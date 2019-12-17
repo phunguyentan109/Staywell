@@ -4,17 +4,17 @@ const mail = require("../utils/mail");
 
 exports.signUp = async(req, res, next) => {
     try {
-        let vname = req.body.email.split("@")[0];
-        let user = await db.User.create({viewname: vname, ...req.body});
-        let {_id, viewname, email, active, avatar} = user;
+        let uname = req.body.email.split("@")[0];
+        let user = await db.User.create({username: uname, ...req.body});
+        let {_id, username, email, active, avatar} = user;
 
         // gen token for storing on client
         let token = genToken(_id);
 
         //send activate mail
-        await mail.activate(email, viewname, _id, req.headers.host);
+        await mail.activate(email, username, _id, req.headers.host);
 
-        return res.status(200).json({_id, viewname, avatar, email, active, token});
+        return res.status(200).json({_id, username, avatar, email, active, token});
     } catch(err) {
         return next({
             status: 400,
@@ -25,20 +25,20 @@ exports.signUp = async(req, res, next) => {
 
 exports.logIn = async(req, res, next) => {
     try {
+        if(!req.body.email.includes("@")) req.body.email = `${req.body.email}@gmail.com`;
         let user = await db.User.findOne({email: req.body.email});
-        let {_id, viewname, email, active, avatar} = user;
+        let {_id, username, email, active, avatar} = user;
         // compare password
         let match = await user.comparePassword(req.body.password);
         if(match){
-
             // get role of user
-            let userRole = await db.UserRole.findOne({user: _id}).populate("role_id").exec();
-            let role = userRole.role ? userRole.role : false;
+            let userRole = await db.UserRole.find({user_id: _id}).populate("role_id").exec();
+            let role = userRole.length > 0 ? userRole.map(u => u.role_id) : false;
 
             // gen token to store on client
             let token = genToken(_id, role);
 
-            return res.status(200).json({_id, viewname, avatar, email, role, active, token});
+            return res.status(200).json({_id, username, avatar, email, role, active, token});
         } else {
             return next({
                 status: 400,
@@ -84,11 +84,11 @@ exports.remove = async(req, res, next) => {
 exports.getOne = async(req, res, next) => {
     try {
         let user = await db.User.findById(req.params.user_id);
-        let {_id, viewname, email, active, avatar, phone} = user;
+        let {_id, username, email, active, avatar, phone} = user;
 
         // get role
-        let userRole = await db.UserRole.findOne({user: _id}).populate("role_id").exec();
-        let role = userRole ? userRole.role : false;
+        let userRole = await db.UserRole.find({user: _id}).populate("role_id").exec();
+        let role = userRole.length > 0 ? userRole.map(u => u.role_id) : false;
 
         // get people_id
         let people_id = false;
@@ -97,7 +97,7 @@ exports.getOne = async(req, res, next) => {
         }
 
         // return email and phone for updating profile
-        return res.status(200).json({_id, viewname, email, avatar, role, active, phone, people_id});
+        return res.status(200).json({_id, username, email, avatar, role, active, phone, people_id});
     } catch(err) {
         return next(err);
     }
@@ -161,9 +161,9 @@ exports.contact = async(req, res, next) => {
         // get user mail from user_id
         for(let id of user_id) {
             let user = await db.User.findById(id);
-            let {email, viewname} = user;
-            listUser.push(viewname);
-            mail.contactUser(email, viewname, content, title);
+            let {email, username} = user;
+            listUser.push(username);
+            mail.contactUser(email, username, content, title);
         }
 
         return res.status(200).json(listUser);

@@ -46,7 +46,7 @@ class SidebarContent extends Component {
                     <div className={`gx-sidebar-notifications ${this.getNoHeaderClass(navStyle)}`}>
                         <UserProfile
                             username={user.username}
-                            avatar={user.avatar}
+                            avatar={user.avatar.link}
                             logout={clearAuthData}
                         />
                         <AppsNavigation/>

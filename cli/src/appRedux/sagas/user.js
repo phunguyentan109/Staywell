@@ -5,8 +5,7 @@ import {
     SEND_RELOAD_USER,
     ACTIVATED_USER
 } from "constants/ActionTypes";
-import api from "constants/api";
-import {apiCall, setTokenHeader} from "constants/api";
+import api, {apiCall, setTokenHeader} from "constants/api";
 import {addUser} from "appRedux/actions/user";
 import {addMessage} from "appRedux/actions/message";
 

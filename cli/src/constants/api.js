@@ -28,5 +28,8 @@ export async function apiFdCall(method, url, data) {
 }
 
 export default {
-    
+    user: {
+        auth: type => ["post", `/api/user/${type}`],
+        getOne: user_id => ["get", `/api/user/${user_id}`]
+    }
 }
