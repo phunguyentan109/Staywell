@@ -1,0 +1,31 @@
+.form-input {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+
+    > label {
+        margin-right: 10px;
+        margin-bottom: 5px;
+        font-size: 12px;
+    }
+
+    > input, textarea {
+        border-radius: 3px;
+        padding: 8px 10px;
+        border: 1px solid #c0c0c0;
+        line-height: 2;
+        outline: none;
+        font-family: "Roboto", sans-serif;
+        color: #555555;
+
+        &::placeholder {
+            line-height: 2;
+            color: #b8b8b8;
+            font-family: "Roboto", sans-serif !important;
+        }
+
+        &:focus {
+            border-color: #9f9f9f;
+        }
+    }
+}

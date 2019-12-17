@@ -1,0 +1,11 @@
+.status {
+    font-weight: 500 !important;
+
+    &.stateWait {
+        color: #daac6f;
+    }
+
+    &.stateSuccess {
+        color: #8bc68b;
+    }
+}

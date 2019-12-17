@@ -1,0 +1,44 @@
+%iconInput{
+    padding: 7px 10px;
+    background-color: #ffffff1a;
+    line-height: 2;
+    transition-duration: 0.5s;
+    font-size: 14px;
+}
+
+.authInput {
+    margin-bottom: 10px;
+
+    > i {
+        @extend %iconInput;
+        color: #edededa8;
+        padding-left: 15px;
+        border-top-left-radius: 20px;
+        border-bottom-left-radius: 20px;
+        transition-duration: 0.5s;
+
+        &.focus {
+            background-color: #ffffff30;
+        }
+    }
+
+    > input {
+        @extend %iconInput;
+        border: none;
+        outline: none;
+        width: 270px;
+        color: #ffffffa8;
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+        font-family: $f-ubuntu;
+
+        &::placeholder{
+            color: #edededa8;
+            font-size: 14px;
+        }
+
+        &.focus {
+            background-color: #ffffff30;
+        }
+    }
+}

@@ -1,0 +1,16 @@
+.custom-header {
+    padding-top: 15px;
+    padding-left: 15px;
+
+    > h5 {
+        margin-top: 10px;
+        margin-bottom: 5px;
+        font-size: 22px;
+    }
+
+    > p {
+        margin: 0;
+        color: gray;
+        font-size: 13px;
+    }
+}

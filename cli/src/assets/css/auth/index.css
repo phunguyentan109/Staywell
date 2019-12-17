@@ -1,0 +1,14 @@
+.auth-credit {
+  position: absolute;
+  bottom: 10px;
+  right: 40px;
+  color: #878787; }
+  .auth-credit p {
+    font-family: "Ubuntu", sans-serif;
+    font-size: 14px !important;
+    font-weight: 300 !important;
+    margin-bottom: 16px; }
+  .auth-credit i {
+    padding-left: 5px;
+    padding-right: 5px;
+    color: #17a2b8; }
