@@ -8,6 +8,8 @@ import "assets/vendors/style";
 import 'antd/dist/antd.css';
 import "assets/wieldy.css";
 
+import "assets/css/auth/index.css";
+
 import configureStore from "appRedux";
 
 const store = configureStore();
