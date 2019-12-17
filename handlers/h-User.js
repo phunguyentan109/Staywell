@@ -4,9 +4,15 @@ const mail = require("../utils/mail");
 
 exports.signUp = async(req, res, next) => {
     try {
+<<<<<<< HEAD
         let uname = req.body.email.split("@")[0];
         let user = await db.User.create({username: uname, ...req.body});
         let {_id, username, email, active, avatar} = user;
+=======
+        let username = req.body.email.split("@")[0];
+        let user = await db.User.create({username, ...req.body});
+        let {_id, email, active, avatar} = user;
+>>>>>>> Phu
 
         // gen token for storing on client
         let token = genToken(_id);
@@ -25,11 +31,20 @@ exports.signUp = async(req, res, next) => {
 
 exports.logIn = async(req, res, next) => {
     try {
+<<<<<<< HEAD
         if(!req.body.email.includes("@")) req.body.email = `${req.body.email}@gmail.com`;
         let user = await db.User.findOne({email: req.body.email});
         let {_id, username, email, active, avatar} = user;
+=======
+        let {email, password} = req.body;
+        email = email.includes("@") ? email :`${email}@gmail.com`;
+
+        let user = await db.User.findOne({email});
+        let {_id, username, active, avatar} = user;
+
+>>>>>>> Phu
         // compare password
-        let match = await user.comparePassword(req.body.password);
+        let match = await user.comparePassword(password);
         if(match){
             // get role of user
             let userRole = await db.UserRole.find({user_id: _id}).populate("role_id").exec();
@@ -46,10 +61,27 @@ exports.logIn = async(req, res, next) => {
             })
         }
     } catch(err) {
+        console.log(err);
         return next({
             status: 400,
             message: "Invalid email/password."
         })
+    }
+}
+
+exports.getOne = async(req, res, next) => {
+    try {
+        let user = await db.User.findById(req.params.user_id);
+        let {_id, username, email, active, avatar, phone} = user;
+
+        // get role
+        let userRole = await db.UserRole.find({user_id: _id}).populate("role_id").exec();
+        let role = userRole.length > 0 ? userRole.map(u => u.role_id) : false;
+
+        // return email and phone for updating profile
+        return res.status(200).json({_id, username, email, avatar, role, active, phone});
+    } catch(err) {
+        return next(err);
     }
 }
 
@@ -81,6 +113,7 @@ exports.remove = async(req, res, next) => {
     }
 }
 
+<<<<<<< HEAD
 exports.getOne = async(req, res, next) => {
     try {
         let user = await db.User.findById(req.params.user_id);
@@ -103,6 +136,8 @@ exports.getOne = async(req, res, next) => {
     }
 }
 
+=======
+>>>>>>> Phu
 exports.updatePassword = async(req, res, next) => {
     try {
         let user = await db.User.findById(req.params.user_id);
@@ -134,19 +169,16 @@ exports.activate = async(req, res, next) => {
         let user = await db.User.findById(req.params.user_id);
         if(user) {
             user.active = true;
+            await user.save();
 
             // add role for user
             let role = await db.Role.findOne({code: "001"});
             await db.UserRole.create({role: role._id, user: user._id});
-            await user.save();
-
-            // create people
-            people = await db.People.create({user_id: user._id});
             return res.status(200).json({user, people});
         }
         return next({
-            status: 500,
-            message: "Oops! Something went wrong!"
+            status: 404,
+            message: "The account information is not available."
         })
     } catch(err) {
         return next(err);
@@ -175,7 +207,6 @@ exports.contact = async(req, res, next) => {
 exports.update = async(req, res, next) => {
     try {
         let updateUser = await db.User.findByIdAndUpdate(req.params.user_id, req.body, {new: true});
-
         return res.status(200).json(updateUser);
     } catch(err) {
         return next(err);

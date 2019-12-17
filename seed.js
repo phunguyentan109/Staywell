@@ -1,8 +1,9 @@
+require("dotenv").config();
 const db = require("./models");
 
 const roles = [
     {
-        type: "FULL CONTROL",
+        type: "OWNER CONTROL",
         code: "000",
         desc: ""
     },
@@ -10,13 +11,18 @@ const roles = [
         type: "PEOPLE CONTROL",
         code: "001",
         desc: ""
+    },
+    {
+        type: "UNACTIVE CONTROL",
+        code: "002",
+        desc: ""
     }
 ];
 
 const owner = {
     email: process.env.GMAILUSER,
     password: "owner",
-    viewname: "owner",
+    username: "owner",
     active: true
 }
 
@@ -27,9 +33,7 @@ async function createRole(){
             for(let role of roles){
                 await db.Role.create(role);
             }
-            return console.log("[ ROLE CREATED ]");
         }
-        return console.log("[ ROLE LOADED ]");
     } catch(err) {
         console.log(err);
     }
@@ -37,20 +41,31 @@ async function createRole(){
 
 async function createOwner() {
     try {
-        let role = await db.Role.findOne({code: "000"});
-        let noOwner = (await db.UserRole.find({role: role._id})).length === 0;
+        let role = await db.Role.findOne({code: "000"}).lean().exec();
+        let noOwner = (await db.UserRole.find({role_id: role._id}).lean().exec()).length === 0;
         if(noOwner) {
             let user = await db.User.create(owner);
-            await db.UserRole.create({role: role._id, user: user._id});
-            return console.log("[ OWNER CREATED ]");
+            await db.UserRole.create({
+                role_id: role._id,
+                user_id: user._id
+            });
         }
-        return console.log("[ OWNER LOADED ]");
     } catch(err) {
         console.log(err);
     }
 }
 
-module.exports = async() => {
+async function seed() {
+    console.log("");
+    console.log("----- SEEDING DATA -----");
+
+    console.log("- Importing all role data...");
     await createRole();
+
+    console.log("- Importing owner and owner's role data...");
     await createOwner();
-};
+
+    console.log("=> Process is completed successfully!");
+}
+
+seed();
