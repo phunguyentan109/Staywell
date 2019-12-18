@@ -9,3 +9,11 @@ export function isPermit(roles = [GUEST_PERMISSION]){
         return uCode.indexOf(vCode) !== -1;
     }
 }
+
+export function isPeople(code) {
+    return code === PEOPLE_PERMISSION;
+}
+
+export function isUnactive(code) {
+    return code === UNACTIVE_PERMISSION;
+}

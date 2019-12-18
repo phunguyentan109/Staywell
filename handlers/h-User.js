@@ -109,16 +109,15 @@ exports.activate = async(req, res, next) => {
 
 exports.get = async(req, res, next) => {
     try {
-        let users = await db.User.find({active: false});
-        return res.status(200).json(users);
-    } catch(err) {
-        return next(err);
-    }
-}
-
-exports.getAll = async(req, res, next) => {
-    try {
-        let users = await db.User.find().exec();
+        let peopleRole = await db.Role.findOne({code: "001"});
+        let users = await db.UserRole.find({role_id: peopleRole._id})
+        .populate("role_id")
+        .populate({
+            path: "user_id",
+            populate: {
+                path: "room_id"
+            }
+        }).lean().exec();
         return res.status(200).json(users);
     } catch (err) {
         return next(err);

@@ -33,11 +33,7 @@ const userSchema = mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "Bill"
         }
-    ],
-    // active: {
-    //     type: Boolean,
-    //     default: false
-    // }
+    ]
 });
 
 userSchema.pre("save", async function(next){
