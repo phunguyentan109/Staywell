@@ -12,12 +12,6 @@ const DEFAULT_ACCOUNT = {
 
 function Register({sendAuthData}) {
     const [account, setAccount] = useState(DEFAULT_ACCOUNT);
-<<<<<<< HEAD
-
-    function hdSubmit(e) {
-        e.preventDefault();
-        sendAuthData("signup", account);
-=======
     const [loading, setLoading] = useState(false);
 
     function hdSubmit(e) {
@@ -25,18 +19,17 @@ function Register({sendAuthData}) {
         try {
             e.preventDefault();
             let isValidPassword = account.password === account.cpassword;
-            let isNotEmpty = account.email.length > 0 && account.password.length > 0
+            let isNotEmpty = account.email.length > 0 && account.password.length > 0;
             if(isNotEmpty && isValidPassword) {
                 sendAuthData("signup", account);
                 setAccount(DEFAULT_ACCOUNT);
             } else {
-                window.alert("The entered information is not valid. Please try again")
+                window.alert("The entered information is not valid. Please try again");
+                setLoading(false);
             }
         } catch (e) {
             console.log(e);
         }
-        setLoading(false);
->>>>>>> Phu
     }
 
     function hdChange(e) {
@@ -65,22 +58,13 @@ function Register({sendAuthData}) {
                     onChange={hdChange}
                 />
                 <AuthInput
-<<<<<<< HEAD
-                    type="cpassword"
-                    placeholder="Confirm Password"
-                    name="password"
-=======
                     type="password"
                     placeholder="Confirm Password"
                     name="cpassword"
->>>>>>> Phu
                     icon="fas fa-key"
                     value={account.cpassword}
                     onChange={hdChange}
                 />
-<<<<<<< HEAD
-                <button className="signup">Create account</button>
-=======
                 <button className="signup" disabled={loading}>
                     {
                         loading
@@ -88,7 +72,6 @@ function Register({sendAuthData}) {
                         : "Create account"
                     }
                 </button>
->>>>>>> Phu
             </form>
             <Link to="/reset">Forgot your password?</Link>
         </div>

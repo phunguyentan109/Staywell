@@ -43,6 +43,7 @@ function* hdClearAuthData() {
 
 function* hdAfterActivate() {
     sessionStorage.clear();
+    localStorage.clear();
     yield put(addUser());
 }
 

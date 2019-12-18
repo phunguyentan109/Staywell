@@ -1,6 +1,5 @@
 import React from "react";
 import {Switch, Redirect, Route, withRouter} from "react-router-dom";
-// import RouteControl from "containers/Route/RouteControl";
 
 // Views
 import Dashboard from "./CRM/index";

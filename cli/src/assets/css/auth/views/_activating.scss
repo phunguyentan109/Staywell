@@ -1,0 +1,19 @@
+.activating {
+    width: 50vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    > h1 {
+        color: #bababa;
+        font-family: $f-ubuntu;
+        margin-bottom: 50px;
+        font-size: 40px;
+    }
+
+    > i {
+        color: #c5c5c5;
+        font-size: 50px;
+    }
+}

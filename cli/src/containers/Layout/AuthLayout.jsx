@@ -1,34 +1,32 @@
 import React from "react";
 import bg from "assets/img/loginBg.jpg"
-<<<<<<< HEAD
-import {Switch, Route, withRouter} from "react-router-dom";
-=======
 import {Switch, Route, withRouter, Redirect} from "react-router-dom";
->>>>>>> Phu
 
 import AuthNavbar from "containers/Bar/Navbar";
 import Login from "views/Auth/Login";
 import Register from "views/Auth/Register";
+
+import {Activate, ActivatedView} from "views/Auth/Activate";
 import RouteControl from "containers/Route/RouteControl";
 
-<<<<<<< HEAD
-function AuthLayout() {
-=======
 function AuthLayout({location}) {
->>>>>>> Phu
     return (
         <div className="auth-bg" style={{backgroundImage: `url(${bg})`}}>
             <div style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}}>
                 <AuthNavbar/>
                 <Switch>
-<<<<<<< HEAD
+                    <Route path="/activate/:user_id" component={ActivatedView}/>
                     <RouteControl
-                        exact path="/"
-=======
-                    <Route path="/activate"/>
+                        path="/activate"
+                        redirectPath="/app"
+                        component={Activate}
+                        access={[
+                            "UNACTIVE_PERMISSION"
+                        ]}
+                    />
                     <RouteControl
                         path="/register"
-                        redirectPath="/app"
+                        redirectPath="/activate"
                         component={Register}
                         access={[
                             "GUEST_PERMISSION"
@@ -36,18 +34,13 @@ function AuthLayout({location}) {
                     />
                     <RouteControl
                         path="/"
->>>>>>> Phu
-                        redirectPath="/app"
+                        redirectPath="/activate"
                         component={Login}
                         access={[
                             "GUEST_PERMISSION"
                         ]}
                     />
-<<<<<<< HEAD
-                    <Route path="/register" component={Register}/>
-=======
                     <Redirect from={location.pathname} to="/"/>
->>>>>>> Phu
                 </Switch>
                 <div className="auth-credit">
                     <p>©2019, designed and coded with all my <i className="fas fa-heartbeat"/> and <i className="fas fa-coffee"/> | Phu Nguyen</p>

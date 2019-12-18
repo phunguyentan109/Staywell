@@ -4,23 +4,21 @@ const mail = require("../utils/mail");
 
 exports.signUp = async(req, res, next) => {
     try {
-<<<<<<< HEAD
-        let uname = req.body.email.split("@")[0];
-        let user = await db.User.create({username: uname, ...req.body});
-        let {_id, username, email, active, avatar} = user;
-=======
         let username = req.body.email.split("@")[0];
         let user = await db.User.create({username, ...req.body});
         let {_id, email, active, avatar} = user;
->>>>>>> Phu
 
         // gen token for storing on client
         let token = genToken(_id);
 
+        // Push the role UNACTIVE for user
+        let role = await db.Role.findOne({code: "002"});
+        await db.UserRole.create({role_id: role._id, user_id: user._id});
+
         //send activate mail
         await mail.activate(email, username, _id, req.headers.host);
 
-        return res.status(200).json({_id, username, avatar, email, active, token});
+        return res.status(200).json({_id, username, avatar, email, active, token, role: [role]});
     } catch(err) {
         return next({
             status: 400,
@@ -31,18 +29,12 @@ exports.signUp = async(req, res, next) => {
 
 exports.logIn = async(req, res, next) => {
     try {
-<<<<<<< HEAD
-        if(!req.body.email.includes("@")) req.body.email = `${req.body.email}@gmail.com`;
-        let user = await db.User.findOne({email: req.body.email});
-        let {_id, username, email, active, avatar} = user;
-=======
         let {email, password} = req.body;
         email = email.includes("@") ? email :`${email}@gmail.com`;
 
         let user = await db.User.findOne({email});
         let {_id, username, active, avatar} = user;
 
->>>>>>> Phu
         // compare password
         let match = await user.comparePassword(password);
         if(match){
@@ -75,11 +67,41 @@ exports.getOne = async(req, res, next) => {
         let {_id, username, email, active, avatar, phone} = user;
 
         // get role
-        let userRole = await db.UserRole.find({user_id: _id}).populate("role_id").exec();
+        let userRole = await db.UserRole.find({user_id: _id}).populate("role_id").lean().exec();
         let role = userRole.length > 0 ? userRole.map(u => u.role_id) : false;
 
         // return email and phone for updating profile
         return res.status(200).json({_id, username, email, avatar, role, active, phone});
+    } catch(err) {
+        return next(err);
+    }
+}
+
+exports.activate = async(req, res, next) => {
+    try {
+        const {user_id} = req.params;
+
+        // check if the user id is not fake
+        let user = await db.User.findById(user_id).lean().exec();
+        if(!user) {
+            return next({
+                status: 404,
+                message: "The account information is not available."
+            })
+        }
+
+        // check if user already has the PEOPLE permission
+        let peopleRole = await db.Role.findOne({code: "001"}).lean().exec();
+        let foundUserRole = await db.UserRole.findOne({user_id, role_id: peopleRole._id}).lean().exec();
+
+        // if the user still has UNACTIVE, replace with PEOPLE
+        let unactiveRole = await db.Role.findOne({code: "002"}).lean().exec();
+        if(user && !foundUserRole) {
+            let userRole = await db.UserRole.findOne({user_id: user._id, role_id: unactiveRole._id});
+            userRole.role_id = peopleRole._id;
+            await userRole.save();
+        }
+        return res.status(200).json({success: true});
     } catch(err) {
         return next(err);
     }
@@ -113,31 +135,6 @@ exports.remove = async(req, res, next) => {
     }
 }
 
-<<<<<<< HEAD
-exports.getOne = async(req, res, next) => {
-    try {
-        let user = await db.User.findById(req.params.user_id);
-        let {_id, username, email, active, avatar, phone} = user;
-
-        // get role
-        let userRole = await db.UserRole.find({user: _id}).populate("role_id").exec();
-        let role = userRole.length > 0 ? userRole.map(u => u.role_id) : false;
-
-        // get people_id
-        let people_id = false;
-        if(role && role.code !== "000"){
-            people_id = (await db.People.findOne({user_id: _id}).populate().exec())._id;
-        }
-
-        // return email and phone for updating profile
-        return res.status(200).json({_id, username, email, avatar, role, active, phone, people_id});
-    } catch(err) {
-        return next(err);
-    }
-}
-
-=======
->>>>>>> Phu
 exports.updatePassword = async(req, res, next) => {
     try {
         let user = await db.User.findById(req.params.user_id);
@@ -161,27 +158,6 @@ exports.updatePassword = async(req, res, next) => {
             status: 400,
             message: err.code === 11000 ? "Sorry, the password is invalid" : err.message
         });
-    }
-}
-
-exports.activate = async(req, res, next) => {
-    try {
-        let user = await db.User.findById(req.params.user_id);
-        if(user) {
-            user.active = true;
-            await user.save();
-
-            // add role for user
-            let role = await db.Role.findOne({code: "001"});
-            await db.UserRole.create({role: role._id, user: user._id});
-            return res.status(200).json({user, people});
-        }
-        return next({
-            status: 404,
-            message: "The account information is not available."
-        })
-    } catch(err) {
-        return next(err);
     }
 }
 

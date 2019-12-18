@@ -18,10 +18,6 @@ function RootRoutes({user}) {
                     "PEOPLE_PERMISSION"
                 ]}
             />
-<<<<<<< HEAD
-            <Route path="/app" component={AppLayout}/>
-=======
->>>>>>> Phu
             <Route path="/" component={AuthLayout}/>
         </Switch>
     )

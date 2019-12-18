@@ -19,7 +19,6 @@ export default async function extractStorage(store) {
             }
         }
     } catch(err) {
-        console.log(err);
         store.dispatch(clearAuthData());
     }
 }

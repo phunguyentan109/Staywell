@@ -34,10 +34,10 @@ const userSchema = mongoose.Schema({
             ref: "Bill"
         }
     ],
-    active: {
-        type: Boolean,
-        default: false
-    }
+    // active: {
+    //     type: Boolean,
+    //     default: false
+    // }
 });
 
 userSchema.pre("save", async function(next){

@@ -9,7 +9,7 @@ const DEFAULT_ACCOUNT = {
     password: ""
 }
 
-function Login({sendAuthData}) {
+function Login({sendAuthData, history}) {
     const [account, setAccount] = useState(DEFAULT_ACCOUNT);
 
     function hdSubmit(e) {
