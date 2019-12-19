@@ -1,8 +1,10 @@
 import React, {useEffect, useCallback, useState} from "react";
 import {Link} from "react-router-dom";
 import {withRouter} from "react-router-dom";
+import {connect} from "react-redux";
+import {clearAuthData} from "appRedux/actions/user";
 
-function AuthNavbar({location, logOut}) {
+function AuthNavbar({location, clearAuthData}) {
     const [isRegister, setRegister] = useState(false);
 
     const load = useCallback(() => {
@@ -19,11 +21,11 @@ function AuthNavbar({location, logOut}) {
             <Link to="/">Staywell</Link>
             {
                 isRegister
-                ? <Link to="/" onClick={logOut}><i className="fas fa-door-open"/> Try with different account?</Link>
+                ? <Link to="/" onClick={clearAuthData}><i className="fas fa-door-open"/> Try with different account?</Link>
                 : <Link to="/register"><i className="fas fa-user-plus"/> Create an account</Link>
             }
         </div>
     )
 };
 
-export default withRouter(AuthNavbar);
+export default withRouter(connect(null, {clearAuthData})(AuthNavbar));

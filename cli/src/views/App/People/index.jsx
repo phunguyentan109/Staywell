@@ -7,22 +7,32 @@ import * as permissions from "constants/credentialControl";
 
 const {isPeople, isUnactive} = permissions;
 
-function People() {
+function People({notify}) {
     const [people, setPeople] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const load = useCallback(async() => {
-        let peopleData = await apiCall(...api.user.get());
-        setPeople(peopleData);
-        setLoading(false);
-    }, [])
+        try {
+            let peopleData = await apiCall(...api.user.get());
+            setPeople(peopleData);
+            setLoading(false);
+        } catch (e) {
+            return notify("error", "Data is not loaded")
+        }
+    }, [notify])
 
     useEffect(() => {
         load();
     }, [load])
 
-    function hdRemove(user_id) {
-        console.log(user_id);
+    async function hdRemove(user_id) {
+        try {
+            await apiCall(...api.user.remove(user_id));
+            setPeople(prev => prev.filter(p => p.user_id._id !== user_id));
+            return notify("success", "Process is completed successfully!", "People data is removed successfully.")
+        } catch (e) {
+            return notify("error", "Process is not completed", "People data cannot be removed properly")
+        }
     }
 
     function getUnactive() {
@@ -83,7 +93,7 @@ function PeopleTable({title, dataSource, loading, hdRemove}) {
                         {
                             title: 'Action',
                             key: 'action',
-                            render: (text, record) => (
+                            render: (text, record) => record.room_id ? <span>None</span> : (
                                 <span>
                                     <PopConfirm
                                         title="Are you sure to delete this genre?"

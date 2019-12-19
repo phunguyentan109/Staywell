@@ -76,6 +76,9 @@ class SidebarContent extends Component {
                                 <Menu.Item key="/app/people">
                                     <Link to="/app/people"><i className="icon icon-pricing-table"/> Manage People</Link>
                                 </Menu.Item>
+                                <Menu.Item key="/app/price">
+                                    <Link to="/app/price"><i className="icon icon-pricing-table"/> Manage Price</Link>
+                                </Menu.Item>
                             </MenuItemGroup>
                         </Menu>
                     </CustomScrollbars>

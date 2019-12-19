@@ -51,7 +51,7 @@ userSchema.pre("save", async function(next){
 
 userSchema.pre("remove", async function(next){
     try {
-        await db.UserRole.deleteMany({user: this._id});
+        await db.UserRole.deleteMany({user_id: this._id});
         return next();
     } catch(err) {
         return next(err);

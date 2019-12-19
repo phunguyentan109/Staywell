@@ -5,7 +5,7 @@ const mw = require("../middleware");
 
 router.route("/")
 .get(hdl.Price.get)
-.post(mw.User.isCorrect, mw.User.isPermit, hdl.Price.create);
+.post(mw.User.isPermit, hdl.Price.create);
 
 router.route("/:price_id")
 .get(hdl.Price.getOne)

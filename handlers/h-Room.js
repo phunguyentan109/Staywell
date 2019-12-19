@@ -5,16 +5,7 @@ const moment = require("moment");
 
 exports.get = async(req, res, next) => {
     try {
-        let list = await db.Room.find()
-            .populate("bill_id")
-            .populate("price_id")
-            .populate({
-                path: "people_id",
-                populate: {
-                    path: "user_id"
-                }
-            })
-            .exec();
+        let list = await db.Room.find().populate("price_id").populate("user_id").lean().exec();
         return res.status(200).json(list);
     } catch(err) {
         return next(err);
@@ -23,15 +14,7 @@ exports.get = async(req, res, next) => {
 
 exports.getOne = async(req, res, next) => {
     try {
-        let one = await db.Room.findById(req.params.room_id)
-            .populate("bill_id")
-            .populate({
-                path: "people_id",
-                populate: {
-                    path: "user_id"
-                }
-            })
-            .exec();
+        let one = await db.Room.findById(req.params.room_id).populate("bill_id").populate("user_id").lean().exec();
         return res.status(200).json(one);
     } catch(err) {
         return next(err);
