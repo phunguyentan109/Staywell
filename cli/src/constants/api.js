@@ -37,6 +37,8 @@ export default {
     },
     price: {
         get: () => ["get", `/api/price`],
-        create: () => ["post", "/api/price"]
+        create: () => ["post", "/api/price"],
+        remove: (price_id) => ["delete", `/api/price/${price_id}`],
+        update: (price_id) => ["put", `/api/price/${price_id}`],
     }
 }

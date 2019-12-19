@@ -48,7 +48,19 @@ function Price({notify}) {
             if(!price._id) {
                 let createdPrice = await apiCall(...api.price.create(), price);
                 setListPrice(prev => [...prev, createdPrice]);
+                notify("success", "Process is completed", "Price data is created successfully.");
+            } else {
+                let updatePrice = await apiCall(...api.price.update(price._id), price);
+                let updatePriceList = listPrice.map(v => {
+                    if(v._id === updatePrice._id) {
+                        return updatePrice;
+                    }
+                    return v;
+                })
+                setListPrice(updatePriceList);
+                notify("success", "Process is completed", "Price data is updated successfully.");
             }
+            hdCancel();
         } catch (e) {
             console.log(e);
             notify("error", "Process is not completed", "Price data is not submitted successfully")
@@ -56,8 +68,15 @@ function Price({notify}) {
         setLoading(false);
     }
 
-    function hdRemove(price_id) {
-
+    async function hdRemove(price_id) {
+        try {
+            await apiCall(...api.price.remove(price_id)) ;
+            let updatePriceList = listPrice.filter(v => v._id !== price_id);
+            setListPrice(updatePriceList);
+            notify("success", "Process is not completed", "Price data is removed successfully")
+        } catch (err){
+            notify("error", "Process is not completed", "Price data is not remove")
+        }
     }
 
     function hdCancel() {

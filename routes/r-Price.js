@@ -9,7 +9,7 @@ router.route("/")
 
 router.route("/:price_id")
 .get(hdl.Price.getOne)
-.delete(mw.User.isCorrect, mw.User.isPermit, hdl.Price.remove)
-.put(mw.User.isCorrect, mw.User.isPermit, hdl.Price.update);
+.delete(mw.User.isPermit, hdl.Price.remove)
+.put(mw.User.isPermit, hdl.Price.update);
 
 module.exports = router;
