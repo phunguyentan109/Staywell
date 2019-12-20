@@ -4,11 +4,10 @@ import About from "components/profile/About/index";
 import Contact from "components/profile/Contact/index";
 import Auxiliary from "util/Auxiliary";
 import ProfileHeader from "components/profile/ProfileHeader";
-import {connect} from "react-redux"
-import api from "constants/api";
-import {apiCall} from "constants/apiCall";
+import api, {apiCall} from "constants/api";
+import withNoti from "hocs/withNoti";
+import {connect} from "react-redux";
 import * as credentials from "constants/credentialControl";
-import withNoti from "hocs/App/withNoti";
 
 const FormItem = Form.Item;
 
@@ -54,20 +53,11 @@ function Profile({notify, user, role, ...props}) {
         }));
     }
 
-    function getRoleName() {
-        let roleName = "";
-        if(role.isSalestaff) roleName = "Salestaff";
-        if(role.isManager) roleName = "Manager";
-        if(role.isAdmin) roleName = "Administrator";
-        return `${roleName} at Kafka Bookstore`;
-    }
-
     return (
         <Auxiliary>
             <ProfileHeader
                 username={user.username}
                 avatar={user.avatar.link}
-                role={getRoleName()}
             />
             <div className="gx-profile-content">
                 <Row>
@@ -142,9 +132,8 @@ function mapState({user}) {
     return {
         user: user.data,
         role: {
-            isSalestaff: isPermit(role)(credentials.SALESTAFF_PERMISSION),
-            isManager: isPermit(role)(credentials.MANAGER_PERMISSION),
-            isAdmin: isPermit(role)(credentials.ADMIN_PERMISSION)
+            isOwner: isPermit(role)(credentials.OWNER_PERMISSION),
+            isPeople: isPermit(role)(credentials.PEOPLE_PERMISSION)
         }
     }
 }

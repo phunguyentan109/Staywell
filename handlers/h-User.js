@@ -139,11 +139,14 @@ exports.updatePassword = async(req, res, next) => {
         let user = await db.User.findById(req.params.user_id);
 
         // verify old password and change password
-        let {password, newPassword} = req.body;
-        let match = await user.comparePassword(password);
+        let {current, change} = req.body;
+        let match = await user.comparePassword(current);
         if(match){
-            user.password = newPassword;
+            user.password = change;
             await user.save();
+
+            //send activate mail
+            await mail.changePassword(user.email, user.username);
             return res.status(200).json(user);
         } else {
             // return error if old password is not matched

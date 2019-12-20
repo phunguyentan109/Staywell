@@ -3,7 +3,6 @@ import {Card, Spin, Table, Divider, Form, Input, Button} from "antd";
 import api, {apiCall} from "constants/api";
 import withNoti from "hocs/withNoti";
 import PopConfirm from "components/App/Pop/PopConfirm";
-import * as permissions from "constants/credentialControl";
 
 const FormItem = Form.Item;
 
@@ -62,13 +61,13 @@ function Price({notify}) {
             }
             hdCancel();
         } catch (e) {
-            console.log(e);
             notify("error", "Process is not completed", "Price data is not submitted successfully")
         }
         setLoading(false);
     }
 
     async function hdRemove(price_id) {
+        setLoading(true);
         try {
             await apiCall(...api.price.remove(price_id)) ;
             let updatePriceList = listPrice.filter(v => v._id !== price_id);
@@ -77,6 +76,7 @@ function Price({notify}) {
         } catch (err){
             notify("error", "Process is not completed", "Price data is not remove")
         }
+        setLoading(false);
     }
 
     function hdCancel() {

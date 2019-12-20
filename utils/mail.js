@@ -70,6 +70,18 @@ This is the automatic email from the system, please do not reply.`;
 	return await send(to, subject, text);
 }
 
+async function changePassword(to, viewname) {
+	let subject = emoji.emojify(`:wrench: Your password has been change - Staywell`);
+	let text = `
+Good day ${viewname}, this mail comes from Staywell,
+
+.
+We will notify you about your password has been change.
+
+This is the automatic email from the system, please do not reply.`;
+	return await send(to, subject, text);
+}
+
 async function contactUser(to, viewname, content, title) {
 	let subject = emoji.emojify(`:calling: Owner had sent - ${title} - Staywell`);
 	let text = `
@@ -79,4 +91,4 @@ ${content}.`;
 	return await send(to, subject, text);
 }
 
-module.exports = {send, activate, getRoom, leaveRoom, contactUser}
+module.exports = {send, activate, getRoom, leaveRoom, contactUser, changePassword}

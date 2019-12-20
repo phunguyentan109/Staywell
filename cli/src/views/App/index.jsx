@@ -6,6 +6,7 @@ import RouteControl from "containers/Route/RouteControl";
 import Dashboard from "./CRM/index";
 import People from "./People";
 import Price from "./Price";
+import Profile from "./Profile";
 
 function AppRoutes(props) {
     const url = props.match.url;
@@ -24,6 +25,14 @@ function AppRoutes(props) {
                     path={`${url}/price`}
                     redirectPath={`${url}/`}
                     component={Price}
+                    access={[
+                        "OWNER_PERMISSION"
+                    ]}
+                />
+                <RouteControl
+                    path={`${url}/profile`}
+                    redirectPath={`${url}/`}
+                    component={Profile}
                     access={[
                         "OWNER_PERMISSION"
                     ]}
