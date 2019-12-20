@@ -48,7 +48,7 @@ export const aboutList = [
   },
   {
     id: 4,
-    title: 'Lives in London',
+    title: 'Lives in',
     icon: 'home',
     userList: '',
     desc: ['From Switzerland']
@@ -59,10 +59,10 @@ export const aboutList = [
     icon: 'family',
     userList: [<ul className="gx-list-inline gx-mb-0" key={1}>
       {userImageList.map((user, index) =>
-        <li className="gx-mb-2" key={index}>
-          <Avatar className="gx-size-30" src={user.image}/>
-        </li>
-      )
+          <li className="gx-mb-2" key={index}>
+            <Avatar className="gx-size-30" src={user.image}/>
+          </li>
+        )
       }
     </ul>],
     desc: ''

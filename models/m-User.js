@@ -24,6 +24,11 @@ const userSchema = mongoose.Schema({
         }
     },
     phone: String,
+    job: String,
+    birthDate: {
+        type: Date,
+        default: Date.now
+    },
     room_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Room"
