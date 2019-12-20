@@ -34,7 +34,8 @@ function AppRoutes(props) {
                     redirectPath={`${url}/`}
                     component={Profile}
                     access={[
-                        "OWNER_PERMISSION"
+                        "OWNER_PERMISSION",
+                        "PEOPLE_PERMISSION"
                     ]}
                 />
                 <Route path={`${url}/`} component={Dashboard}/>

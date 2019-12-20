@@ -7,7 +7,9 @@ import ProfileHeader from "components/profile/ProfileHeader";
 import api, {apiCall} from "constants/api";
 import withNoti from "hocs/withNoti";
 import {connect} from "react-redux";
+import moment from "moment";
 import * as credentials from "constants/credentialControl";
+import {sendReloadUser} from "appRedux/actions/user";
 
 const FormItem = Form.Item;
 
@@ -17,11 +19,20 @@ const DEFAULT_PASSWORD = {
     confirm: ""
 }
 
-function Profile({notify, user, role, ...props}) {
+const DEFAULT_PROFILE = {
+    email: "",
+    job: "",
+    phone:"",
+    birthDate: moment()
+}
+
+function Profile({notify, user, role, sendReloadUser, ...props}) {
     const [password, setPassword] = useState(DEFAULT_PASSWORD);
+    const [profile, setProfile] = useState(DEFAULT_PROFILE);
     const [loading, setLoading] = useState(true);
 
     const load = useCallback(async() => {
+        setProfile(user);
         setLoading(false);
     }, [])
 
@@ -53,23 +64,125 @@ function Profile({notify, user, role, ...props}) {
         }));
     }
 
+    function getRoleName() {
+        let roleName = "";
+        if(role.isOwner) roleName = "Owner";
+        if(role.isPeople) roleName = "People";
+        return `${roleName} at StayWell`;
+    }
+
+    function hdChange(e) {
+        const {name, value} = e.target;
+        setProfile(prev => ({...prev, [name]: value}))
+    }
+
+    async function hdUpdateProfile(profile) {
+        setLoading(true);
+        try {
+            await apiCall(...api.user.update(user._id), profile);
+            sendReloadUser(user._id);
+            setProfile(DEFAULT_PROFILE);
+            notify("success", "Process is completed!", "Your profile has been updated successfully.");
+        } catch (err){
+            notify("error", "Process is not completed", "Profile data is not updated successfully")
+        }
+        setLoading(false);
+    }
+
     return (
         <Auxiliary>
             <ProfileHeader
                 username={user.username}
                 avatar={user.avatar.link}
+                role = {getRoleName()}
             />
             <div className="gx-profile-content">
                 <Row>
                     <Col xl={16} lg={14} md={14} sm={24} xs={24}>
-                        <About/>
+                        <About
+                            job={user.job}
+                            birthDate={user.birthDate}
+                        />
+                        <Card className="gx-card" title="Change your profile">
+                            <Spin spinning={loading}>
+                                <Form layout="horizontal">
+                                    <FormItem
+                                        label="Your email"
+                                        labelCol={{xs: 24, sm: 6}}
+                                        wrapperCol={{xs: 24, sm: 16}}
+                                    >
+                                        <Input
+                                            type="email"
+                                            placeholder="Enter your email here..."
+                                            name="email"
+                                            value={profile.email}
+                                            onChange={hdChange}
+                                            disabled={role.isOwner ? profile.email : ""}
+                                        />
+                                    </FormItem>
+                                    <FormItem
+                                        label="Your job"
+                                        labelCol={{xs: 24, sm: 6}}
+                                        wrapperCol={{xs: 24, sm: 16}}
+                                    >
+                                        <Input
+                                            type="text"
+                                            placeholder="Enter your job here..."
+                                            name="job"
+                                            value={profile.job}
+                                            onChange={hdChange}
+                                        />
+                                    </FormItem>
+                                    <FormItem
+                                        label="Your Phone"
+                                        labelCol={{xs: 24, sm: 6}}
+                                        wrapperCol={{xs: 24, sm: 16}}
+                                    >
+                                        <Input
+                                            type="phone"
+                                            placeholder="Enter your phone here..."
+                                            name="phone"
+                                            value={profile.phone}
+                                            onChange={hdChange}
+                                        />
+                                    </FormItem>
+                                    <FormItem
+                                        label="Your birthdate"
+                                        labelCol={{xs: 24, sm: 6}}
+                                        wrapperCol={{xs: 24, sm: 16}}
+                                    >
+                                        <Input
+                                            type="date"
+                                            placeholder="Enter your birthdate here..."
+                                            name="birthDate"
+                                            value={profile.birthDate}
+                                            onChange={hdChange}
+                                        />
+                                    </FormItem>
+                                    <FormItem
+                                        wrapperCol={{
+                                            xs: 24,
+                                            sm: {span: 14, offset: 6}
+                                        }}
+                                    >
+                                        <Button type="primary" onClick={() => hdUpdateProfile(profile)}>Save changes</Button>
+                                    </FormItem>
+                                </Form>
+                            </Spin>
+                        </Card>
+                    </Col>
+                    <Col xl={8} lg={10} md={10} sm={24} xs={24}>
+                        <Contact
+                            email={user.email}
+                            phone={user.phone}
+                        />
                         <Card className="gx-card" title="Change your password">
                             <Spin spinning={loading}>
                                 <Form layout="horizontal">
                                     <FormItem
                                         label="Current Password"
                                         labelCol={{xs: 24, sm: 6}}
-                                        wrapperCol={{xs: 24, sm: 10}}
+                                        wrapperCol={{xs: 24, sm: 22}}
                                     >
                                         <Input
                                             type="password"
@@ -82,7 +195,7 @@ function Profile({notify, user, role, ...props}) {
                                     <FormItem
                                         label="New Password"
                                         labelCol={{xs: 24, sm: 6}}
-                                        wrapperCol={{xs: 24, sm: 10}}
+                                        wrapperCol={{xs: 24, sm: 22}}
                                     >
                                         <Input
                                             type="password"
@@ -94,8 +207,8 @@ function Profile({notify, user, role, ...props}) {
                                     </FormItem>
                                     <FormItem
                                         label="Confirm New Password"
-                                        labelCol={{xs: 24, sm: 6}}
-                                        wrapperCol={{xs: 24, sm: 10}}
+                                        labelCol={{xs: 24, sm: 10}}
+                                        wrapperCol={{xs: 24, sm: 22}}
                                     >
                                         <Input
                                             type="password"
@@ -117,9 +230,6 @@ function Profile({notify, user, role, ...props}) {
                             </Spin>
                         </Card>
                     </Col>
-                    <Col xl={8} lg={10} md={10} sm={24} xs={24}>
-                        <Contact/>
-                    </Col>
                 </Row>
             </div>
         </Auxiliary>
@@ -138,4 +248,4 @@ function mapState({user}) {
     }
 }
 
-export default connect(mapState, null)(withNoti(Profile));
+export default connect(mapState, {sendReloadUser})(withNoti(Profile));

@@ -33,7 +33,7 @@ exports.logIn = async(req, res, next) => {
         email = email.includes("@") ? email :`${email}@gmail.com`;
 
         let user = await db.User.findOne({email});
-        let {_id, username, active, avatar} = user;
+        let {_id, username, active, avatar, phone, job, birthDate} = user;
 
         // compare password
         let match = await user.comparePassword(password);
@@ -45,7 +45,7 @@ exports.logIn = async(req, res, next) => {
             // gen token to store on client
             let token = genToken(_id, role);
 
-            return res.status(200).json({_id, username, avatar, email, role, active, token});
+            return res.status(200).json({_id, username, avatar, email, phone, job, birthDate, role, active, token});
         } else {
             return next({
                 status: 400,
@@ -64,14 +64,14 @@ exports.logIn = async(req, res, next) => {
 exports.getOne = async(req, res, next) => {
     try {
         let user = await db.User.findById(req.params.user_id);
-        let {_id, username, email, active, avatar, phone} = user;
+        let {_id, username, email, active, avatar, phone, job, birthDate} = user;
 
         // get role
         let userRole = await db.UserRole.find({user_id: _id}).populate("role_id").lean().exec();
         let role = userRole.length > 0 ? userRole.map(u => u.role_id) : false;
 
         // return email and phone for updating profile
-        return res.status(200).json({_id, username, email, avatar, role, active, phone});
+        return res.status(200).json({_id, username, email, avatar, role, active, phone, job, birthDate});
     } catch(err) {
         return next(err);
     }

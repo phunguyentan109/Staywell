@@ -1,55 +1,38 @@
 import React from "react";
 import {Col, Row, Tabs} from "antd";
 import Widget from "components/Widget";
-import {aboutList} from "views/App/data";
 import AboutItem from "./AboutItem";
+import moment from "moment";
 
 const TabPane = Tabs.TabPane;
 
-class About extends React.Component {
+const About = ({job, birthDate}) => (
+  <Widget title="About" styleName="gx-card-tabs gx-card-tabs-right gx-card-profile">
+    <Tabs defaultActiveKey="1">
+      <TabPane tab="Overview" key="1">
+        <div className="gx-mb-2">
+          <Row>
+            <Col xl={8} lg={12} md={12} sm={12} xs={24}>
+              <AboutItem 
+                title="Job"
+                icon="company"
+                desc={job ? job : "Developer"}
+              />
+            </Col>
+            <Col xl={8} lg={12} md={12} sm={12} xs={24}>
+              <AboutItem 
+                title="Birthday"
+                icon="birthday-new"
+                desc={birthDate ? moment(birthDate).format("MMMM Do YYYY") : "Oct 25, 1984"}
+              />
+            </Col>
+          </Row>
+        </div>
+      </TabPane>
+    </Tabs>
+  </Widget>
+);
 
-  render() {
-    return (
-      <Widget title="About" styleName="gx-card-tabs gx-card-tabs-right gx-card-profile">
-        <Tabs defaultActiveKey="1">
-          <TabPane tab="Overview" key="1">
-            <div className="gx-mb-2">
-              <Row>
-                {aboutList.map((about, index) =>
-                  <Col key={index} xl={8} lg={12} md={12} sm={12} xs={24}>
-                    <AboutItem data={about}/>
-                  </Col>
-                )}
-              </Row>
-            </div>
-          </TabPane>
-          <TabPane tab="Work" key="2">
-            <div className="gx-mb-2">
-              <Row>{aboutList.map((about, index) =>
-                <Col key={index} xl={8} lg={12} md={12} sm={12} xs={24}>
-                  <AboutItem data={about}/>
-                </Col>
-              )}
-              </Row>
-            </div>
-          </TabPane>
-          <TabPane tab="Education" key="3">
-            <div className="gx-mb-2">
-              <Row>
-                {aboutList.map((about, index) =>
-
-                  <Col key={index} xl={8} lg={12} md={12} sm={12} xs={24}>
-                    <AboutItem data={about}/>
-                  </Col>
-                )}
-              </Row>
-            </div>
-          </TabPane>
-        </Tabs>
-      </Widget>
-    );
-  }
-}
 
 
 export default About;
