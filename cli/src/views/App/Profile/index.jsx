@@ -34,7 +34,7 @@ function Profile({notify, user, role, sendReloadUser, ...props}) {
     const load = useCallback(async() => {
         setProfile(user);
         setLoading(false);
-    }, [])
+    }, [user])
 
     useEffect(() => {
         load();
@@ -117,7 +117,7 @@ function Profile({notify, user, role, sendReloadUser, ...props}) {
                                             name="email"
                                             value={profile.email}
                                             onChange={hdChange}
-                                            disabled={role.isOwner ? profile.email : ""}
+                                            disabled={role.isOwner ? true : false}
                                         />
                                     </FormItem>
                                     <FormItem
