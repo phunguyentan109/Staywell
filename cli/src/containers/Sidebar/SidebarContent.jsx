@@ -63,8 +63,8 @@ class SidebarContent extends Component {
                                 className="gx-menu-group"
                                 title="Main"
                             >
-                                <Menu.Item key="/app/dashboard">
-                                    <Link to="/app/dashboard"><i className="icon icon-dasbhoard"/>Dashboard</Link>
+                                <Menu.Item key="/app">
+                                    <Link to="/app"><i className="icon icon-dasbhoard"/>Dashboard</Link>
                                 </Menu.Item>
                             </MenuItemGroup>
 
