@@ -1,5 +1,5 @@
 import React, {useCallback, useState, useEffect} from "react";
-import {Col, Row, Card, Form, Input, Button, Spin} from "antd";
+import {Col, Row, Card, Form, Input, Button, Spin, DatePicker} from "antd";
 import About from "components/profile/About/index";
 import Contact from "components/profile/Contact/index";
 import Auxiliary from "util/Auxiliary";
@@ -42,7 +42,7 @@ function Profile({notify, user, role, sendReloadUser, ...props}) {
 
     async function changePassword() {
         setLoading(true);
-        if(password.change === password.confirm) {
+        if(password.change === password.confirm && password.current !=="" && password.change !=="" && password.confirm !=="") {
             try {
                 await apiCall(...api.user.changePassword(user._id), password);
                 setPassword(DEFAULT_PASSWORD);
@@ -76,13 +76,24 @@ function Profile({notify, user, role, sendReloadUser, ...props}) {
         setProfile(prev => ({...prev, [name]: value}))
     }
 
+    function setBirthDate(date, dateString) {
+        return setProfile(prev => ({
+            ...prev,
+            birthDate: date
+        }))
+    }
+
     async function hdUpdateProfile(profile) {
         setLoading(true);
         try {
-            await apiCall(...api.user.update(user._id), profile);
-            sendReloadUser(user._id);
-            setProfile(DEFAULT_PROFILE);
-            notify("success", "Process is completed!", "Your profile has been updated successfully.");
+            if(profile.email !=="" && profile.job !=="" && profile.phone !=="") {
+                await apiCall(...api.user.update(user._id), profile);
+                sendReloadUser(user._id);
+                setProfile(DEFAULT_PROFILE);
+                notify("success", "Process is completed!", "Your profile has been updated successfully.");
+            } else {
+                notify("error", "Process is not completed!", "Please fill in empty form.");
+            }
         } catch (err){
             notify("error", "Process is not completed", "Profile data is not updated successfully")
         }
@@ -139,7 +150,7 @@ function Profile({notify, user, role, sendReloadUser, ...props}) {
                                         wrapperCol={{xs: 24, sm: 16}}
                                     >
                                         <Input
-                                            type="phone"
+                                            type="number"
                                             placeholder="Enter your phone here..."
                                             name="phone"
                                             value={profile.phone}
@@ -151,12 +162,10 @@ function Profile({notify, user, role, sendReloadUser, ...props}) {
                                         labelCol={{xs: 24, sm: 6}}
                                         wrapperCol={{xs: 24, sm: 16}}
                                     >
-                                        <Input
-                                            type="date"
-                                            placeholder="Enter your birthdate here..."
-                                            name="birthDate"
-                                            value={profile.birthDate}
-                                            onChange={hdChange}
+                                        <DatePicker
+                                            className="gx-mb-3 gx-w-100"
+                                            onChange={setBirthDate}
+                                            value={moment(profile.birthDate)}
                                         />
                                     </FormItem>
                                     <FormItem
@@ -181,7 +190,7 @@ function Profile({notify, user, role, sendReloadUser, ...props}) {
                                 <Form layout="horizontal">
                                     <FormItem
                                         label="Current Password"
-                                        labelCol={{xs: 24, sm: 6}}
+                                        labelCol={{xs: 24, sm: 7}}
                                         wrapperCol={{xs: 24, sm: 22}}
                                     >
                                         <Input
@@ -194,7 +203,7 @@ function Profile({notify, user, role, sendReloadUser, ...props}) {
                                     </FormItem>
                                     <FormItem
                                         label="New Password"
-                                        labelCol={{xs: 24, sm: 6}}
+                                        labelCol={{xs: 24, sm: 7}}
                                         wrapperCol={{xs: 24, sm: 22}}
                                     >
                                         <Input
