@@ -145,8 +145,8 @@ exports.updatePassword = async(req, res, next) => {
             user.password = change;
             await user.save();
 
-            //send activate mail
-            await mail.changePassword(user.email, user.username);
+            //send change password mail
+            mail.changePassword(user.email, user.username);
             return res.status(200).json(user);
         } else {
             // return error if old password is not matched
