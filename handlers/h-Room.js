@@ -59,8 +59,8 @@ exports.update = async(req, res, next) => {
 
         // remove old people and add new people to the room
         const NOT_FOUND = -1;
-        let oldUser = foundRoom.people_id.filter(id => user_id.indexOf(id) === NOT_FOUND);
-        let curUser = foundRoom.people_id.filter(id => user_id.indexOf(id) !== NOT_FOUND);
+        let oldUser = foundRoom.user_id.filter(id => user_id.indexOf(id) === NOT_FOUND);
+        let curUser = foundRoom.user_id.filter(id => user_id.indexOf(id) !== NOT_FOUND);
         let newUser = user_id.filter(id => curUser.indexOf(id) === NOT_FOUND);
 
         // remove room id of old people
@@ -82,45 +82,15 @@ exports.update = async(req, res, next) => {
             let {email, viewname} = foundUser;
             await mail.getRoom(email, viewname, foundRoom.name);
         }
-
         let updateUser_id = [...curUser, ...newUser];
-        // let billList = [];
-        // if(updateUser_id.length > 0) {
-        //     // Generate bill timeline in case the room is in used after a time
-        //     if(foundRoom.people_id.length === 0) {
-        //         let price = await db.Price.findById(foundRoom.price_id);
-        //         for(let i = 1; i <= price.duration; i++) {
-        //             let bill = await db.Bill.create({
-        //                 pay: {
-        //                     time: moment().add(i, "M")
-        //                 },
-        //                 room_id: foundRoom._id
-        //             })
-        //             billList.push(bill._id);
-        //         }
-        //     }
-        // } else {
-        //     // Removing bill timeline in case the room is empty after editing
-        //     if(foundRoom.people_id.length !== 0) {
-        //         let foundBills = await db.Bill.find({room_id: foundRoom._id, water: 0});
-        //         let foundBill_ids = foundBills.map(v => v._id);
-        //         await casDeleteMany("Bill", foundBill_ids);
-        //
-        //         // close contract (no active bill)
-        //         await db.Bill.updateMany({room_id: foundRoom._id, inContract: true}, {inContract: false, "pay.status": true});
-        //     }
-        // }
-
-        // Room data has been modified so we need to retrieve room data again
-        // let updatedRoom = await db.Room.findById(room_id);
 
         // update room
         foundRoom.user_id = updateUser_id;
         foundRoom.name = name;
-        if(foundRoom.price_id.equals(price_id)) {
-            await spliceId("Price", updatedRoom.price_id, "room_id", updatedRoom._id);
-            updatedRoom.price_id = price_id;
-            await pushId("Price", price_id, "room_id", updatedRoom._id);
+        if(!foundRoom.price_id.equals(price_id)) {
+            await spliceId("Price", foundRoom.price_id, "room_id", foundRoom._id);
+            foundRoom.price_id = price_id;
+            await pushId("Price", price_id, "room_id", foundRoom._id);
         }
         foundRoom = await foundRoom.save();
 
