@@ -41,7 +41,7 @@ function Room({notify}) {
             await apiCall(...api.room.remove(room_id));
             let newRooms = rooms.filter(r => r._id !== room_id);
             setRooms(newRooms);
-            notify("success", "The room information is removed successfully");
+            notify("success", "The process is completed", "The room information is removed successfully!");
         } catch (e) {
             notify("error", "The process is not completed");
         }
@@ -49,28 +49,32 @@ function Room({notify}) {
     }
 
     function hdEdit(room) {
-        toggleForm(room);
-        setRoom(room);
+        toggleForm(true);
+        setRoom(prev => ({...prev, ...room, price_id: room.price_id._id}));
     }
 
     function hdSelectPrice(price_id) {
-        setRoom(prev => ({...prev, price_id}))
+        setRoom(prev => ({...prev, price_id}));
     }
 
     async function hdSubmit() {
         setLoading(true);
         try {
             if(!room._id) {
+                // Create new room
                 let createdRoom = await apiCall(...api.room.create(), room);
                 let newRooms = [...rooms, createdRoom];
                 setRooms(newRooms);
                 setRoom(DEFAULT_ROOM);
                 notify("success", "Add new room successfully!");
             } else {
-
+                // Update available room data
+                let updatedRoom = await apiCall(...api.room.edit(room._id), room);
+                let newRooms = rooms.map(r => r._id === room._id ? updatedRoom : r);
+                setRooms(newRooms);
             }
+            setRoom(DEFAULT_ROOM);
         } catch (e) {
-            console.log(e);
             notify("error", "Process is not completed", "The data is not submitted successfully!")
         }
         setLoading(false);
@@ -103,20 +107,20 @@ function Room({notify}) {
                             />
                         </FormItem>
                         <FormItem
-                        label="Select author"
-                        labelCol={{xs: 24, sm: 6}}
-                        wrapperCol={{xs: 24, sm: 10}}
-                    >
-                        <Select
-                            mode="single"
-                            style={{width: '100%'}}
-                            placeholder="Pick a price"
-                            onChange={hdSelectPrice}
-                            value={room.price_id}
+                            label="Select author"
+                            labelCol={{xs: 24, sm: 6}}
+                            wrapperCol={{xs: 24, sm: 10}}
                         >
-                            { price.map((v, i) => <Option value={v._id} key={i}>{v.type}</Option>) }
-                        </Select>
-                    </FormItem>
+                            <Select
+                                mode="single"
+                                style={{width: '100%'}}
+                                placeholder="Pick a price"
+                                onChange={hdSelectPrice}
+                                value={room.price_id}
+                            >
+                                { price.map((v, i) => <Option value={v._id} key={i}>{v.type}</Option>) }
+                            </Select>
+                        </FormItem>
                         <FormItem
                             wrapperCol={{
                                 xs: 24,
