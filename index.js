@@ -15,6 +15,7 @@ app.use(cors());
 
 app.use("/api/user", require("./routes/r-User"));
 app.use("/api/price", require("./routes/r-Price"));
+app.use("/api/rooms", require("./routes/r-Room"));
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname+'/cli/build/index.html'));

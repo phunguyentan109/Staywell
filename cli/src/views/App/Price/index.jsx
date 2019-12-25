@@ -72,9 +72,9 @@ function Price({notify}) {
             await apiCall(...api.price.remove(price_id)) ;
             let updatePriceList = listPrice.filter(v => v._id !== price_id);
             setListPrice(updatePriceList);
-            notify("success", "Process is not completed", "Price data is removed successfully")
+            notify("success", "Process is not completed", "Price data is removed successfully");
         } catch (err){
-            notify("error", "Process is not completed", "Price data is not remove")
+            notify("error", "Process is not completed", "Price data is not remove");
         }
         setLoading(false);
     }
