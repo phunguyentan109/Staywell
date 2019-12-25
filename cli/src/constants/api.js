@@ -46,6 +46,7 @@ export default {
     room: {
         get: () => ["get", `/api/rooms`],
         create: () => ["post", `/api/rooms`],
-        remove: room_id => ["delete", `/api/rooms/${room_id}`]
+        remove: room_id => ["delete", `/api/rooms/${room_id}`],
+        edit: room_id => ["put", `/api/rooms/${room_id}`]
     }
 }
