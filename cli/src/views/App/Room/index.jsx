@@ -1,11 +1,9 @@
 import React, {useState, useEffect, useCallback} from "react";
-import {Card, Spin, Table, Button, Divider, Form, Input, Select} from "antd";
+import {Card, Spin, Table, Button, Divider} from "antd";
 import withNoti from "hocs/withNoti";
 import PopConfirm from "components/App/Pop/PopConfirm";
 import api, {apiCall} from "constants/api";
-
-const FormItem = Form.Item;
-const Option = Select.Option;
+import RoomForm from "./RoomForm";
 
 const DEFAULT_ROOM = {
     name: "",
@@ -16,6 +14,7 @@ function Room({notify}) {
     const [rooms, setRooms] = useState([]);
     const [room, setRoom] = useState(DEFAULT_ROOM);
     const [price, setPrice] = useState([]);
+    const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [form, toggleForm] = useState(false);
 
@@ -23,6 +22,8 @@ function Room({notify}) {
         try {
             let roomData = await apiCall(...api.room.get());
             let priceData = await apiCall(...api.price.get());
+            let userData = await apiCall(...api.user.get());
+            setUsers(userData.map(u => u.user_id));
             setPrice(priceData);
             setRooms(roomData);
             setLoading(false);
@@ -53,11 +54,7 @@ function Room({notify}) {
         setRoom(prev => ({...prev, ...room, price_id: room.price_id._id}));
     }
 
-    function hdSelectPrice(price_id) {
-        setRoom(prev => ({...prev, price_id}));
-    }
-
-    async function hdSubmit() {
+    async function hdSubmit(room) {
         setLoading(true);
         try {
             if(!room._id) {
@@ -65,7 +62,6 @@ function Room({notify}) {
                 let createdRoom = await apiCall(...api.room.create(), room);
                 let newRooms = [...rooms, createdRoom];
                 setRooms(newRooms);
-                setRoom(DEFAULT_ROOM);
                 notify("success", "Add new room successfully!");
             } else {
                 // Update available room data
@@ -73,7 +69,6 @@ function Room({notify}) {
                 let newRooms = rooms.map(r => r._id === room._id ? updatedRoom : r);
                 setRooms(newRooms);
             }
-            setRoom(DEFAULT_ROOM);
         } catch (e) {
             notify("error", "Process is not completed", "The data is not submitted successfully!")
         }
@@ -84,55 +79,18 @@ function Room({notify}) {
         toggleForm(false);
     }
 
-    function hdChange(e) {
-        const {name, value} = e.target;
-        setRoom(prev => ({...prev, [name]: value}))
-    }
-
     return (
         <div>
-            {form && <Card className="gx-card" title={!room._id ? "Add New Price" : "Edit Price Information"}>
-                <Spin spinning={loading}>
-                    <Form layout="horizontal">
-                        <FormItem
-                            label="Type"
-                            labelCol={{xs: 24, sm: 6}}
-                            wrapperCol={{xs: 24, sm: 10}}
-                        >
-                            <Input
-                                placeholder="Enter the room's name here..."
-                                name="name"
-                                value={room.name}
-                                onChange={hdChange}
-                            />
-                        </FormItem>
-                        <FormItem
-                            label="Select author"
-                            labelCol={{xs: 24, sm: 6}}
-                            wrapperCol={{xs: 24, sm: 10}}
-                        >
-                            <Select
-                                mode="single"
-                                style={{width: '100%'}}
-                                placeholder="Pick a price"
-                                onChange={hdSelectPrice}
-                                value={room.price_id}
-                            >
-                                { price.map((v, i) => <Option value={v._id} key={i}>{v.type}</Option>) }
-                            </Select>
-                        </FormItem>
-                        <FormItem
-                            wrapperCol={{
-                                xs: 24,
-                                sm: {span: 14, offset: 6}
-                            }}
-                        >
-                            <Button type="primary" onClick={hdSubmit}>{room._id ? "Save changes" : "Submit"}</Button>
-                            <Button onClick={hdCancel}>Cancel</Button>
-                        </FormItem>
-                    </Form>
-                </Spin>
-            </Card>}
+            {
+                form && <RoomForm
+                    users={users}
+                    price={price}
+                    loading={loading}
+                    hdSubmit={hdSubmit}
+                    editRoom={room}
+                    hdCancel={hdCancel}
+                />
+            }
             <Card title="List of available room">
                 <Spin spinning={loading}>
                     {

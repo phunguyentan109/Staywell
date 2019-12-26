@@ -42,7 +42,7 @@ const priceSchema = new mongoose.Schema({
         type: Number,
         default: 6
     }
-})
+}, {timestamps: true})
 
 priceSchema.pre("remove", async function(next){
     try {
