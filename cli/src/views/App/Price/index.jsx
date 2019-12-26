@@ -91,7 +91,8 @@ function Price({notify}) {
 
     return (
         <div>
-            {form && <Card className="gx-card" title={!price._id ? "Add New Price" : "Edit Price Information"}>
+            {
+            form && <Card className="gx-card" title={!price._id ? "Add New Price" : "Edit Price Information"}>
                 <Spin spinning={loading}>
                     <Form layout="horizontal">
                         <FormItem
@@ -195,7 +196,8 @@ function Price({notify}) {
                         </FormItem>
                     </Form>
                 </Spin>
-            </Card>}
+            </Card>
+            }
             <Card title="List of available price">
                 <Spin spinning={loading}>
                     {form || <Button type="primary" onClick={() => toggleForm(true)}>Add new price</Button>}
@@ -235,7 +237,7 @@ function Price({notify}) {
                             {
                                 title: 'Action',
                                 key: 'action',
-                                render: (text, record) => record.room_id ? <span>None</span> : (
+                                render: (text, record) => (
                                     <span>
                                         <PopConfirm
                                             title="Are you sure to delete this genre?"
