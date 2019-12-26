@@ -182,6 +182,24 @@ exports.contact = async(req, res, next) => {
     }
 }
 
+exports.getAssign = async(req, res, next) => {
+    try {
+        let peopleRole = await db.Role.findOne({code: "001"});
+        let users = await db.UserRole.find({role_id: peopleRole._id})
+        .populate("role_id")
+        .populate({
+            path: "user_id",
+            populate: {
+                path: "room_id"
+            }
+        }).lean().exec();
+        users = users.map(u => u.user_id).filter(u => !u.room_id);
+        return res.status(200).json(users);
+    } catch (e) {
+        return next(e);
+    }
+}
+
 exports.update = async(req, res, next) => {
     try {
         let updateUser = await db.User.findByIdAndUpdate(req.params.user_id, req.body, {new: true});

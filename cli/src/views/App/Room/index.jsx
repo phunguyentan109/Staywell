@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useCallback} from "react";
-import {Card, Spin, Table, Button, Divider, Form, Input, Select} from "antd";
+import {Card, Spin, Table, Button, Divider} from "antd";
 import withNoti from "hocs/withNoti";
 import PopConfirm from "components/App/Pop/PopConfirm";
 import api, {apiCall} from "constants/api";
@@ -14,7 +14,6 @@ function Room({notify}) {
     const [rooms, setRooms] = useState([]);
     const [room, setRoom] = useState(DEFAULT_ROOM);
     const [price, setPrice] = useState([]);
-    const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [form, toggleForm] = useState(false);
 
@@ -22,8 +21,6 @@ function Room({notify}) {
         try {
             let roomData = await apiCall(...api.room.get());
             let priceData = await apiCall(...api.price.get());
-            let userData = await apiCall(...api.user.get());
-            setUsers(userData.map(u => u.user_id));
             setPrice(priceData);
             setRooms(roomData);
             setLoading(false);
@@ -57,25 +54,28 @@ function Room({notify}) {
     async function hdSubmit(room) {
         setLoading(true);
         try {
-            if(!room._id) {
-                // Create new room
-                let createdRoom = await apiCall(...api.room.create(), room);
-                let newRooms = [...rooms, createdRoom];
-                setRooms(newRooms);
-                notify("success", "Add new room successfully!");
-            } else {
-                // Update available room data
-                let updatedRoom = await apiCall(...api.room.edit(room._id), room);
-                let newRooms = rooms.map(r => r._id === room._id ? updatedRoom : r);
-                setRooms(newRooms);
-            }
+            console.log(room);
+            // if(!room._id) {
+            //     // Create new room
+            //     let createdRoom = await apiCall(...api.room.create(), room);
+            //     let newRooms = [...rooms, createdRoom];
+            //     setRooms(newRooms);
+            //     notify("success", "Add new room successfully!");
+            // } else {
+            //     // Update available room data
+            //     let updatedRoom = await apiCall(...api.room.edit(room._id), room);
+            //     let newRooms = rooms.map(r => r._id === room._id ? updatedRoom : r);
+            //     setRooms(newRooms);
+            // }
         } catch (e) {
             notify("error", "Process is not completed", "The data is not submitted successfully!")
         }
+        hdCancel();
         setLoading(false);
     }
 
     function hdCancel() {
+        setRoom(DEFAULT_ROOM);
         toggleForm(false);
     }
 
@@ -83,12 +83,13 @@ function Room({notify}) {
         <div>
             {
                 form && <RoomForm
-                    users={users}
                     price={price}
                     loading={loading}
+                    setLoading={setLoading}
                     hdSubmit={hdSubmit}
                     editRoom={room}
                     hdCancel={hdCancel}
+                    notify={notify}
                 />
             }
             <Card title="List of available room">

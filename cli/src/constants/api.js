@@ -34,6 +34,7 @@ export default {
         activate: user_id => ["put", `/api/user/${user_id}/activate`],
         changePassword: user_id => ["put", `/api/user/${user_id}/password`],
         get: () => ["get", `/api/user`],
+        getAssign: () => ["get", `/api/user/assign`],
         remove: user_id => ["delete", `/api/user/${user_id}`],
         update: user_id => ["put", `/api/user/${user_id}`]
     },

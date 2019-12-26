@@ -22,8 +22,7 @@ const roles = [
 const owner = {
     email: process.env.GMAILUSER,
     password: "owner",
-    username: "owner",
-    active: true
+    username: "owner"
 }
 
 async function createRole(){
