@@ -70,8 +70,11 @@ exports.getOne = async(req, res, next) => {
         let userRole = await db.UserRole.find({user_id: _id}).populate("role_id").lean().exec();
         let role = userRole.length > 0 ? userRole.map(u => u.role_id) : false;
 
+        // gen token to store on client
+        let token = genToken(_id, role);
+
         // return email and phone for updating profile
-        return res.status(200).json({_id, username, email, avatar, role, active, phone, job, birthDate});
+        return res.status(200).json({_id, username, email, avatar, role, active, phone, job, birthDate, token});
     } catch(err) {
         return next(err);
     }
