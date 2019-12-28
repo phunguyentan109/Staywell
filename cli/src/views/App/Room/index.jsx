@@ -48,25 +48,31 @@ function Room({notify}) {
 
     function hdEdit(room) {
         toggleForm(true);
-        setRoom(prev => ({...prev, ...room, price_id: room.price_id._id}));
+        setRoom(prev => ({
+            ...prev, ...room,
+            price_id: room.price_id._id,
+            user_id: [...room.user_id]
+        }));
     }
 
-    async function hdSubmit(room) {
+    async function hdSubmit(roomData) {
         setLoading(true);
+        roomData.user_id = roomData.user_id.map(u => u._id);
         try {
-            console.log(room);
-            // if(!room._id) {
-            //     // Create new room
-            //     let createdRoom = await apiCall(...api.room.create(), room);
-            //     let newRooms = [...rooms, createdRoom];
-            //     setRooms(newRooms);
-            //     notify("success", "Add new room successfully!");
-            // } else {
-            //     // Update available room data
-            //     let updatedRoom = await apiCall(...api.room.edit(room._id), room);
-            //     let newRooms = rooms.map(r => r._id === room._id ? updatedRoom : r);
-            //     setRooms(newRooms);
-            // }
+            // Getting the room's user_id instead of the whole object
+            if(!roomData._id) {
+                // Create new room
+                let createdRoom = await apiCall(...api.room.create(), roomData);
+                let newRooms = [...rooms, createdRoom];
+                setRooms(newRooms);
+                notify("success", "Process is completed!", "Add new room successfully!");
+            } else {
+                // Update available room data
+                let updatedRoom = await apiCall(...api.room.edit(room._id), roomData);
+                let newRooms = rooms.map(r => r._id === updatedRoom._id ? updatedRoom : r);
+                setRooms(newRooms);
+                notify("success", "Process is completed!", "Update room successfully!");
+            }
         } catch (e) {
             notify("error", "Process is not completed", "The data is not submitted successfully!")
         }
@@ -118,7 +124,7 @@ function Room({notify}) {
                             {
                                 title: 'Action',
                                 key: 'action',
-                                render: (text, record) => record.room_id ? <span>None</span> : (
+                                render: (text, record) => room._id ? <span>None</span> : (
                                     <span>
                                         <PopConfirm
                                             title="Are you sure to delete this genre?"

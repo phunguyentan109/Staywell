@@ -14,7 +14,7 @@ exports.get = async(req, res, next) => {
 
 exports.getOne = async(req, res, next) => {
     try {
-        let one = await db.Room.findById(req.params.room_id).populate("bill_id").populate("user_id").lean().exec();
+        let one = await db.Room.findById(req.params.room_id).populate("price_id").populate("user_id").lean().exec();
         return res.status(200).json(one);
     } catch(err) {
         return next(err);
@@ -26,10 +26,10 @@ exports.create = async(req, res, next) => {
         let createdRoom = await db.Room.create(req.body);
         const {price_id, user_id} = req.body;
 
-        // add room_id to price and people
+        // add room_id to price and user
         await pushId("Price", price_id, "room_id", createdRoom._id);
         for(let id of user_id) {
-            await assignId("People", id, "room_id", createdRoom._id);
+            await assignId("User", id, "room_id", createdRoom._id);
         }
         await createdRoom.save();
 
@@ -57,30 +57,34 @@ exports.update = async(req, res, next) => {
         let {name, price_id, user_id} = req.body;
         let foundRoom = await db.Room.findById(room_id);
 
-        // remove old people and add new people to the room
+        // remove old people and add new user to the room
         const NOT_FOUND = -1;
         let oldUser = foundRoom.user_id.filter(id => user_id.indexOf(id) === NOT_FOUND);
         let curUser = foundRoom.user_id.filter(id => user_id.indexOf(id) !== NOT_FOUND);
         let newUser = user_id.filter(id => curUser.indexOf(id) === NOT_FOUND);
 
-        // remove room id of old people
-        for(let id of oldUser) {
-            await assignId("User", id, "room_id", false);
+        // remove room id of old user
+        if(oldUser.length > 0) {
+            for(let id of oldUser) {
+                await assignId("User", id, "room_id", false);
 
-            // send mail to notify people about removing from the room
-            let foundUser = await db.User.findById(id).lean().exec();
-            let {email, viewname} = foundUser;
-            await mail.leaveRoom(email, viewname, foundRoom.name);
+                // send mail to notify user about removing from the room
+                let foundUser = await db.User.findById(id).lean().exec();
+                let {email, viewname} = foundUser;
+                mail.leaveRoom(email, viewname, foundRoom.name);
+            }
         }
 
         // assign room id for new people
-        for(let id of newUser) {
-            await assignId("User", id, "room_id", foundRoom._id);
+        if(newUser.length > 0) {
+            for(let id of newUser) {
+                await assignId("User", id, "room_id", foundRoom._id);
 
-            // send mail to notify people about new place
-            let foundUser = await db.User.findById(id).lean().exec();
-            let {email, viewname} = foundUser;
-            await mail.getRoom(email, viewname, foundRoom.name);
+                // send mail to notify people about new place
+                let foundUser = await db.User.findById(id).lean().exec();
+                let {email, viewname} = foundUser;
+                mail.getRoom(email, viewname, foundRoom.name);
+            }
         }
         let updateUser_id = [...curUser, ...newUser];
 
@@ -92,9 +96,12 @@ exports.update = async(req, res, next) => {
             foundRoom.price_id = price_id;
             await pushId("Price", price_id, "room_id", foundRoom._id);
         }
-        foundRoom = await foundRoom.save();
+        await foundRoom.save();
 
-        return res.status(200).json(foundRoom);
+        // return the updated room
+        let rsRoom = await db.Room.findById(foundRoom._id).populate("price_id").populate("user_id").lean().exec();
+
+        return res.status(200).json(rsRoom);
     } catch(err){
         return next(err);
     }

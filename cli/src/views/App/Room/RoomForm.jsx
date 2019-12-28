@@ -13,14 +13,14 @@ function RoomForm({loading, editRoom, price, hdCancel, hdSubmit, notify, setLoad
     const [users, setUsers] = useState([]);
 
     const load = useCallback(async() => {
+        setLoading(true);
         try {
-            setLoading(true);
             let userData = await apiCall(...api.user.getAssign());
             setUsers(userData);
-            setLoading(false);
         } catch (e) {
             notify("error", "Data is not loaded");
         }
+        setLoading(false);
     }, [notify, setLoading])
 
     useEffect(() => {
@@ -37,19 +37,27 @@ function RoomForm({loading, editRoom, price, hdCancel, hdSubmit, notify, setLoad
     }
 
     function isAssigned(user_id) {
-        return room.user_id.indexOf(user_id) !== NOT_FOUND;
+        return room.user_id.map(u => u._id).indexOf(user_id) !== NOT_FOUND;
     }
 
     function hdAssign(user) {
         if(isAssigned(user._id)) {
             // if already assign, do unassign
-            let rmUser = room.user_id.filter(id => user._id !== id);
+            let rmUser = room.user_id.filter(u => user._id !== u._id);
             setRoom(prev => ({...prev, user_id: rmUser}));
-            setUsers(prev => ({...prev, user_id: [...prev.user_id, user] }));
+
+            setUsers(prev => ([...prev, user]));
         } else {
             // if is unassigned, do assign
+            let rmUser = users.filter(u => user._id !== u._id);
+            setUsers(rmUser);
+
             setRoom(prev => ({ ...prev, user_id: [...prev.user_id, user] }));
         }
+    }
+
+    async function hdConfirm() {
+        await hdSubmit({...room});
     }
 
     return (
@@ -91,7 +99,7 @@ function RoomForm({loading, editRoom, price, hdCancel, hdSubmit, notify, setLoad
                                     sm: {span: 14, offset: 6}
                                 }}
                             >
-                                <Button type="primary" onClick={() => hdSubmit(room)}>{room._id ? "Save changes" : "Submit"}</Button>
+                                <Button type="primary" onClick={hdConfirm}>{room._id ? "Save changes" : "Submit"}</Button>
                                 <Button onClick={hdCancel}>Cancel</Button>
                             </FormItem>
                         </Form>
@@ -125,7 +133,7 @@ function RoomForm({loading, editRoom, price, hdCancel, hdSubmit, notify, setLoad
                                         key: "action",
                                         render: (text, record) => <span
                                             className={`gx-text-primary gx-pointer ${isAssigned(record._id) ? "app-assign" : ""}`}
-                                            onClick={hdAssign.bind(this, record._id)}
+                                            onClick={hdAssign.bind(this, record)}
                                         >
                                             {
                                                 isAssigned(record._id)
