@@ -4,6 +4,7 @@ const mw = require("../middleware");
 const router = express.Router({mergeParams: true});
 
 router.route("/").get(hdl.User.get);
+router.route("/assign").get(hdl.User.getAssign);
 
 router.route("/signup").post(mw.User.generateAvatar, hdl.User.signUp);
 router.route("/login").post(hdl.User.logIn);

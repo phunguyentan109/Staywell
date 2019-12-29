@@ -20,4 +20,13 @@ const roomSchema = new mongoose.Schema({
     ]
 });
 
+roomSchema.pre("remove", async function(next) {
+    try {
+        await spliceId("Price", this.price_id, "room_id", this._id);
+        next();
+    } catch (e) {
+        return next(e);
+    }
+})
+
 module.exports = mongoose.model("Room", roomSchema);
