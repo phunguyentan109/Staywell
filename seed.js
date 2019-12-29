@@ -65,6 +65,7 @@ async function seed() {
     await createOwner();
 
     console.log("=> Process is completed successfully!");
+    process.exit();
 }
 
 seed();
