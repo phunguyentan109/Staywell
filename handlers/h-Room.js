@@ -33,9 +33,7 @@ exports.create = async(req, res, next) => {
         }
         await createdRoom.save();
 
-        let foundRoom = await db.Room.findById(createdRoom._id).populate("user_id").populate("price_id").lean().exec();
-
-        return res.status(200).json(foundRoom);
+        return res.status(200).json(createdRoom);
     } catch(err) {
         return next(err);
     }
@@ -70,8 +68,8 @@ exports.update = async(req, res, next) => {
 
                 // send mail to notify user about removing from the room
                 let foundUser = await db.User.findById(id).lean().exec();
-                let {email, viewname} = foundUser;
-                mail.leaveRoom(email, viewname, foundRoom.name);
+                let {email, username} = foundUser;
+                mail.leaveRoom(email, username, foundRoom.name);
             }
         }
 
@@ -82,8 +80,8 @@ exports.update = async(req, res, next) => {
 
                 // send mail to notify people about new place
                 let foundUser = await db.User.findById(id).lean().exec();
-                let {email, viewname} = foundUser;
-                mail.getRoom(email, viewname, foundRoom.name);
+                let {email, username} = foundUser;
+                mail.getRoom(email, username, foundRoom.name);
             }
         }
         let updateUser_id = [...curUser, ...newUser];
@@ -98,10 +96,7 @@ exports.update = async(req, res, next) => {
         }
         await foundRoom.save();
 
-        // return the updated room
-        let rsRoom = await db.Room.findById(foundRoom._id).populate("price_id").populate("user_id").lean().exec();
-
-        return res.status(200).json(rsRoom);
+        return res.status(200).json(foundRoom);
     } catch(err){
         return next(err);
     }

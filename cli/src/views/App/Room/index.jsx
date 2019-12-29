@@ -63,13 +63,15 @@ function Room({notify}) {
             if(!roomData._id) {
                 // Create new room
                 let createdRoom = await apiCall(...api.room.create(), roomData);
-                let newRooms = [...rooms, createdRoom];
+                let createdRoomData = await apiCall(...api.room.getOne(createdRoom._id));
+                let newRooms = [...rooms, createdRoomData];
                 setRooms(newRooms);
                 notify("success", "Process is completed!", "Add new room successfully!");
             } else {
                 // Update available room data
                 let updatedRoom = await apiCall(...api.room.edit(room._id), roomData);
-                let newRooms = rooms.map(r => r._id === updatedRoom._id ? updatedRoom : r);
+                let updatedRoomData = await apiCall(...api.room.getOne(updatedRoom._id));
+                let newRooms = rooms.map(r => r._id === updatedRoom._id ? updatedRoomData : r);
                 setRooms(newRooms);
                 notify("success", "Process is completed!", "Update room successfully!");
             }
