@@ -70,12 +70,24 @@ This is the automatic email from the system, please do not reply.`;
 	return await send(to, subject, text);
 }
 
+async function forgotPassword(to, viewname, token) {
+	let subject = emoji.emojify(`:wrench: Are you forgot password ? - Staywell`);
+	let text = `
+Good day ${viewname}, this mail comes from Staywell,
+
+This mail available in 1 hour. Please click to the link below for create new password:
+https://${host}/forgot/${token}
+
+And that's all, thank you for your time. Have a good day and see you later.
+This is the automatic email from the system, please do not reply.`;
+	return await send(to, subject, text);
+}
+
 async function changePassword(to, viewname) {
 	let subject = emoji.emojify(`:wrench: Your password has been change - Staywell`);
 	let text = `
 Good day ${viewname}, this mail comes from Staywell,
 
-.
 We will notify you about your password has been change.
 
 This is the automatic email from the system, please do not reply.`;
@@ -91,4 +103,4 @@ ${content}.`;
 	return await send(to, subject, text);
 }
 
-module.exports = {send, activate, getRoom, leaveRoom, contactUser, changePassword}
+module.exports = {send, activate, getRoom, leaveRoom, contactUser, changePassword, forgotPassword}

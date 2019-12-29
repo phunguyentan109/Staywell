@@ -29,6 +29,8 @@ const userSchema = mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    resetPwToken: String,
+    resetPwExpires: Date,
     room_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Room"
