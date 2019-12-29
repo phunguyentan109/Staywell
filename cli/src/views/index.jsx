@@ -5,22 +5,34 @@ import {connect} from "react-redux";
 
 import AppLayout from "containers/Layout/AppLayout";
 import AuthLayout from "containers/Layout/AuthLayout";
+import Accessing from "./Accessing";
 
 function RootRoutes({user}) {
-    return (
-        <Switch>
-            <RouteControl
-                path="/app"
-                redirectPath="/"
-                component={AppLayout}
-                access={[
-                    "OWNER_PERMISSION",
-                    "PEOPLE_PERMISSION"
-                ]}
-            />
-            <Route path="/" component={AuthLayout}/>
-        </Switch>
-    )
+    let isAlreadyAuth = localStorage.swtoken && Object.keys(user).length === 0;
+
+    if(isAlreadyAuth) {
+        return (
+            <Switch>
+                <Route path="/" component={Accessing}/>
+            </Switch>
+        )
+    } else {
+        return (
+            <Switch>
+                <RouteControl
+                    path="/app"
+                    redirectPath="/"
+                    component={AppLayout}
+                    access={[
+                        "OWNER_PERMISSION",
+                        "PEOPLE_PERMISSION"
+                    ]}
+                />
+                <Route path="/" component={AuthLayout}/>
+            </Switch>
+        )
+    }
+
 }
 
 function mapState({user}) {
