@@ -14,7 +14,7 @@ import "assets/css/app/index.css";
 import configureStore from "appRedux";
 
 const store = configureStore();
-extractStorage(store);
+extractStorage(store); 
 
 function App() {
     return (

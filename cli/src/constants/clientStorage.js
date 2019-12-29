@@ -12,10 +12,12 @@ export default async function extractStorage(store) {
                 const user = JSON.parse(sessionStorage.auth);
                 store.dispatch(addUser(user));
             } else {
-                let tokenData = jwtDecode(localStorage.swtoken);
-                let {token, ...user} = await apiCall(...api.user.getOne(tokenData._id));
-                sessionStorage.setItem("auth", JSON.stringify(user));
-                store.dispatch(addUser(user));
+                setTimeout(async() => {
+                    let tokenData = jwtDecode(localStorage.swtoken);
+                    let {token, ...user} = await apiCall(...api.user.getOne(tokenData._id));
+                    sessionStorage.setItem("auth", JSON.stringify(user));
+                    store.dispatch(addUser(user));
+                }, 3000);
             }
         }
     } catch(err) {
