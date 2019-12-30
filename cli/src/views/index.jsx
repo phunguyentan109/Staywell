@@ -8,9 +8,9 @@ import AuthLayout from "containers/Layout/AuthLayout";
 import Accessing from "./Accessing";
 
 function RootRoutes({user}) {
-    let isAlreadyAuth = localStorage.swtoken && Object.keys(user).length === 0;
+    let isRememberAuth = localStorage.swtoken && Object.keys(user).length === 0;
 
-    if(isAlreadyAuth) {
+    if(isRememberAuth) {
         return (
             <Switch>
                 <Route path="/" component={Accessing}/>

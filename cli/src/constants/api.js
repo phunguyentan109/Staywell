@@ -38,6 +38,10 @@ export default {
         remove: user_id => ["delete", `/api/user/${user_id}`],
         update: user_id => ["put", `/api/user/${user_id}`]
     },
+    contract: {
+        get: user_id => ["get", `/api/user/${user_id}/contracts`],
+        remove: (user_id, contract_id) => ["delete", `/api/user/${user_id}/contracts/${contract_id}`]
+    },
     price: {
         get: () => ["get", `/api/price`],
         create: () => ["post", "/api/price"],

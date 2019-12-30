@@ -1,7 +1,19 @@
 const db = require("../models");
-const {pushId, assignId, spliceId, casDeleteMany} = require("../utils/dbSupport");
+const {pushId, assignId, spliceId} = require("../utils/dbSupport");
 const mail = require("../utils/mail");
 const moment = require("moment");
+
+async function createContract(user_id, price_id) {
+    let contract = { user_id, timeline: [] };
+    // Get the duration from price to set the contract timeline
+    let priceData = await db.Price.findById(price_id).lean().exec();
+    for(let i = 1; i <= priceData.duration; i++) {
+        let time = moment().add(i, "months");
+        contract.timeline.push(time);
+    }
+    let createdContract = await db.Contract.create(contract);
+    await pushId("User", user_id, "contract_id", createdContract._id);
+}
 
 exports.get = async(req, res, next) => {
     try {
@@ -28,10 +40,13 @@ exports.create = async(req, res, next) => {
 
         // add room_id to price and user
         await pushId("Price", price_id, "room_id", createdRoom._id);
-        for(let id of user_id) {
-            await assignId("User", id, "room_id", createdRoom._id);
+        if(user_id.length > 0) {
+            for(let id of user_id) {
+                await assignId("User", id, "room_id", createdRoom._id);
+                await createContract(id, price_id);
+            }
         }
-        await createdRoom.save();
+        createdRoom = await createdRoom.save();
 
         return res.status(200).json(createdRoom);
     } catch(err) {

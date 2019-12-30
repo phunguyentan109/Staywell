@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-const db = require("./index");
-const {spliceId, assignId} = require("../utils/dbSupport");
+const {spliceId} = require("../utils/dbSupport");
 
 const roomSchema = new mongoose.Schema({
     name: {

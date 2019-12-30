@@ -5,3 +5,4 @@ module.exports.Price = require("./h-Price");
 module.exports.Role = require("./h-Role");
 module.exports.Room = require("./h-Room");
 module.exports.Bill = require("./h-Bill");
+module.exports.Contract = require("./h-Contract");
