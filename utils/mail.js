@@ -70,13 +70,13 @@ This is the automatic email from the system, please do not reply.`;
 	return await send(to, subject, text);
 }
 
-async function forgotPassword(to, viewname, token) {
-	let subject = emoji.emojify(`:wrench: Are you forgot password ? - Staywell`);
+async function forgotPassword(to, viewname, token, host) {
+	let subject = emoji.emojify(`:building_construction: Are you forgot password ? - Staywell`);
 	let text = `
 Good day ${viewname}, this mail comes from Staywell,
 
 This mail available in 1 hour. Please click to the link below for create new password:
-https://${host}/forgot/${token}
+https://${host}/reset/${token}
 
 And that's all, thank you for your time. Have a good day and see you later.
 This is the automatic email from the system, please do not reply.`;

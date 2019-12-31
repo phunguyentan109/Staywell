@@ -53,7 +53,6 @@ exports.logIn = async(req, res, next) => {
             })
         }
     } catch(err) {
-        console.log(err);
         return next({
             status: 400,
             message: "Invalid email/password."
@@ -169,17 +168,17 @@ exports.updatePassword = async(req, res, next) => {
 exports.forgot = async(req, res, next) => {
     try {
         let {email} = req.body;
-        let foundUser = await db.User.findOne(email);
+        let foundUser = await db.User.findOne({email});
 
         if(foundUser){
-            let findRole = await db.UserRole.findOne({user_id: foundUser._id});
-            foundUser.resetPwToken = genToken(foundUser._id, findRole._id);
+            let token = genToken(foundUser._id);
+            foundUser.resetPwToken = token;
             foundUser.resetPwExpires = Date.now() + 3600000; // 1 hour
             await foundUser.save();
 
             // send token to reset password
-            await mail.forgotPassword(foundUser.email, user.username, foundUser.resetPwToken);
-            return res.status(200).json(foundUser.resetPwToken);
+            mail.forgotPassword(foundUser.email, foundUser.username, token, req.headers.host);
+            return res.status(200).json(token);
         } else {
             return next({
                 status: 404,
@@ -202,7 +201,7 @@ exports.checkTokenReset = async(req, res, next) => {
         if(!foundUser) {
             return next ({
                 status: 404,
-                message: "The token is not defined or token has timeout, please send mail again"
+                message: "The token is not defined or token has timeout, please send reset password again"
             })
         } else {
             return res.status(200).json(token);
@@ -223,14 +222,14 @@ exports.resetPassword = async(req, res, next) => {
         if(!foundUser) {
             return next({
                 status: 404,
-                message: "The token is not defined or token has timeout, please send mail again."
+                message: "The token is not defined or token has timeout, please send reset password again."
             })
         } else {
             let {password} = req.body;
             foundUser.password = password;
             await foundUser.save();
 
-            await mail.changePassword(foundUser.email, foundUser.username);
+            mail.changePassword(foundUser.email, foundUser.username);
             return res.status(200).json(token);
         }
     } catch(err) {

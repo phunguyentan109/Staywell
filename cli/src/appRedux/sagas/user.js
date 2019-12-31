@@ -29,6 +29,11 @@ function* hdAuthData({value}) {
         if(value.route === "/signup") {
             yield put(addMessage("A verification link from us has been sent to your mail.", false));
         }
+
+        // inform user to check mail after success reset password
+        if(value.route === "/forgot") {
+            yield put(addMessage("A reset passwork link from us has been sent to your mail.", false));
+        }
     } catch(err) {
         yield put(addMessage(err));
     }
