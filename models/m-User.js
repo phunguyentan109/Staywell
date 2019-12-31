@@ -41,7 +41,7 @@ const userSchema = mongoose.Schema({
             ref: "Bill"
         }
     ]
-});
+}, {timestamps: true});
 
 userSchema.pre("save", async function(next){
     try {

@@ -7,12 +7,21 @@ import Dashboard from "./Dashboard";
 import People from "./People";
 import Price from "./Price";
 import Profile from "./Profile";
+import Room from "./Room";
 
 function AppRoutes(props) {
     const url = props.match.url;
     return (
         <div className="gx-main-content-wrapper">
             <Switch>
+                <RouteControl
+                    path={`${url}/room`}
+                    redirectPath={`${url}/`}
+                    component={Room}
+                    access={[
+                        "OWNER_PERMISSION"
+                    ]}
+                />
                 <RouteControl
                     path={`${url}/people`}
                     redirectPath={`${url}/`}

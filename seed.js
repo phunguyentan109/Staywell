@@ -22,8 +22,7 @@ const roles = [
 const owner = {
     email: process.env.GMAILUSER,
     password: "owner",
-    username: "owner",
-    active: true
+    username: "owner"
 }
 
 async function createRole(){
@@ -66,6 +65,7 @@ async function seed() {
     await createOwner();
 
     console.log("=> Process is completed successfully!");
+    process.exit();
 }
 
 seed();

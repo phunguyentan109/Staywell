@@ -9,11 +9,12 @@ import 'antd/dist/antd.css';
 import "assets/wieldy.css";
 
 import "assets/css/auth/index.css";
+import "assets/css/app/index.css";
 
 import configureStore from "appRedux";
 
 const store = configureStore();
-extractStorage(store);
+extractStorage(store); 
 
 function App() {
     return (

@@ -36,6 +36,7 @@ export default {
         resetPassword: token => ["put", `/api/user/${token}/reset`],
         changePassword: user_id => ["put", `/api/user/${user_id}/password`],
         get: () => ["get", `/api/user`],
+        getAssign: () => ["get", `/api/user/assign`],
         remove: user_id => ["delete", `/api/user/${user_id}`],
         update: user_id => ["put", `/api/user/${user_id}`]
     },
@@ -44,5 +45,12 @@ export default {
         create: () => ["post", "/api/price"],
         remove: (price_id) => ["delete", `/api/price/${price_id}`],
         update: (price_id) => ["put", `/api/price/${price_id}`],
+    },
+    room: {
+        get: () => ["get", `/api/rooms`],
+        getOne: room_id => ["get", `/api/rooms/${room_id}`],
+        create: () => ["post", `/api/rooms`],
+        remove: room_id => ["delete", `/api/rooms/${room_id}`],
+        edit: room_id => ["put", `/api/rooms/${room_id}`]
     }
 }
