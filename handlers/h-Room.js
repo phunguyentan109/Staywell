@@ -8,7 +8,7 @@ async function createContract(user_id, price_id) {
     // Get the duration from price to set the contract timeline
     let priceData = await db.Price.findById(price_id).lean().exec();
     for(let i = 1; i <= priceData.duration; i++) {
-        let time = moment().add(i, "months");
+        let time = moment(Date.now()).add(i, "months");
         contract.timeline.push(time);
     }
     let createdContract = await db.Contract.create(contract);
@@ -81,6 +81,13 @@ exports.update = async(req, res, next) => {
             for(let id of oldUser) {
                 await assignId("User", id, "room_id", false);
 
+                // Close the contract
+                let foundContract = await db.Contract.findOne({user_id: id});
+                if(foundContract) {
+                    foundContract.active = false;
+                    foundContract.save();
+                }
+
                 // send mail to notify user about removing from the room
                 let foundUser = await db.User.findById(id).lean().exec();
                 let {email, username} = foundUser;
@@ -92,6 +99,8 @@ exports.update = async(req, res, next) => {
         if(newUser.length > 0) {
             for(let id of newUser) {
                 await assignId("User", id, "room_id", foundRoom._id);
+
+                await createContract(id, price_id);
 
                 // send mail to notify people about new place
                 let foundUser = await db.User.findById(id).lean().exec();
