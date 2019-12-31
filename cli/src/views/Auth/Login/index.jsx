@@ -44,7 +44,7 @@ function Login({sendAuthData, history}) {
                 />
                 <button className="signin">Get access</button>
             </form>
-            <Link to="/reset">Forgot your password?</Link>
+            <Link to="/forgot">Forgot your password?</Link>
         </div>
     )
 }

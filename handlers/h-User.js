@@ -171,6 +171,78 @@ exports.updatePassword = async(req, res, next) => {
     }
 }
 
+exports.forgot = async(req, res, next) => {
+    try {
+        let {email} = req.body;
+        let foundUser = await db.User.findOne({email});
+
+        if(foundUser){
+            let token = genToken(foundUser._id);
+            foundUser.resetPwToken = token;
+            foundUser.resetPwExpires = Date.now() + 3600000; // 1 hour
+            await foundUser.save();
+
+            // send token to reset password
+            mail.forgotPassword(foundUser.email, foundUser.username, token, req.headers.host);
+            return res.status(200).json(token);
+        } else {
+            return next({
+                status: 404,
+                message: "The email is not available."
+            })
+        }
+    } catch(err) {
+        return next(err);
+    }
+}
+
+exports.checkTokenReset = async(req, res, next) => {
+    try {
+        let {token} = req.params;
+        let foundUser = await db.User.findOne({
+            resetPwToken: token,
+            resetPwExpires: {$gt: Date.now()
+        }});
+
+        if(!foundUser) {
+            return next ({
+                status: 404,
+                message: "The token is not defined or token has timeout, please send reset password again"
+            })
+        } else {
+            return res.status(200).json(token);
+        }
+    } catch(err) {
+        return next(err);
+    }
+}
+
+exports.resetPassword = async(req, res, next) => {
+    try {
+        let {token} = req.params;
+        let foundUser = await db.User.findOne({
+            resetPwToken: token,
+            resetPwExpires: {$gt: Date.now()
+        }});
+
+        if(!foundUser) {
+            return next({
+                status: 404,
+                message: "The token is not defined or token has timeout, please send reset password again."
+            })
+        } else {
+            let {password} = req.body;
+            foundUser.password = password;
+            await foundUser.save();
+
+            mail.changePassword(foundUser.email, foundUser.username);
+            return res.status(200).json(token);
+        }
+    } catch(err) {
+        return next(err);
+    }
+}
+
 exports.contact = async(req, res, next) => {
     try {
         let {title, content, user_id} = req.body;

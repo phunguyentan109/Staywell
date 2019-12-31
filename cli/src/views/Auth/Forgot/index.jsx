@@ -1,16 +1,29 @@
 import React, {useState} from "react";
-import {Link} from "react-router-dom";
 import AuthInput from "components/Auth/AuthInput.jsx";
+import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import {sendAuthData} from "appRedux/actions/user";
 
-const DEFAULT_ACCOUNT = {
-    email: "",
-    password: "",
-    cpassword: ""
+function SendForgot() {
+    return (
+        <div className="activate">
+            <h1>An email has been sent from Staywell,</h1>
+            <hr/>
+            <h3>We has sent you an email. Please check it and follows instructions to reset your account password. We wish you to have a good day!</h3>
+            <Link to="/forgot">
+                <button>
+                    Resend forgot password
+                </button>
+            </Link>
+        </div>
+    )
 }
 
-function Register({sendAuthData}) {
+const DEFAULT_ACCOUNT = {
+    email: ""
+}
+
+function ForgetForm({sendAuthData, history}) {
     const [account, setAccount] = useState(DEFAULT_ACCOUNT);
     const [loading, setLoading] = useState(false);
 
@@ -18,11 +31,14 @@ function Register({sendAuthData}) {
         setLoading(true);
         try {
             e.preventDefault();
-            let isValidPassword = account.password === account.cpassword;
-            let isNotEmpty = account.email.length > 0 && account.password.length > 0;
-            if(isNotEmpty && isValidPassword) {
-                sendAuthData("signup", account);
+            let isValidEmail = account.email;
+            let isNotEmpty = account.email.length > 0;
+            if(isNotEmpty && isValidEmail) {
+                sendAuthData("forgot", account);
                 setAccount(DEFAULT_ACCOUNT);
+                setTimeout(() => {
+                    history.push("/sendforgot");
+                }, 1500);
             } else {
                 window.alert("The entered information is not valid. Please try again");
                 setLoading(false);
@@ -39,8 +55,8 @@ function Register({sendAuthData}) {
 
     return (
         <div className="content">
-            <h1>Sign up</h1>
-            <h4>Please enter your account to complete your registration.</h4>
+            <h1>Reset password</h1>
+            <h4>Please enter your email to complete reset password form.</h4>
             <form className="auth-form" onSubmit={hdSubmit}>
                 <AuthInput
                     placeholder="Email"
@@ -49,33 +65,18 @@ function Register({sendAuthData}) {
                     value={account.email}
                     onChange={hdChange}
                 />
-                <AuthInput
-                    type="password"
-                    placeholder="Password"
-                    name="password"
-                    icon="fas fa-key"
-                    value={account.password}
-                    onChange={hdChange}
-                />
-                <AuthInput
-                    type="password"
-                    placeholder="Confirm Password"
-                    name="cpassword"
-                    icon="fas fa-key"
-                    value={account.cpassword}
-                    onChange={hdChange}
-                />
                 <button className="signup" disabled={loading}>
                     {
                         loading
                         ? <i class="fas fa-circle-notch fa-spin"/>
-                        : "Create account"
+                        : "Reset password"
                     }
                 </button>
             </form>
-            <Link to="/forgot">Forgot your password?</Link>
         </div>
     )
 }
 
-export default connect(null, {sendAuthData})(Register);
+const Forgot = connect(null, {sendAuthData})(ForgetForm)
+
+export { Forgot, SendForgot }
