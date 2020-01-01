@@ -5,7 +5,7 @@ import {Switch, Route, withRouter, Redirect} from "react-router-dom";
 import AuthNavbar from "containers/Bar/Navbar";
 import Login from "views/Auth/Login";
 import Register from "views/Auth/Register";
-import {Forgot, SendForgot} from "views/Auth/Forgot";
+import Forgot from "views/Auth/Forgot";
 import {TimeOut, Reseted, Reset} from "views/Auth/Reset";
 
 import {Activate, ActivatedView} from "views/Auth/Activate";
@@ -19,9 +19,22 @@ function AuthLayout({location}) {
                 <Switch>
                     <Route path="/activate/:user_id" component={ActivatedView}/>
                     <Route path="/reset/:token" component={Reset}/>
-                    <Route path="/sendforgot" component={SendForgot}/>
-                    <Route path="/timeout" component={TimeOut}/>
-                    <Route path="/reseted" component={Reseted}/>
+                    <RouteControl 
+                        path="/timeout" 
+                        redirectPath="/forgot"
+                        component={TimeOut}
+                        access={[
+                            "GUEST_PERMISSION"
+                        ]}
+                    />
+                    <RouteControl 
+                        path="/reseted" 
+                        redirectPath="/"
+                        component={Reseted}
+                        access={[
+                            "GUEST_PERMISSION"
+                        ]}
+                    />
                     <RouteControl
                         path="/activate"
                         redirectPath="/app"
@@ -40,7 +53,7 @@ function AuthLayout({location}) {
                     />
                     <RouteControl
                         path="/forgot"
-                        redirectPath="/sendforgot"
+                        redirectPath="/"
                         component={Forgot}
                         access={[
                             "GUEST_PERMISSION"

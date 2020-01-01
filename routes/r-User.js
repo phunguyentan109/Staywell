@@ -15,9 +15,7 @@ router.route("/:user_id")
 .delete(hdl.User.remove)
 .put(hdl.User.update);
 
-router.route("/:token/reset")
-.get(hdl.User.checkTokenReset)
-.put(hdl.User.resetPassword);
+router.route("/:token/reset").put(hdl.User.resetPassword);
 
 router.route("/:user_id/activate").put(hdl.User.activate);
 router.route("/:user_id/password").put(hdl.User.updatePassword);
