@@ -190,48 +190,29 @@ exports.forgot = async(req, res, next) => {
     }
 }
 
-exports.checkTokenReset = async(req, res, next) => {
-    try {
-        let {token} = req.params;
-        let foundUser = await db.User.findOne({
-            resetPwToken: token,
-            resetPwExpires: {$gt: Date.now()
-        }});
-
-        if(!foundUser) {
-            return next ({
-                status: 404,
-                message: "The token is not defined or token has timeout, please send reset password again"
-            })
-        } else {
-            return res.status(200).json(token);
-        }
-    } catch(err) {
-        return next(err);
-    }
-}
-
 exports.resetPassword = async(req, res, next) => {
     try {
         let {token} = req.params;
+        // find user by token and check timeout
         let foundUser = await db.User.findOne({
             resetPwToken: token,
-            resetPwExpires: {$gt: Date.now()
-        }});
+            resetPwExpires: {$gt: Date.now()}
+        });
 
+        // return massage if not find any token in table user or the token has timeout
         if(!foundUser) {
             return next({
                 status: 404,
-                message: "The token is not defined or token has timeout, please send reset password again."
+                message: "The token is invalid or timeout."
             })
-        } else {
-            let {password} = req.body;
-            foundUser.password = password;
-            await foundUser.save();
-
-            mail.changePassword(foundUser.email, foundUser.username);
-            return res.status(200).json(token);
         }
+
+        let {password} = req.body;
+        foundUser.password = password;
+        await foundUser.save();
+
+        mail.changePassword(foundUser.email, foundUser.username);
+        return res.status(200).json(token);
     } catch(err) {
         return next(err);
     }

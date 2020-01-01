@@ -68,7 +68,7 @@ function Register({sendAuthData}) {
                 <button className="signup" disabled={loading}>
                     {
                         loading
-                        ? <i class="fas fa-circle-notch fa-spin"/>
+                        ? <i className="fas fa-circle-notch fa-spin"/>
                         : "Create account"
                     }
                 </button>

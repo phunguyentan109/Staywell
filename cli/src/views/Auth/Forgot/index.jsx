@@ -1,56 +1,37 @@
 import React, {useState} from "react";
 import AuthInput from "components/Auth/AuthInput.jsx";
-import {Link} from "react-router-dom";
-import {connect} from "react-redux";
-import {sendAuthData} from "appRedux/actions/user";
+import api, {apiCall} from "constants/api";
 
-function SendForgot() {
-    return (
-        <div className="activate">
-            <h1>An email has been sent from Staywell,</h1>
-            <hr/>
-            <h3>We has sent you an email. Please check it and follows instructions to reset your account password. We wish you to have a good day!</h3>
-            <Link to="/forgot">
-                <button>
-                    Resend forgot password
-                </button>
-            </Link>
-        </div>
-    )
-}
-
-const DEFAULT_ACCOUNT = {
-    email: ""
-}
-
-function ForgetForm({sendAuthData, history}) {
-    const [account, setAccount] = useState(DEFAULT_ACCOUNT);
+function Forgot({history}) {
+    const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
 
-    function hdSubmit(e) {
+    async function hdSubmit(e) {
+        e.preventDefault();
         setLoading(true);
         try {
-            e.preventDefault();
-            let isValidEmail = account.email;
-            let isNotEmpty = account.email.length > 0;
-            if(isNotEmpty && isValidEmail) {
-                sendAuthData("forgot", account);
-                setAccount(DEFAULT_ACCOUNT);
-                setTimeout(() => {
-                    history.push("/sendforgot");
-                }, 1500);
+            if(email.length > 0) {
+                if(email.indexOf("@") !== -1) {
+                    await apiCall(...api.user.forgotPassword(), {email});
+                    setEmail("");
+                    window.alert("Reset password successfully");
+                    history.push("/");
+                } else {
+                    window.alert("Your email has incorrect format");
+                }
             } else {
                 window.alert("The entered information is not valid. Please try again");
                 setLoading(false);
             }
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
+        setLoading(false);
     }
 
     function hdChange(e) {
-        const {value, name} = e.target;
-        setAccount(prev => ({...prev, [name]: value}));
+        const {value} = e.target;
+        setEmail(value);
     }
 
     return (
@@ -62,13 +43,13 @@ function ForgetForm({sendAuthData, history}) {
                     placeholder="Email"
                     name="email"
                     icon="far fa-envelope"
-                    value={account.email}
+                    value={email}
                     onChange={hdChange}
                 />
                 <button className="signup" disabled={loading}>
                     {
                         loading
-                        ? <i class="fas fa-circle-notch fa-spin"/>
+                        ? <i className="fas fa-circle-notch fa-spin"/>
                         : "Reset password"
                     }
                 </button>
@@ -77,6 +58,4 @@ function ForgetForm({sendAuthData, history}) {
     )
 }
 
-const Forgot = connect(null, {sendAuthData})(ForgetForm)
-
-export { Forgot, SendForgot }
+export default Forgot;

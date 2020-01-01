@@ -1,8 +1,7 @@
-import React, {useEffect, useCallback, useState} from "react";
+import React, {useState} from "react";
 import api, {apiCall} from "constants/api";
 import {Link} from "react-router-dom";
 import AuthInput from "components/Auth/AuthInput.jsx";
-import {connect} from "react-redux";
 
 function TimeOut() {
     return (
@@ -39,28 +38,14 @@ const DEFAULT_ACCOUNT = {
     cpassword: ""
 }
 
-function ResetPassword({match, history}) {
+function Reset({match, history}) {
     const [account, setAccount] = useState(DEFAULT_ACCOUNT);
-    const [loading, setLoading] = useState(true);
-
-    const load = useCallback(async() => {
-        try {
-            await apiCall(...api.user.checkTokenReset(match.params.token));
-            setLoading(false);
-        } catch (e) {
-            console.log(e);
-            history.push("/timeout");
-        }
-    }, [history, match])
-
-    useEffect(() => {
-        load();
-    }, [load])
+    const [loading, setLoading] = useState(false);
 
     async function hdSubmit(e) {
+        e.preventDefault();
         setLoading(true);
         try {
-            e.preventDefault();
             let isValidPassword = account.password === account.cpassword;
             let isNotEmpty = account.password.length > 0;
             if(isNotEmpty && isValidPassword) {
@@ -75,9 +60,10 @@ function ResetPassword({match, history}) {
                 setLoading(false);
             }
         } catch (e) {
-            console.log(e);
+            console.error(e);
             history.push("/timeout");
         }
+        setLoading(false);
     }
 
     function hdChange(e) {
@@ -109,7 +95,7 @@ function ResetPassword({match, history}) {
                 <button className="signup" disabled={loading}>
                     {
                         loading
-                        ? <i class="fas fa-circle-notch fa-spin"/>
+                        ? <i className="fas fa-circle-notch fa-spin"/>
                         : "Reset password"
                     }
                 </button>
@@ -118,7 +104,5 @@ function ResetPassword({match, history}) {
         </div>
     )
 }
-
-const Reset = connect(null, null)(ResetPassword)
 
 export { Reset, TimeOut, Reseted }
