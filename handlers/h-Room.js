@@ -8,8 +8,7 @@ async function createContract(user_id, price_id) {
     // Get the duration from price to set the contract timeline
     let priceData = await db.Price.findById(price_id).lean().exec();
     for(let i = 1; i <= priceData.duration; i++) {
-        let time = moment(Date.now()).add(i, "months");
-        contract.timeline.push(time);
+        contract.timeline.push(moment().add(1, "months"));
     }
     let createdContract = await db.Contract.create(contract);
     await pushId("User", user_id, "contract_id", createdContract._id);

@@ -24,11 +24,13 @@ function Contract({notify, match}) {
         load();
     }, [load])
 
-    function hdRemove(contract_id) {
+    async function hdRemove(contract_id) {
         setLoading(true);
         try {
+            const {user_id} = match.params;
+            await apiCall(...api.contract.remove(user_id, contract_id));
             setContracts(prev => prev.filter(c => c._id !== contract_id));
-            return notify("success", "Process is completed successfully!", "Contract data is removed successfully.")
+            notify("success", "Process is completed!", "Contract data is removed successfully.");
         } catch (e) {
             notify("error", "The data is not removed");
         }
@@ -46,7 +48,7 @@ function Contract({notify, match}) {
                         {
                             title: "Timeline",
                             dataIndex: 'timeline',
-                            render: text => <span>{text.map(time => moment(time).format("MMM DDDo, YYYY")).join(" - ")}</span>
+                            render: (text, rec) => <span>From {moment(text[0]).format("MMM Do, YYYY")} to {moment(text[text.length - 1]).format("MMM Do, YYYY")} {rec.active ? " | active": ""}</span>
                         },
                         {
                             title: 'Action',
