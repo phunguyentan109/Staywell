@@ -53,6 +53,7 @@ export default {
         getOne: room_id => ["get", `/api/rooms/${room_id}`],
         create: () => ["post", `/api/rooms`],
         remove: room_id => ["delete", `/api/rooms/${room_id}`],
-        edit: room_id => ["put", `/api/rooms/${room_id}`]
+        edit: room_id => ["put", `/api/rooms/${room_id}`],
+        assign: room_id => ["put", `/api/rooms/${room_id}/assign`]
     }
 }

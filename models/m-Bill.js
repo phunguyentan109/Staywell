@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-// const {spliceId} = require("../utils/dbSupport");
-// const db = require("../models");
 
 const billSchema = new mongoose.Schema({
     contract_id: {
@@ -19,10 +17,6 @@ const billSchema = new mongoose.Schema({
             ref: "House"
         }
     ],
-    user_id : {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
-    },
     water: {
         type: Number,
         default: 0
@@ -30,6 +24,14 @@ const billSchema = new mongoose.Schema({
     wifi: {
         type: Number,
         default: 0
+    },
+    endTime: {
+        type: Date,
+        required: true
+    },
+    isRevealed: {
+        type: Boolean,
+        default: false
     },
     isPaid: {
         type: Boolean,

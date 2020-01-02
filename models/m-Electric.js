@@ -9,7 +9,7 @@ const electricSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    amount: {
+    number: {
         type: Number,
         default: 0
     }

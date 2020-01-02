@@ -4,13 +4,17 @@ const mail = require("../utils/mail");
 const moment = require("moment");
 
 async function createContract(user_id, price_id) {
-    let contract = { user_id, timeline: [] };
+    let createdContract = await db.Contract.create({user_id});
     // Get the duration from price to set the contract timeline
     let priceData = await db.Price.findById(price_id).lean().exec();
     for(let i = 1; i <= priceData.duration; i++) {
-        contract.timeline.push(moment().add(1, "months"));
+        let createdBill = await db.Bill.create({
+            contract_id: createContract._id,
+            endTime: moment().add(i, "months")
+        })
+        createdContract.bill_id.push(createdBill._id);
+        await createdContract.save();
     }
-    let createdContract = await db.Contract.create(contract);
     await pushId("User", user_id, "contract_id", createdContract._id);
 }
 
@@ -35,16 +39,10 @@ exports.getOne = async(req, res, next) => {
 exports.create = async(req, res, next) => {
     try {
         let createdRoom = await db.Room.create(req.body);
-        const {price_id, user_id} = req.body;
+        const {price_id} = req.body;
 
         // add room_id to price and user
         await pushId("Price", price_id, "room_id", createdRoom._id);
-        if(user_id.length > 0) {
-            for(let id of user_id) {
-                await assignId("User", id, "room_id", createdRoom._id);
-                await createContract(id, price_id);
-            }
-        }
         createdRoom = await createdRoom.save();
 
         return res.status(200).json(createdRoom);
@@ -66,7 +64,28 @@ exports.remove = async(req, res, next) => {
 exports.update = async(req, res, next) => {
     try{
         const {room_id} = req.params;
-        let {name, price_id, user_id} = req.body;
+        let {name, price_id} = req.body;
+        let foundRoom = await db.Room.findById(room_id);
+
+        // update room
+        foundRoom.name = name;
+        if(!foundRoom.price_id.equals(price_id)) {
+            await spliceId("Price", foundRoom.price_id, "room_id", foundRoom._id);
+            foundRoom.price_id = price_id;
+            await pushId("Price", price_id, "room_id", foundRoom._id);
+        }
+        await foundRoom.save();
+
+        return res.status(200).json(foundRoom);
+    } catch(err){
+        return next(err);
+    }
+}
+
+exports.assign = async(req, res, next) => {
+    try {
+        const {room_id} = req.params;
+        const {user_id, amount} = req.body;
         let foundRoom = await db.Room.findById(room_id);
 
         // remove old people and add new user to the room
@@ -99,7 +118,7 @@ exports.update = async(req, res, next) => {
             for(let id of newUser) {
                 await assignId("User", id, "room_id", foundRoom._id);
 
-                await createContract(id, price_id);
+                await createContract(id, foundRoom.price_id);
 
                 // send mail to notify people about new place
                 let foundUser = await db.User.findById(id).lean().exec();
@@ -107,20 +126,37 @@ exports.update = async(req, res, next) => {
                 mail.getRoom(email, username, foundRoom.name);
             }
         }
-        let updateUser_id = [...curUser, ...newUser];
 
-        // update room
-        foundRoom.user_id = updateUser_id;
-        foundRoom.name = name;
-        if(!foundRoom.price_id.equals(price_id)) {
-            await spliceId("Price", foundRoom.price_id, "room_id", foundRoom._id);
-            foundRoom.price_id = price_id;
-            await pushId("Price", price_id, "room_id", foundRoom._id);
+        if(curUser.length > 0) {
+            // create electric sub-bill for current people
+            for(let people of curUser) {
+                let foundContract = await db.Contract.findOne({
+                    user_id: people._id,
+                    active: true
+                })
+                .populate({
+                    path: "bill_id",
+                    populate: {
+                        path: "electric_id"
+                    }
+                })
+                .populate({
+                    path: "bill_id",
+                    populate: {
+                        path: "house_id"
+                    }
+                }).lean().exec();
+
+            }
+
+            // create house sub-bill for current people
         }
-        await foundRoom.save();
+
+        foundRoom.user_id = [...curUser, ...newUser];
+        foundRoom = await foundRoom.save();
 
         return res.status(200).json(foundRoom);
-    } catch(err){
-        return next(err);
+    } catch (e) {
+        return next(e);
     }
 }
