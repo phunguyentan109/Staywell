@@ -194,6 +194,7 @@ exports.assign = async(req, res, next) => {
 
         return res.status(200).json(foundRoom);
     } catch (e) {
+        console.log(e);
         return next(e);
     }
 }

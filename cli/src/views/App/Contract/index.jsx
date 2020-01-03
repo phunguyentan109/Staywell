@@ -71,7 +71,9 @@ function Contract({notify, match}) {
                                     key: 'action',
                                     render: (text, record) => record.room_id ? <span>None</span> : (
                                         <span>
-                                            <span className="gx-link" onClick={hdViewBills.bind(this, record.bill_id)}>View bills ({record.bill_id.length})</span>
+                                            <span className="gx-link" onClick={hdViewBills.bind(this, record.bill_id)}>
+                                                View bills ({record.bill_id.length})
+                                            </span>
                                             <Divider type="vertical"/>
                                             <PopConfirm
                                                 title="Are you sure to delete this contract?"
@@ -98,27 +100,31 @@ function Contract({notify, match}) {
                             rowKey="_id"
                             columns={[
                                 {
-                                    title: "Timeline",
-                                    dataIndex: 'bill_id',
-                                    render: (text, rec) => <span>{moment(text[0].endTime).format("MMM Do, YYYY")} - {moment(text[text.length - 1].endTime).format("MMM Do, YYYY")} {rec.active ? " | active": ""}</span>
+                                    title: 'House',
+                                    dataIndex: 'house_id',
+                                    render: text => <span>{text.length} calculation(s)</span>
                                 },
                                 {
-                                    title: "Progress",
-                                    render: (record) => <span className="contract-progress"><span></span> {getProgress(record.bill_id)}%</span>
+                                    title: "Electric",
+                                    dataIndex: 'electric_id',
+                                    render: text => <span>{text.length} calculation(s)</span>
+                                },
+                                {
+                                    title: "Wifi",
+                                    dataIndex: 'wifi',
+                                    render: text => <span>$ {text.toFixed(2)}</span>
+                                },
+                                {
+                                    title: 'Water',
+                                    dataIndex: 'water',
+                                    render: text => <span>$ {text.toFixed(2)}</span>
                                 },
                                 {
                                     title: 'Action',
                                     key: 'action',
                                     render: (text, record) => record.room_id ? <span>None</span> : (
                                         <span>
-                                            <PopConfirm
-                                                title="Are you sure to delete this contract?"
-                                                task={hdRemove.bind(this, record._id)}
-                                                okText="Sure, remove it"
-                                                cancelText="Not now"
-                                            >
-                                                <span className="gx-link">Delete</span>
-                                            </PopConfirm>
+                                            <span className="gx-link">Detail</span>
                                         </span>
                                     )
                                 }

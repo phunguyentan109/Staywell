@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const houseSchema = new mongoose.Schema({
     bill_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Electric"
+        ref: "Bill"
     },
     money: {
         type: Number,
