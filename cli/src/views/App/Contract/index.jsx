@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useCallback} from "react";
-import {Card, Spin, Table} from "antd";
+import {Row, Col, Card, Spin, Table, Divider} from "antd";
 import withNoti from "hocs/withNoti";
 import PopConfirm from "components/App/Pop/PopConfirm";
 import moment from "moment";
@@ -7,6 +7,7 @@ import api, {apiCall} from "constants/api";
 
 function Contract({notify, match}) {
     const [contracts, setContracts] = useState([]);
+    const [bills, setBills] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const load = useCallback(async() => {
@@ -37,39 +38,96 @@ function Contract({notify, match}) {
         setLoading(false);
     }
 
+    function getProgress(bills) {
+        let paidBills = bills.filter(b => b.isPaid).length;
+        return (paidBills / bills.length) * 100;
+    }
+
+    function hdViewBills(bills) {
+        setBills(bills);
+    }
+
     return (
-        <Card title="List of contracts">
-            <Spin spinning={loading}>
-                <Table
-                    className="gx-table-responsive"
-                    dataSource={contracts}
-                    rowKey="_id"
-                    columns={[
-                        {
-                            title: "Timeline",
-                            dataIndex: 'timeline',
-                            render: (text, rec) => <span>From {moment(text[0]).format("MMM Do, YYYY")} to {moment(text[text.length - 1]).format("MMM Do, YYYY")} {rec.active ? " | active": ""}</span>
-                        },
-                        {
-                            title: 'Action',
-                            key: 'action',
-                            render: (text, record) => record.room_id ? <span>None</span> : (
-                                <span>
-                                    <PopConfirm
-                                        title="Are you sure to delete this genre?"
-                                        task={hdRemove.bind(this, record._id)}
-                                        okText="Sure, remove it"
-                                        cancelText="Not now"
-                                    >
-                                        <span className="gx-link">Delete</span>
-                                    </PopConfirm>
-                                </span>
-                            )
-                        }
-                    ]}
-                />
-            </Spin>
-        </Card>
+        <Row>
+            <Col md={12}>
+                <Card title="List of contracts">
+                    <Spin spinning={loading}>
+                        <Table
+                            className="gx-table-responsive"
+                            dataSource={contracts}
+                            rowKey="_id"
+                            columns={[
+                                {
+                                    title: "Timeline",
+                                    dataIndex: 'bill_id',
+                                    render: (text, rec) => <span>{moment(text[0].endTime).format("MMM Do, YYYY")} - {moment(text[text.length - 1].endTime).format("MMM Do, YYYY")} {rec.active ? " | active": ""}</span>
+                                },
+                                {
+                                    title: "Progress",
+                                    render: (record) => <span className="contract-progress"><span></span> {getProgress(record.bill_id)}%</span>
+                                },
+                                {
+                                    title: 'Action',
+                                    key: 'action',
+                                    render: (text, record) => record.room_id ? <span>None</span> : (
+                                        <span>
+                                            <span className="gx-link" onClick={hdViewBills.bind(this, record.bill_id)}>View bills ({record.bill_id.length})</span>
+                                            <Divider type="vertical"/>
+                                            <PopConfirm
+                                                title="Are you sure to delete this contract?"
+                                                task={hdRemove.bind(this, record._id)}
+                                                okText="Sure, remove it"
+                                                cancelText="Not now"
+                                            >
+                                                <span className="gx-link">Delete</span>
+                                            </PopConfirm>
+                                        </span>
+                                    )
+                                }
+                            ]}
+                        />
+                    </Spin>
+                </Card>
+            </Col>
+            <Col md={12}>
+                <Card title="List of bills" className="gx-card">
+                    <Spin spinning={loading}>
+                        <Table
+                            className="gx-table-responsive"
+                            dataSource={bills}
+                            rowKey="_id"
+                            columns={[
+                                {
+                                    title: "Timeline",
+                                    dataIndex: 'bill_id',
+                                    render: (text, rec) => <span>{moment(text[0].endTime).format("MMM Do, YYYY")} - {moment(text[text.length - 1].endTime).format("MMM Do, YYYY")} {rec.active ? " | active": ""}</span>
+                                },
+                                {
+                                    title: "Progress",
+                                    render: (record) => <span className="contract-progress"><span></span> {getProgress(record.bill_id)}%</span>
+                                },
+                                {
+                                    title: 'Action',
+                                    key: 'action',
+                                    render: (text, record) => record.room_id ? <span>None</span> : (
+                                        <span>
+                                            <PopConfirm
+                                                title="Are you sure to delete this contract?"
+                                                task={hdRemove.bind(this, record._id)}
+                                                okText="Sure, remove it"
+                                                cancelText="Not now"
+                                            >
+                                                <span className="gx-link">Delete</span>
+                                            </PopConfirm>
+                                        </span>
+                                    )
+                                }
+                            ]}
+                        />
+                    </Spin>
+                </Card>
+            </Col>
+        </Row>
     )
 }
 

@@ -3,15 +3,28 @@ const {pushId, assignId, spliceId} = require("../utils/dbSupport");
 const mail = require("../utils/mail");
 const moment = require("moment");
 
-async function createContract(user_id, price_id) {
+async function createContract(user_id, price_id, electricNumber) {
     let createdContract = await db.Contract.create({user_id});
     // Get the duration from price to set the contract timeline
     let priceData = await db.Price.findById(price_id).lean().exec();
     for(let i = 1; i <= priceData.duration; i++) {
+        // create all bill of the contract
         let createdBill = await db.Bill.create({
             contract_id: createContract._id,
             endTime: moment().add(i, "months")
         })
+
+        // Check if the pre-push bill is the contract's first bill, add starting electric
+        if(createdContract.bill_id.length === 0) {
+            let createdElectric = await db.Electric.create({
+                bill_id: createdBill._id,
+                number: electricNumber,
+                money: 0
+            });
+            createdBill.electric_id.push(createdElectric._id);
+            createdBill.save();
+        }
+
         createdContract.bill_id.push(createdBill._id);
         await createdContract.save();
     }
@@ -86,7 +99,7 @@ exports.assign = async(req, res, next) => {
     try {
         const {room_id} = req.params;
         const {user_id, amount} = req.body;
-        let foundRoom = await db.Room.findById(room_id);
+        let foundRoom = await db.Room.findById(room_id).populate("price_id").exec();
 
         // remove old people and add new user to the room
         const NOT_FOUND = -1;
@@ -118,7 +131,7 @@ exports.assign = async(req, res, next) => {
             for(let id of newUser) {
                 await assignId("User", id, "room_id", foundRoom._id);
 
-                await createContract(id, foundRoom.price_id);
+                await createContract(id, foundRoom.price_id, amount);
 
                 // send mail to notify people about new place
                 let foundUser = await db.User.findById(id).lean().exec();
@@ -136,20 +149,44 @@ exports.assign = async(req, res, next) => {
                 })
                 .populate({
                     path: "bill_id",
-                    populate: {
-                        path: "electric_id"
-                    }
+                    populate: { path: "electric_id" }
                 })
                 .populate({
                     path: "bill_id",
-                    populate: {
-                        path: "house_id"
-                    }
-                }).lean().exec();
+                    populate: { path: "house_id" }
+                })
+                .lean().exec();
 
+                // get current bill
+                let currentBill = foundContract.bill_id.filter(b => moment(b.endTime).isSameOrAfter(moment()))[0];
+
+                // get last electric number
+                let electricNums = foundContract.bill_id.map(b => b.electric_id).flat().map(elec => elec.number);
+                let lastNum = Math.max(...electricNums);
+
+                let additionPeopleNumber = foundRoom.user_id.length - 1;
+
+                // create electric sub-bill for current people
+                let eTotalMoney = (amount - lastNum) * foundRoom.price_id.electric; // all people money
+                let eEachMoney = eTotalMoney / additionPeopleNumber; // each person money
+                let createdElectric = await db.Electric.create({
+                    bill_id: currentBill._id,
+                    number: amount,
+                    money: eEachMoney
+                });
+
+                // create house sub-bill for current people
+                let additionHousePrice = foundRoom.price_id.extra * additionPeopleNumber;
+                let createdHouse = await db.House.create({
+                    bill_id: currentBill._id,
+                    money: foundRoom.price_id.house + additionHousePrice
+                })
+
+                currentBill.electric_id.push(createdElectric._id);
+                currentBill.house_id.push(createdHouse._id);
+                await currentBill.save();
             }
 
-            // create house sub-bill for current people
         }
 
         foundRoom.user_id = [...curUser, ...newUser];

@@ -12,7 +12,6 @@ const contractSchema = new mongoose.Schema({
             ref: "Bill"
         }
     ],
-    timeline: [Date],
     active: {
         type: Boolean,
         default: true
