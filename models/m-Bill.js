@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const {casDeleteMany} = require("../utils/dbSupport");
 
 const billSchema = new mongoose.Schema({
     contract_id: {
@@ -29,6 +30,10 @@ const billSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
+    isInTime: {
+        type: Boolean,
+        default: false
+    },
     isRevealed: {
         type: Boolean,
         default: false
@@ -38,6 +43,16 @@ const billSchema = new mongoose.Schema({
         default: false
     },
     paidDate: Date
-}, { timestamps: true })
+}, { timestamps: true });
+
+billSchema.pre("remove", async function(next) {
+    try {
+        await casDeleteMany("House", this.house_id);
+        await casDeleteMany("Electric", this.electric_id);
+        return next();
+    } catch (e) {
+        return next(e);
+    }
+})
 
 module.exports = mongoose.model("Bill", billSchema);
