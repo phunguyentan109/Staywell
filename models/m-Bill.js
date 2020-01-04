@@ -30,10 +30,6 @@ const billSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
-    isInTime: {
-        type: Boolean,
-        default: false
-    },
     isRevealed: {
         type: Boolean,
         default: false
