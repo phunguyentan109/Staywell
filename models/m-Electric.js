@@ -5,10 +5,8 @@ const electricSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Electric"
     },
-    money: {
-        type: Number,
-        default: 0
-    },
+    time: Date,
+    people: Number,
     number: {
         type: Number,
         default: 0

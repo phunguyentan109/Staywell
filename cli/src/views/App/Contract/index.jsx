@@ -10,6 +10,36 @@ const DEFAULT_BILL = {
     house_id: []
 };
 
+function HouseCalc({houses}) {
+
+    function format(time) {
+        return moment(time).format("MMM Do, YYYY");
+    }
+
+    return (
+        <Card title="House Calculation" className="gx-card">
+            {
+                houses.map((h, i) => (
+                    <div key={i}>
+                        <p>{format(h.time.begin)} - {format(h.time.end)} ({h.time.length} day(s))</p>
+                        <p>House: ${h.money} for {h.time.length} day(s) | ${h.money / (h.time.length > 0 ? h.time.length : 1)}/day</p>
+                        <p>Room {h.room.name} | {h.room.numberOfPeople} people</p>
+                        <hr/>
+                    </div>
+                ))
+            }
+        </Card>
+    )
+}
+
+function ElectricCalc({electrics}) {
+    return (
+        <Card title="Electric Calculation" className="gx-card">
+            <p>Electric: ${}</p>
+        </Card>
+    )
+}
+
 function Contract({notify, match}) {
     const [contracts, setContracts] = useState([]);
     const [bills, setBills] = useState([]);
@@ -54,7 +84,6 @@ function Contract({notify, match}) {
     }
 
     function hdDetail(bill) {
-        console.log(bill);
         setBill(bill);
     }
 
@@ -106,16 +135,10 @@ function Contract({notify, match}) {
                 {
                     bill._id && <Row>
                         <Col md={12}>
-                            <Card title="House Calculation" className="gx-card">
-                                {
-                                    bill.house_id.map((h, i) => <p key={i}>House: ${h.money} in {h.dayLiveNumber} days (${h.money / (h.dayLiveNumber > 0 ? h.dayLiveNumber : 1)} per day)</p>)
-                                }
-                            </Card>
+                            <HouseCalc houses={bill.house_id}/>
                         </Col>
                         <Col md={12}>
-                            <Card title="Electric Calculation" className="gx-card">
-                                <p>Electric: ${}</p>
-                            </Card>
+                            <ElectricCalc electrics={bill.electric_id}/>
                         </Col>
                     </Row>
                 }

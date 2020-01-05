@@ -3,7 +3,7 @@ const {pushId, assignId, spliceId} = require("../utils/dbSupport");
 const mail = require("../utils/mail");
 const moment = require("moment");
 
-async function createContract(user_id, price_id, electricNumber) {
+async function createContract(user_id, price_id, electricNumber, peopleNumber) {
     let createdContract = await db.Contract.create({user_id});
     // Get the duration from price to set the contract timeline
     let priceData = await db.Price.findById(price_id).lean().exec();
@@ -18,13 +18,15 @@ async function createContract(user_id, price_id, electricNumber) {
         if(createdContract.bill_id.length === 0) {
             let createdElectric = await db.Electric.create({
                 bill_id: createdBill._id,
-                number: electricNumber,
-                money: 0
+                time: Date.now(),
+                people: peopleNumber,
+                number: electricNumber
             });
 
             let createdHouse = await db.House.create({
                 bill_id: createdBill._id,
-                money: 0
+                time: Date.now(),
+                people: peopleNumber
             })
 
             createdBill.electric_id.push(createdElectric._id);
@@ -138,7 +140,8 @@ exports.assign = async(req, res, next) => {
             for(let id of newUser) {
                 await assignId("User", id, "room_id", foundRoom._id);
 
-                await createContract(id, foundRoom.price_id, amount);
+                // Create contract with information of room and the timeline
+                await createContract(id, foundRoom.price_id, amount, foundRoom.user_id.length);
 
                 // send mail to notify people about new place
                 let foundUser = await db.User.findById(id).lean().exec;
@@ -167,24 +170,34 @@ exports.assign = async(req, res, next) => {
                 // get number of people in room (before)
                 let roomPeopleNumber = foundRoom.user_id.length;
 
-                // get last electric number of the contract
-                let electricNums = foundContract.bill_id.map(b => b.electric_id).flat().map(elec => elec.number);
-                let lastNum = Math.max(...electricNums);
-
                 // CREATE ELECTRIC SUB-BILL
+                // get last electric number of the contract
+                let electricBills = foundContract.bill_id.map(b => b.electric_id).flat().map(elec => elec);
+                let lastElectricNum = Math.max(...(electricBills.map(e => e.number)));
+                let lastElectricBill = electricBills.filter(e => e.number === lastElectricNum)[0];
+
                 // total electric money
-                let totalElectricMoney = (amount - lastNum) * foundRoom.price_id.electric;
+                let totalElectricMoney = (amount - lastElectricNum) * foundRoom.price_id.electric;
                 // each person electric money
                 let eachElectricMoney = totalElectricMoney / roomPeopleNumber;
                 let createdElectric = await db.Electric.create({
                     bill_id: currentBill._id,
                     number: amount,
+                    time: {
+                        begin: moment(lastElectricBill.time.end).add(1, "days"),
+                        end: moment(),
+                        length: moment(moment(lastElectricBill.time.end).add(1, "days")).diff(moment()) + 1
+                    },
+                    room: {
+                        name: foundRoom.name,
+                        numberOfPeople: roomPeopleNumber
+                    },
                     money: eachElectricMoney
                 });
 
                 // CREATE HOUSE SUB-BILL
                 // get last house sub bill
-                let houseBillDates = foundContract.bill_id.map(b => b.house_id).flat().map(h => h.createdAt).sort((a, b) => moment(b).isAfter(a));
+                let houseBillDates = foundContract.bill_id.map(b => b.house_id).flat().map(h => h.time.end).sort((a, b) => moment(b).isAfter(a));
                 let lastDate = houseBillDates[houseBillDates.length - 1];
 
                 // get the planned live dates and actual result before calculating money
@@ -199,6 +212,15 @@ exports.assign = async(req, res, next) => {
 
                 let createdHouse = await db.House.create({
                     bill_id: currentBill._id,
+                    time: {
+                        begin: moment(lastElectricBill.time.end).add(1, "days"),
+                        end: moment(),
+                        length: moment(moment(lastElectricBill.time.end).add(1, "days")).diff(moment()) + 1
+                    },
+                    room: {
+                        name: foundRoom.name,
+                        numberOfPeople: roomPeopleNumber
+                    },
                     money: eachHouseMoney
                 });
 
@@ -213,7 +235,6 @@ exports.assign = async(req, res, next) => {
 
         return res.status(200).json(foundRoom);
     } catch (e) {
-        console.log(e);
         return next(e);
     }
 }

@@ -5,14 +5,8 @@ const houseSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Bill"
     },
-    dayLiveNumber: {
-        type: Number,
-        default: 0
-    },
-    money: {
-        type: Number,
-        default: 0
-    }
+    time: Date,
+    people: Number
 }, {timestamps: true});
 
 module.exports = mongoose.model("House", houseSchema);
