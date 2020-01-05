@@ -5,9 +5,15 @@ import PopConfirm from "components/App/Pop/PopConfirm";
 import moment from "moment";
 import api, {apiCall} from "constants/api";
 
+const DEFAULT_BILL = {
+    electric_id: [],
+    house_id: []
+};
+
 function Contract({notify, match}) {
     const [contracts, setContracts] = useState([]);
     const [bills, setBills] = useState([]);
+    const [bill, setBill] = useState(DEFAULT_BILL);
     const [loading, setLoading] = useState(true);
 
     const load = useCallback(async() => {
@@ -45,6 +51,11 @@ function Contract({notify, match}) {
 
     function hdViewBills(bills) {
         setBills(bills);
+    }
+
+    function hdDetail(bill) {
+        console.log(bill);
+        setBill(bill);
     }
 
     return (
@@ -92,6 +103,22 @@ function Contract({notify, match}) {
                 </Card>
             </Col>
             <Col md={12}>
+                {
+                    bill._id && <Row>
+                        <Col md={12}>
+                            <Card title="House Calculation" className="gx-card">
+                                {
+                                    bill.house_id.map((h, i) => <p key={i}>House: ${h.money} in {h.dayLiveNumber} days (${h.money / (h.dayLiveNumber > 0 ? h.dayLiveNumber : 1)} per day)</p>)
+                                }
+                            </Card>
+                        </Col>
+                        <Col md={12}>
+                            <Card title="Electric Calculation" className="gx-card">
+                                <p>Electric: ${}</p>
+                            </Card>
+                        </Col>
+                    </Row>
+                }
                 <Card title="List of bills" className="gx-card">
                     <Spin spinning={loading}>
                         <Table
@@ -124,7 +151,7 @@ function Contract({notify, match}) {
                                     key: 'action',
                                     render: (text, record) => record.room_id ? <span>None</span> : (
                                         <span>
-                                            <span className="gx-link">Detail</span>
+                                            <span className="gx-link" onClick={hdDetail.bind(this, record)}>Detail</span>
                                         </span>
                                     )
                                 }

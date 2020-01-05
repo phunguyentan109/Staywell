@@ -97,7 +97,7 @@ exports.update = async(req, res, next) => {
         await foundRoom.save();
 
         return res.status(200).json(foundRoom);
-    } catch(err){
+    } catch(err) {
         return next(err);
     }
 }

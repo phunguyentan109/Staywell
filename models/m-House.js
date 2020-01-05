@@ -5,6 +5,10 @@ const houseSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Bill"
     },
+    dayLiveNumber: {
+        type: Number,
+        default: 0
+    },
     money: {
         type: Number,
         default: 0
