@@ -24,7 +24,7 @@ exports.get = async(req, res, next) => {
 exports.remove = async(req, res, next) => {
     try {
         let contract = await db.Contract.findById(req.params.contract_id);
-        if(contract) contract.remove();
+        if(contract) await contract.remove();
         return res.status(200).json(contract);
     } catch(err) {
         return next(err);

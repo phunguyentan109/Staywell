@@ -13,6 +13,7 @@ const contractSchema = new mongoose.Schema({
             ref: "Bill"
         }
     ],
+    room: String,
     active: {
         type: Boolean,
         default: true
