@@ -16,10 +16,18 @@ function HouseCalc({houses}) {
         return moment(time).format("MMM Do, YYYY");
     }
 
+    function getLength(begin, end) {
+        return moment(end).diff(begin, "days");
+    }
+
     return (
         <Card title="House Calculation" className="gx-card">
             {
-                houses.map((h, i) => (
+                houses.map((h, i) => i === houses.length - 1 ? (
+                    <div key={i}>
+                        <p>{format(h.time)} - Present | { getLength(h.time, moment()) } day(s)</p>
+                    </div>
+                ) : (
                     <div key={i}>
                         <p>{format(h.time.begin)} - {format(h.time.end)} ({h.time.length} day(s))</p>
                         <p>House: ${h.money} for {h.time.length} day(s) | ${h.money / (h.time.length > 0 ? h.time.length : 1)}/day</p>
@@ -101,6 +109,10 @@ function Contract({notify, match}) {
                                     title: "Timeline",
                                     dataIndex: 'bill_id',
                                     render: (text, rec) => <span>{moment(text[0].endTime).format("MMM Do, YYYY")} - {moment(text[text.length - 1].endTime).format("MMM Do, YYYY")} {rec.active ? " | active": ""}</span>
+                                },
+                                {
+                                    title: "Room",
+                                    dataIndex: "room"
                                 },
                                 {
                                     title: "Progress",
