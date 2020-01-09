@@ -18,14 +18,14 @@ async function createContract(user_id, price_id, electricNumber, peopleNumber, r
         if(createdContract.bill_id.length === 0) {
             let createdElectric = await db.Electric.create({
                 bill_id: createdBill._id,
-                time: Date.now(),
+                time: moment().subtract(1, "days"),
                 people: peopleNumber,
                 number: electricNumber
             });
 
             let createdHouse = await db.House.create({
                 bill_id: createdBill._id,
-                time: Date.now(),
+                time: moment().subtract(1, "days"),
                 people: peopleNumber
             })
 

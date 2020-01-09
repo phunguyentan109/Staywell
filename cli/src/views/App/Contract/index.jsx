@@ -5,40 +5,12 @@ import PopConfirm from "components/App/Pop/PopConfirm";
 import moment from "moment";
 import api, {apiCall} from "constants/api";
 
+import HouseCalc from "./HouseCalc";
+
 const DEFAULT_BILL = {
     electric_id: [],
     house_id: []
 };
-
-function HouseCalc({houses}) {
-
-    function format(time) {
-        return moment(time).format("MMM Do, YYYY");
-    }
-
-    function getLength(begin, end) {
-        return moment(end).diff(begin, "days");
-    }
-
-    return (
-        <Card title="House Calculation" className="gx-card">
-            {
-                houses.map((h, i) => i === houses.length - 1 ? (
-                    <div key={i}>
-                        <p>{format(h.time)} - Present | { getLength(h.time, moment()) } day(s)</p>
-                    </div>
-                ) : (
-                    <div key={i}>
-                        <p>{format(h.time.begin)} - {format(h.time.end)} ({h.time.length} day(s))</p>
-                        <p>House: ${h.money} for {h.time.length} day(s) | ${h.money / (h.time.length > 0 ? h.time.length : 1)}/day</p>
-                        <p>Room {h.room.name} | {h.room.numberOfPeople} people</p>
-                        <hr/>
-                    </div>
-                ))
-            }
-        </Card>
-    )
-}
 
 function ElectricCalc({electrics}) {
     return (
@@ -50,8 +22,10 @@ function ElectricCalc({electrics}) {
 
 function Contract({notify, match}) {
     const [contracts, setContracts] = useState([]);
+    const [currentPeople, setCurrentPeople] = useState(0);
     const [bills, setBills] = useState([]);
     const [bill, setBill] = useState(DEFAULT_BILL);
+    const [price, setPrice] = useState({});
     const [loading, setLoading] = useState(true);
 
     const load = useCallback(async() => {
@@ -87,8 +61,10 @@ function Contract({notify, match}) {
         return (paidBills / bills.length) * 100;
     }
 
-    function hdViewBills(bills) {
-        setBills(bills);
+    function hdViewBills(contract) {
+        setCurrentPeople(contract.user_id.room_id.user_id.length);
+        setBills(contract.bill_id);
+        setPrice(contract.user_id.room_id.price_id);
     }
 
     function hdDetail(bill) {
@@ -98,7 +74,7 @@ function Contract({notify, match}) {
     return (
         <Row>
             <Col md={12}>
-                <Card title="List of contracts">
+                <Card title="List of contracts" className="gx-card">
                     <Spin spinning={loading}>
                         <Table
                             className="gx-table-responsive"
@@ -123,7 +99,10 @@ function Contract({notify, match}) {
                                     key: 'action',
                                     render: (text, record) => record.room_id ? <span>None</span> : (
                                         <span>
-                                            <span className="gx-link" onClick={hdViewBills.bind(this, record.bill_id)}>
+                                            <span
+                                                className="gx-link"
+                                                onClick={hdViewBills.bind(this, record)}
+                                            >
                                                 View bills ({record.bill_id.length})
                                             </span>
                                             <Divider type="vertical"/>
@@ -142,18 +121,6 @@ function Contract({notify, match}) {
                         />
                     </Spin>
                 </Card>
-            </Col>
-            <Col md={12}>
-                {
-                    bill._id && <Row>
-                        <Col md={12}>
-                            <HouseCalc houses={bill.house_id}/>
-                        </Col>
-                        <Col md={12}>
-                            <ElectricCalc electrics={bill.electric_id}/>
-                        </Col>
-                    </Row>
-                }
                 <Card title="List of bills" className="gx-card">
                     <Spin spinning={loading}>
                         <Table
@@ -194,6 +161,27 @@ function Contract({notify, match}) {
                         />
                     </Spin>
                 </Card>
+            </Col>
+            <Col md={12}>
+                {
+                    bill._id && <Row>
+                        <Col md={12}>
+                            <HouseCalc
+                                houses={bill.house_id}
+                                currentPeople={currentPeople}
+                                price={price}
+                                endTime={bill.endTime}
+                            />
+                        </Col>
+                        <Col md={12}>
+                            <ElectricCalc
+                                electrics={bill.electric_id}
+                                currentPeople={currentPeople}
+                                price={price}
+                            />
+                        </Col>
+                    </Row>
+                }
             </Col>
         </Row>
     )
