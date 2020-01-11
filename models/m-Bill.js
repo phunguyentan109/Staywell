@@ -6,18 +6,20 @@ const billSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Contract"
     },
-    electric_id: [
+    timePoint_id: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Electric"
+            ref: "TimePoint"
         }
     ],
-    house_id: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "House"
-        }
-    ],
+    electric: {
+        type: Number,
+        default: 0
+    },
+    house: {
+        type: Number,
+        default: 0
+    },
     water: {
         type: Number,
         default: 0
@@ -43,8 +45,7 @@ const billSchema = new mongoose.Schema({
 
 billSchema.pre("remove", async function(next) {
     try {
-        await casDeleteMany("House", this.house_id);
-        await casDeleteMany("Electric", this.electric_id);
+        await casDeleteMany("TimePoint", this.timePoint_id);
         return next();
     } catch (e) {
         return next(e);

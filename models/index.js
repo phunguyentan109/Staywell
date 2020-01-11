@@ -10,6 +10,5 @@ module.exports.Price = require("./m-Price");
 module.exports.Contract = require("./m-Contract");
 module.exports.Bill = require("./m-Bill");
 module.exports.Role = require("./m-Role");
-module.exports.Electric = require("./m-Electric");
-module.exports.House = require("./m-House");
+module.exports.TimePoint = require("./m-TimePoint");
 module.exports.UserRole = require("./m-UserRole");

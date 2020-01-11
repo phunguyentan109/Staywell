@@ -16,12 +16,7 @@ exports.get = async(req, res, next) => {
         .populate({
             path: "bill_id",
             populate: {
-                path: "electric_id"
-            }
-        }).populate({
-            path: "bill_id",
-            populate: {
-                path: "house_id"
+                path: "timePoint_id"
             }
         }).lean().exec();
         return res.status(200).json(contracts);

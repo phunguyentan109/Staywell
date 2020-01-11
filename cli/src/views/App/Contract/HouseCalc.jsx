@@ -13,7 +13,7 @@ const HouseItem = ({no, begin, end, otherPeople, money, length}) => (
     </Card>
 )
 
-function HouseCalc({houses, currentPeople, endTime, price}) {
+function HouseCalc({timePoints, currentPeople, endTime, price}) {
 
     function format(time) {
         return moment(time).format("MMM Do, YYYY");
@@ -32,28 +32,39 @@ function HouseCalc({houses, currentPeople, endTime, price}) {
         return formatVND(price.house * (lengthToCurrent / lengthToEnd * 100));
     }
 
+    function getFirstBegin(time) {
+        let subtractTime = moment(time).subtract(1, "days");
+        return format(subtractTime);
+    }
+
+    function getBegin(index, time) {
+        let lastPointTime = timePoints[index - 1].time;
+        return moment(lastPointTime).add(1, "days");
+    }
+
     return (
         <div>
             {
-                houses.map((h, i) => i === houses.length - 1 ? (
+                timePoints.map((point, i) => i === timePoints.length - 1 ? (
                     <HouseItem
                         no={i+1}
-                        begin={h.time}
+                        begin={getFirstBegin(point.time)}
                         end="Present"
-                        length={getLength(h.time, moment())}
+                        length={getLength(point.time, moment(), 1)}
                         otherPeople={currentPeople - 1}
-                        money={getMoney(h.time)}
+                        money={getMoney(point.time)}
                         key={i}
                     />
                 ) : (
-                    <Card title={`House Calculation #${i+1}`} className="gx-card" key={i}>
-                        <div>
-                            <p>{format(h.time.begin)} - {format(h.time.end)} ({h.time.length} day(s))</p>
-                            <p>House: ${h.money} for {h.time.length} day(s) | ${h.money / (h.time.length > 0 ? h.time.length : 1)}/day</p>
-                            <p>Room {h.room.name} | {h.room.numberOfPeople} people</p>
-                            <hr/>
-                        </div>
-                    </Card>
+                    <HouseItem
+                        no={i+1}
+                        begin={getBegin(i, point.time)}
+                        end={point.time}
+                        length={getLength(point.time, moment(), 1)}
+                        otherPeople={point.people - 1}
+                        money={getMoney(point.time)}
+                        key={i}
+                    />
                 ))
             }
         </div>

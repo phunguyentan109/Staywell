@@ -5,32 +5,27 @@ const moment = require("moment");
 
 async function createContract(user_id, price_id, electricNumber, peopleNumber, roomName) {
     let createdContract = await db.Contract.create({user_id, room: roomName});
+
     // Get the duration from price to set the contract timeline
     let priceData = await db.Price.findById(price_id).lean().exec();
     for(let i = 1; i <= priceData.duration; i++) {
+
         // create all bill of the contract
         let createdBill = await db.Bill.create({
             contract_id: createContract._id,
             endTime: moment().add(i, "months")
         })
 
-        // Check if the pre-push bill is the contract's first bill, add starting electric and house bill
+        // Check if the pre-push bill is the contract's first bill, add starting time point
         if(createdContract.bill_id.length === 0) {
-            let createdElectric = await db.Electric.create({
-                bill_id: createdBill._id,
-                time: moment().subtract(1, "days"),
-                people: peopleNumber,
-                number: electricNumber
-            });
-
-            let createdHouse = await db.House.create({
+            let createdTimePoint = await db.TimePoint.create({
                 bill_id: createdBill._id,
                 time: moment().subtract(1, "days"),
                 people: peopleNumber
-            })
+            });
 
-            createdBill.electric_id.push(createdElectric._id);
-            createdBill.house_id.push(createdHouse._id);
+            // createdBill.electric_id.push(createdElectric._id);
+            createdBill.timePoint_id.push(createdTimePoint._id);
             createdBill.save();
         }
 
@@ -107,17 +102,39 @@ exports.update = async(req, res, next) => {
 exports.assign = async(req, res, next) => {
     try {
         const {room_id} = req.params;
-        const {user_id, amount} = req.body;
+        const {amount} = req.body;
         let foundRoom = await db.Room.findById(room_id).populate("price_id").exec();
+        // console.log("user in room", foundRoom.user_id);
+
+        // Get only the id of user
+        let user_id = req.body.user_id.map(user => user._id);
 
         // get number of people in room (before)
         let roomPeopleNumber = foundRoom.user_id.length;
 
         // remove old people and add new user to the room
-        const NOT_FOUND = -1;
-        let oldUser = foundRoom.user_id.filter(id => user_id.indexOf(id) === NOT_FOUND);
-        let curUser = foundRoom.user_id.filter(id => user_id.indexOf(id) !== NOT_FOUND);
-        let newUser = user_id.filter(id => curUser.indexOf(id) === NOT_FOUND);
+        // const NOT_FOUND = -1;
+        // let oldUser = foundRoom.user_id.filter(id => user_id.indexOf(id) === NOT_FOUND);
+        // let curUser = foundRoom.user_id.filter(id => user_id.indexOf(id) !== NOT_FOUND);
+        // let newUser = user_id.filter(id => curUser.indexOf(id) === NOT_FOUND);
+
+        let newUser = [], oldUser = [], curUser = [];
+        for(let id of foundRoom.user_id) {
+            let isExist = user_id.some(uid => id.equals(uid));
+            if(isExist) {
+                curUser.push(id);
+            } else {
+                oldUser.push(id);
+            }
+        }
+        for(let uid of user_id) {
+            let isExist = foundRoom.user_id.some(id => id.equals(uid));
+            if(!isExist) newUser.push(uid);
+        }
+
+        console.log("old user", oldUser);
+        console.log("current user", curUser);
+        console.log("new user", newUser);
 
         // remove room id of old user
         if(oldUser.length > 0) {
@@ -154,35 +171,27 @@ exports.assign = async(req, res, next) => {
         }
 
         if(curUser.length > 0) {
-            // create electric sub-bill for current people
             for(let people of curUser) {
                 let foundContract = await db.Contract.findOne({
                     user_id: people._id,
                     active: true
                 }).populate({
                     path: "bill_id",
-                    populate: { path: "electric_id" }
-                }).populate({
-                    path: "bill_id",
-                    populate: { path: "house_id" }
+                    populate: { path: "timePoint_id" }
                 }).lean().exec();
 
                 // get current bill
                 let currentBill = foundContract.bill_id.filter(b => moment(b.endTime).isSameOrAfter(moment()))[0];
 
-                // create house sub-bill
-                let houseData = {
+                // create new time point
+                let createdTimePoint = await db.TimePoint.create({
                     bill_id: currentBill._id,
                     time: moment(),
-                    people: roomPeopleNumber
-                }
-                let createdHouse = await db.House.create({...houseData});
+                    people: roomPeopleNumber,
+                    number: amount
+                });
 
-                // create electric sub-bill
-                let createdElectric = await db.Electric.create({...houseData, number: amount});
-
-                currentBill.electric_id.push(createdElectric._id);
-                currentBill.house_id.push(createdHouse._id);
+                currentBill.timePoint_id.push(createdTimePoint._id);
                 await currentBill.save();
             }
         }

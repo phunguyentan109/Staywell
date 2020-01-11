@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const {casDeleteMany} = require("../utils/dbSupport");
+const {casDeleteMany, spliceId} = require("../utils/dbSupport");
 const db = require("../models");
 
 const contractSchema = new mongoose.Schema({
@@ -40,6 +40,7 @@ contractSchema.pre("save", async function(next) {
 contractSchema.pre("remove", async function(next) {
     try {
         await casDeleteMany("Bill", this.bill_id);
+        await spliceId("User", this.user_id, "contract_id", this._id);
         return next();
     } catch (e) {
         return next(e);

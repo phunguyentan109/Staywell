@@ -130,13 +130,13 @@ function Contract({notify, match}) {
                             columns={[
                                 {
                                     title: 'House',
-                                    dataIndex: 'house_id',
-                                    render: text => <span>{text.length} calculation(s)</span>
+                                    dataIndex: 'house',
+                                    render: (text, record) => <span>$ {text.toFixed(2)} | {record.timePoint_id.length} calculation(s)</span>
                                 },
                                 {
                                     title: "Electric",
-                                    dataIndex: 'electric_id',
-                                    render: text => <span>{text.length} calculation(s)</span>
+                                    dataIndex: 'electric',
+                                    render: (text, record) => <span>$ {text.toFixed(2)} | {record.timePoint_id.length} calculation(s)</span>
                                 },
                                 {
                                     title: "Wifi",
@@ -167,7 +167,7 @@ function Contract({notify, match}) {
                     bill._id && <Row>
                         <Col md={12}>
                             <HouseCalc
-                                houses={bill.house_id}
+                                timePoints={bill.timePoint_id}
                                 currentPeople={currentPeople}
                                 price={price}
                                 endTime={bill.endTime}
@@ -175,7 +175,7 @@ function Contract({notify, match}) {
                         </Col>
                         <Col md={12}>
                             <ElectricCalc
-                                electrics={bill.electric_id}
+                                timePoints={bill.timePoint_id}
                                 currentPeople={currentPeople}
                                 price={price}
                             />

@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
-const electricSchema = new mongoose.Schema({
+const timePointSchema = new mongoose.Schema({
     bill_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Electric"
+        ref: "Bill"
     },
     time: Date,
     people: Number,
@@ -11,6 +11,6 @@ const electricSchema = new mongoose.Schema({
         type: Number,
         default: 0
     }
-}, {timestamps: true})
+}, { timestamps: true })
 
-module.exports = mongoose.model("Electric", electricSchema);
+module.exports = mongoose.model("TimePoint", timePointSchema);
