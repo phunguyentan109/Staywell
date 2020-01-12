@@ -32,14 +32,17 @@ function HouseCalc({timePoints, currentPeople, endTime, price}) {
         return formatVND(price.house * (lengthToCurrent / lengthToEnd * 100));
     }
 
-    function getFirstBegin(time) {
+    function getLatestBegin(time) {
         let subtractTime = moment(time).subtract(1, "days");
         return format(subtractTime);
     }
 
-    function getBegin(index, time) {
-        let lastPointTime = timePoints[index - 1].time;
-        return moment(lastPointTime).add(1, "days");
+    function getBegin(isFirstTimePoint, time) {
+        // if(isFirstTimePoint) {
+        //
+        // }
+        // let lastPointTime = timePoints[index - 1];
+        // return moment(lastPointTime).add(1, "days");
     }
 
     return (
@@ -47,8 +50,8 @@ function HouseCalc({timePoints, currentPeople, endTime, price}) {
             {
                 timePoints.map((point, i) => i === timePoints.length - 1 ? (
                     <HouseItem
-                        no={i+1}
-                        begin={getFirstBegin(point.time)}
+                        no={i}
+                        begin={getLatestBegin(point.time)}
                         end="Present"
                         length={getLength(point.time, moment(), 1)}
                         otherPeople={currentPeople - 1}
@@ -57,8 +60,8 @@ function HouseCalc({timePoints, currentPeople, endTime, price}) {
                     />
                 ) : (
                     <HouseItem
-                        no={i+1}
-                        begin={getBegin(i, point.time)}
+                        no={i}
+                        begin={getBegin(i === 0, point.time)}
                         end={point.time}
                         length={getLength(point.time, moment(), 1)}
                         otherPeople={point.people - 1}

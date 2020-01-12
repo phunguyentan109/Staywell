@@ -9,25 +9,22 @@ async function createContract(user_id, price_id, electricNumber, peopleNumber, r
     // Get the duration from price to set the contract timeline
     let priceData = await db.Price.findById(price_id).lean().exec();
     for(let i = 1; i <= priceData.duration; i++) {
+        let endTime = moment().add(i, "months");
 
         // create all bill of the contract
         let createdBill = await db.Bill.create({
-            contract_id: createContract._id,
-            endTime: moment().add(i, "months")
+            contract_id: createContract._id, endTime
         })
 
-        // Check if the pre-push bill is the contract's first bill, add starting time point
-        if(createdContract.bill_id.length === 0) {
-            let createdTimePoint = await db.TimePoint.create({
-                bill_id: createdBill._id,
-                time: moment().subtract(1, "days"),
-                people: peopleNumber
-            });
+        // Add starting time point for each bill
+        let isFirstBill = createdContract.bill_id.length === 0;
+        let createdTimePoint = await db.TimePoint.create({
+            bill_id: createdBill._id,
+            time: isFirstBill ? moment().subtract(1, "days") : endTime
+        });
 
-            // createdBill.electric_id.push(createdElectric._id);
-            createdBill.timePoint_id.push(createdTimePoint._id);
-            createdBill.save();
-        }
+        createdBill.timePoint_id.push(createdTimePoint._id);
+        createdBill.save();
 
         createdContract.bill_id.push(createdBill._id);
         await createdContract.save();
@@ -104,37 +101,24 @@ exports.assign = async(req, res, next) => {
         const {room_id} = req.params;
         const {amount} = req.body;
         let foundRoom = await db.Room.findById(room_id).populate("price_id").exec();
-        // console.log("user in room", foundRoom.user_id);
+        let roomPeopleNumber = foundRoom.user_id.length; // get number of people in room (before)
 
         // Get only the id of user
         let user_id = req.body.user_id.map(user => user._id);
 
-        // get number of people in room (before)
-        let roomPeopleNumber = foundRoom.user_id.length;
-
-        // remove old people and add new user to the room
-        // const NOT_FOUND = -1;
-        // let oldUser = foundRoom.user_id.filter(id => user_id.indexOf(id) === NOT_FOUND);
-        // let curUser = foundRoom.user_id.filter(id => user_id.indexOf(id) !== NOT_FOUND);
-        // let newUser = user_id.filter(id => curUser.indexOf(id) === NOT_FOUND);
-
+        // determine old people and current user
         let newUser = [], oldUser = [], curUser = [];
         for(let id of foundRoom.user_id) {
             let isExist = user_id.some(uid => id.equals(uid));
-            if(isExist) {
-                curUser.push(id);
-            } else {
-                oldUser.push(id);
-            }
+            if(isExist) curUser.push(id);
+            else oldUser.push(id);
         }
+
+        // determine new user
         for(let uid of user_id) {
             let isExist = foundRoom.user_id.some(id => id.equals(uid));
             if(!isExist) newUser.push(uid);
         }
-
-        console.log("old user", oldUser);
-        console.log("current user", curUser);
-        console.log("new user", newUser);
 
         // remove room id of old user
         if(oldUser.length > 0) {
@@ -181,18 +165,19 @@ exports.assign = async(req, res, next) => {
                 }).lean().exec();
 
                 // get current bill
-                let currentBill = foundContract.bill_id.filter(b => moment(b.endTime).isSameOrAfter(moment()))[0];
+                let currentBill_id = foundContract.bill_id.filter(b => moment(b.endTime).isSameOrAfter(moment()))[0]._id;
+                let foundBill = await db.Bill.findById(currentBill_id);
 
                 // create new time point
                 let createdTimePoint = await db.TimePoint.create({
-                    bill_id: currentBill._id,
+                    bill_id: currentBill_id,
                     time: moment(),
                     people: roomPeopleNumber,
                     number: amount
                 });
 
-                currentBill.timePoint_id.push(createdTimePoint._id);
-                await currentBill.save();
+                foundBill.timePoint_id.push(createdTimePoint._id);
+                await foundBill.save();
             }
         }
 
