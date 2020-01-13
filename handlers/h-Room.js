@@ -171,7 +171,8 @@ exports.assign = async(req, res, next) => {
                 // create new time point
                 let createdTimePoint = await db.TimePoint.create({
                     bill_id: currentBill_id,
-                    time: moment(),
+                    // time: moment(),
+                    time: moment().add(Math.random() * 5, "days"),
                     people: roomPeopleNumber,
                     number: amount
                 });

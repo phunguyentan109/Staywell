@@ -168,7 +168,6 @@ function Contract({notify, match}) {
                         <Col md={12}>
                             <HouseCalc
                                 timePoints={bill.timePoint_id}
-                                currentPeople={currentPeople}
                                 price={price.house}
                                 endTime={bill.endTime}
                             />
