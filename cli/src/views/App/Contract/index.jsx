@@ -4,21 +4,14 @@ import withNoti from "hocs/withNoti";
 import PopConfirm from "components/App/Pop/PopConfirm";
 import moment from "moment";
 import api, {apiCall} from "constants/api";
+import {formatVND} from "util/helper";
 
-import HouseCalc from "./HouseCalc";
+import TimePointCalc from "./TimePointCalc";
 
 const DEFAULT_BILL = {
     electric_id: [],
     house_id: []
 };
-
-function ElectricCalc({electrics}) {
-    return (
-        <Card title="Electric Calculation" className="gx-card">
-            <p>Electric: ${}</p>
-        </Card>
-    )
-}
 
 function Contract({notify, match}) {
     const [contracts, setContracts] = useState([]);
@@ -71,9 +64,26 @@ function Contract({notify, match}) {
         setBill(bill);
     }
 
+    function renderMoneyElectric(record) {
+        const {electric, house, timePoint_id} = record;
+        let total = electric + house;
+        if(timePoint_id.length > 1) {
+            return (
+                <span>
+                    { formatVND(total) } { timePoint_id.length > 1
+                        ? <span> <span className="gx-link" onClick={hdDetail.bind(this, record)}> <Divider type="vertical"/> +{timePoint_id.length} calculation(s)</span>
+                         </span>
+                        : null
+                    }
+                </span>
+            )
+        }
+        return <span>{ formatVND(total) }</span>
+    }
+
     return (
         <Row>
-            <Col md={12}>
+            <Col md={24}>
                 <Card title="List of contracts" className="gx-card">
                     <Spin spinning={loading}>
                         <Table
@@ -121,65 +131,53 @@ function Contract({notify, match}) {
                         />
                     </Spin>
                 </Card>
-                <Card title="List of bills" className="gx-card">
-                    <Spin spinning={loading}>
-                        <Table
-                            className="gx-table-responsive"
-                            dataSource={bills}
-                            rowKey="_id"
-                            columns={[
-                                {
-                                    title: 'House',
-                                    dataIndex: 'house',
-                                    render: (text, record) => <span>$ {text.toFixed(2)} | {record.timePoint_id.length} calculation(s)</span>
-                                },
-                                {
-                                    title: "Electric",
-                                    dataIndex: 'electric',
-                                    render: (text, record) => <span>$ {text.toFixed(2)} | {record.timePoint_id.length} calculation(s)</span>
-                                },
-                                {
-                                    title: "Wifi",
-                                    dataIndex: 'wifi',
-                                    render: text => <span>$ {text.toFixed(2)}</span>
-                                },
-                                {
-                                    title: 'Water',
-                                    dataIndex: 'water',
-                                    render: text => <span>$ {text.toFixed(2)}</span>
-                                },
-                                {
-                                    title: 'Action',
-                                    key: 'action',
-                                    render: (text, record) => record.room_id ? <span>None</span> : (
-                                        <span>
-                                            <span className="gx-link" onClick={hdDetail.bind(this, record)}>Detail</span>
-                                        </span>
-                                    )
-                                }
-                            ]}
-                        />
-                    </Spin>
-                </Card>
             </Col>
-            <Col md={12}>
+            {
+                bills.length > 0 && <Col md={16}>
+                    <Card title="List of bills" className="gx-card">
+                        <Spin spinning={loading}>
+                            <Table
+                                className="gx-table-responsive"
+                                dataSource={bills}
+                                rowKey="_id"
+                                columns={[
+                                    {
+                                        title: 'House & Electric',
+                                        render: renderMoneyElectric
+                                    },
+                                    {
+                                        title: "Wifi",
+                                        dataIndex: 'wifi',
+                                        render: text => <span>{ formatVND(text) }</span>
+                                    },
+                                    {
+                                        title: 'Water',
+                                        dataIndex: 'water',
+                                        render: text => <span>{ formatVND(text) }</span>
+                                    },
+                                    {
+                                        title: 'Action',
+                                        key: 'action',
+                                        render: (text, record) => record.room_id ? <span>None</span> : (
+                                            <span>
+                                                <span className="gx-link" onClick={() => console.log("reveal")}>Reveal</span>
+                                            </span>
+                                        )
+                                    }
+                                ]}
+                            />
+                        </Spin>
+                    </Card>
+                </Col>
+            }
+            <Col md={8}>
                 {
-                    bill._id && <Row>
-                        <Col md={12}>
-                            <HouseCalc
-                                timePoints={bill.timePoint_id}
-                                price={price.house}
-                                endTime={bill.endTime}
-                            />
-                        </Col>
-                        <Col md={12}>
-                            <ElectricCalc
-                                timePoints={bill.timePoint_id}
-                                currentPeople={currentPeople}
-                                price={price}
-                            />
-                        </Col>
-                    </Row>
+                    bill._id && <TimePointCalc
+                        timePoints={bill.timePoint_id}
+                        currentPeople={currentPeople}
+                        endTime={bill.endTime}
+                        price={price}
+                    />
                 }
             </Col>
         </Row>

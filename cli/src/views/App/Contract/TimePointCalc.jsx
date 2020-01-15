@@ -1,15 +1,15 @@
 import React from "react";
-import {Card} from "antd";
 import moment from "moment";
+import {Card} from "antd";
 import {formatVND} from "util/helper";
 
-function HouseItem({no, begin, end, otherPeople, money, length}) {
+function TimePointItem({no, begin, end, otherPeople, money, length}) {
     function format(time) {
         return time === "Present" ? end : moment(time).format("MMM Do, YYYY");
     }
 
     return (
-        <Card title={no ? `House Calculation #${no}` : "Curent in calculation"} className="gx-card">
+        <Card title={no ? `TimePoint-Based Calculation #${no}` : "Curent in calculation"} className="gx-card">
             <div>
                 <p>{format(begin)} - {format(end)} | {length} day(s)</p>
                 <p>Live with: {otherPeople > 0 ? `${otherPeople} Other people` : "Only himself"}</p>
@@ -19,8 +19,7 @@ function HouseItem({no, begin, end, otherPeople, money, length}) {
     )
 }
 
-function HouseCalc({timePoints, endTime, price, currentPeople}) {
-
+function TimePointCalc({timePoints, currentPeople, endTime, price}) {
     function getLength(end, lastTimePointIndex) {
         let beginDate = moment(timePoints[lastTimePointIndex].time).dayOfYear();
         let endDate = moment(end).dayOfYear();
@@ -33,10 +32,18 @@ function HouseCalc({timePoints, endTime, price, currentPeople}) {
         return endDate - beginDate;
     }
 
-    function getMoney(beginTime, lastTimePointIndex) {
+    function getHouseMoney(beginTime, lastTimePointIndex) {
         let lengthToCurrent = getLength(beginTime, lastTimePointIndex);
         let lengthToEnd = getBillLength();
-        return formatVND(price * (lengthToCurrent / lengthToEnd * 100));
+        return formatVND(price.house * (lengthToCurrent / lengthToEnd * 100));
+    }
+
+    function getElectricMoney(index, people) {
+        if(index !== 0) {
+            let electricUsed = timePoints[index].number - timePoints[index - 1].number;
+            return formatVND((price * electricUsed) / people);
+        }
+        return "???";
     }
 
     function getBegin(lastIndex) {
@@ -54,31 +61,32 @@ function HouseCalc({timePoints, endTime, price, currentPeople}) {
                     end: n.time,
                     length: getLength(n.time, i - 1),
                     otherPeople: n.people - 1,
-                    money: getMoney(n.time, i - 1)
+                    houseMoney: getHouseMoney(n.time, i - 1),
+                    electricMoney: getElectricMoney(i, n.people)
                 })
             }
             return a;
         }, []);
 
         // add timeline box from last time point to present
-        let lastIndexTillPresent = timePoints.length - 1;
-        let latestTimePoint = timePoints[lastIndexTillPresent];
-        timeline.push({
-            begin: getBegin(lastIndexTillPresent),
-            end: "Present",
-            length: getLength(moment(), lastIndexTillPresent),
-            otherPeople: currentPeople - 1,
-            money: getMoney(latestTimePoint.time, lastIndexTillPresent)
-        })
+        // let lastIndexTillPresent = timePoints.length - 1;
+        // let latestTimePoint = timePoints[lastIndexTillPresent];
+        // timeline.push({
+        //     begin: getBegin(lastIndexTillPresent),
+        //     end: "Present",
+        //     length: getLength(moment(), lastIndexTillPresent),
+        //     otherPeople: currentPeople - 1,
+        //     money: getHouseMoney(latestTimePoint.time, lastIndexTillPresent)
+        // })
 
         return timeline;
     }
 
     return (
         <div>
-            { arrangeTimeline().map((t, i) => <HouseItem {...t} key={i}/>) }
+            { arrangeTimeline().map((t, i) => <TimePointItem {...t} key={i}/>) }
         </div>
     )
 }
 
-export default HouseCalc;
+export default TimePointCalc;

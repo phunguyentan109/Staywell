@@ -20,6 +20,7 @@ async function createContract(user_id, price_id, electricNumber, peopleNumber, r
         let isFirstBill = createdContract.bill_id.length === 0;
         let createdTimePoint = await db.TimePoint.create({
             bill_id: createdBill._id,
+            people: isFirstBill ? peopleNumber : undefined,
             time: isFirstBill ? moment().subtract(1, "days") : endTime
         });
 
@@ -171,8 +172,8 @@ exports.assign = async(req, res, next) => {
                 // create new time point
                 let createdTimePoint = await db.TimePoint.create({
                     bill_id: currentBill_id,
-                    // time: moment(),
-                    time: moment().add(Math.random() * 5, "days"),
+                    time: moment(),
+                    // time: moment().add(Math.random() * 5, "days"),
                     people: roomPeopleNumber,
                     number: amount
                 });
