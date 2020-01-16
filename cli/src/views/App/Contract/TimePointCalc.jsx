@@ -9,10 +9,10 @@ function TimePointItem({no, begin, end, otherPeople, electricMoney, houseMoney, 
     }
 
     return (
-        <Card title={no ? `TimePoint-Based Calculation #${no}` : "Current in calculation"} className="gx-card">
+        <Card title={no ? `TimePoint-Based Calculation #${no}` : "Current in calculation"} className={no ? "gx-card" : ""}>
             <div>
                 <p>{format(begin)} - {format(end)}</p>
-                <p>Live in: {length} day(s) - {otherPeople > 0 ? `With ${otherPeople} Other people` : "Single"} - {houseMoney}</p>
+                <p>{length} day(s) - {otherPeople > 0 ? `With ${otherPeople} Other people` : "Single"} - {houseMoney}</p>
                 <p>Electric used: {number} kw/h - {electricMoney}</p>
             </div>
         </Card>
@@ -29,12 +29,15 @@ function TimePointCalc({timePoints, currentPeople, endTime, price}) {
     function getBillLength() {
         let beginDate = moment(timePoints[0].time).dayOfYear();
         let endDate = moment(endTime).dayOfYear();
+        // console.log("begin", moment(timePoints[0].time).format("Do MMM"), beginDate);
+        // console.log("end", moment(endTime).format("Do MMM"), endDate);
         return endDate - beginDate;
     }
 
     function getHouseMoney(beginTime, lastTimePointIndex) {
         let lengthToCurrent = getLength(beginTime, lastTimePointIndex);
         let lengthToEnd = getBillLength();
+        // console.log(lastTimePointIndex, lengthToCurrent, lengthToEnd);
         return formatVND(price.house * (lengthToCurrent / lengthToEnd * 100));
     }
 
@@ -70,15 +73,17 @@ function TimePointCalc({timePoints, currentPeople, endTime, price}) {
         }, []);
 
         // add timeline box from last time point to present
-        // let lastIndexTillPresent = timePoints.length - 1;
-        // let latestTimePoint = timePoints[lastIndexTillPresent];
-        // timeline.push({
-        //     begin: getBegin(lastIndexTillPresent),
-        //     end: "Present",
-        //     length: getLength(moment(), lastIndexTillPresent),
-        //     otherPeople: currentPeople - 1,
-        //     money: getHouseMoney(latestTimePoint.time, lastIndexTillPresent)
-        // })
+        let lastIndexTillPresent = timePoints.length - 1;
+        let latestTimePoint = timePoints[lastIndexTillPresent];
+        timeline.push({
+            begin: getBegin(lastIndexTillPresent),
+            end: "Present",
+            length: getLength(moment(), lastIndexTillPresent),
+            otherPeople: currentPeople - 1,
+            number: "???",
+            electricMoney: "VND ???",
+            houseMoney: getHouseMoney(latestTimePoint.time, lastIndexTillPresent)
+        })
 
         return timeline;
     }

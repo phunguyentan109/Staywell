@@ -9,7 +9,10 @@ async function createContract(user_id, price_id, electricNumber, peopleNumber, r
     // Get the duration from price to set the contract timeline
     let priceData = await db.Price.findById(price_id).lean().exec();
     for(let i = 1; i <= priceData.duration; i++) {
-        let endTime = moment().add(i, "months");
+
+        let isFirstBill = createdContract.bill_id.length === 0;
+
+        let endTime = isFirstBill ? moment().add(i, "months").subtract(1, "days") : moment().add(i, "months");
 
         // create all bill of the contract
         let createdBill = await db.Bill.create({
@@ -17,11 +20,10 @@ async function createContract(user_id, price_id, electricNumber, peopleNumber, r
         })
 
         // Add starting time point for each bill
-        let isFirstBill = createdContract.bill_id.length === 0;
         let createdTimePoint = await db.TimePoint.create({
             bill_id: createdBill._id,
             people: isFirstBill ? peopleNumber : undefined,
-            time: isFirstBill ? moment().subtract(1, "days") : endTime
+            time: isFirstBill ? moment() : endTime
         });
 
         createdBill.timePoint_id.push(createdTimePoint._id);

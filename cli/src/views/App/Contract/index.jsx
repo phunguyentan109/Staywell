@@ -157,6 +157,11 @@ function Contract({notify, match}) {
                                         render: text => <span>{ formatVND(text) }</span>
                                     },
                                     {
+                                        title: "Bill Date",
+                                        dataIndex: "endTime",
+                                        render: text => <span>{moment(text).format("Do MMM, YYYY")}</span>
+                                    },
+                                    {
                                         title: 'Action',
                                         key: 'action',
                                         render: (text, record) => record.room_id ? <span>None</span> : (
