@@ -133,7 +133,7 @@ function Contract({notify, match}) {
                 </Card>
             </Col>
             {
-                bills.length > 0 && <Col md={16}>
+                bills.length > 0 && <Col md={14}>
                     <Card title="List of bills" className="gx-card">
                         <Spin spinning={loading}>
                             <Table
@@ -143,6 +143,7 @@ function Contract({notify, match}) {
                                 columns={[
                                     {
                                         title: 'House & Electric',
+                                        key: "H&E",
                                         render: renderMoneyElectric
                                     },
                                     {
@@ -170,7 +171,7 @@ function Contract({notify, match}) {
                     </Card>
                 </Col>
             }
-            <Col md={8}>
+            <Col md={10}>
                 {
                     bill._id && <TimePointCalc
                         timePoints={bill.timePoint_id}

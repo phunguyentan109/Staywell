@@ -3,17 +3,17 @@ import moment from "moment";
 import {Card} from "antd";
 import {formatVND} from "util/helper";
 
-function TimePointItem({no, begin, end, otherPeople, money, length}) {
+function TimePointItem({no, begin, end, otherPeople, electricMoney, houseMoney, length, number}) {
     function format(time) {
         return time === "Present" ? end : moment(time).format("MMM Do, YYYY");
     }
 
     return (
-        <Card title={no ? `TimePoint-Based Calculation #${no}` : "Curent in calculation"} className="gx-card">
+        <Card title={no ? `TimePoint-Based Calculation #${no}` : "Current in calculation"} className="gx-card">
             <div>
-                <p>{format(begin)} - {format(end)} | {length} day(s)</p>
-                <p>Live with: {otherPeople > 0 ? `${otherPeople} Other people` : "Only himself"}</p>
-                <p>Money paid - {money}</p>
+                <p>{format(begin)} - {format(end)}</p>
+                <p>Live in: {length} day(s) - {otherPeople > 0 ? `With ${otherPeople} Other people` : "Single"} - {houseMoney}</p>
+                <p>Electric used: {number} kw/h - {electricMoney}</p>
             </div>
         </Card>
     )
@@ -41,7 +41,7 @@ function TimePointCalc({timePoints, currentPeople, endTime, price}) {
     function getElectricMoney(index, people) {
         if(index !== 0) {
             let electricUsed = timePoints[index].number - timePoints[index - 1].number;
-            return formatVND((price * electricUsed) / people);
+            return formatVND((price.electric * electricUsed) / people);
         }
         return "???";
     }
@@ -61,6 +61,7 @@ function TimePointCalc({timePoints, currentPeople, endTime, price}) {
                     end: n.time,
                     length: getLength(n.time, i - 1),
                     otherPeople: n.people - 1,
+                    number: n.number - timePoints[i - 1].number,
                     houseMoney: getHouseMoney(n.time, i - 1),
                     electricMoney: getElectricMoney(i, n.people)
                 })
