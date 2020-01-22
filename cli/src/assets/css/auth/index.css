@@ -85,6 +85,11 @@
         animation-duration: 1.2s;
         animation-fill-mode: backwards;
         animation-delay: 1.5s; }
+      @media (max-width: 479px) {
+        .auth-bg > div > .content > h1 {
+          font-size: 30px; }
+        .auth-bg > div > .content > h4 {
+          font-size: 14px; } }
 
 .auth-credit {
   position: absolute;
@@ -100,6 +105,11 @@
     padding-left: 5px;
     padding-right: 5px;
     color: #17a2b8; }
+  @media (max-width: 479px) {
+    .auth-credit {
+      right: 0px;
+      text-align: center;
+      width: 100%; } }
 
 .auth-navbar {
   display: flex;
@@ -126,6 +136,23 @@
       color: white; }
     .auth-navbar > a:nth-of-type(2) > i {
       margin-right: 8px; }
+    @media (max-width: 479px) {
+      .auth-navbar > a:nth-of-type(2) {
+        background-color: #bbbbbb14;
+        padding: 12px;
+        border-radius: 5px; }
+        .auth-navbar > a:nth-of-type(2) > i {
+          margin-right: 0;
+          font-size: 12px; } }
+  @media (max-width: 479px) {
+    .auth-navbar {
+      padding: 30px;
+      padding-left: 25px;
+      padding-right: 25px; }
+      .auth-navbar > a:nth-of-type(1) {
+        font-size: 20px; }
+      .auth-navbar > a:nth-of-type(2) {
+        font-size: 13px; } }
 
 .auth-input > i, .auth-input > input {
   padding: 7px 10px;
@@ -158,6 +185,9 @@
       font-size: 14px; }
     .auth-input > input.focus {
       background-color: #ffffff30; }
+    @media (max-width: 479px) {
+      .auth-input > input {
+        width: 270px; } }
 
 .auth-form {
   margin-top: 60px; }
@@ -174,16 +204,22 @@
     font-family: "Ubuntu", sans-serif; }
     .auth-form > button.signin {
       background-color: #952323;
-      font-size: 16px !important; }
+      font-size: 16px; }
       .auth-form > button.signin:hover {
         background-color: #ca3030;
         cursor: pointer; }
     .auth-form > button.signup {
       background-color: #287f7f;
-      font-size: 16px !important; }
+      font-size: 16px; }
       .auth-form > button.signup:hover {
         background-color: #319696;
         cursor: pointer; }
+    @media (max-width: 479px) {
+      .auth-form > button {
+        margin-top: 30px; }
+        .auth-form > button.signin {
+          padding: 5px 0;
+          font-size: 15px; } }
   .auth-form + a {
     color: gray;
     margin-top: 20px;
