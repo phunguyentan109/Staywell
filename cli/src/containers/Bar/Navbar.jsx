@@ -27,11 +27,16 @@ function AuthNavbar({location, clearAuthData, device}) {
     return (
         <div className="auth-navbar">
             <Link to="/">Staywell</Link>
-            {
-                isRegister
-                ? <Link to="/" onClick={clearAuthData}><i className="fas fa-door-open"/>{getTitle()}</Link>
-                : <Link to="/register"><i className="fas fa-user-plus"/>{getTitle()}</Link>
-            }
+            <div>
+                {
+                    isRegister
+                    ? <Link to="/" onClick={clearAuthData}><i className="fas fa-door-open"/>{getTitle()}</Link>
+                    : <Link to="/register"><i className="fas fa-user-plus"/>{getTitle()}</Link>
+                }
+                {
+                    device.isMobile && <Link to="/forgot"><i className="fas fa-key"/></Link>
+                }
+            </div>
         </div>
     )
 };

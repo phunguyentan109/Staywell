@@ -1,13 +1,13 @@
 import React from "react";
+import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import {Avatar, Popover} from "antd";
 import {clearAuthData} from "appRedux/actions/user";
 
-function UserInfo({clearAuthData}) {
+function UserInfo({clearAuthData, user}) {
     let userMenuOptions = (
         <ul className="gx-user-popover">
-            <li>My Account</li>
-            <li>Connections</li>
+            <li><Link to="/app/profile">My Account</Link></li>
             <li onClick={clearAuthData}>Logout</li>
         </ul>
     );
@@ -19,7 +19,7 @@ function UserInfo({clearAuthData}) {
             trigger="click"
         >
             <Avatar
-                src='https://via.placeholder.com/150x150'
+                src={user.avatar.link}
                 className="gx-avatar gx-pointer"
                 alt=""
             />
@@ -27,4 +27,10 @@ function UserInfo({clearAuthData}) {
     )
 }
 
-export default connect(null, {clearAuthData})(UserInfo);
+function mapState({user}) {
+    return {
+        user: user.data
+    }
+}
+
+export default connect(mapState, {clearAuthData})(UserInfo);
