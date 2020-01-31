@@ -30,7 +30,8 @@ function* hdAuthData({value}) {
             yield put(addMessage("A verification link from us has been sent to your mail.", false));
         }
     } catch(err) {
-        yield put(addMessage(err));
+        // yield put(addMessage(err));
+        yield put(addMessage("Your email/password/token is false or has timeout."));
     }
 }
 
