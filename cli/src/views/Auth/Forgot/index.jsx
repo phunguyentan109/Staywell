@@ -30,8 +30,7 @@ function Forgot({history}) {
     }
 
     function hdChange(e) {
-        const {value} = e.target;
-        setEmail(value);
+        setEmail(e.target.value);
     }
 
     return (
