@@ -36,7 +36,7 @@ const billSchema = new mongoose.Schema({
 
 billSchema.pre("remove", async function(next) {
     try {
-        await casDeleteMany("TimePoint", this.timePoint_id);
+        // await casDeleteMany("TimePoint", this.timePoint_id);
         return next();
     } catch (e) {
         return next(e);
