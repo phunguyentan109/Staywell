@@ -33,10 +33,10 @@ const userSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Room"
     },
-    bill_id: [
+    contract_id: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Bill"
+            ref: "Contract"
         }
     ]
 }, {timestamps: true});
