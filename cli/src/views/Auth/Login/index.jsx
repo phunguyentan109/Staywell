@@ -3,13 +3,14 @@ import {Link} from "react-router-dom";
 import AuthInput from "components/Auth/AuthInput.jsx";
 import {connect} from "react-redux";
 import {sendAuthData} from "appRedux/actions/user";
+import withResize from "hocs/withResize";
 
 const DEFAULT_ACCOUNT = {
     email: "",
     password: ""
 }
 
-function Login({sendAuthData, history}) {
+function Login({sendAuthData, history, device}) {
     const [account, setAccount] = useState(DEFAULT_ACCOUNT);
 
     function hdSubmit(e) {
@@ -24,7 +25,11 @@ function Login({sendAuthData, history}) {
 
     return (
         <div className="content">
-            <h1>Welcome to Staywell,</h1>
+            {
+                device.isMobile
+                ? <h1>What a nice day,</h1>
+                : <h1>Welcome to Staywell,</h1>
+            }
             <h4>Please enter your account to continue.</h4>
             <form className="auth-form" onSubmit={hdSubmit}>
                 <AuthInput
@@ -44,9 +49,9 @@ function Login({sendAuthData, history}) {
                 />
                 <button className="signin">Get access</button>
             </form>
-            <Link to="/reset">Forgot your password?</Link>
+            {device.isMobile || <Link to="/forgot">Forgot your password?</Link>}
         </div>
     )
 }
 
-export default connect(null, {sendAuthData})(Login);
+export default connect(null, {sendAuthData})(withResize(Login));

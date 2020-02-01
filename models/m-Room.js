@@ -11,7 +11,12 @@ const roomSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Price"
     },
-    room: String,
+    contract_id: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Contract"
+        }
+    ],
     user_id: [
         {
             type: mongoose.Schema.Types.ObjectId,

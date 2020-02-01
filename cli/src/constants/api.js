@@ -32,6 +32,8 @@ export default {
         auth: type => ["post", `/api/user/${type}`],
         getOne: user_id => ["get", `/api/user/${user_id}`],
         activate: user_id => ["put", `/api/user/${user_id}/activate`],
+        forgotPassword: () => ["post", `/api/user/forgot`],
+        resetPassword: token => ["put", `/api/user/${token}/reset`],
         changePassword: user_id => ["put", `/api/user/${user_id}/password`],
         get: () => ["get", `/api/user`],
         getAssign: () => ["get", `/api/user/assign`],

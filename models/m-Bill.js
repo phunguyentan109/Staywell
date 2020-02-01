@@ -1,17 +1,8 @@
 const mongoose = require("mongoose");
-const {casDeleteMany} = require("../utils/dbSupport");
+// const {spliceId} = require("../utils/dbSupport");
+// const db = require("../models");
 
 const billSchema = new mongoose.Schema({
-    contract_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Contract"
-    },
-    timePoint_id: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "TimePoint"
-        }
-    ],
     electric: {
         type: Number,
         default: 0
@@ -28,11 +19,11 @@ const billSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    endTime: {
-        type: Date,
-        required: true
+    contract_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Contract"
     },
-    isRevealed: {
+    inContract: {
         type: Boolean,
         default: false
     },

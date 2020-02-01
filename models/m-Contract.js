@@ -3,9 +3,9 @@ const {casDeleteMany, spliceId} = require("../utils/dbSupport");
 const db = require("../models");
 
 const contractSchema = new mongoose.Schema({
-    user_id: {
+    room_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        ref: "Room"
     },
     bill_id: [
         {
