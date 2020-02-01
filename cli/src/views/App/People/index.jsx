@@ -75,29 +75,20 @@ function PeopleTable({title, dataSource, loading, hdRemove}) {
                         {
                             title: "Avatar",
                             dataIndex: 'avatar.link',
-                            render: text => <span>{text.substring(0, 80)}</span>
-                        },
-                        {
-                            title: "Username",
-                            dataIndex: 'username'
+                            render: (text, rec) => (
+                                <span className="user-cell">
+                                    <img src={text} alt=""/>
+                                    <div>
+                                        <p>{rec.username}</p>
+                                        <small>{rec.email}</small>
+                                    </div>
+                                </span>
+                            )
                         },
                         {
                             title: "Room",
                             dataIndex: 'room_id.name',
                             render: text => <span>{text ? text : "Not Assigned"}</span>
-                        },
-                        {
-                            title: 'Email',
-                            dataIndex: 'email'
-                        },
-                        {
-                            title: "Contract",
-                            dataIndex: "contract_id",
-                            render: (text, record) => text.length === 0 ? <span>None</span> : (
-                                <span>
-                                    <a href={`/app/people/${record._id}/contract`} className="gx-link">{text.length} contract(s)</a>
-                                </span>
-                            )
                         },
                         {
                             title: 'Action',
