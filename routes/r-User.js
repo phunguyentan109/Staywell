@@ -21,6 +21,5 @@ router.route("/:user_id/contact").post(hdl.User.contact);
 router.use("/:user_id/rooms", mw.User.isLogin, require("./r-Room"));
 router.use("/:user_id/price", mw.User.isLogin, require("./r-Price"));
 router.use("/:user_id/people", mw.User.isLogin, require("./r-People"));
-router.use("/:user_id/contracts", require("./r-Contract"));
 
 module.exports = router;

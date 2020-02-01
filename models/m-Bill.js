@@ -1,24 +1,23 @@
 const mongoose = require("mongoose");
-const {casDeleteMany} = require("../utils/dbSupport");
+const {spliceId} = require("../utils/dbSupport");
+const db = require("../models");
 
 const billSchema = new mongoose.Schema({
-    contract_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Contract"
-    },
-    timePoint_id: [
+    electric_id: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "TimePoint"
+            ref: "Electric"
         }
     ],
-    electric: {
-        type: Number,
-        default: 0
-    },
-    house: {
-        type: Number,
-        default: 0
+    house_id: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "House"
+        }
+    ],
+    user_id : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
     },
     water: {
         type: Number,
@@ -28,28 +27,15 @@ const billSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    endTime: {
-        type: Date,
-        required: true
-    },
-    isRevealed: {
+    inContract: {
         type: Boolean,
-        default: false
+        default: true
     },
     isPaid: {
         type: Boolean,
         default: false
     },
     paidDate: Date
-}, { timestamps: true });
-
-billSchema.pre("remove", async function(next) {
-    try {
-        await casDeleteMany("TimePoint", this.timePoint_id);
-        return next();
-    } catch (e) {
-        return next(e);
-    }
-})
+}, { timestamps: true })
 
 module.exports = mongoose.model("Bill", billSchema);

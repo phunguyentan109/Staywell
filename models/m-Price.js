@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const db = require("../models");
 const {assignId} = require("../utils/dbSupport");
 
 const priceSchema = new mongoose.Schema({

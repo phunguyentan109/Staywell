@@ -38,10 +38,6 @@ export default {
         remove: user_id => ["delete", `/api/user/${user_id}`],
         update: user_id => ["put", `/api/user/${user_id}`]
     },
-    contract: {
-        get: user_id => ["get", `/api/user/${user_id}/contracts`],
-        remove: (user_id, contract_id) => ["delete", `/api/user/${user_id}/contracts/${contract_id}`]
-    },
     price: {
         get: () => ["get", `/api/price`],
         create: () => ["post", "/api/price"],
@@ -53,7 +49,6 @@ export default {
         getOne: room_id => ["get", `/api/rooms/${room_id}`],
         create: () => ["post", `/api/rooms`],
         remove: room_id => ["delete", `/api/rooms/${room_id}`],
-        edit: room_id => ["put", `/api/rooms/${room_id}`],
-        assign: room_id => ["put", `/api/rooms/${room_id}/assign`]
+        edit: room_id => ["put", `/api/rooms/${room_id}`]
     }
 }
