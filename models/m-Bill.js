@@ -1,23 +1,15 @@
 const mongoose = require("mongoose");
-const {spliceId} = require("../utils/dbSupport");
-const db = require("../models");
+// const {spliceId} = require("../utils/dbSupport");
+// const db = require("../models");
 
 const billSchema = new mongoose.Schema({
-    electric_id: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Electric"
-        }
-    ],
-    house_id: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "House"
-        }
-    ],
-    user_id : {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+    electric: {
+        type: Number,
+        default: 0
+    },
+    house: {
+        type: Number,
+        default: 0
     },
     water: {
         type: Number,
@@ -26,6 +18,10 @@ const billSchema = new mongoose.Schema({
     wifi: {
         type: Number,
         default: 0
+    },
+    contract_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Contract"
     },
     inContract: {
         type: Boolean,
