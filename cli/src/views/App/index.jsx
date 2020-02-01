@@ -8,7 +8,6 @@ import People from "./People";
 import Price from "./Price";
 import Profile from "./Profile";
 import Room from "./Room";
-import Contract from "./Contract";
 
 function AppRoutes(props) {
     const url = props.match.url;
@@ -19,14 +18,6 @@ function AppRoutes(props) {
                     path={`${url}/room`}
                     redirectPath={`${url}/`}
                     component={Room}
-                    access={[
-                        "OWNER_PERMISSION"
-                    ]}
-                />
-                <RouteControl
-                    path={`${url}/people/:user_id/contract`}
-                    redirectPath={`${url}/`}
-                    component={Contract}
                     access={[
                         "OWNER_PERMISSION"
                     ]}

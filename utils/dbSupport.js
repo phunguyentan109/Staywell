@@ -58,6 +58,7 @@ exports.casDeleteMany = async(schema, listId) => {
             if(foundDoc) await foundDoc.remove();
         }
     } catch(err) {
+        console.log("run");
         console.log(err);
     }
 }

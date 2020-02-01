@@ -53,6 +53,7 @@ exports.logIn = async(req, res, next) => {
             })
         }
     } catch(err) {
+        console.log(err);
         return next({
             status: 400,
             message: "Invalid email/password."
@@ -119,12 +120,6 @@ exports.get = async(req, res, next) => {
             populate: {
                 path: "room_id"
             }
-        })
-        .populate({
-            path: "user_id",
-            populate: {
-                path: "contract_id"
-            }
         }).lean().exec();
         return res.status(200).json(users.filter(ur => !ownerRole._id.equals(ur.role_id._id)));
     } catch (err) {
@@ -160,7 +155,7 @@ exports.updatePassword = async(req, res, next) => {
             // return error if old password is not matched
             return next({
                 status: 400,
-                message: "Sorry, the password is invalid"
+                message: err.code === 11000 ? "Sorry, the password is invalid" : err.message
             })
         }
     } catch(err) {

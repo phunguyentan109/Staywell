@@ -17,7 +17,7 @@ function People({notify}) {
             setPeople(peopleData);
             setLoading(false);
         } catch (e) {
-            return notify("error", "Data is not loaded");
+            return notify("error", "Data is not loaded")
         }
     }, [notify])
 
@@ -84,20 +84,11 @@ function PeopleTable({title, dataSource, loading, hdRemove}) {
                         {
                             title: "Room",
                             dataIndex: 'room_id.name',
-                            render: text => <span>{text ? text : "Not Assigned"}</span>
+                            render: text => <span>{text ? text.name : "Not Assigned"}</span>
                         },
                         {
                             title: 'Email',
                             dataIndex: 'email'
-                        },
-                        {
-                            title: "Contract",
-                            dataIndex: "contract_id",
-                            render: (text, record) => text.length === 0 ? <span>None</span> : (
-                                <span>
-                                    <a href={`/app/people/${record._id}/contract`} className="gx-link">{text.length} contract(s)</a>
-                                </span>
-                            )
                         },
                         {
                             title: 'Action',
