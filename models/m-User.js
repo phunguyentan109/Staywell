@@ -34,13 +34,7 @@ const userSchema = mongoose.Schema({
     room_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Room"
-    },
-    contract_id: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Contract"
-        }
-    ]
+    }
 }, {timestamps: true});
 
 userSchema.pre("save", async function(next){
