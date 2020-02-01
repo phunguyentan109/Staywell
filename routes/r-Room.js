@@ -12,6 +12,9 @@ router.route("/:room_id")
     .delete(mw.User.isPermit, hdl.Room.remove)
     .put(mw.User.isPermit, hdl.Room.update);
 
+router.route("/:room_id/assign")
+    .put(mw.User.isPermit, hdl.Room.assign);
+
 router.use("/:room_id/bills", mw.User.isCorrect, require("./r-Bill"));
 
 module.exports = router;

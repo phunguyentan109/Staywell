@@ -25,13 +25,22 @@ const billSchema = new mongoose.Schema({
     },
     inContract: {
         type: Boolean,
-        default: true
+        default: false
     },
     isPaid: {
         type: Boolean,
         default: false
     },
     paidDate: Date
-}, { timestamps: true })
+}, { timestamps: true });
+
+billSchema.pre("remove", async function(next) {
+    try {
+        await casDeleteMany("TimePoint", this.timePoint_id);
+        return next();
+    } catch (e) {
+        return next(e);
+    }
+})
 
 module.exports = mongoose.model("Bill", billSchema);
