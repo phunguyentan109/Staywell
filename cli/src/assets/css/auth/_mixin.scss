@@ -1,3 +1,15 @@
 $f-ubuntu: "Ubuntu", sans-serif;
 $f-poppin: "Poppins", sans-serif;
 $f-montserrat: "Montserrat", sans-serif;
+
+@mixin k-frame($ani-name) {
+    @keyframes #{$ani-name} {
+        @content;
+    }
+    @-webkit-keyframes #{$ani-name} {
+        @content;
+    }
+    @-moz-keyframes #{$ani-name} {
+        @content;
+    }
+}

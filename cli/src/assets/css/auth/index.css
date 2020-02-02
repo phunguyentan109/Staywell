@@ -1,3 +1,75 @@
+@keyframes fromTop {
+  from {
+    transform: translate(0, -100px);
+    opacity: 0; }
+  to {
+    transform: translate(0, 0);
+    opacity: 1; } }
+
+@-webkit-keyframes fromTop {
+  from {
+    transform: translate(0, -100px);
+    opacity: 0; }
+  to {
+    transform: translate(0, 0);
+    opacity: 1; } }
+
+@-moz-keyframes fromTop {
+  from {
+    transform: translate(0, -100px);
+    opacity: 0; }
+  to {
+    transform: translate(0, 0);
+    opacity: 1; } }
+
+@keyframes fromLeft {
+  from {
+    transform: translate(-100px, 0);
+    opacity: 0; }
+  to {
+    transform: translate(0, 0);
+    opacity: 1; } }
+
+@-webkit-keyframes fromLeft {
+  from {
+    transform: translate(-100px, 0);
+    opacity: 0; }
+  to {
+    transform: translate(0, 0);
+    opacity: 1; } }
+
+@-moz-keyframes fromLeft {
+  from {
+    transform: translate(-100px, 0);
+    opacity: 0; }
+  to {
+    transform: translate(0, 0);
+    opacity: 1; } }
+
+@keyframes fromBottom {
+  from {
+    transform: translate(0, 100px);
+    opacity: 0; }
+  to {
+    transform: translate(0, 0);
+    opacity: 1; } }
+
+@-webkit-keyframes fromBottom {
+  from {
+    transform: translate(0, 100px);
+    opacity: 0; }
+  to {
+    transform: translate(0, 0);
+    opacity: 1; } }
+
+@-moz-keyframes fromBottom {
+  from {
+    transform: translate(0, 100px);
+    opacity: 0; }
+  to {
+    transform: translate(0, 0);
+    opacity: 1; } }
+
 .auth-bg {
   background-position: center;
   background-repeat: no-repeat;
@@ -16,20 +88,52 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: center; }
-      .auth-bg > div > .content h1 {
+      align-items: center;
+      font-family: "Ubuntu", sans-serif; }
+      .auth-bg > div > .content > h1 {
         margin: 0;
         text-align: center;
-        font-family: "Ubuntu", sans-serif;
         color: #bababa;
         font-size: 40px;
-        margin-bottom: 8px; }
-      .auth-bg > div > .content h4 {
+        margin-bottom: 8px;
+        animation-name: fromTop;
+        animation-duration: 1.2s;
+        animation-delay: 0.3s;
+        animation-fill-mode: backwards; }
+      .auth-bg > div > .content > h4 {
         margin: 0;
         margin-top: 20px;
         color: #939393;
         font-size: 15px;
-        font-family: "Ubuntu", sans-serif; }
+        animation-name: fromTop;
+        animation-duration: 1.2s;
+        animation-delay: 0s;
+        animation-fill-mode: backwards; }
+      .auth-bg > div > .content > form > .auth-input:nth-of-type(1) {
+        animation-name: fromLeft;
+        animation-duration: 1.2s;
+        animation-delay: 0.6s;
+        animation-fill-mode: backwards; }
+      .auth-bg > div > .content > form > .auth-input:nth-of-type(2) {
+        animation-name: fromLeft;
+        animation-duration: 1.2s;
+        animation-delay: 0.9s;
+        animation-fill-mode: backwards; }
+      .auth-bg > div > .content > form > .auth-input:nth-of-type(3) {
+        animation-name: fromLeft;
+        animation-duration: 1.2s;
+        animation-delay: 1.2s;
+        animation-fill-mode: backwards; }
+      .auth-bg > div > .content button {
+        animation-name: fromBottom;
+        animation-duration: 1.2s;
+        animation-delay: 1.2s;
+        animation-fill-mode: backwards; }
+      .auth-bg > div > .content a {
+        animation-name: fromBottom;
+        animation-duration: 1.2s;
+        animation-delay: 1.5s;
+        animation-fill-mode: backwards; }
 
 .auth-credit {
   position: absolute;
