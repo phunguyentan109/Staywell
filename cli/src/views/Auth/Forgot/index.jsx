@@ -36,8 +36,8 @@ function Forgot({history}) {
 
     return (
         <div className="content">
-            <h1>Reset password</h1>
-            <h4>Please enter your email to complete reset password form.</h4>
+            <h1>Forgot password?</h1>
+            <h4>Please fill in your email below to reset password.</h4>
             <form className="auth-form" onSubmit={hdSubmit}>
                 <AuthInput
                     placeholder="Email"

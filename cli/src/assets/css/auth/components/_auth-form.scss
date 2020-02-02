@@ -1,5 +1,5 @@
 @mixin authBtn($hov-color){
-    font-size: 16px !important;
+    font-size: 16px;
 
     &:hover{
         background-color: $hov-color;
@@ -30,6 +30,15 @@
         &.signup {
             background-color: #287f7f;
             @include authBtn(#319696);
+        }
+
+        @include mobile {
+            margin-top: 30px;
+
+            &.signin {
+                padding: 5px 0;
+                font-size: 15px;
+            }
         }
     }
 

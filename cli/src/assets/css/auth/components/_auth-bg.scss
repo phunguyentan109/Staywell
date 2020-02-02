@@ -87,6 +87,15 @@
                 @include appear-animation(fromBottom, 1.2s, 1.5s);
             }
 
+            @include mobile {
+                > h1 {
+                    font-size: 30px;
+                }
+
+                > h4 {
+                    font-size: 14px;
+                }
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import AuthInput from "components/Auth/AuthInput.jsx";
 import {connect} from "react-redux";
 import {sendAuthData} from "appRedux/actions/user";
+import withResize from "hocs/withResize";
 
 const DEFAULT_ACCOUNT = {
     email: "",
@@ -10,7 +11,7 @@ const DEFAULT_ACCOUNT = {
     cpassword: ""
 }
 
-function Register({sendAuthData}) {
+function Register({sendAuthData, device}) {
     const [account, setAccount] = useState(DEFAULT_ACCOUNT);
     const [loading, setLoading] = useState(false);
 
@@ -40,7 +41,7 @@ function Register({sendAuthData}) {
     return (
         <div className="content">
             <h1>Sign up</h1>
-            <h4>Please enter your account to complete your registration.</h4>
+            <h4>Please fill in below to complete registration.</h4>
             <form className="auth-form" onSubmit={hdSubmit}>
                 <AuthInput
                     placeholder="Email"
@@ -73,9 +74,9 @@ function Register({sendAuthData}) {
                     }
                 </button>
             </form>
-            <Link to="/forgot">Forgot your password?</Link>
+            {device.isMobile || <Link to="/forgot">Forgot your password?</Link>}
         </div>
     )
 }
 
-export default connect(null, {sendAuthData})(Register);
+export default connect(null, {sendAuthData})(withResize(Register));
