@@ -14,6 +14,10 @@ const contractSchema = new mongoose.Schema({
         }
     ],
     room: String,
+    startingElectric: {
+        type: Number,
+        default: 0
+    },
     active: {
         type: Boolean,
         default: true
