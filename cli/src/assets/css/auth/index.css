@@ -5,6 +5,7 @@
   to {
     transform: translate(0, 0);
     opacity: 1; } }
+
 @-webkit-keyframes fromTop {
   from {
     transform: translate(0, -100px);
@@ -133,6 +134,11 @@
         animation-duration: 1.2s;
         animation-delay: 1.5s;
         animation-fill-mode: backwards; }
+      @media (max-width: 479px) {
+        .auth-bg > div > .content > h1 {
+          font-size: 30px; }
+        .auth-bg > div > .content > h4 {
+          font-size: 14px; } }
 
 .auth-credit {
   position: absolute;
