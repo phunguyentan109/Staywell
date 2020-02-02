@@ -35,15 +35,6 @@ function* hdAuthData({value}) {
     }
 }
 
-function* hdResetPassword({value}) {
-    try {
-        yield call(apiCall, ...api.user.resetPassword(value.token), {account: value.resetData});
-        yield put(addMessage("Your password have been reseted", false));
-    } catch(err) {
-        yield put(addMessage(err));
-    }
-}
-
 function* hdClearAuthData() {
     sessionStorage.clear();
     localStorage.clear();
