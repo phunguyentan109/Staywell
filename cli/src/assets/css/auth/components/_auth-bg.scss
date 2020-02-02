@@ -11,16 +11,16 @@
     }
 }
 
-@include appear('fromTop', 0, 0, -100px, 0);
-@include appear('fromLeft', -100px, 0, 0, 0);
-@include appear('fromBottom', 0, 0, 100px, 0);
-
 @mixin appear-animation($name, $duration, $delay: 0s) {
     animation-name: $name;
     animation-duration: $duration;
     animation-delay: $delay;
     animation-fill-mode: backwards;
 }
+
+@include appear('fromTop', 0, 0, -100px, 0);
+@include appear('fromLeft', -100px, 0, 0, 0);
+@include appear('fromBottom', 0, 0, 100px, 0);
 
 .auth-bg {
     background-position: center;
