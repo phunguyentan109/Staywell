@@ -4,9 +4,8 @@ import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import {clearAuthData} from "appRedux/actions/user";
 import withResize from "hocs/withResize";
-import { message } from 'antd';
 
-function AuthNavbar({noti, negative, location, clearAuthData, device}) {
+function AuthNavbar({location, clearAuthData, device}) {
     const [isRegister, setRegister] = useState(false);
 
     const load = useCallback(() => {
@@ -25,18 +24,9 @@ function AuthNavbar({noti, negative, location, clearAuthData, device}) {
         }
     }
 
-    function showNoti(noti, negative) {
-        if(negative === true && noti !=="") {
-            message.error(noti)
-        }
-    }
-
     return (
         <div className="auth-navbar">
             <Link to="/">Staywell</Link>
-            {
-                showNoti(noti, negative)
-            }
             <div>
                 {
                     isRegister
@@ -51,11 +41,4 @@ function AuthNavbar({noti, negative, location, clearAuthData, device}) {
     )
 };
 
-function mapState({message}) {
-    return {
-        noti: message.message,
-        negative: message.negative
-    }
-}
-
-export default withRouter(connect(mapState, {clearAuthData})(withResize(AuthNavbar)));
+export default withRouter(connect(null, {clearAuthData})(withResize(AuthNavbar)));
