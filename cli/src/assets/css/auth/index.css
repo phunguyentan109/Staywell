@@ -109,6 +109,22 @@
         animation-duration: 1.2s;
         animation-delay: 0s;
         animation-fill-mode: backwards; }
+      .auth-bg > div > .content > .notify {
+        padding: 10px 35px;
+        margin: 10px 20px -42px 20px;
+        border-radius: 2px;
+        background-color: #f31a1a3d;
+        color: #bababa;
+        font-size: 14px;
+        font-weight: bold; }
+      .auth-bg > div > .content > .great-notify {
+        padding: 10px 35px;
+        margin: 10px 20px -42px 20px;
+        border-radius: 2px;
+        background-color: #1df31a3d;
+        color: #bababa;
+        font-size: 14px;
+        font-weight: bold; }
       .auth-bg > div > .content > form > .auth-input:nth-of-type(1) {
         animation-name: fromLeft;
         animation-duration: 1.2s;

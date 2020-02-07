@@ -10,7 +10,7 @@ const DEFAULT_ACCOUNT = {
     password: ""
 }
 
-function Login({sendAuthData, history, device}) {
+function Login({message, negative, sendAuthData, history, device}) {
     const [account, setAccount] = useState(DEFAULT_ACCOUNT);
 
     function hdSubmit(e) {
@@ -31,6 +31,11 @@ function Login({sendAuthData, history, device}) {
                 : <h1>Welcome to Staywell,</h1>
             }
             <h4>Please enter your account to continue.</h4>
+            <div className={`${negative ? "notify" : "no-notify"}`}>
+                <span>
+                    {message ? message : ""}
+                </span>
+            </div>
             <form className="auth-form" onSubmit={hdSubmit}>
                 <AuthInput
                     placeholder="Email"
@@ -54,4 +59,11 @@ function Login({sendAuthData, history, device}) {
     )
 }
 
-export default connect(null, {sendAuthData})(withResize(Login));
+function mapState({message}) {
+    return {
+        message: message.message,
+        negative: message.negative
+    }
+}
+
+export default connect(mapState, {sendAuthData})(withResize(Login));

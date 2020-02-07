@@ -213,11 +213,20 @@ exports.resetPassword = async(req, res, next) => {
             })
         }
 
-        let {password} = req.body;
-        foundUser.password = password;
-        await foundUser.save();
+        let {password, cpassword} = req.body.account;
 
-        mail.changePassword(foundUser.email, foundUser.username);
+        if(password === cpassword) {
+            foundUser.password = password;
+            await foundUser.save();
+
+            mail.changePassword(foundUser.email, foundUser.username);
+        } else {
+            return next({
+                status: 404,
+                message: "Password and compare password not similar."
+            })
+        }
+
         return res.status(200).json(token);
     } catch(err) {
         return next(err);

@@ -14,7 +14,7 @@ function Forgot({history}) {
                 if(email.indexOf("@") !== -1) {
                     await apiCall(...api.user.forgotPassword(), {email});
                     setEmail("");
-                    window.alert("Reset password successfully");
+                    // window.alert("Reset password successfully");
                     history.push("/");
                 } else {
                     window.alert("Your email has incorrect format");

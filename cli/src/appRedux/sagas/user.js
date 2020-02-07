@@ -3,7 +3,8 @@ import {
     SEND_AUTH_DATA,
     CLEAR_AUTH_DATA,
     SEND_RELOAD_USER,
-    ACTIVATED_USER
+    ACTIVATED_USER,
+    RESET_PASSWORD
 } from "constants/ActionTypes";
 import api, {apiCall, setTokenHeader} from "constants/api";
 import {addUser} from "appRedux/actions/user";
@@ -30,8 +31,16 @@ function* hdAuthData({value}) {
             yield put(addMessage("A verification link from us has been sent to your mail.", false));
         }
     } catch(err) {
-        // yield put(addMessage(err));
-        yield put(addMessage("Your email/password/token is false or has timeout."));
+        yield put(addMessage(err));
+    }
+}
+
+function* hdResetPassword({value}) {
+    try {
+        yield call(apiCall, ...api.user.resetPassword(value.token), {account: value.resetData});
+        yield put(addMessage("Your password have been reseted"));
+    } catch(err) {
+        yield put(addMessage(err));
     }
 }
 
@@ -57,6 +66,7 @@ function* hdReloadUser({value}) {
 
 export const userSagas = [
     takeLatest(SEND_AUTH_DATA, hdAuthData),
+    takeLatest(RESET_PASSWORD, hdResetPassword),
     takeLatest(ACTIVATED_USER, hdAfterActivate),
     takeLatest(SEND_RELOAD_USER, hdReloadUser),
     takeLatest(CLEAR_AUTH_DATA, hdClearAuthData)
