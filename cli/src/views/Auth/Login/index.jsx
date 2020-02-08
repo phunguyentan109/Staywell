@@ -31,11 +31,13 @@ function Login({message, negative, sendAuthData, history, device}) {
                 : <h1>Welcome to Staywell,</h1>
             }
             <h4>Please enter your account to continue.</h4>
-            <div className={`${negative ? "notify" : "no-notify"}`}>
-                <span>
-                    {message ? message : ""}
-                </span>
-            </div>
+            {
+                negative && <div className="notify">
+                    <span>
+                        {message.length ? message : ""}
+                    </span>
+                </div>
+            }
             <form className="auth-form" onSubmit={hdSubmit}>
                 <AuthInput
                     placeholder="Email"

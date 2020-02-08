@@ -32,7 +32,7 @@ function Forgot({history}) {
     function hdChange(e) {
         setEmail(e.target.value);
     }
-
+    
     return (
         <div className="content">
             <h1>Forgot password?</h1>
