@@ -4,8 +4,6 @@ import AuthInput from "components/Auth/AuthInput.jsx";
 import {connect} from "react-redux";
 import {sendAuthData} from "appRedux/actions/user";
 import withResize from "hocs/withResize";
-import { message } from 'antd';
-
 
 const DEFAULT_ACCOUNT = {
     email: "",
@@ -23,12 +21,6 @@ function Login({message, negative, sendAuthData, history, device}) {
     function hdChange(e) {
         const {value, name} = e.target;
         setAccount(prev => ({...prev, [name]: value}));
-    }
-
-    function showNoti(noti, negative) {
-        if(negative === true && noti !=="") {
-            message.error(noti)
-        }
     }
 
     return (
@@ -69,11 +61,7 @@ function Login({message, negative, sendAuthData, history, device}) {
 
 function mapState({message}) {
     return {
-<<<<<<< HEAD
         message: message.message,
-=======
-        noti: message.message,
->>>>>>> Implement message login
         negative: message.negative
     }
 }
