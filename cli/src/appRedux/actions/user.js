@@ -4,13 +4,21 @@ import {
     CLEAR_AUTH_DATA,
     ACTIVATED_USER,
     SEND_RELOAD_USER,
-    ADD_USER
+    ADD_USER,
+    RESET_PASSWORD
 } from "constants/ActionTypes";
 
 export function sendAuthData(route, authData){
     return {
         type: SEND_AUTH_DATA,
         value: {route, authData}
+    }
+}
+
+export function sendResetPassword(token, resetData){
+    return {
+        type: RESET_PASSWORD,
+        value: {token, resetData}
     }
 }
 

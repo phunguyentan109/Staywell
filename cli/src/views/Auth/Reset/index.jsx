@@ -1,7 +1,10 @@
 import React, {useState} from "react";
-import api, {apiCall} from "constants/api";
+// import api, {apiCall} from "constants/api";
 import {Link} from "react-router-dom";
 import AuthInput from "components/Auth/AuthInput.jsx";
+import {connect} from "react-redux";
+import {sendResetPassword} from "appRedux/actions/user";
+import withResize from "hocs/withResize";
 
 function TimeOut() {
     return (
@@ -35,10 +38,10 @@ function Reseted() {
 
 const DEFAULT_ACCOUNT = {
     password: "",
-    cpassword: ""
+    cpassword: "",
 }
 
-function Reset({match, history}) {
+function ResetPassword({message, negative, sendResetPassword, match, history}) {
     const [account, setAccount] = useState(DEFAULT_ACCOUNT);
     const [loading, setLoading] = useState(false);
 
@@ -46,22 +49,12 @@ function Reset({match, history}) {
         e.preventDefault();
         setLoading(true);
         try {
-            let isValidPassword = account.password === account.cpassword;
-            let isNotEmpty = account.password.length > 0;
-            if(isNotEmpty && isValidPassword) {
-                await apiCall(...api.user.resetPassword(match.params.token), {password: account.password});
+            sendResetPassword(match.params.token, account);
+            // await apiCall(...api.user.resetPassword(match.params.token), {account});
 
-                setAccount(DEFAULT_ACCOUNT);
-                setTimeout(() => {
-                    history.push("/reseted");
-                }, 2000);
-            } else {
-                window.alert("The entered information is not valid. Please try again");
-                setLoading(false);
-            }
+            setAccount(DEFAULT_ACCOUNT);
         } catch (e) {
             console.error(e);
-            history.push("/timeout");
         }
         setLoading(false);
     }
@@ -75,6 +68,15 @@ function Reset({match, history}) {
         <div className="content">
             <h1>Reset password</h1>
             <h4>Please enter your new password and confirm password.</h4>
+            {
+                message
+                ? <div className={`${negative ? "notify" : "great-notify"}`}>
+                    <span>
+                        {message ? message : ""}
+                    </span>
+                </div>
+                : <span/>
+            }
             <form className="auth-form" onSubmit={hdSubmit}>
                 <AuthInput
                     type="password"
@@ -104,5 +106,14 @@ function Reset({match, history}) {
         </div>
     )
 }
+
+function mapState({message}) {
+    return {
+        message: message.message,
+        negative: message.negative
+    }
+}
+
+const Reset = connect(mapState, {sendResetPassword})(withResize(ResetPassword));
 
 export { Reset, TimeOut, Reseted }
