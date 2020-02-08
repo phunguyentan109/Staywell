@@ -19,8 +19,8 @@ function AuthNavbar({location, clearAuthData, device}) {
 
     function getTitle() {
         if(!device.isMobile) {
-            if(isRegister) return " Create an account";
-            return " Try with different account?"
+            if(isRegister) return " Try with different account?";
+            return " Create an account";
         }
     }
 
