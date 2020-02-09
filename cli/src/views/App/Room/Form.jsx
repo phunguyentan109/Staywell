@@ -14,23 +14,23 @@ function RoomForm({loading, editRoom, price, hdCancel, refresh, setLoading, noti
 
     function hdChange(e) {
         const {name, value} = e.target;
-        setRoom(prev => ({...prev, [name]: value}))
+        setRoom(prev => ({...prev, [name]: value}));
     }
 
     async function hdSubmit() {
         setLoading(true);
         try {
-            if(room._id) {
-                // run in edit mode
-                let updatedRoom = await apiCall(...api.room.edit(room._id), room);
-                let updatedRoomData = await apiCall(...api.room.getOne(updatedRoom._id));
-                refresh(updatedRoomData, "Update room successfully!", false);
-            } else {
-                // run in create mode
-                let createdRoom = await apiCall(...api.room.create(), room);
-                let createdRoomData = await apiCall(...api.room.getOne(createdRoom._id));
-                refresh(createdRoomData, "Create new room successfully!");
-            }
+            // Prepare data based-on mode
+            let usedApi = room._id ? api.room.edit(room._id) : api.room.create();
+            let msg = room._id ? "Update room successfully!" : "Create new room successfully!";
+            let isNewRecord = room._id === undefined;
+
+            // Send data
+            let returnedData = await apiCall(...usedApi, room);
+            let roomData = await apiCall(...api.room.getOne(returnedData._id));
+
+            // Update the list data
+            refresh(roomData, msg, isNewRecord);
         } catch (e) {
             notify("error", "Process is not completed")
             setLoading(false);
@@ -54,7 +54,7 @@ function RoomForm({loading, editRoom, price, hdCancel, refresh, setLoading, noti
                         />
                     </FormItem>
                     <FormItem
-                        label="Select author"
+                        label="Select price"
                         labelCol={{xs: 24, sm: 6}}
                         wrapperCol={{xs: 24, sm: 16}}
                     >

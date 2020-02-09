@@ -71,7 +71,7 @@ function Room({notify}) {
         toggleAssign(true);
     }
 
-    async function refreshRoom(record, message, isNewRecord = true) {
+    async function refreshRoom(record, message, isNewRecord) {
         if(isNewRecord) {
             setRooms(prev => [...prev, record]);
         } else {
@@ -81,6 +81,15 @@ function Room({notify}) {
         notify("success", "Process is completed!", message);
         hdCancel();
         setLoading(false);
+    }
+
+    function renderContract(text, record) {
+        let hasActiveContract = record.contract_id.some(contract => contract.active);
+        if(!hasActiveContract) {
+            return <span className="gx-link">Begin contract</span>
+        } else {
+            return <span className="gx-link">View contracts({text.length})</span>
+        }
     }
 
     function controlCols() {
@@ -97,6 +106,11 @@ function Room({notify}) {
             {
                 title: 'Price Type',
                 dataIndex: 'price_id.type'
+            },
+            {
+                title: 'Contract Information',
+                dataIndex: "contract_id",
+                render: renderContract
             },
             {
                 title: 'Action',

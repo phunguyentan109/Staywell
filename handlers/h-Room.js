@@ -4,7 +4,12 @@ const mail = require("../utils/mail");
 
 exports.get = async(req, res, next) => {
     try {
-        let list = await db.Room.find().populate("price_id").populate("user_id").lean().exec();
+        let list = await db.Room.find()
+        .populate("price_id")
+        .populate("user_id")
+        .populate("contract_id")
+        .lean().exec();
+
         return res.status(200).json(list);
     } catch(err) {
         return next(err);
@@ -13,7 +18,12 @@ exports.get = async(req, res, next) => {
 
 exports.getOne = async(req, res, next) => {
     try {
-        let one = await db.Room.findById(req.params.room_id).populate("price_id").populate("user_id").lean().exec();
+        let one = await db.Room.findById(req.params.room_id)
+        .populate("price_id")
+        .populate("user_id")
+        .populate("contract_id")
+        .lean().exec();
+
         return res.status(200).json(one);
     } catch(err) {
         return next(err);
