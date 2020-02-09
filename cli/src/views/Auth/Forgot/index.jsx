@@ -1,28 +1,30 @@
-import React, {useState} from "react";
+import React, {useState, useCallback, useEffect} from "react";
 import AuthInput from "components/Auth/AuthInput.jsx";
-import api, {apiCall} from "constants/api";
+// import api, {apiCall} from "constants/api";
+import {connect} from "react-redux";
+import {sendForgotMail} from "appRedux/actions/user";
+import {clearMessage} from "appRedux/actions/message";
+import withResize from "hocs/withResize";
 
-function Forgot({history}) {
+function Forgot({message, negative, sendForgotMail, clearMessage, history}) {
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
+
+    const load = useCallback(async() => {
+        clearMessage();
+    }, [clearMessage])
+
+    useEffect(() => {
+        load();
+    }, [load])
 
     async function hdSubmit(e) {
         e.preventDefault();
         setLoading(true);
         try {
-            if(email.length > 0) {
-                if(email.indexOf("@") !== -1) {
-                    await apiCall(...api.user.forgotPassword(), {email});
-                    setEmail("");
-                    // window.alert("Reset password successfully");
-                    history.push("/");
-                } else {
-                    window.alert("Your email has incorrect format");
-                }
-            } else {
-                window.alert("The entered information is not valid. Please try again");
-                setLoading(false);
-            }
+            // await apiCall(...api.user.forgotPassword(), {email});
+            sendForgotMail(email);
+            setEmail("");
         } catch (e) {
             console.error(e);
         }
@@ -37,6 +39,15 @@ function Forgot({history}) {
         <div className="content">
             <h1>Forgot password?</h1>
             <h4>Please fill in your email below to reset password.</h4>
+            {
+                message
+                ? <div className={`${negative ? "notify" : "great-notify"}`}>
+                    <span>
+                        {message ? message : ""}
+                    </span>
+                </div>
+                : <span/>
+            }
             <form className="auth-form" onSubmit={hdSubmit}>
                 <AuthInput
                     placeholder="Email"
@@ -57,4 +68,11 @@ function Forgot({history}) {
     )
 }
 
-export default Forgot;
+function mapState({message}) {
+    return {
+        message: message.message,
+        negative: message.negative
+    }
+}
+
+export default connect(mapState, {sendForgotMail, clearMessage})(withResize(Forgot));

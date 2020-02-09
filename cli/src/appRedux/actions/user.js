@@ -5,7 +5,8 @@ import {
     ACTIVATED_USER,
     SEND_RELOAD_USER,
     ADD_USER,
-    RESET_PASSWORD
+    RESET_PASSWORD,
+    SEND_FORGOT
 } from "constants/ActionTypes";
 
 export function sendAuthData(route, authData){
@@ -19,6 +20,13 @@ export function sendResetPassword(token, resetData){
     return {
         type: RESET_PASSWORD,
         value: {token, resetData}
+    }
+}
+
+export function sendForgotMail(mailForgot){
+    return {
+        type: SEND_FORGOT,
+        value: {mailForgot}
     }
 }
 

@@ -1,8 +1,9 @@
-import React, {useState} from "react";
+import React, {useState, useCallback, useEffect} from "react";
 import {Link} from "react-router-dom";
 import AuthInput from "components/Auth/AuthInput.jsx";
 import {connect} from "react-redux";
 import {sendAuthData} from "appRedux/actions/user";
+import {clearMessage} from "appRedux/actions/message";
 import withResize from "hocs/withResize";
 
 const DEFAULT_ACCOUNT = {
@@ -10,8 +11,16 @@ const DEFAULT_ACCOUNT = {
     password: ""
 }
 
-function Login({message, negative, sendAuthData, history, device}) {
+function Login({message, negative, sendAuthData, clearMessage, history, device}) {
     const [account, setAccount] = useState(DEFAULT_ACCOUNT);
+
+    const load = useCallback(async() => {
+        clearMessage();
+    }, [clearMessage])
+
+    useEffect(() => {
+        load();
+    }, [load])
 
     function hdSubmit(e) {
         e.preventDefault();
@@ -31,11 +40,13 @@ function Login({message, negative, sendAuthData, history, device}) {
                 : <h1>Welcome to Staywell,</h1>
             }
             <h4>Please enter your account to continue.</h4>
-            <div className={`${negative ? "notify" : "no-notify"}`}>
-                <span>
-                    {message ? message : ""}
-                </span>
-            </div>
+            {
+                negative && <div className="notify">
+                    <span>
+                        {message.length > 0 ? message : ""}
+                    </span>
+                </div>
+            }
             <form className="auth-form" onSubmit={hdSubmit}>
                 <AuthInput
                     placeholder="Email"
@@ -66,4 +77,4 @@ function mapState({message}) {
     }
 }
 
-export default connect(mapState, {sendAuthData})(withResize(Login));
+export default connect(mapState, {sendAuthData, clearMessage})(withResize(Login));

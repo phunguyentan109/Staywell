@@ -174,21 +174,37 @@ exports.updatePassword = async(req, res, next) => {
 exports.forgot = async(req, res, next) => {
     try {
         let {email} = req.body;
-        let foundUser = await db.User.findOne({email});
+        // Check full fill input email
+        if(email.length > 0) {
+            // Check email format
+            if(email.indexOf("@") !== -1) {
+                let foundUser = await db.User.findOne({email});
+                // Check available mail in database
+                if(foundUser){
+                    let token = genToken(foundUser._id);
+                    foundUser.resetPwToken = token;
+                    foundUser.resetPwExpires = Date.now() + 3600000; // 1 hour
+                    await foundUser.save();
 
-        if(foundUser){
-            let token = genToken(foundUser._id);
-            foundUser.resetPwToken = token;
-            foundUser.resetPwExpires = Date.now() + 3600000; // 1 hour
-            await foundUser.save();
-
-            // send token to reset password
-            mail.forgotPassword(foundUser.email, foundUser.username, token, req.headers.host);
-            return res.status(200).json(token);
+                    // send token to reset password
+                    mail.forgotPassword(foundUser.email, foundUser.username, token, req.headers.host);
+                    return res.status(200).json(token);
+                } else {
+                    return next({
+                        status: 404,
+                        message: "The email is not available!"
+                    })
+                }
+            } else {
+                return next({
+                    status: 404,
+                    message: "Your email has incorrect format!"
+                })
+            }
         } else {
             return next({
                 status: 404,
-                message: "The email is not available."
+                message: "The entered information is not valid. Please try again!"
             })
         }
     } catch(err) {

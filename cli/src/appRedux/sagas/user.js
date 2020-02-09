@@ -4,7 +4,8 @@ import {
     CLEAR_AUTH_DATA,
     SEND_RELOAD_USER,
     ACTIVATED_USER,
-    RESET_PASSWORD
+    RESET_PASSWORD,
+    SEND_FORGOT
 } from "constants/ActionTypes";
 import api, {apiCall, setTokenHeader} from "constants/api";
 import {addUser} from "appRedux/actions/user";
@@ -44,6 +45,15 @@ function* hdResetPassword({value}) {
     }
 }
 
+function* hdSendForgot({value}) {
+    try {
+        yield call(apiCall, ...api.user.forgotPassword(), {email: value.mailForgot});
+        yield put(addMessage("Your resetted link has been sent to your mail successfully!", false));
+    } catch(err) {
+        yield put(addMessage(err));
+    }
+}
+
 function* hdClearAuthData() {
     sessionStorage.clear();
     localStorage.clear();
@@ -67,6 +77,7 @@ function* hdReloadUser({value}) {
 export const userSagas = [
     takeLatest(SEND_AUTH_DATA, hdAuthData),
     takeLatest(RESET_PASSWORD, hdResetPassword),
+    takeLatest(SEND_FORGOT, hdSendForgot),
     takeLatest(ACTIVATED_USER, hdAfterActivate),
     takeLatest(SEND_RELOAD_USER, hdReloadUser),
     takeLatest(CLEAR_AUTH_DATA, hdClearAuthData)
