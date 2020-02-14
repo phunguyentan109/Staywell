@@ -6,32 +6,6 @@ import {connect} from "react-redux";
 import {addMessage} from "appRedux/actions/message";
 import withResize from "hocs/withResize";
 
-function TimeOut() {
-    return (
-        <div className="activate">
-            <h1>Reset password link has been timeout,</h1>
-            <hr/>
-            <h3>Your reset password link has been timeout. Please take a new link to reset your account password. We wish you to have a good day!</h3>
-            <Link to="/forgot">
-                <button>Resend forgot password</button>
-            </Link>
-        </div>
-    )
-}
-
-function Reseted() {
-    return (
-        <div className="activate">
-            <h1>Your Staywell password account has been reseted,</h1>
-            <hr/>
-            <h3>We has sent you confirmed email, what you can check it. We wish you to have a good day!</h3>
-            <Link to="/">
-                <button>Login your account</button>
-            </Link>
-        </div>
-    )
-}
-
 const DEFAULT_ACCOUNT = {
     password: "",
     cpassword: "",
@@ -126,6 +100,4 @@ function mapState({message}) {
     }
 }
 
-const Reset = connect(mapState, {addMessage})(withResize(ResetPassword));
-
-export { Reset, TimeOut, Reseted }
+export default connect(mapState, {addMessage})(withResize(ResetPassword));

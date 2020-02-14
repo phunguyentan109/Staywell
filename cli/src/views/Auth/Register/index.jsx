@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import AuthInput from "components/Auth/AuthInput.jsx";
 import {connect} from "react-redux";
 import {sendAuthData} from "appRedux/actions/user";
+import {addMessage} from "appRedux/actions/message"
 import withResize from "hocs/withResize";
 
 const DEFAULT_ACCOUNT = {
@@ -11,7 +12,7 @@ const DEFAULT_ACCOUNT = {
     cpassword: ""
 }
 
-function Register({sendAuthData, device}) {
+function Register({message, negative, sendAuthData, addMessage, device}) {
     const [account, setAccount] = useState(DEFAULT_ACCOUNT);
     const [loading, setLoading] = useState(false);
 
@@ -24,13 +25,16 @@ function Register({sendAuthData, device}) {
             if(isNotEmpty && isValidPassword) {
                 sendAuthData("signup", account);
                 setAccount(DEFAULT_ACCOUNT);
+                addMessage("Your account have been created. Please check your email and click link to active your account!", false);
             } else {
-                window.alert("The entered information is not valid. Please try again");
+                addMessage("The entered information is not valid. Please try again");
                 setLoading(false);
             }
-        } catch (e) {
-            console.log(e);
+        } catch (err) {
+            console.log(err);
+            addMessage(err);
         }
+        setLoading(false);
     }
 
     function hdChange(e) {
@@ -42,6 +46,11 @@ function Register({sendAuthData, device}) {
         <div className="content">
             <h1>Sign up</h1>
             <h4>Please fill in below to complete registration.</h4>
+            {
+                message.length > 0 && <div className={`${negative ? "notify" : "great-notify"}`}>
+                    <span>{message}</span>
+                </div>
+            }
             <form className="auth-form" onSubmit={hdSubmit}>
                 <AuthInput
                     placeholder="Email"
@@ -79,4 +88,11 @@ function Register({sendAuthData, device}) {
     )
 }
 
-export default connect(null, {sendAuthData})(withResize(Register));
+function mapState({message}) {
+    return {
+        message: message.text,
+        negative: message.isNegative
+    }
+}
+
+export default connect(mapState, {sendAuthData, addMessage})(withResize(Register));
