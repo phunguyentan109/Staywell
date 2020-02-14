@@ -1,9 +1,9 @@
-import React, {useState} from "react";
-// import api, {apiCall} from "constants/api";
+import React, {useState, useEffect} from "react";
+import api, {apiCall} from "constants/api";
 import {Link} from "react-router-dom";
 import AuthInput from "components/Auth/AuthInput.jsx";
 import {connect} from "react-redux";
-import {sendResetPassword} from "appRedux/actions/user";
+import {addMessage} from "appRedux/actions/message";
 import withResize from "hocs/withResize";
 
 function TimeOut() {
@@ -37,20 +37,36 @@ const DEFAULT_ACCOUNT = {
     cpassword: "",
 }
 
-function ResetPassword({message, negative, sendResetPassword, match, history}) {
+function ResetPassword({message, negative, addMessage, match, history}) {
     const [account, setAccount] = useState(DEFAULT_ACCOUNT);
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        return () => addMessage();
+    }, [addMessage]);
 
     async function hdSubmit(e) {
         e.preventDefault();
         setLoading(true);
         try {
-            sendResetPassword(match.params.token, account);
-            // await apiCall(...api.user.resetPassword(match.params.token), {account});
+            let {password, cpassword} = account;
+            if(password.length > 0 && cpassword > 0) {
+                if(password === cpassword) {
+                    await apiCall(...api.user.resetPassword(match.params.token), {password: account.password});
 
-            setAccount(DEFAULT_ACCOUNT);
-        } catch (e) {
-            console.error(e);
+                    setAccount(DEFAULT_ACCOUNT);
+                    addMessage("Your resetted link has been sent to your mail successfully!", false);
+                } else {
+                    addMessage("Your password and confirm password not similar. Please try again");
+                    setLoading(false);
+                }
+            } else {
+                addMessage("Please fullfill to reset your password");
+                setLoading(false);
+            }
+        } catch (err) {
+            console.error(err);
+            addMessage(err);
         }
         setLoading(false);
     }
@@ -68,7 +84,7 @@ function ResetPassword({message, negative, sendResetPassword, match, history}) {
                 message
                 ? <div className={`${negative ? "notify" : "great-notify"}`}>
                     <span>
-                        {message ? message : ""}
+                        {message.length > 0 ? message : ""}
                     </span>
                 </div>
                 : <span/>
@@ -105,11 +121,11 @@ function ResetPassword({message, negative, sendResetPassword, match, history}) {
 
 function mapState({message}) {
     return {
-        message: message.message,
-        negative: message.negative
+        message: message.text,
+        negative: message.isNegative
     }
 }
 
-const Reset = connect(mapState, {sendResetPassword})(withResize(ResetPassword));
+const Reset = connect(mapState, {addMessage})(withResize(ResetPassword));
 
 export { Reset, TimeOut, Reseted }
