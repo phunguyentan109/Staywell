@@ -49,8 +49,6 @@ export const ACTIVATED_USER = 'ACTIVATED_USER';
 export const ADD_USER = 'ADD_USER';
 export const SEND_RELOAD_USER = 'SEND_RELOAD_USER';
 export const RESET_PASSWORD = 'RESET_PASSWORD';
-export const SEND_FORGOT = 'SEND_FORGOT';
 
 // Error
 export const ADD_MESSAGE = 'ADD_MESSAGE';
-export const CLEAR_MESSAGE = 'CLEAR_MESSAGE';

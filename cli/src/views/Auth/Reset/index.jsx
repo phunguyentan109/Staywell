@@ -105,8 +105,8 @@ function ResetPassword({message, negative, sendResetPassword, match, history}) {
 
 function mapState({message}) {
     return {
-        message: message.message,
-        negative: message.negative
+        message: message.text,
+        negative: message.isNegative
     }
 }
 

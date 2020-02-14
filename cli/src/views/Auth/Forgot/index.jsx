@@ -1,32 +1,38 @@
-import React, {useState, useCallback, useEffect} from "react";
+import React, {useState, useEffect} from "react";
 import AuthInput from "components/Auth/AuthInput.jsx";
-// import api, {apiCall} from "constants/api";
+import api, {apiCall} from "constants/api";
 import {connect} from "react-redux";
-import {sendForgotMail} from "appRedux/actions/user";
-import {clearMessage} from "appRedux/actions/message";
+import {addMessage} from "appRedux/actions/message";
 import withResize from "hocs/withResize";
 
-function Forgot({message, negative, sendForgotMail, clearMessage, history}) {
+function Forgot({message, negative, addMessage, history}) {
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const load = useCallback(async() => {
-        clearMessage();
-    }, [clearMessage])
-
     useEffect(() => {
-        load();
-    }, [load])
+        return () => addMessage();
+    }, [addMessage])
 
     async function hdSubmit(e) {
         e.preventDefault();
         setLoading(true);
         try {
-            // await apiCall(...api.user.forgotPassword(), {email});
-            sendForgotMail(email);
-            setEmail("");
-        } catch (e) {
-            console.error(e);
+            if(email.length > 0) {
+                if(email.indexOf("@") !== -1) {
+                    await apiCall(...api.user.forgotPassword(), {email});
+                    setEmail("");
+                    addMessage("Reset password successfully", false);
+                } else {
+                    addMessage("Your email has incorrect format");
+                    setLoading(false);
+                }
+            } else {
+                addMessage("Please enter your email. Please try again!");
+                setLoading(false);
+            }
+        } catch (err) {
+            console.error(err);
+            addMessage(err);
         }
         setLoading(false);
     }
@@ -70,9 +76,9 @@ function Forgot({message, negative, sendForgotMail, clearMessage, history}) {
 
 function mapState({message}) {
     return {
-        message: message.message,
-        negative: message.negative
+        message: message.text,
+        negative: message.isNegative
     }
 }
 
-export default connect(mapState, {sendForgotMail, clearMessage})(withResize(Forgot));
+export default connect(mapState, {addMessage})(withResize(Forgot));
