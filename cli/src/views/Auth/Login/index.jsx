@@ -37,10 +37,8 @@ function Login({message, negative, sendAuthData, addMessage, history, device}) {
             }
             <h4>Please enter your account to continue.</h4>
             {
-                negative && <div className="notify">
-                    <span>
-                        {message.length > 0 ? message : ""}
-                    </span>
+                message.length > 0 && <div className="notify">
+                    <span>{message}</span>
                 </div>
             }
             <form className="auth-form" onSubmit={hdSubmit}>
