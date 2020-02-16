@@ -13,9 +13,7 @@ function TimeOut() {
             <hr/>
             <h3>Your reset password link has been timeout. Please take a new link to reset your account password. We wish you to have a good day!</h3>
             <Link to="/forgot">
-                <button>
-                    Resend forgot password
-                </button>
+                <button>Resend forgot password</button>
             </Link>
         </div>
     )
@@ -28,9 +26,7 @@ function Reseted() {
             <hr/>
             <h3>We has sent you confirmed email, what you can check it. We wish you to have a good day!</h3>
             <Link to="/">
-                <button>
-                    Login your account
-                </button>
+                <button>Login your account</button>
             </Link>
         </div>
     )
@@ -109,8 +105,8 @@ function ResetPassword({message, negative, sendResetPassword, match, history}) {
 
 function mapState({message}) {
     return {
-        message: message.message,
-        negative: message.negative
+        message: message.text,
+        negative: message.isNegative
     }
 }
 
