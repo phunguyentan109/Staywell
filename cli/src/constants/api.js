@@ -42,7 +42,9 @@ export default {
     },
     contract: {
         get: user_id => ["get", `/api/user/${user_id}/contracts`],
-        remove: (user_id, contract_id) => ["delete", `/api/user/${user_id}/contracts/${contract_id}`]
+        getOne: (room_id, contract_id) => ["get", `/api/rooms/${room_id}/contracts/${contract_id}`],
+        create: room_id => ["post", `/api/rooms/${room_id}/contracts`],
+        remove: (room_id, contract_id) => ["delete", `/api/room/${room_id}/contracts/${contract_id}`]
     },
     price: {
         get: () => ["get", `/api/price`],

@@ -1,13 +1,17 @@
 import React, {useState, useEffect} from "react";
 import {MOBILE_SIZE, DESKTOP_SIZE} from "constants/variables";
+import {notification} from "antd";
 
-export default function withResize(WrappedComponent) {
-    function Sizing({...props}) {
+const DEFAULT_DESC = "There may be some errors occuring in the process. Please wait and try again later.";
+
+export default function withHelpers(WrappedComponent) {
+    function Helpers({...props}) {
         const [device, setDevice] = useState({
             isMobile: false,
             isTablet: false,
             isDesktop: true
-        })
+        });
+        const [loading, setLoading] = useState(true);
 
         useEffect(() => {
             hdResize();
@@ -22,8 +26,18 @@ export default function withResize(WrappedComponent) {
             setDevice({isMobile, isTablet, isDesktop});
         }
 
-        return <WrappedComponent device={{...device}} {...props} />
+        const openNotificationWithIcon = (type, message, description=DEFAULT_DESC) => {
+            notification[type]({message, description});
+        };
+
+        return <WrappedComponent
+            device={{...device}}
+            notify={openNotificationWithIcon}
+            loading={loading}
+            setLoading={setLoading}
+            {...props}
+        />
     }
 
-    return Sizing;
+    return Helpers;
 }

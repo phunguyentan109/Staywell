@@ -15,6 +15,6 @@ router.route("/:room_id")
 router.route("/:room_id/assign")
     .put(mw.User.isPermit, hdl.Room.assign);
 
-router.use("/:room_id/bills", mw.User.isCorrect, require("./r-Bill"));
+router.use("/:room_id/contracts", require("./r-Contract"));
 
 module.exports = router;

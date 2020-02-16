@@ -5,7 +5,7 @@ import Contact from "components/profile/Contact/index";
 import Auxiliary from "util/Auxiliary";
 import ProfileHeader from "components/profile/ProfileHeader";
 import api, {apiCall} from "constants/api";
-import withNoti from "hocs/withNoti";
+import withHelpers from "hocs/withHelpers";
 import {connect} from "react-redux";
 import moment from "moment";
 import * as credentials from "constants/credentialControl";
@@ -257,4 +257,4 @@ function mapState({user}) {
     }
 }
 
-export default connect(mapState, {sendReloadUser})(withNoti(Profile));
+export default connect(mapState, {sendReloadUser})(withHelpers(Profile));

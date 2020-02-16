@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useCallback} from "react";
 import {Card, Spin, Table, Divider, Form, Input, Button} from "antd";
 import api, {apiCall} from "constants/api";
-import withNoti from "hocs/withNoti";
+import withHelpers from "hocs/withHelpers";
 import PopConfirm from "components/App/Pop/PopConfirm";
 
 const FormItem = Form.Item;
@@ -260,4 +260,4 @@ function Price({notify}) {
     )
 }
 
-export default withNoti(Price);
+export default withHelpers(Price);

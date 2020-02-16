@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 import AuthInput from "components/Auth/AuthInput.jsx";
 import {connect} from "react-redux";
 import {sendAuthData} from "appRedux/actions/user";
-import withResize from "hocs/withResize";
+import withHelpers from "hocs/withHelpers";
 
 const DEFAULT_ACCOUNT = {
     email: "",
@@ -54,4 +54,4 @@ function Login({sendAuthData, history, device}) {
     )
 }
 
-export default connect(null, {sendAuthData})(withResize(Login));
+export default connect(null, {sendAuthData})(withHelpers(Login));

@@ -1,23 +1,24 @@
 import React, {useState, useEffect, useCallback} from "react";
 import {Row, Col, Card, Spin, Table, Button, Divider} from "antd";
-import withNoti from "hocs/withNoti";
 import PopConfirm from "components/App/Pop/PopConfirm";
 import api, {apiCall} from "constants/api";
 import RoomForm from "./Form";
 import RoomAssign from "./Assign";
+import ContractList from "./ContractList";
+import withHelpers from "hocs/withHelpers";
 
 const DEFAULT_ROOM = {
     name: "",
     user_id: []
 }
 
-function Room({notify}) {
+function Room({notify, setLoading, loading}) {
     const [rooms, setRooms] = useState([]);
     const [room, setRoom] = useState(DEFAULT_ROOM);
     const [price, setPrice] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [form, toggleForm] = useState(false);
     const [assign, toggleAssign] = useState(false);
+    const [viewContract, toggleViewContract] = useState(false);
 
     const load = useCallback(async() => {
         try {
@@ -29,7 +30,7 @@ function Room({notify}) {
         } catch (e) {
             notify("error", "The data cannot be loaded!");
         }
-    }, [notify])
+    }, [notify, setLoading])
 
     useEffect(() => {
         load();
@@ -60,6 +61,12 @@ function Room({notify}) {
         setRoom(DEFAULT_ROOM);
         toggleForm(false);
         toggleAssign(false);
+        toggleViewContract(false);
+    }
+
+    function hdViewContract(room) {
+        toggleViewContract(true);
+        setRoom(room);
     }
 
     function hdAssign(room) {
@@ -83,15 +90,6 @@ function Room({notify}) {
         setLoading(false);
     }
 
-    function renderContract(text, record) {
-        let hasActiveContract = record.contract_id.some(contract => contract.active);
-        if(!hasActiveContract) {
-            return <span className="gx-link">Begin contract</span>
-        } else {
-            return <span className="gx-link">View contracts({text.length})</span>
-        }
-    }
-
     function controlCols() {
         let cols = [
             {
@@ -110,7 +108,11 @@ function Room({notify}) {
             {
                 title: 'Contract Information',
                 dataIndex: "contract_id",
-                render: renderContract
+                render: (text, record) => (
+                    <span className="gx-link" onClick={hdViewContract.bind(this, record)}>
+                        View contracts ({text.length})
+                    </span>
+                )
             },
             {
                 title: 'Action',
@@ -133,7 +135,9 @@ function Room({notify}) {
                 )
             }
         ];
-        return (assign || form) ? cols.filter(c => c.key !== "action") : cols;
+
+        // If "Assign" or "Form" content is shown, then hide the action
+        return (assign || form || viewContract) ? cols.filter(c => c.key !== "action") : cols;
     }
 
     return (
@@ -155,7 +159,7 @@ function Room({notify}) {
                     <Card title="List of available room">
                         <Spin spinning={loading}>
                             {
-                                form || <Button type="primary" onClick={() => toggleForm(true)}>Add new room information</Button>
+                                form || viewContract || <Button type="primary" onClick={() => toggleForm(true)}>Add new room information</Button>
                             }
                             <Table
                                 className="gx-table-responsive"
@@ -178,9 +182,17 @@ function Room({notify}) {
                         />
                     </Col>
                 }
+                {
+                    viewContract && <Col md={10}>
+                        <ContractList
+                            hdCancel={hdCancel}
+                            selectedRoom={room}
+                        />
+                    </Col>
+                }
             </Row>
         </div>
     )
 }
 
-export default withNoti(Room);
+export default withHelpers(Room);

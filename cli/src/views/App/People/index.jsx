@@ -1,7 +1,7 @@
 import React, {useEffect, useCallback, useState} from "react";
 import {Card, Table, Spin} from "antd";
 import api, {apiCall} from "constants/api";
-import withNoti from "hocs/withNoti";
+import withHelpers from "hocs/withHelpers";
 import PopConfirm from "components/App/Pop/PopConfirm";
 import * as permissions from "constants/credentialControl";
 
@@ -113,4 +113,4 @@ function PeopleTable({title, dataSource, loading, hdRemove}) {
     )
 }
 
-export default withNoti(People);
+export default withHelpers(People);

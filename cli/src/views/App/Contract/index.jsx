@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useCallback} from "react";
 import {Row, Col, Card, Spin, Table, Divider} from "antd";
-import withNoti from "hocs/withNoti";
+import withHelpers from "hocs/withHelpers";
 import PopConfirm from "components/App/Pop/PopConfirm";
 import moment from "moment";
 import api, {apiCall} from "constants/api";
@@ -13,13 +13,12 @@ const DEFAULT_BILL = {
     house_id: []
 };
 
-function Contract({notify, match}) {
+function Contract({notify, match, setLoading, loading}) {
     const [contracts, setContracts] = useState([]);
     const [currentPeople, setCurrentPeople] = useState(0);
     const [bills, setBills] = useState([]);
     const [bill, setBill] = useState(DEFAULT_BILL);
     const [price, setPrice] = useState({});
-    const [loading, setLoading] = useState(true);
 
     const load = useCallback(async() => {
         try {
@@ -30,7 +29,7 @@ function Contract({notify, match}) {
             notify("error", "The data is not loaded");
         }
         setLoading(false);
-    }, [notify, match.params])
+    }, [setLoading, match.params, notify])
 
     useEffect(() => {
         load();
@@ -190,4 +189,4 @@ function Contract({notify, match}) {
     )
 }
 
-export default withNoti(Contract);
+export default withHelpers(Contract);
