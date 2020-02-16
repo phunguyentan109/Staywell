@@ -11,7 +11,7 @@ const DEFAULT_ACCOUNT = {
     password: ""
 }
 
-function Login({message, negative, sendAuthData, history, device, addMessage}) {
+function Login({message, negative, sendAuthData, addMessage, history, device}) {
     const [account, setAccount] = useState(DEFAULT_ACCOUNT);
 
     useEffect(() => {

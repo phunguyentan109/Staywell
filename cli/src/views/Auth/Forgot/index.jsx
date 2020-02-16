@@ -1,10 +1,17 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import AuthInput from "components/Auth/AuthInput.jsx";
 import api, {apiCall} from "constants/api";
+import {connect} from "react-redux";
+import {addMessage} from "appRedux/actions/message";
+import withResize from "hocs/withResize";
 
-function Forgot({history}) {
+function Forgot({message, negative, addMessage, history}) {
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        return () => addMessage();
+    }, [addMessage])
 
     async function hdSubmit(e) {
         e.preventDefault();
@@ -14,17 +21,18 @@ function Forgot({history}) {
                 if(email.indexOf("@") !== -1) {
                     await apiCall(...api.user.forgotPassword(), {email});
                     setEmail("");
-                    // window.alert("Reset password successfully");
-                    history.push("/");
+                    addMessage("Reset password successfully", false);
                 } else {
-                    window.alert("Your email has incorrect format");
+                    addMessage("Your email has incorrect format");
+                    setLoading(false);
                 }
             } else {
-                window.alert("The entered information is not valid. Please try again");
+                addMessage("Please enter your email. Please try again!");
                 setLoading(false);
             }
-        } catch (e) {
-            console.error(e);
+        } catch (err) {
+            console.error(err);
+            addMessage(err);
         }
         setLoading(false);
     }
@@ -37,6 +45,15 @@ function Forgot({history}) {
         <div className="content">
             <h1>Forgot password?</h1>
             <h4>Please fill in your email below to reset password.</h4>
+            {
+                message
+                ? <div className={`${negative ? "notify" : "great-notify"}`}>
+                    <span>
+                        {message ? message : ""}
+                    </span>
+                </div>
+                : <span/>
+            }
             <form className="auth-form" onSubmit={hdSubmit}>
                 <AuthInput
                     placeholder="Email"
@@ -57,4 +74,11 @@ function Forgot({history}) {
     )
 }
 
-export default Forgot;
+function mapState({message}) {
+    return {
+        message: message.text,
+        negative: message.isNegative
+    }
+}
+
+export default connect(mapState, {addMessage})(withResize(Forgot));
