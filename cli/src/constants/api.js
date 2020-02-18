@@ -46,6 +46,9 @@ export default {
         create: room_id => ["post", `/api/rooms/${room_id}/contracts`],
         remove: (room_id, contract_id) => ["delete", `/api/room/${room_id}/contracts/${contract_id}`]
     },
+    bill: {
+        create: (room_id, contract_id) => ['post', `/api/room/${room_id}/contracts/${contract_id}/bills`]    
+    },
     price: {
         get: () => ["get", `/api/price`],
         create: () => ["post", "/api/price"],

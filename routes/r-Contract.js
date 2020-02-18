@@ -10,5 +10,6 @@ router.route("/:contract_id")
     .get(hdl.Contract.getOne)
     .delete(hdl.Contract.remove);
 
+router.use("/:contract_id/bills", require("./r-Bill"));
 
 module.exports = router;

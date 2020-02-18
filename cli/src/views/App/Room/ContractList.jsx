@@ -27,11 +27,20 @@ function ContractList({notify, hdCancel, room, selectedRoom, loading, setLoading
         setElectric(e.target.value);
     }
 
-    function hdSubmit() {
+    async function hdSubmit() {
         try {
-            let returnContractId = apiCall(...api.contract.create(selectedRoom._id), {electric});
-            let contractGet = apiCall(...api.contract.getOne(selectedRoom._id, returnContractId));
-            setContracts(prev=> [...prev, contractGet]);
+            // Create contract
+            let returnContractId = await apiCall(...api.contract.create(selectedRoom._id), {electric});
+
+            // Initial bill in the contract
+            await apiCall(...api.contract.create(returnContractId), {
+                price: selectedRoom.price_id
+            });
+
+            // Get contract data to refresh the list
+            let contractGet = await apiCall(...api.contract.getOne(selectedRoom._id, returnContractId));
+
+            setContracts(prev => [...prev, contractGet]);
         } catch (e) {
             notify("error", "The process cannot be done");
         }
@@ -52,7 +61,7 @@ function ContractList({notify, hdCancel, room, selectedRoom, loading, setLoading
                     ]}
                 />
             </Card>
-            <Card className="gx-card" title="Contract Management">
+            <Card className="gx-card" title="Begin New Contract">
                 <Spin spinning={loading}>
                     <Form layout="inline">
                         <FormItem label="Electric Number">
