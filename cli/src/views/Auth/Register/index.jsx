@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {Link} from "react-router-dom";
 import AuthInput from "components/Auth/AuthInput.jsx";
 import {connect} from "react-redux";
@@ -15,6 +15,10 @@ const DEFAULT_ACCOUNT = {
 function Register({message, negative, sendAuthData, addMessage, device}) {
     const [account, setAccount] = useState(DEFAULT_ACCOUNT);
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        return () => addMessage();
+    },[addMessage])
 
     function hdSubmit(e) {
         setLoading(true);
