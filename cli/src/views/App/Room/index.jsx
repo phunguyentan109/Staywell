@@ -184,7 +184,7 @@ function Room({notify, setLoading, loading}) {
                     </Col>
                 }
                 {
-                    viewContract && <Col md={10}>
+                    viewContract && <Col md={24}>
                         <ContractList
                             hdCancel={hdCancel}
                             selectedRoom={room}
