@@ -1,12 +1,11 @@
 import React, {useState, useEffect, useCallback} from "react";
 import {Row, Col, Card, Spin, Table, Button, Divider} from "antd";
+import {Link} from "react-router-dom";
 import PopConfirm from "components/App/Pop/PopConfirm";
 import api, {apiCall} from "constants/api";
 import RoomForm from "./Form";
 import RoomAssign from "./Assign";
-import ContractList from "./ContractList";
 import withHelpers from "hocs/withHelpers";
-// import moment from "moment";
 
 const DEFAULT_ROOM = {
     name: "",
@@ -19,7 +18,6 @@ function Room({notify, setLoading, loading}) {
     const [price, setPrice] = useState([]);
     const [form, toggleForm] = useState(false);
     const [assign, toggleAssign] = useState(false);
-    const [viewContract, toggleViewContract] = useState(false);
 
     const load = useCallback(async() => {
         try {
@@ -62,12 +60,6 @@ function Room({notify, setLoading, loading}) {
         setRoom(DEFAULT_ROOM);
         toggleForm(false);
         toggleAssign(false);
-        toggleViewContract(false);
-    }
-
-    function hdViewContract(room) {
-        toggleViewContract(true);
-        setRoom(room);
     }
 
     function hdAssign(room) {
@@ -110,8 +102,10 @@ function Room({notify, setLoading, loading}) {
                 title: 'Contract Information',
                 dataIndex: "contract_id",
                 render: (text, record) => (
-                    <span className="gx-link" onClick={hdViewContract.bind(this, record)}>
-                        View contracts ({text.length})
+                    <span className="gx-link">
+                        <Link to={`rooms/${record._id}/contracts`}>
+                            View contracts ({text.length})
+                        </Link>
                     </span>
                 )
             },
@@ -138,7 +132,7 @@ function Room({notify, setLoading, loading}) {
         ];
 
         // If "Assign" or "Form" content is shown, then hide the action
-        return (assign || form || viewContract) ? cols.filter(c => c.key !== "action") : cols;
+        return assign || form ? cols.filter(c => c.key !== "action") : cols;
     }
 
     return (
@@ -160,7 +154,7 @@ function Room({notify, setLoading, loading}) {
                     <Card title="List of available room">
                         <Spin spinning={loading}>
                             {
-                                form || viewContract || <Button type="primary" onClick={() => toggleForm(true)}>Add new room information</Button>
+                                form || <Button type="primary" onClick={() => toggleForm(true)}>Add new room information</Button>
                             }
                             <Table
                                 className="gx-table-responsive"
@@ -180,14 +174,6 @@ function Room({notify, setLoading, loading}) {
                             selectedRoom={room}
                             hdCancel={hdCancel}
                             notify={notify}
-                        />
-                    </Col>
-                }
-                {
-                    viewContract && <Col md={24}>
-                        <ContractList
-                            hdCancel={hdCancel}
-                            selectedRoom={room}
                         />
                     </Col>
                 }

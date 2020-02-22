@@ -16,17 +16,17 @@ function AppRoutes(props) {
         <div className="gx-main-content-wrapper">
             <Switch>
                 <RouteControl
-                    path={`${url}/room`}
+                    path={`${url}/rooms/:room_id/contracts`}
                     redirectPath={`${url}/`}
-                    component={Room}
+                    component={Contract}
                     access={[
                         "OWNER_PERMISSION"
                     ]}
                 />
                 <RouteControl
-                    path={`${url}/people/:user_id/contract`}
+                    path={`${url}/rooms`}
                     redirectPath={`${url}/`}
-                    component={Contract}
+                    component={Room}
                     access={[
                         "OWNER_PERMISSION"
                     ]}

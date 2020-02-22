@@ -23,7 +23,7 @@ exports.getOne = async(req, res, next) => {
 
 exports.create = async(req, res, next) => {
     try {
-        let {price} = req.body;
+        let {duration} = req.body;
         let {contract_id} = req.params;
 
         // Find the contract
@@ -31,7 +31,7 @@ exports.create = async(req, res, next) => {
         if(foundContract) {
             // Create bill data for the contract
             // Each bill created with each different end month (base on price's duration)
-            for(let i = 0; i < price.duration; i++) {
+            for(let i = 0; i < duration; i++) {
                 let date = moment().startOf().add(i, "months");
                 let cBill = await db.Bill.create({
                     paidDate: moment(date).endOf("month"),
@@ -47,48 +47,6 @@ exports.create = async(req, res, next) => {
         return next(e);
     }
 }
-
-// exports.oldCreate = async(req, res, next) => {
-//     try {
-//         let {amount} = req.body;
-//         let {room_id} = req.params;
-//
-//         // find previous bill
-//         let room = await db.Room.findById(room_id).populate("bill_id").populate("price_id").exec();
-//         let price = room.price_id;
-//         let prevAmount = 0;
-//         if(room.bill_id && room.bill_id.length > 0) {
-//             let bills = room.bill_id;
-//             let lastDate = moment.max(bills.map(bill => moment(bill.pay.time)));
-//             let prevBill = bills.filter(b => moment(b.pay.time).isSame(lastDate))[0];
-//             prevAmount = prevBill.electric.amount;
-//         }
-//
-//         // calculate the bill with price and create
-//         let bill = {
-//             electric: {
-//                 amount: amount,
-//                 cost: (amount - prevAmount) * price.electric
-//             },
-//             water: price.water * (room.people_id.length !== 0 ? room.people_id.length : 1),
-//             house: price.house + (price.extra * (room.people_id.length !== 0 ? room.peole_id.length - 1 : 0)),
-//             wifi: price.wifi
-//         }
-//         let newBill = await db.Bill.create(bill);
-//
-//         // save bill_id to room
-//         await pushId("Room", room_id, "bill_id", newBill._id);
-//         // save room_id to bill
-//         newBill.room_id = req.params.room_id;
-//         newBill.pay.status = true;
-//         newBill.inContract = false;
-//         await newBill.save();
-//
-//         return res.status(200).json(newBill);
-//     } catch (err) {
-//         return next(err);
-//     }
-// }
 
 exports.update  = async(req, res, next) => {
     try {
