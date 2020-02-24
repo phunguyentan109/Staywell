@@ -25,6 +25,8 @@ exports.create = async(req, res, next) => {
     try {
         let {room_id} = req.params;
         let createdContract = await db.Contract.create(req.body);
+        createdContract.room_id = room_id;
+        createdContract.save();
 
         // Save contract id to room
         await pushId("Room", room_id, "contract_id", createdContract._id);

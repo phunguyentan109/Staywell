@@ -41,7 +41,7 @@ export default {
         update: user_id => ["put", `/api/user/${user_id}`]
     },
     contract: {
-        get: user_id => ["get", `/api/user/${user_id}/contracts`],
+        get: room_id => ["get", `/api/rooms/${room_id}/contracts`],
         getOne: (room_id, contract_id) => ["get", `/api/rooms/${room_id}/contracts/${contract_id}`],
         create: room_id => ["post", `/api/rooms/${room_id}/contracts`],
         remove: (room_id, contract_id) => ["delete", `/api/room/${room_id}/contracts/${contract_id}`]

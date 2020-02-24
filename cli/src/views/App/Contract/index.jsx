@@ -3,6 +3,7 @@ import {Card, Spin, Form, Input, Button, Table, Row, Col} from "antd";
 import withHelpers from "hocs/withHelpers";
 import api, {apiCall} from "constants/api";
 import moment from "moment";
+import {PaidBill, Bill} from "./Bill";
 
 const FormItem = Form.Item;
 
@@ -15,8 +16,9 @@ function Contract({notify, hdCancel, room, match, loading, setLoading}) {
     const load = useCallback(async() => {
         try {
             let {room_id} = match.params;
+            let contractData = await apiCall(...api.contract.get(room_id));
             let roomData = await apiCall(...api.room.getOne(room_id));
-            setContracts(roomData.contract_id);
+            setContracts(contractData);
             setPrice(roomData.price_id);
         } catch (e) {
             notify("error", "The data cannot be loaded!");
@@ -32,30 +34,37 @@ function Contract({notify, hdCancel, room, match, loading, setLoading}) {
         setElectric(e.target.value);
     }
 
+    function hdView(contract) {
+        setContract(contract);
+    }
+
     async function hdSubmit() {
         try {
-            let {room_id} = match.params;
-            // Create contract
-            let returnData = await apiCall(...api.contract.create(room_id), {electric});
+            if(electric > 0) {
+                let {room_id} = match.params;
+                // Create contract
+                let returnData = await apiCall(...api.contract.create(room_id), {electric});
 
-            // Initial bill in the contract
-            await apiCall(...api.bill.create(room_id, returnData.contract_id), price);
+                // Initial bill in the contract
+                await apiCall(...api.bill.create(room_id, returnData.contract_id), price);
 
-            // Get contract data to refresh the list
-            let contractGet = await apiCall(...api.contract.getOne(room_id, returnData.contract_id));
+                // Get contract data to refresh the list
+                let contractGet = await apiCall(...api.contract.getOne(room_id, returnData.contract_id));
 
-            setContract(contractGet);
-            setContracts(prev => [...prev, contractGet]);
+                setContract(contractGet);
+                setContracts(prev => [...prev, contractGet]);
+                setElectric(0);
+            }
         } catch (e) {
             notify("error", "The process cannot be done");
         }
     }
 
     function displayTimeline(text, rec) {
-        let begin = moment(text).format("MMM DDo, YYY");
-        let finish = moment(rec.bill_id[rec.bill_id.length - 1].paidDate).format("MMM DDo, YYYY");
+        let begin = moment(text).format("MMM Do, YYYY");
+        let finish = moment(rec.bill_id[rec.bill_id.length - 1].paidDate).format("MMM Do, YYYY");
         return (
-            <span>From {begin} to {finish}</span>
+            <span>From <b>{begin}</b> To <b>{finish}</b></span>
         )
     }
 
@@ -89,12 +98,23 @@ function Contract({notify, hdCancel, room, match, loading, setLoading}) {
                                 dataIndex: "createdAt",
                                 render: displayTimeline
                             },
+                            {
+                                title: 'Actions',
+                                key: 'action',
+                                render: (text, record) => (
+                                    <span>
+                                        <span className="gx-link" onClick={hdView.bind(this, record)}>View bills</span>
+                                    </span>
+                                )
+                            }
                         ]}
                     />
                 </Card>
             </Col>
             <Col md={14}>
-                <Card className="gx-card" title="Contract's bills">
+                <Bill />
+                <PaidBill />
+                {/* <Card className="gx-card" title="Contract's bills">
                     <Table
                         className="gx-table-responsive"
                         dataSource={contract.bill_id}
@@ -123,7 +143,7 @@ function Contract({notify, hdCancel, room, match, loading, setLoading}) {
                             {
                                 title: 'Action',
                                 key: 'action',
-                                render: (text, record) => room._id ? <span>None</span> : (
+                                render: (text, record) => (
                                     <span>
                                         <span className="gx-link" onClick={console.log}>Checkout</span>
                                     </span>
@@ -131,7 +151,7 @@ function Contract({notify, hdCancel, room, match, loading, setLoading}) {
                             }
                         ]}
                     />
-                </Card>
+                </Card> */}
             </Col>
         </Row>
     )

@@ -1,6 +1,28 @@
 .app-assign {
   color: #e87422 !important; }
 
+.bill-record {
+  display: flex;
+  align-items: center;
+  padding: 15px; }
+  .bill-record > i {
+    padding-left: 5px;
+    padding-right: 5px; }
+  .bill-record > h3 {
+    margin-bottom: 0;
+    color: #545454; }
+
+.paid-bill-record {
+  display: flex;
+  align-items: center;
+  padding: 15px; }
+  .paid-bill-record > i {
+    padding-left: 5px;
+    padding-right: 5px; }
+  .paid-bill-record > h3 {
+    margin-bottom: 0;
+    color: white; }
+
 .user-cell {
   display: flex;
   align-items: center; }
