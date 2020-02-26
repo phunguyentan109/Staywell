@@ -5,6 +5,7 @@ import PopConfirm from "components/App/Pop/PopConfirm";
 import api, {apiCall} from "constants/api";
 import RoomForm from "./Form";
 import RoomAssign from "./Assign";
+import withBreadCrumb from "hocs/withBreadCrumb" ;
 
 const DEFAULT_ROOM = {
     name: "",
@@ -169,4 +170,4 @@ function Room({notify}) {
     )
 }
 
-export default withNoti(Room);
+export default withBreadCrumb(withNoti(Room));

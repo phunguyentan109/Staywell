@@ -3,6 +3,7 @@ import {Card, Spin, Table, Divider, Form, Input, Button} from "antd";
 import api, {apiCall} from "constants/api";
 import withNoti from "hocs/withNoti";
 import PopConfirm from "components/App/Pop/PopConfirm";
+import withBreadCrumb from "hocs/withBreadCrumb";
 
 const FormItem = Form.Item;
 
@@ -260,4 +261,4 @@ function Price({notify}) {
     )
 }
 
-export default withNoti(Price);
+export default withBreadCrumb(withNoti(Price));
