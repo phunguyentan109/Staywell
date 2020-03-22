@@ -8,7 +8,6 @@ import {PaidBill, Bill} from "./Bill";
 const FormItem = Form.Item;
 
 function Contract({notify, hdCancel, room, match, loading, setLoading}) {
-    const [electric, setElectric] = useState(0);
     const [contracts, setContracts] = useState([]);
     const [contract, setContract] = useState({});
     const [price, setPrice] = useState({});
