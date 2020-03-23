@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import api, {apiCall} from "constants/api";
+import {apiUser} from "constants/api";
 import {Link} from "react-router-dom";
 import AuthInput from "components/Auth/AuthInput.jsx";
 import {connect} from "react-redux";
@@ -9,7 +9,7 @@ import withResize from "hocs/withResize";
 const DEFAULT_ACCOUNT = {
     password: "",
     cpassword: "",
-}
+};
 
 function ResetPassword({message, negative, addMessage, match, history}) {
     const [account, setAccount] = useState(DEFAULT_ACCOUNT);
@@ -26,7 +26,7 @@ function ResetPassword({message, negative, addMessage, match, history}) {
             let {password, cpassword} = account;
             if(password.length > 0 && cpassword > 0) {
                 if(password === cpassword) {
-                    await apiCall(...api.user.resetPassword(match.params.token), {password: account.password});
+                    await apiUser.resetPassword(match.params.token, {password: account.password});
 
                     setAccount(DEFAULT_ACCOUNT);
                     addMessage("Your resetted link has been sent to your mail successfully!", false);
@@ -35,7 +35,7 @@ function ResetPassword({message, negative, addMessage, match, history}) {
                     setLoading(false);
                 }
             } else {
-                addMessage("Please fullfill to reset your password");
+                addMessage("Please fulfill to reset your password");
                 setLoading(false);
             }
         } catch (err) {

@@ -1,6 +1,6 @@
 import React, {useEffect, useCallback, useState} from "react";
 import {Card, Table, Spin} from "antd";
-import api, {apiCall} from "constants/api";
+import {apiUser} from "constants/api";
 import withNoti from "hocs/withNoti";
 import PopConfirm from "components/App/Pop/PopConfirm";
 import * as permissions from "constants/credentialControl";
@@ -13,21 +13,21 @@ function People({notify}) {
 
     const load = useCallback(async() => {
         try {
-            let peopleData = await apiCall(...api.user.get());
+            let peopleData = await apiUser.get();
             setPeople(peopleData);
             setLoading(false);
         } catch (e) {
             return notify("error", "Data is not loaded");
         }
-    }, [notify])
+    }, [notify]);
 
     useEffect(() => {
         load();
-    }, [load])
+    }, [load]);
 
     async function hdRemove(user_id) {
         try {
-            await apiCall(...api.user.remove(user_id));
+            await apiUser.remove(user_id);
             setPeople(prev => prev.filter(p => p.user_id._id !== user_id));
             return notify("success", "Process is completed successfully!", "People data is removed successfully.")
         } catch (e) {

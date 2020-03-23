@@ -4,7 +4,7 @@ import About from "components/profile/About/index";
 import Contact from "components/profile/Contact/index";
 import Auxiliary from "util/Auxiliary";
 import ProfileHeader from "components/profile/ProfileHeader";
-import api, {apiCall} from "constants/api";
+import {apiUser} from "constants/api";
 import withNoti from "hocs/withNoti";
 import {connect} from "react-redux";
 import moment from "moment";
@@ -17,14 +17,14 @@ const DEFAULT_PASSWORD = {
     current: "",
     change: "",
     confirm: ""
-}
+};
 
 const DEFAULT_PROFILE = {
     email: "",
     job: "",
     phone:"",
     birthDate: moment()
-}
+};
 
 function Profile({notify, user, role, sendReloadUser, ...props}) {
     const [password, setPassword] = useState(DEFAULT_PASSWORD);
@@ -34,17 +34,17 @@ function Profile({notify, user, role, sendReloadUser, ...props}) {
     const load = useCallback(async() => {
         setProfile(user);
         setLoading(false);
-    }, [user])
+    }, [user]);
 
     useEffect(() => {
         load();
-    }, [load])
+    }, [load]);
 
     async function changePassword() {
         setLoading(true);
         if(password.change === password.confirm && password.current !=="" && password.change !=="" && password.confirm !=="") {
             try {
-                await apiCall(...api.user.changePassword(user._id), password);
+                await apiUser.changePassword(user._id, password);
                 setPassword(DEFAULT_PASSWORD);
                 notify("success", "Process is completed!", "Your password has been changed successfully.");
             } catch (e) {
@@ -87,7 +87,7 @@ function Profile({notify, user, role, sendReloadUser, ...props}) {
         setLoading(true);
         try {
             if(profile.email !=="" && profile.job !=="" && profile.phone !=="") {
-                await apiCall(...api.user.update(user._id), profile);
+                await apiUser.update(user._id, profile);
                 sendReloadUser(user._id);
                 setProfile(DEFAULT_PROFILE);
                 notify("success", "Process is completed!", "Your profile has been updated successfully.");

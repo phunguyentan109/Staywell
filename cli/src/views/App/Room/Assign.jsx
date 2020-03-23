@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useCallback} from "react";
 import {Spin, Table, Button, Card, Form, Input} from "antd";
 import Widget from "components/Widget/index";
-import api, {apiCall} from "constants/api";
+import {apiUser, apiRoom} from "constants/api";
 import moment from "moment";
 
 const NOT_FOUND = -1;
@@ -18,7 +18,7 @@ function RoomAssign({loading, selectedRoom, hdCancel, refresh, notify, setLoadin
     const load = useCallback(async() => {
         setLoading(true);
         try {
-            let userData = await apiCall(...api.user.getAssign());
+            let userData = await apiUser.getAssign();
             setUsers(userData);
         } catch (e) {
             notify("error", "Data is not loaded");
@@ -28,7 +28,7 @@ function RoomAssign({loading, selectedRoom, hdCancel, refresh, notify, setLoadin
 
     useEffect(() => {
         load();
-    }, [load])
+    }, [load]);
 
     function isAssigned(user_id) {
         return room.user_id.map(u => u._id).indexOf(user_id) !== NOT_FOUND;
@@ -56,8 +56,8 @@ function RoomAssign({loading, selectedRoom, hdCancel, refresh, notify, setLoadin
     async function hdConfirm() {
         try {
             setLoading(true);
-            let assignRoom = await apiCall(...api.room.assign(room._id), room);
-            let assignRoomData = await apiCall(...api.room.getOne(assignRoom._id));
+            let assignRoom = await apiRoom.assign(room._id, room);
+            let assignRoomData = await apiRoom.getOne(assignRoom._id);
             refresh(assignRoomData, "People are assigned to room successfully!", false);
         } catch (e) {
             setLoading(false);

@@ -3,7 +3,7 @@ import {Row, Col, Card, Spin, Table, Divider} from "antd";
 import withNoti from "hocs/withNoti";
 import PopConfirm from "components/App/Pop/PopConfirm";
 import moment from "moment";
-import api, {apiCall} from "constants/api";
+import {apiContract} from 'constants/api';
 import {formatVND} from "util/helper";
 
 import TimePointCalc from "./TimePointCalc";
@@ -24,23 +24,23 @@ function Contract({notify, match}) {
     const load = useCallback(async() => {
         try {
             const {user_id} = match.params;
-            let contractData = await apiCall(...api.contract.get(user_id));
+            let contractData = await apiContract.get(user_id);
             setContracts(contractData);
         } catch (e) {
             notify("error", "The data is not loaded");
         }
         setLoading(false);
-    }, [notify, match.params])
+    }, [notify, match.params]);
 
     useEffect(() => {
         load();
-    }, [load])
+    }, [load]);
 
     async function hdRemove(contract_id) {
         setLoading(true);
         try {
             const {user_id} = match.params;
-            await apiCall(...api.contract.remove(user_id, contract_id));
+            await apiContract.remove(user_id, contract_id);
             setContracts(prev => prev.filter(c => c._id !== contract_id));
             notify("success", "Process is completed!", "Contract data is removed successfully.");
         } catch (e) {
@@ -70,9 +70,15 @@ function Contract({notify, match}) {
         if(timePoint_id.length > 1) {
             return (
                 <span>
-                    { formatVND(total) } { timePoint_id.length > 1
-                        ? <span> <span className="gx-link" onClick={hdDetail.bind(this, record)}> <Divider type="vertical"/> +{timePoint_id.length} calculation(s)</span>
-                         </span>
+                    { formatVND(total) } {
+                        timePoint_id.length > 1 ? <span>
+                            <span
+                                className="gx-link"
+                                onClick={hdDetail.bind(this, record)}
+                            >
+                                <Divider type="vertical"/> +{timePoint_id.length} calculation(s)
+                            </span>
+                        </span>
                         : null
                     }
                 </span>

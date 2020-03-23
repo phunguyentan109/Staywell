@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import AuthInput from "components/Auth/AuthInput.jsx";
-import api, {apiCall} from "constants/api";
+import {apiUser} from "constants/api";
 import {connect} from "react-redux";
 import {addMessage} from "appRedux/actions/message";
 import withResize from "hocs/withResize";
@@ -11,7 +11,7 @@ function Forgot({message, negative, addMessage, history}) {
 
     useEffect(() => {
         return () => addMessage();
-    }, [addMessage])
+    }, [addMessage]);
 
     async function hdSubmit(e) {
         e.preventDefault();
@@ -19,7 +19,7 @@ function Forgot({message, negative, addMessage, history}) {
         try {
             if(email.length > 0) {
                 if(email.indexOf("@") !== -1) {
-                    await apiCall(...api.user.forgotPassword(), {email});
+                    await apiUser.forgot({email});
                     setEmail("");
                     addMessage("Reset password successfully", false);
                 } else {
@@ -49,7 +49,7 @@ function Forgot({message, negative, addMessage, history}) {
                 message
                 ? <div className={`${negative ? "notify" : "great-notify"}`}>
                     <span>
-                        {message ? message : ""}
+                        { message ? message : "" }
                     </span>
                 </div>
                 : <span/>

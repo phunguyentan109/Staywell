@@ -1,5 +1,5 @@
 import React, {useEffect, useCallback, useState} from "react";
-import api, {apiCall} from "constants/api";
+import {apiUser} from "constants/api";
 import {connect} from "react-redux";
 import {activateUser} from "appRedux/actions/user";
 
@@ -19,7 +19,7 @@ function Activated({match, activateUser, history}) {
 
     const load = useCallback(async() => {
         try {
-            await apiCall(...api.user.activate(match.params.user_id));
+            await apiUser.activate(match.params.user_id);
             activateUser();
             setLoading(false);
             setTimeout(() => {
@@ -29,11 +29,11 @@ function Activated({match, activateUser, history}) {
             console.log(e);
             history.push("/");
         }
-    }, [activateUser, history, match])
+    }, [activateUser, history, match]);
 
     useEffect(() => {
         load();
-    }, [load])
+    }, [load]);
 
     return (
         <div>
@@ -54,6 +54,6 @@ function Activated({match, activateUser, history}) {
     )
 }
 
-const ActivatedView = connect(null, {activateUser})(Activated)
+const ActivatedView = connect(null, {activateUser})(Activated);
 
 export { ActivatedView, Activate }
