@@ -4,14 +4,15 @@ import {
     CLEAR_AUTH_DATA,
     SEND_RELOAD_USER,
     ACTIVATED_USER
-} from "constants/ActionTypes";
-import api, {apiCall, setTokenHeader} from "constants/api";
-import {addUser} from "appRedux/actions/user";
-import {addMessage} from "appRedux/actions/message";
+} from 'constants/ActionTypes';
+import {apiUser} from 'constants/api';
+import {setTokenHeader} from 'constants/api/call'
+import {addUser} from 'appRedux/actions/user';
+import {addMessage} from 'appRedux/actions/message';
 
 function* hdAuthData({value}) {
     try {
-        let auth = yield call(apiCall, ...api.user.auth(value.route), value.authData);
+        let auth = yield call(apiUser.auth, value.route, value.authData);
         const {token, ...user} = auth;
 
         // add token to req headers for user data validation in server
@@ -48,7 +49,7 @@ function* hdAfterActivate() {
 }
 
 function* hdReloadUser({value}) {
-    let {token, ...user} = yield call(apiCall, ...api.user.getOne(value.user_id));
+    let {token, ...user} = yield call(apiUser.getOne, value.user_id);
     sessionStorage.setItem("auth", JSON.stringify(user));
     localStorage.setItem("swtoken", token);
     yield put(addUser(user));

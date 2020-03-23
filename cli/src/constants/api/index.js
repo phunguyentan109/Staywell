@@ -3,7 +3,7 @@ import * as apiUser from './models/user';
 import * as apiRoom from './models/room';
 import * as apiPrice from './models/price';
 
-export default {
+export {
     apiContract,
     apiUser,
     apiRoom,

@@ -1,7 +1,7 @@
 import { apiCall } from "../call";
 
-export async function auth(authType) {
-    return await apiCall('post', `/api/user/${authType}`)
+export async function auth(authType, authData) {
+    return await apiCall('post', `/api/user/${authType}`, authData)
 }
 
 export async function getOne(user_id) {
@@ -12,12 +12,16 @@ export async function activate(user_id) {
     return await apiCall('put', `/api/user/${user_id}/activate`)
 }
 
-export async function forgot() {
-    return await apiCall('post', `/api/user/forgot`)
+export async function forgot(email) {
+    return await apiCall('post', `/api/user/forgot`, email)
 }
 
-export async function changePassword(user_id) {
-    return await apiCall('put', `/api/user/${user_id}/password`)
+export async function resetPassword(token, password) {
+    return await apiCall('put', `/api/user/${token}/reset`, password)
+}
+
+export async function changePassword(user_id, password) {
+    return await apiCall('put', `/api/user/${user_id}/password`, password)
 }
 
 export async function get() {
@@ -32,6 +36,6 @@ export async function remove(user_id) {
     return await apiCall('delete', `/api/user/${user_id}`)
 }
 
-export async function update(user_id) {
-    return await apiCall('put', `/api/user/${user_id}`)
+export async function update(user_id, user) {
+    return await apiCall('put', `/api/user/${user_id}`, user)
 }

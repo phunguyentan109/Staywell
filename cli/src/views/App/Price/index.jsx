@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useCallback} from "react";
 import {Card, Spin, Table, Divider, Form, Input, Button} from "antd";
-import api, {apiCall} from "constants/api";
+import {apiPrice} from "constants/api";
 import withNoti from "hocs/withNoti";
 import PopConfirm from "components/App/Pop/PopConfirm";
 
@@ -14,7 +14,7 @@ const DEFAULT_PRICE = {
     house: 0,
     extra: 0,
     duration: 6
-}
+};
 
 function Price({notify}) {
     const [listPrice, setListPrice] = useState([]);
@@ -24,17 +24,17 @@ function Price({notify}) {
 
     const load = useCallback(async() => {
         try {
-            let priceData = await apiCall(...api.price.get());
+            let priceData = await apiPrice.get();
             setListPrice(priceData);
             setLoading(false);
         } catch (e) {
             return notify("error", "Data is not loaded");
         }
-    }, [notify])
+    }, [notify]);
 
     useEffect(() => {
         load();
-    }, [load])
+    }, [load]);
 
     function hdChange(e) {
         const {name, value} = e.target;
@@ -45,17 +45,17 @@ function Price({notify}) {
         setLoading(true);
         try {
             if(!price._id) {
-                let createdPrice = await apiCall(...api.price.create(), price);
+                let createdPrice = await apiPrice.create(price);
                 setListPrice(prev => [...prev, createdPrice]);
                 notify("success", "Process is completed", "Price data is created successfully.");
             } else {
-                let updatePrice = await apiCall(...api.price.update(price._id), price);
+                let updatePrice = await apiPrice.update(price._id, price);
                 let updatePriceList = listPrice.map(v => {
                     if(v._id === updatePrice._id) {
                         return updatePrice;
                     }
                     return v;
-                })
+                });
                 setListPrice(updatePriceList);
                 notify("success", "Process is completed", "Price data is updated successfully.");
             }
@@ -69,7 +69,7 @@ function Price({notify}) {
     async function hdRemove(price_id) {
         setLoading(true);
         try {
-            await apiCall(...api.price.remove(price_id)) ;
+            await apiPrice.remove(price_id);
             let updatePriceList = listPrice.filter(v => v._id !== price_id);
             setListPrice(updatePriceList);
             notify("success", "Process is not completed", "Price data is removed successfully");
