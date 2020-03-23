@@ -2,12 +2,13 @@ import React, {useEffect, useCallback, useState} from "react";
 import {Card, Table, Spin} from "antd";
 import {apiUser} from "constants/api";
 import withNoti from "hocs/withNoti";
+import withBreadCrumb from "hocs/withBreadCrumb";
 import PopConfirm from "components/App/Pop/PopConfirm";
 import * as permissions from "constants/credentialControl";
 
 const {isPeople, isUnactive} = permissions;
 
-function People({notify}) {
+function People({notify, ...props}) {
     const [people, setPeople] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -113,4 +114,4 @@ function PeopleTable({title, dataSource, loading, hdRemove}) {
     )
 }
 
-export default withNoti(People);
+export default withBreadCrumb(withNoti(People));

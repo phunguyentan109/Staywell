@@ -5,6 +5,7 @@ import PopConfirm from "components/App/Pop/PopConfirm";
 import moment from "moment";
 import {apiContract} from 'constants/api';
 import {formatVND} from "util/helper";
+import withBreadCrumb from "hocs/withBreadCrumb";
 
 import TimePointCalc from "./TimePointCalc";
 
@@ -196,4 +197,4 @@ function Contract({notify, match}) {
     )
 }
 
-export default withNoti(Contract);
+export default withBreadCrumb(withNoti(Contract));
