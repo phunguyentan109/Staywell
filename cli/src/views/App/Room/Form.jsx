@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Card, Spin, Form, Input, Select, Button} from "antd";
-import api, {apiCall} from "constants/api";
+import {apiRoom} from "constants/api";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -20,19 +20,19 @@ function RoomForm({loading, editRoom, price, hdCancel, refresh, setLoading, noti
     async function hdSubmit() {
         setLoading(true);
         try {
-            // Prepare data based-on mode
-            let usedApi = room._id ? api.room.edit(room._id) : api.room.create();
-            let msg = room._id ? "Update room successfully!" : "Create new room successfully!";
-            let isNewRecord = room._id === undefined;
-
-            // Send data
-            let returnedData = await apiCall(...usedApi, room);
-            let roomData = await apiCall(...api.room.getOne(returnedData._id));
-
-            // Update the list data
-            refresh(roomData, msg, isNewRecord);
+            if(room._id) {
+                // run in edit mode
+                let updatedRoom = await apiRoom.update(room._id, room);
+                let updatedRoomData = await apiRoom.getOne(updatedRoom._id);
+                refresh(updatedRoomData, "Update room successfully!", false);
+            } else {
+                // run in create mode
+                let createdRoom = await apiRoom.create(room);
+                let createdRoomData = await apiRoom.getOne(createdRoom._id);
+                refresh(createdRoomData, "Create new room successfully!");
+            }
         } catch (e) {
-            notify("error", "Process is not completed")
+            notify("error", "Process is not completed");
             setLoading(false);
         }
     }

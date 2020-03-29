@@ -1,7 +1,8 @@
 import React, {useState, useEffect, useCallback} from "react";
 import {Card, Spin, Form, Input, Button, Table, Row, Col} from "antd";
 import withHelpers from "hocs/withHelpers";
-import api, {apiCall} from "constants/api";
+import withBreadCrumb from "hocs/withBreadCrumb";
+import { apiContract, apiBill, apiRoom } from 'constants/api';
 import moment from "moment";
 import {PaidBill, Bill} from "./Bill";
 
@@ -15,8 +16,8 @@ function Contract({notify, hdCancel, room, match, loading, setLoading}) {
     const load = useCallback(async() => {
         try {
             let {room_id} = match.params;
-            let contractData = await apiCall(...api.contract.get(room_id));
-            let roomData = await apiCall(...api.room.getOne(room_id));
+            let contractData = await apiContract.get(room_id);
+            let roomData = await apiRoom.getOne(room_id);
             setContracts(contractData);
             setPrice(roomData.price_id);
         } catch (e) {
@@ -29,34 +30,30 @@ function Contract({notify, hdCancel, room, match, loading, setLoading}) {
         load();
     }, [load]);
 
-    function hdChange(e) {
-        setElectric(e.target.value);
-    }
-
     function hdView(contract) {
         setContract(contract);
     }
 
     async function hdSubmit() {
-        try {
-            if(electric > 0) {
-                let {room_id} = match.params;
-                // Create contract
-                let returnData = await apiCall(...api.contract.create(room_id), {electric});
-
-                // Initial bill in the contract
-                await apiCall(...api.bill.create(room_id, returnData.contract_id), price);
-
-                // Get contract data to refresh the list
-                let contractGet = await apiCall(...api.contract.getOne(room_id, returnData.contract_id));
-
-                setContract(contractGet);
-                setContracts(prev => [...prev, contractGet]);
-                setElectric(0);
-            }
-        } catch (e) {
-            notify("error", "The process cannot be done");
-        }
+        // try {
+        //     if(electric > 0) {
+        //         let {room_id} = match.params;
+        //         // Create contract
+        //         let returnData = await apiContract.create(room_id, {electric});
+        //
+        //         // Initial bill in the contract
+        //         await apiBill.create(room_id, returnData.contract_id, price);
+        //
+        //         // Get contract data to refresh the list
+        //         let contractGet = await apiContract.getOne(room_id, returnData.contract_id);
+        //
+        //         setContract(contractGet);
+        //         setContracts(prev => [...prev, contractGet]);
+        //         setElectric(0);
+        //     }
+        // } catch (e) {
+        //     notify("error", "The process cannot be done");
+        // }
     }
 
     function displayTimeline(text, rec) {
@@ -72,18 +69,18 @@ function Contract({notify, hdCancel, room, match, loading, setLoading}) {
             <Col md={10}>
                 <Card className="gx-card" title="Begin New Contract">
                     <Spin spinning={loading}>
-                        <Form layout="inline">
-                            <FormItem label="Electric Number">
-                                <Input
-                                    placeholder="Set the starting electric number"
-                                    value={electric}
-                                    onChange={hdChange}
-                                />
-                            </FormItem>
-                            <FormItem>
-                                <Button type="primary" onClick={hdSubmit}>New contract</Button>
-                            </FormItem>
-                        </Form>
+                        {/*<Form layout="inline">*/}
+                        {/*    <FormItem label="Electric Number">*/}
+                        {/*        <Input*/}
+                        {/*            placeholder="Set the starting electric number"*/}
+                        {/*            value={electric}*/}
+                        {/*            onChange={hdChange}*/}
+                        {/*        />*/}
+                        {/*    </FormItem>*/}
+                        {/*    <FormItem>*/}
+                        {/*        <Button type="primary" onClick={hdSubmit}>New contract</Button>*/}
+                        {/*    </FormItem>*/}
+                        {/*</Form>*/}
                     </Spin>
                 </Card>
                 <Card className="gx-card" title="List of contracts">
@@ -156,4 +153,4 @@ function Contract({notify, hdCancel, room, match, loading, setLoading}) {
     )
 }
 
-export default withHelpers(Contract);
+export default withBreadCrumb(withHelpers(Contract));

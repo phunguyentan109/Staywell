@@ -2,15 +2,16 @@ import React, {useState, useEffect, useCallback} from "react";
 import {Row, Col, Card, Spin, Table, Button, Divider} from "antd";
 import {Link} from "react-router-dom";
 import PopConfirm from "components/App/Pop/PopConfirm";
-import api, {apiCall} from "constants/api";
+import {apiRoom, apiPrice} from "constants/api";
 import RoomForm from "./Form";
 import RoomAssign from "./Assign";
 import withHelpers from "hocs/withHelpers";
+import withBreadCrumb from "hocs/withBreadCrumb" ;
 
 const DEFAULT_ROOM = {
     name: "",
     user_id: []
-}
+};
 
 function Room({notify, setLoading, loading}) {
     const [rooms, setRooms] = useState([]);
@@ -21,24 +22,24 @@ function Room({notify, setLoading, loading}) {
 
     const load = useCallback(async() => {
         try {
-            let roomData = await apiCall(...api.room.get());
-            let priceData = await apiCall(...api.price.get());
+            let roomData = await apiRoom.get();
+            let priceData = await apiPrice.get();
             setPrice(priceData);
             setRooms(roomData);
             setLoading(false);
         } catch (e) {
             notify("error", "The data cannot be loaded!");
         }
-    }, [notify, setLoading])
+    }, [notify, setLoading]);
 
     useEffect(() => {
         load();
-    }, [load])
+    }, [load]);
 
     async function hdRemove(room_id) {
         setLoading(true);
         try {
-            await apiCall(...api.room.remove(room_id));
+            await apiRoom.remove(room_id);
             let newRooms = rooms.filter(r => r._id !== room_id);
             setRooms(newRooms);
             notify("success", "The process is completed", "The room information is removed successfully!");
@@ -182,4 +183,4 @@ function Room({notify, setLoading, loading}) {
     )
 }
 
-export default withHelpers(Room);
+export default withBreadCrumb(withHelpers(Room));

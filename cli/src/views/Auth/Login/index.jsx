@@ -1,17 +1,20 @@
-import React, {useState} from "react";
-import {Link} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import AuthInput from "components/Auth/AuthInput.jsx";
-import {connect} from "react-redux";
-import {sendAuthData} from "appRedux/actions/user";
+import { connect } from "react-redux";
+import { sendAuthData } from "appRedux/actions/user";
+import { addMessage } from "appRedux/actions/message";
 import withHelpers from "hocs/withHelpers";
 
-const DEFAULT_ACCOUNT = {
-    email: "",
-    password: ""
-}
+function Login({message, sendAuthData, addMessage, device}) {
+    const [account, setAccount] = useState({
+        email: "",
+        password: ""
+    });
 
-function Login({sendAuthData, history, device}) {
-    const [account, setAccount] = useState(DEFAULT_ACCOUNT);
+    useEffect(() => {
+        return () => addMessage();
+    }, [addMessage]);
 
     function hdSubmit(e) {
         e.preventDefault();
@@ -31,6 +34,11 @@ function Login({sendAuthData, history, device}) {
                 : <h1>Welcome to Staywell,</h1>
             }
             <h4>Please enter your account to continue.</h4>
+            {
+                message.length > 0 && <div className="notify">
+                    <span>{message}</span>
+                </div>
+            }
             <form className="auth-form" onSubmit={hdSubmit}>
                 <AuthInput
                     placeholder="Email"
@@ -54,4 +62,11 @@ function Login({sendAuthData, history, device}) {
     )
 }
 
-export default connect(null, {sendAuthData})(withHelpers(Login));
+function mapState({ message }) {
+    return {
+        message: message.text,
+        negative: message.isNegative
+    }
+}
+
+export default connect(mapState, {sendAuthData, addMessage})(withHelpers(Login));

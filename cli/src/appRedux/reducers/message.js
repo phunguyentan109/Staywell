@@ -1,8 +1,8 @@
 import {ADD_MESSAGE} from "constants/ActionTypes";
 
 const DEFAULT_STATE = {
-    content: "",
-    isNegative: true
+    text: "",
+    isNegative: false
 }
 
 export default (state = DEFAULT_STATE, action) => {

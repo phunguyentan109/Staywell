@@ -1,67 +1,46 @@
-import React, {useState} from "react";
-import api, {apiCall} from "constants/api";
+import React, {useState, useEffect} from "react";
+import {apiUser} from "constants/api";
 import {Link} from "react-router-dom";
 import AuthInput from "components/Auth/AuthInput.jsx";
-
-function TimeOut() {
-    return (
-        <div className="activate">
-            <h1>Reset password link has been timeout,</h1>
-            <hr/>
-            <h3>Your reset password link has been timeout. Please take a new link to reset your account password. We wish you to have a good day!</h3>
-            <Link to="/forgot">
-                <button>
-                    Resend forgot password
-                </button>
-            </Link>
-        </div>
-    )
-}
-
-function Reseted() {
-    return (
-        <div className="activate">
-            <h1>Your Staywell password account has been reseted,</h1>
-            <hr/>
-            <h3>We has sent you confirmed email, what you can check it. We wish you to have a good day!</h3>
-            <Link to="/">
-                <button>
-                    Login your account
-                </button>
-            </Link>
-        </div>
-    )
-}
+import {connect} from "react-redux";
+import {addMessage} from "appRedux/actions/message";
+import withResize from "hocs/withResize";
 
 const DEFAULT_ACCOUNT = {
     password: "",
-    cpassword: ""
-}
+    cpassword: "",
+};
 
-function Reset({match, history}) {
+function ResetPassword({message, negative, addMessage, match, history}) {
     const [account, setAccount] = useState(DEFAULT_ACCOUNT);
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        return () => addMessage();
+    }, [addMessage]);
 
     async function hdSubmit(e) {
         e.preventDefault();
         setLoading(true);
         try {
-            let isValidPassword = account.password === account.cpassword;
-            let isNotEmpty = account.password.length > 0;
-            if(isNotEmpty && isValidPassword) {
-                await apiCall(...api.user.resetPassword(match.params.token), {password: account.password});
+            let {password, cpassword} = account;
+            if(password.length > 0 && cpassword > 0) {
+                if(password === cpassword) {
+                    await apiUser.resetPassword(match.params.token, {password: account.password});
 
-                setAccount(DEFAULT_ACCOUNT);
-                setTimeout(() => {
-                    history.push("/reseted");
-                }, 2000);
+                    setAccount(DEFAULT_ACCOUNT);
+                    addMessage("Your resetted link has been sent to your mail successfully!", false);
+                } else {
+                    addMessage("Your password and confirm password not similar. Please try again");
+                    setLoading(false);
+                }
             } else {
-                window.alert("The entered information is not valid. Please try again");
+                addMessage("Please fulfill to reset your password");
                 setLoading(false);
             }
-        } catch (e) {
-            console.error(e);
-            history.push("/timeout");
+        } catch (err) {
+            console.error(err);
+            addMessage(err);
         }
         setLoading(false);
     }
@@ -75,6 +54,15 @@ function Reset({match, history}) {
         <div className="content">
             <h1>Reset password</h1>
             <h4>Please enter your new password and confirm password.</h4>
+            {
+                message
+                ? <div className={`${negative ? "notify" : "great-notify"}`}>
+                    <span>
+                        {message.length > 0 ? message : ""}
+                    </span>
+                </div>
+                : <span/>
+            }
             <form className="auth-form" onSubmit={hdSubmit}>
                 <AuthInput
                     type="password"
@@ -105,4 +93,11 @@ function Reset({match, history}) {
     )
 }
 
-export { Reset, TimeOut, Reseted }
+function mapState({message}) {
+    return {
+        message: message.text,
+        negative: message.isNegative
+    }
+}
+
+export default connect(mapState, {addMessage})(withResize(ResetPassword));

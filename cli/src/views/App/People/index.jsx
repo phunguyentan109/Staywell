@@ -1,33 +1,34 @@
-import React, {useEffect, useCallback, useState} from "react";
-import {Card, Table, Spin} from "antd";
-import api, {apiCall} from "constants/api";
+import React, { useEffect, useCallback, useState } from "react";
+import { Card, Table, Spin } from "antd";
+import { apiUser } from "constants/api";
+import withBreadCrumb from "hocs/withBreadCrumb";
 import withHelpers from "hocs/withHelpers";
 import PopConfirm from "components/App/Pop/PopConfirm";
 import * as permissions from "constants/credentialControl";
 
-const {isPeople, isUnactive} = permissions;
+const { isPeople, isUnactive } = permissions;
 
-function People({notify}) {
+function People({notify, ...props}) {
     const [people, setPeople] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const load = useCallback(async() => {
         try {
-            let peopleData = await apiCall(...api.user.get());
+            let peopleData = await apiUser.get();
             setPeople(peopleData);
             setLoading(false);
         } catch (e) {
             return notify("error", "Data is not loaded");
         }
-    }, [notify])
+    }, [notify]);
 
     useEffect(() => {
         load();
-    }, [load])
+    }, [load]);
 
     async function hdRemove(user_id) {
         try {
-            await apiCall(...api.user.remove(user_id));
+            await apiUser.remove(user_id);
             setPeople(prev => prev.filter(p => p.user_id._id !== user_id));
             return notify("success", "Process is completed successfully!", "People data is removed successfully.")
         } catch (e) {
@@ -113,4 +114,4 @@ function PeopleTable({title, dataSource, loading, hdRemove}) {
     )
 }
 
-export default withHelpers(People);
+export default withBreadCrumb(withHelpers(People));
