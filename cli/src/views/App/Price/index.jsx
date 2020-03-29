@@ -1,7 +1,7 @@
-import React, {useState, useEffect, useCallback} from "react";
-import {Card, Spin, Table, Divider, Form, Input, Button} from "antd";
-import {apiPrice} from "constants/api";
-import withNoti from "hocs/withNoti";
+import React, { useState, useEffect, useCallback } from "react";
+import { Card, Spin, Table, Divider, Form, Input, Button } from "antd";
+import { apiPrice } from "constants/api";
+import withHelpers from "hocs/withHelpers";
 import PopConfirm from "components/App/Pop/PopConfirm";
 import withBreadCrumb from "hocs/withBreadCrumb";
 
@@ -261,4 +261,4 @@ function Price({notify}) {
     )
 }
 
-export default withBreadCrumb(withNoti(Price));
+export default withBreadCrumb(withHelpers(Price));

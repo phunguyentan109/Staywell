@@ -3,14 +3,14 @@ import {Link} from "react-router-dom";
 import AuthInput from "components/Auth/AuthInput.jsx";
 import {connect} from "react-redux";
 import {sendAuthData} from "appRedux/actions/user";
+import withHelpers from "hocs/withHelpers";
 import {addMessage} from "appRedux/actions/message"
-import withResize from "hocs/withResize";
 
 const DEFAULT_ACCOUNT = {
     email: "",
     password: "",
     cpassword: ""
-}
+};
 
 function Register({message, negative, sendAuthData, addMessage, device}) {
     const [account, setAccount] = useState(DEFAULT_ACCOUNT);
@@ -18,7 +18,7 @@ function Register({message, negative, sendAuthData, addMessage, device}) {
 
     useEffect(() => {
         return () => addMessage();
-    },[addMessage])
+    },[addMessage]);
 
     function hdSubmit(e) {
         setLoading(true);
@@ -99,4 +99,4 @@ function mapState({message}) {
     }
 }
 
-export default connect(mapState, {sendAuthData, addMessage})(withResize(Register));
+export default connect(mapState, {sendAuthData, addMessage})(withHelpers(Register));

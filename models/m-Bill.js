@@ -23,10 +23,6 @@ const billSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Contract"
     },
-    inContract: {
-        type: Boolean,
-        default: false
-    },
     isPaid: {
         type: Boolean,
         default: false
@@ -36,7 +32,7 @@ const billSchema = new mongoose.Schema({
 
 billSchema.pre("remove", async function(next) {
     try {
-        await casDeleteMany("TimePoint", this.timePoint_id);
+        // await casDeleteMany("TimePoint", this.timePoint_id);
         return next();
     } catch (e) {
         return next(e);

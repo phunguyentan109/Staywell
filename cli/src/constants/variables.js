@@ -9,4 +9,4 @@ export const breadcrumbNames = {
     "/app/profile": "Manage Profile",
     "/app/room": "Manage Room",
     "/app/people/contract": "Manage Contract",
-}
+};

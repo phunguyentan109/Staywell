@@ -1,22 +1,20 @@
-import React, {useState, useEffect} from "react";
-import {Link} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import AuthInput from "components/Auth/AuthInput.jsx";
-import {connect} from "react-redux";
-import {sendAuthData} from "appRedux/actions/user";
-import {addMessage} from "appRedux/actions/message";
-import withResize from "hocs/withResize";
+import { connect } from "react-redux";
+import { sendAuthData } from "appRedux/actions/user";
+import { addMessage } from "appRedux/actions/message";
+import withHelpers from "hocs/withHelpers";
 
-const DEFAULT_ACCOUNT = {
-    email: "",
-    password: ""
-}
-
-function Login({message, negative, sendAuthData, addMessage, history, device}) {
-    const [account, setAccount] = useState(DEFAULT_ACCOUNT);
+function Login({message, sendAuthData, addMessage, device}) {
+    const [account, setAccount] = useState({
+        email: "",
+        password: ""
+    });
 
     useEffect(() => {
         return () => addMessage();
-    }, [addMessage])
+    }, [addMessage]);
 
     function hdSubmit(e) {
         e.preventDefault();
@@ -64,11 +62,11 @@ function Login({message, negative, sendAuthData, addMessage, history, device}) {
     )
 }
 
-function mapState({message}) {
+function mapState({ message }) {
     return {
         message: message.text,
         negative: message.isNegative
     }
 }
 
-export default connect(mapState, {sendAuthData, addMessage})(withResize(Login));
+export default connect(mapState, {sendAuthData, addMessage})(withHelpers(Login));

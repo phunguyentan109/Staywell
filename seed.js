@@ -23,7 +23,7 @@ const owner = {
     email: process.env.GMAILUSER,
     password: "owner",
     username: "owner"
-}
+};
 
 async function createRole(){
     try {

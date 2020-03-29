@@ -14,7 +14,7 @@ function RoomForm({loading, editRoom, price, hdCancel, refresh, setLoading, noti
 
     function hdChange(e) {
         const {name, value} = e.target;
-        setRoom(prev => ({...prev, [name]: value}))
+        setRoom(prev => ({...prev, [name]: value}));
     }
 
     async function hdSubmit() {
@@ -54,7 +54,7 @@ function RoomForm({loading, editRoom, price, hdCancel, refresh, setLoading, noti
                         />
                     </FormItem>
                     <FormItem
-                        label="Select author"
+                        label="Select price"
                         labelCol={{xs: 24, sm: 6}}
                         wrapperCol={{xs: 24, sm: 16}}
                     >

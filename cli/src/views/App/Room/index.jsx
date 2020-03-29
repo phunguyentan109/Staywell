@@ -1,10 +1,11 @@
 import React, {useState, useEffect, useCallback} from "react";
 import {Row, Col, Card, Spin, Table, Button, Divider} from "antd";
-import withNoti from "hocs/withNoti";
+import {Link} from "react-router-dom";
 import PopConfirm from "components/App/Pop/PopConfirm";
 import {apiRoom, apiPrice} from "constants/api";
 import RoomForm from "./Form";
 import RoomAssign from "./Assign";
+import withHelpers from "hocs/withHelpers";
 import withBreadCrumb from "hocs/withBreadCrumb" ;
 
 const DEFAULT_ROOM = {
@@ -12,11 +13,10 @@ const DEFAULT_ROOM = {
     user_id: []
 };
 
-function Room({notify}) {
+function Room({notify, setLoading, loading}) {
     const [rooms, setRooms] = useState([]);
     const [room, setRoom] = useState(DEFAULT_ROOM);
     const [price, setPrice] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [form, toggleForm] = useState(false);
     const [assign, toggleAssign] = useState(false);
 
@@ -30,7 +30,7 @@ function Room({notify}) {
         } catch (e) {
             notify("error", "The data cannot be loaded!");
         }
-    }, [notify]);
+    }, [notify, setLoading]);
 
     useEffect(() => {
         load();
@@ -72,7 +72,7 @@ function Room({notify}) {
         toggleAssign(true);
     }
 
-    async function refreshRoom(record, message, isNewRecord = true) {
+    async function refreshRoom(record, message, isNewRecord) {
         if(isNewRecord) {
             setRooms(prev => [...prev, record]);
         } else {
@@ -100,6 +100,17 @@ function Room({notify}) {
                 dataIndex: 'price_id.type'
             },
             {
+                title: 'Contract Information',
+                dataIndex: "contract_id",
+                render: (text, record) => (
+                    <span className="gx-link">
+                        <Link to={`rooms/${record._id}/contracts`}>
+                            View contracts ({text.length})
+                        </Link>
+                    </span>
+                )
+            },
+            {
                 title: 'Action',
                 key: 'action',
                 render: (text, record) => room._id ? <span>None</span> : (
@@ -120,7 +131,9 @@ function Room({notify}) {
                 )
             }
         ];
-        return (assign || form) ? cols.filter(c => c.key !== "action") : cols;
+
+        // If "Assign" or "Form" content is shown, then hide the action
+        return assign || form ? cols.filter(c => c.key !== "action") : cols;
     }
 
     return (
@@ -170,4 +183,4 @@ function Room({notify}) {
     )
 }
 
-export default withBreadCrumb(withNoti(Room));
+export default withBreadCrumb(withHelpers(Room));

@@ -4,14 +4,14 @@ import {Link} from "react-router-dom";
 import AuthInput from "components/Auth/AuthInput.jsx";
 import {connect} from "react-redux";
 import {addMessage} from "appRedux/actions/message";
-import withResize from "hocs/withResize";
+import withHelpers from "hocs/withHelpers";
 
 const DEFAULT_ACCOUNT = {
     password: "",
     cpassword: "",
 };
 
-function ResetPassword({message, negative, addMessage, match, history}) {
+function ResetPassword({message, negative, addMessage, match}) {
     const [account, setAccount] = useState(DEFAULT_ACCOUNT);
     const [loading, setLoading] = useState(false);
 
@@ -100,4 +100,4 @@ function mapState({message}) {
     }
 }
 
-export default connect(mapState, {addMessage})(withResize(ResetPassword));
+export default connect(mapState, {addMessage})(withHelpers(ResetPassword));

@@ -1,6 +1,6 @@
 import React from "react";
 import bg from "assets/img/loginBg.jpg"
-import withResize from "hocs/withResize";
+import withHelpers from "hocs/withHelpers";
 
 import AuthNavbar from "containers/Bar/Navbar";
 import AuthRoutes from "views/Auth/index";
@@ -23,4 +23,4 @@ function AuthLayout({location, device}) {
     )
 };
 
-export default withResize(AuthLayout);
+export default withHelpers(AuthLayout);
