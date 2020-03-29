@@ -5,18 +5,17 @@ import {connect} from "react-redux";
 import {sendAuthData} from "appRedux/actions/user";
 import {addMessage} from "appRedux/actions/message";
 import withResize from "hocs/withResize";
-
-const DEFAULT_ACCOUNT = {
-    email: "",
-    password: ""
-}
+import PropTypes from "prop-types";
 
 function Login({message, negative, sendAuthData, addMessage, history, device}) {
-    const [account, setAccount] = useState(DEFAULT_ACCOUNT);
+    const [account, setAccount] = useState({
+        email: "",
+        password: ""
+    });
 
     useEffect(() => {
         return () => addMessage();
-    }, [addMessage])
+    }, [addMessage]);
 
     function hdSubmit(e) {
         e.preventDefault();
@@ -72,3 +71,16 @@ function mapState({message}) {
 }
 
 export default connect(mapState, {sendAuthData, addMessage})(withResize(Login));
+
+Login.propsTypes = {
+    message: PropTypes.object,
+    addMessage: PropTypes.func,
+    history: PropTypes.object
+};
+
+Login.defaultProps = {
+    message: {
+        text: "",
+        isNegative: false
+    }
+};
