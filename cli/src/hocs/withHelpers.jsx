@@ -17,7 +17,7 @@ export default function withHelpers(WrappedComponent) {
             hdResize();
             window.addEventListener("resize", hdResize);
             return () => window.removeEventListener("resize", hdResize);
-        }, [])
+        }, []);
 
         function hdResize() {
             let isMobile = window.innerWidth < MOBILE_SIZE;

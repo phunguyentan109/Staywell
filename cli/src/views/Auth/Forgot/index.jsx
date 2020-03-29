@@ -3,9 +3,9 @@ import AuthInput from "components/Auth/AuthInput.jsx";
 import {apiUser} from "constants/api";
 import {connect} from "react-redux";
 import {addMessage} from "appRedux/actions/message";
-import withResize from "hocs/withResize";
+import withHelpers from "hocs/withHelpers";
 
-function Forgot({message, negative, addMessage, history}) {
+function Forgot({message, negative, addMessage}) {
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -40,7 +40,7 @@ function Forgot({message, negative, addMessage, history}) {
     function hdChange(e) {
         setEmail(e.target.value);
     }
-    
+
     return (
         <div className="content">
             <h1>Forgot password?</h1>
@@ -81,4 +81,4 @@ function mapState({message}) {
     }
 }
 
-export default connect(mapState, {addMessage})(withResize(Forgot));
+export default connect(mapState, {addMessage})(withHelpers(Forgot));

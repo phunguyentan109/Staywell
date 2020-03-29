@@ -16,7 +16,7 @@ function AppRoutes(props) {
         <div className="gx-main-content-wrapper">
             <Switch>
                 <RouteControl
-                    path={`${url}/rooms/:room_id/contracts`}
+                    path={`${url}/rooms/contracts`}
                     redirectPath={`${url}/`}
                     component={Contract}
                     access={[
