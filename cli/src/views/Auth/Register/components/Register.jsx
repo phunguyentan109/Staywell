@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import AuthInput from "components/Auth/AuthInput";
-import withHelpers from "hocs/withHelpers";
 
 import { DEFAULT_ACCOUNT } from "../modules/const";
 
-function Register({ message, negative, sendAuthData, addMessage, device }) {
+export default function Register({ message, negative, sendAuthData, addMessage, device }) {
     const [account, setAccount] = useState(DEFAULT_ACCOUNT);
     const [loading, setLoading] = useState(false);
 
@@ -28,7 +27,6 @@ function Register({ message, negative, sendAuthData, addMessage, device }) {
                 setLoading(false);
             }
         } catch (err) {
-            console.log(err);
             addMessage(err);
         }
         setLoading(false);
@@ -84,5 +82,3 @@ function Register({ message, negative, sendAuthData, addMessage, device }) {
         </div>
     )
 }
-
-export default withHelpers(Register);

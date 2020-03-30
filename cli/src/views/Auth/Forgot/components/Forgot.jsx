@@ -1,12 +1,9 @@
-import React, {useState, useEffect} from "react";
-import AuthInput from "components/Auth/AuthInput.jsx";
-import {apiUser} from "constants/api";
-import {connect} from "react-redux";
-import {addMessage} from "appRedux/actions/message";
-import withHelpers from "hocs/withHelpers";
+import React, { useState, useEffect } from "react";
+import AuthInput from 'components/Auth/AuthInput';
+import { apiUser } from "constants/api";
 
-function Forgot({message, negative, addMessage}) {
-    const [email, setEmail] = useState("");
+export default function Forgot({ message, negative, addMessage }) {
+    const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -19,7 +16,7 @@ function Forgot({message, negative, addMessage}) {
         try {
             if(email.length > 0) {
                 if(email.indexOf("@") !== -1) {
-                    await apiUser.forgot({email});
+                    await apiUser.forgot({ email });
                     setEmail("");
                     addMessage("Reset password successfully", false);
                 } else {
@@ -42,30 +39,30 @@ function Forgot({message, negative, addMessage}) {
     }
 
     return (
-        <div className="content">
+        <div className='content'>
             <h1>Forgot password?</h1>
             <h4>Please fill in your email below to reset password.</h4>
             {
                 message
-                ? <div className={`${negative ? "notify" : "great-notify"}`}>
+                    ? <div className={`${negative ? "notify" : "great-notify"}`}>
                     <span>
                         { message ? message : "" }
                     </span>
-                </div>
-                : <span/>
+                    </div>
+                    : <span/>
             }
-            <form className="auth-form" onSubmit={hdSubmit}>
+            <form className='auth-form' onSubmit={hdSubmit}>
                 <AuthInput
-                    placeholder="Email"
-                    name="email"
-                    icon="far fa-envelope"
+                    placeholder='Email'
+                    name='email'
+                    icon='far fa-envelope'
                     value={email}
                     onChange={hdChange}
                 />
-                <button className="signup" disabled={loading}>
+                <button className='signup' disabled={loading}>
                     {
                         loading
-                        ? <i className="fas fa-circle-notch fa-spin"/>
+                        ? <i className='fas fa-circle-notch fa-spin'/>
                         : "Reset password"
                     }
                 </button>
@@ -73,12 +70,3 @@ function Forgot({message, negative, addMessage}) {
         </div>
     )
 }
-
-function mapState({message}) {
-    return {
-        message: message.text,
-        negative: message.isNegative
-    }
-}
-
-export default connect(mapState, {addMessage})(withHelpers(Forgot));

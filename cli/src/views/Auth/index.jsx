@@ -1,18 +1,17 @@
 import React from "react";
 import { Switch, Route, withRouter, Redirect } from "react-router-dom";
-
-import Login from "views/Auth/Login";
-import Register from "views/Auth/Register";
-import Forgot from "views/Auth/Forgot";
-import Reset from './Reset';
-
-import { Activate, ActivatedView } from './Activate';
 import RouteControl from 'containers/Route/RouteControl';
+
+import Login from './Login';
+import Register from './Register';
+import Forgot from './Forgot';
+import Reset from './Reset';
+import { Activate, Activated } from './Activate';
 
 function AuthRoutes({ location }) {
     return (
         <Switch>
-            <Route path='/activate/:user_id' component={ActivatedView}/>
+            <Route path='/activate/:user_id' component={Activated}/>
             <Route path='/reset/:token' component={Reset}/>
             <RouteControl
                 path='/activate'
