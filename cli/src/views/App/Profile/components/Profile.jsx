@@ -1,32 +1,16 @@
-import React, {useCallback, useState, useEffect} from "react";
-import {Col, Row, Card, Form, Input, Button, Spin, DatePicker} from "antd";
-import About from "components/profile/About/index";
-import Contact from "components/profile/Contact/index";
-import Auxiliary from "util/Auxiliary";
-import ProfileHeader from "components/profile/ProfileHeader";
-import withHelpers from "hocs/withHelpers";
-import {apiUser} from "constants/api";
-import {connect} from "react-redux";
-import moment from "moment";
-import * as credentials from "constants/credentialControl";
-import {sendReloadUser} from "appRedux/actions/user";
+import React, { useCallback, useState, useEffect } from 'react';
+import { Col, Row, Card, Form, Input, Button, Spin, DatePicker } from 'antd';
+import About from 'components/profile/About';
+import Contact from 'components/profile/Contact';
+import Auxiliary from 'util/Auxiliary';
+import ProfileHeader from 'components/profile/ProfileHeader';
+import { apiUser } from 'constants/api';
+import moment from 'moment';
+import { DEFAULT_PROFILE, DEFAULT_PASSWORD } from "../modules/const";
 
 const FormItem = Form.Item;
 
-const DEFAULT_PASSWORD = {
-    current: "",
-    change: "",
-    confirm: ""
-};
-
-const DEFAULT_PROFILE = {
-    email: "",
-    job: "",
-    phone:"",
-    birthDate: moment()
-};
-
-function Profile({notify, user, role, sendReloadUser, ...props}) {
+export default function Profile({ notify, user, role, sendReloadUser, ...props }) {
     const [password, setPassword] = useState(DEFAULT_PASSWORD);
     const [profile, setProfile] = useState(DEFAULT_PROFILE);
     const [loading, setLoading] = useState(true);
@@ -57,7 +41,7 @@ function Profile({notify, user, role, sendReloadUser, ...props}) {
     }
 
     function hdChangePassword(e) {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         setPassword(prev => ({
             ...prev,
             [name]: value
@@ -72,8 +56,8 @@ function Profile({notify, user, role, sendReloadUser, ...props}) {
     }
 
     function hdChange(e) {
-        const {name, value} = e.target;
-        setProfile(prev => ({...prev, [name]: value}))
+        const { name, value } = e.target;
+        setProfile(prev => ({ ...prev, [name]: value }))
     }
 
     function setBirthDate(date, dateString) {
@@ -107,63 +91,63 @@ function Profile({notify, user, role, sendReloadUser, ...props}) {
                 avatar={user.avatar.link}
                 role = {getRoleName()}
             />
-            <div className="gx-profile-content">
+            <div className='gx-profile-content'>
                 <Row>
                     <Col xl={16} lg={14} md={14} sm={24} xs={24}>
                         <About
                             job={user.job}
                             birthDate={user.birthDate}
                         />
-                        <Card className="gx-card" title="Change your profile">
+                        <Card className='gx-card' title='Change your profile'>
                             <Spin spinning={loading}>
-                                <Form layout="horizontal">
+                                <Form layout='horizontal'>
                                     <FormItem
-                                        label="Your email"
-                                        labelCol={{xs: 24, sm: 6}}
-                                        wrapperCol={{xs: 24, sm: 16}}
+                                        label='Your email'
+                                        labelCol={{ xs: 24, sm: 6 }}
+                                        wrapperCol={{ xs: 24, sm: 16 }}
                                     >
                                         <Input
-                                            type="email"
-                                            placeholder="Enter your email here..."
-                                            name="email"
+                                            type='email'
+                                            placeholder='Enter your email here...'
+                                            name='email'
                                             value={profile.email}
                                             onChange={hdChange}
                                             disabled={role.isOwner ? true : false}
                                         />
                                     </FormItem>
                                     <FormItem
-                                        label="Your job"
-                                        labelCol={{xs: 24, sm: 6}}
-                                        wrapperCol={{xs: 24, sm: 16}}
+                                        label='Your job'
+                                        labelCol={{ xs: 24, sm: 6 }}
+                                        wrapperCol={{ xs: 24, sm: 16 }}
                                     >
                                         <Input
-                                            type="text"
-                                            placeholder="Enter your job here..."
-                                            name="job"
+                                            type='text'
+                                            placeholder='Enter your job here...'
+                                            name='job'
                                             value={profile.job}
                                             onChange={hdChange}
                                         />
                                     </FormItem>
                                     <FormItem
-                                        label="Your Phone"
-                                        labelCol={{xs: 24, sm: 6}}
-                                        wrapperCol={{xs: 24, sm: 16}}
+                                        label='Your Phone'
+                                        labelCol={{ xs: 24, sm: 6 }}
+                                        wrapperCol={{ xs: 24, sm: 16 }}
                                     >
                                         <Input
-                                            type="number"
-                                            placeholder="Enter your phone here..."
-                                            name="phone"
+                                            type='number'
+                                            placeholder='Enter your phone here...'
+                                            name='phone'
                                             value={profile.phone}
                                             onChange={hdChange}
                                         />
                                     </FormItem>
                                     <FormItem
-                                        label="Your birthdate"
-                                        labelCol={{xs: 24, sm: 6}}
-                                        wrapperCol={{xs: 24, sm: 16}}
+                                        label='Your birthdate'
+                                        labelCol={{ xs: 24, sm: 6 }}
+                                        wrapperCol={{ xs: 24, sm: 16 }}
                                     >
                                         <DatePicker
-                                            className="gx-mb-3 gx-w-100"
+                                            className='gx-mb-3 gx-w-100'
                                             onChange={setBirthDate}
                                             value={moment(profile.birthDate)}
                                         />
@@ -171,10 +155,10 @@ function Profile({notify, user, role, sendReloadUser, ...props}) {
                                     <FormItem
                                         wrapperCol={{
                                             xs: 24,
-                                            sm: {span: 14, offset: 6}
+                                            sm: { span: 14, offset: 6 }
                                         }}
                                     >
-                                        <Button type="primary" onClick={() => hdUpdateProfile(profile)}>Save changes</Button>
+                                        <Button type='primary' onClick={() => hdUpdateProfile(profile)}>Save changes</Button>
                                     </FormItem>
                                 </Form>
                             </Spin>
@@ -185,44 +169,44 @@ function Profile({notify, user, role, sendReloadUser, ...props}) {
                             email={user.email}
                             phone={user.phone}
                         />
-                        <Card className="gx-card" title="Change your password">
+                        <Card className='gx-card' title='Change your password'>
                             <Spin spinning={loading}>
-                                <Form layout="horizontal">
+                                <Form layout='horizontal'>
                                     <FormItem
-                                        label="Current Password"
-                                        labelCol={{xs: 24, sm: 7}}
-                                        wrapperCol={{xs: 24, sm: 22}}
+                                        label='Current Password'
+                                        labelCol={{ xs: 24, sm: 7 }}
+                                        wrapperCol={{ xs: 24, sm: 22 }}
                                     >
                                         <Input
-                                            type="password"
-                                            placeholder="Enter the current password here..."
-                                            name="current"
+                                            type='password'
+                                            placeholder='Enter the current password here...'
+                                            name='current'
                                             value={password.current}
                                             onChange={hdChangePassword}
                                         />
                                     </FormItem>
                                     <FormItem
-                                        label="New Password"
-                                        labelCol={{xs: 24, sm: 7}}
-                                        wrapperCol={{xs: 24, sm: 22}}
+                                        label='New Password'
+                                        labelCol={{ xs: 24, sm: 7 }}
+                                        wrapperCol={{ xs: 24, sm: 22 }}
                                     >
                                         <Input
-                                            type="password"
-                                            placeholder="Enter the new password here..."
-                                            name="change"
+                                            type='password'
+                                            placeholder='Enter the new password here...'
+                                            name='change'
                                             value={password.change}
                                             onChange={hdChangePassword}
                                         />
                                     </FormItem>
                                     <FormItem
-                                        label="Confirm New Password"
-                                        labelCol={{xs: 24, sm: 10}}
-                                        wrapperCol={{xs: 24, sm: 22}}
+                                        label='Confirm New Password'
+                                        labelCol={{ xs: 24, sm: 10 }}
+                                        wrapperCol={{ xs: 24, sm: 22 }}
                                     >
                                         <Input
-                                            type="password"
-                                            placeholder="Confirm your password here..."
-                                            name="confirm"
+                                            type='password'
+                                            placeholder='Confirm your password here...'
+                                            name='confirm'
                                             value={password.confirm}
                                             onChange={hdChangePassword}
                                         />
@@ -230,10 +214,10 @@ function Profile({notify, user, role, sendReloadUser, ...props}) {
                                     <FormItem
                                         wrapperCol={{
                                             xs: 24,
-                                            sm: {span: 14, offset: 6}
+                                            sm: { span: 14, offset: 6 }
                                         }}
                                     >
-                                        <Button type="primary" onClick={changePassword}>Save changes</Button>
+                                        <Button type='primary' onClick={changePassword}>Save changes</Button>
                                     </FormItem>
                                 </Form>
                             </Spin>
@@ -244,17 +228,3 @@ function Profile({notify, user, role, sendReloadUser, ...props}) {
         </Auxiliary>
     );
 }
-
-function mapState({user}) {
-    const {role} = user.data;
-    const {isPermit} = credentials;
-    return {
-        user: user.data,
-        role: {
-            isOwner: isPermit(role)(credentials.OWNER_PERMISSION),
-            isPeople: isPermit(role)(credentials.PEOPLE_PERMISSION)
-        }
-    }
-}
-
-export default connect(mapState, {sendReloadUser})(withHelpers(Profile));

@@ -1,23 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Card, Spin, Table, Divider, Form, Input, Button } from "antd";
 import { apiPrice } from "constants/api";
-import withHelpers from "hocs/withHelpers";
 import PopConfirm from "components/App/Pop/PopConfirm";
-import withBreadCrumb from "hocs/withBreadCrumb";
+import { DEFAULT_PRICE } from '../modules/const';
 
 const FormItem = Form.Item;
 
-const DEFAULT_PRICE = {
-    type: "",
-    electric: 0,
-    wifi: 0,
-    water: 0,
-    house: 0,
-    extra: 0,
-    duration: 6
-};
-
-function Price({notify}) {
+export default function Price({ notify }) {
     const [listPrice, setListPrice] = useState([]);
     const [loading, setLoading] = useState(true);
     const [price, setPrice] = useState(DEFAULT_PRICE);
@@ -38,8 +27,8 @@ function Price({notify}) {
     }, [load]);
 
     function hdChange(e) {
-        const {name, value} = e.target;
-        setPrice(prev => ({...prev, [name]: value}))
+        const { name, value } = e.target;
+        setPrice(prev => ({ ...prev, [name]: value }))
     }
 
     async function hdSubmit() {
@@ -93,95 +82,95 @@ function Price({notify}) {
     return (
         <div>
             {
-            form && <Card className="gx-card" title={!price._id ? "Add New Price" : "Edit Price Information"}>
+            form && <Card className='gx-card' title={!price._id ? "Add New Price" : "Edit Price Information"}>
                 <Spin spinning={loading}>
-                    <Form layout="horizontal">
+                    <Form layout='horizontal'>
                         <FormItem
-                            label="Type"
-                            labelCol={{xs: 24, sm: 6}}
-                            wrapperCol={{xs: 24, sm: 10}}
+                            label='Type'
+                            labelCol={{ xs: 24, sm: 6 }}
+                            wrapperCol={{ xs: 24, sm: 10 }}
                         >
                             <Input
                                 placeholder="Enter the price's type here..."
-                                name="type"
+                                name='type'
                                 value={price.type}
                                 onChange={hdChange}
                             />
                         </FormItem>
                         <FormItem
-                            label="Electric"
-                            labelCol={{xs: 24, sm: 6}}
-                            wrapperCol={{xs: 24, sm: 10}}
+                            label='Electric'
+                            labelCol={{ xs: 24, sm: 6 }}
+                            wrapperCol={{ xs: 24, sm: 10 }}
                         >
                             <Input
-                                type="Number"
-                                placeholder="Enter the electric price here..."
-                                name="electric"
+                                type='Number'
+                                placeholder='Enter the electric price here...'
+                                name='electric'
                                 value={price.electric}
                                 onChange={hdChange}
                             />
                         </FormItem>
                         <FormItem
-                            label="Wifi"
-                            labelCol={{xs: 24, sm: 6}}
-                            wrapperCol={{xs: 24, sm: 10}}
+                            label='Wifi'
+                            labelCol={{ xs: 24, sm: 6 }}
+                            wrapperCol={{ xs: 24, sm: 10 }}
                         >
                             <Input
-                                type="Number"
-                                placeholder="Enter the wifi price here..."
-                                name="wifi"
+                                type='Number'
+                                placeholder='Enter the wifi price here...'
+                                name='wifi'
                                 value={price.wifi}
                                 onChange={hdChange}
                             />
                         </FormItem>
                         <FormItem
-                            label="Water"
-                            labelCol={{xs: 24, sm: 6}}
-                            wrapperCol={{xs: 24, sm: 10}}
+                            label='Water'
+                            labelCol={{ xs: 24, sm: 6 }}
+                            wrapperCol={{ xs: 24, sm: 10 }}
                         >
                             <Input
-                                type="Number"
-                                placeholder="Enter the water price here..."
-                                name="water"
+                                type='Number'
+                                placeholder='Enter the water price here...'
+                                name='water'
                                 value={price.water}
                                 onChange={hdChange}
                             />
                         </FormItem>
                         <FormItem
-                            label="House"
-                            labelCol={{xs: 24, sm: 6}}
-                            wrapperCol={{xs: 24, sm: 10}}
+                            label='House'
+                            labelCol={{ xs: 24, sm: 6 }}
+                            wrapperCol={{ xs: 24, sm: 10 }}
                         >
                             <Input
-                                type="Number"
-                                placeholder="Enter the house price here..."
-                                name="house"
+                                type='Number'
+                                placeholder='Enter the house price here...'
+                                name='house'
                                 value={price.house}
                                 onChange={hdChange}
                             />
                         </FormItem>
                         <FormItem
-                            label="Extra"
-                            labelCol={{xs: 24, sm: 6}}
-                            wrapperCol={{xs: 24, sm: 10}}
+                            label='Extra'
+                            labelCol={{ xs: 24, sm: 6 }}
+                            wrapperCol={{ xs: 24, sm: 10 }}
                         >
                             <Input
-                                type="Number"
-                                placeholder="Enter the extra price here..."
-                                name="extra"
+                                type='Number'
+                                placeholder='Enter the extra price here...'
+                                name='extra'
                                 value={price.extra}
                                 onChange={hdChange}
                             />
                         </FormItem>
                         <FormItem
-                            label="Duration"
-                            labelCol={{xs: 24, sm: 6}}
-                            wrapperCol={{xs: 24, sm: 10}}
+                            label='Duration'
+                            labelCol={{ xs: 24, sm: 6 }}
+                            wrapperCol={{ xs: 24, sm: 10 }}
                         >
                             <Input
-                                type="Number"
-                                placeholder="Enter the duration here..."
-                                name="duration"
+                                type='Number'
+                                placeholder='Enter the duration here...'
+                                name='duration'
                                 value={price.duration}
                                 onChange={hdChange}
                             />
@@ -189,23 +178,23 @@ function Price({notify}) {
                         <FormItem
                             wrapperCol={{
                                 xs: 24,
-                                sm: {span: 14, offset: 6}
+                                sm: { span: 14, offset: 6 }
                             }}
                         >
-                            <Button type="primary" onClick={hdSubmit}>{price._id ? "Save changes" : "Submit"}</Button>
+                            <Button type='primary' onClick={hdSubmit}>{price._id ? "Save changes" : "Submit"}</Button>
                             <Button onClick={hdCancel}>Cancel</Button>
                         </FormItem>
                     </Form>
                 </Spin>
             </Card>
             }
-            <Card title="List of available price">
+            <Card title='List of available price'>
                 <Spin spinning={loading}>
-                    {form || <Button type="primary" onClick={() => toggleForm(true)}>Add new price</Button>}
+                    {form || <Button type='primary' onClick={() => toggleForm(true)}>Add new price</Button>}
                     <Table
-                        className="gx-table-responsive"
+                        className='gx-table-responsive'
                         dataSource={listPrice}
-                        rowKey="_id"
+                        rowKey='_id'
                         columns={[
                             {
                                 title: "Price type",
@@ -241,15 +230,15 @@ function Price({notify}) {
                                 render: (text, record) => (
                                     <span>
                                         <PopConfirm
-                                            title="Are you sure to delete this genre?"
+                                            title='Are you sure to delete this genre?'
                                             task={hdRemove.bind(this, record._id)}
-                                            okText="Sure, remove it"
-                                            cancelText="Not now"
+                                            okText='Sure, remove it'
+                                            cancelText='Not now'
                                         >
-                                            <span className="gx-link">Delete</span>
+                                            <span className='gx-link'>Delete</span>
                                         </PopConfirm>
-                                        <Divider type="vertical"/>
-                                        <span className="gx-link" onClick={hdEdit.bind(this, record)}>Edit</span>
+                                        <Divider type='vertical'/>
+                                        <span className='gx-link' onClick={hdEdit.bind(this, record)}>Edit</span>
                                     </span>
                                 )
                             }
@@ -260,5 +249,3 @@ function Price({notify}) {
         </div>
     )
 }
-
-export default withBreadCrumb(withHelpers(Price));

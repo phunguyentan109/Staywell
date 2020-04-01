@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {Button, Card, Modal} from "antd";
+import React, { useState } from "react";
+import { Button, Card, Modal } from "antd";
 
 export default function ContractModal() {
   const [electric, setElectric] = useState(0);
@@ -50,7 +50,7 @@ export default function ContractModal() {
   //   );
   // }
     return (
-        <Modal title="Title"
+        <Modal title='Title'
            visible={visible}
            onOk={this.handleOk}
            confirmLoading={confirmLoading}

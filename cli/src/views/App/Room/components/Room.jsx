@@ -1,19 +1,14 @@
-import React, {useState, useEffect, useCallback} from "react";
-import {Row, Col, Card, Spin, Table, Button, Divider} from "antd";
-import {Link} from "react-router-dom";
-import PopConfirm from "components/App/Pop/PopConfirm";
-import {apiRoom, apiPrice} from "constants/api";
-import RoomForm from "./Form";
-import RoomAssign from "./Assign";
-import withHelpers from "hocs/withHelpers";
-import withBreadCrumb from "hocs/withBreadCrumb" ;
+import React, { useState, useEffect, useCallback } from "react";
+import { Row, Col, Card, Spin, Table, Button, Divider } from "antd";
+import { Link } from "react-router-dom";
+import PopConfirm from 'components/App/Pop/PopConfirm';
+import { apiRoom, apiPrice } from 'constants/api';
+import RoomForm from '../modules/Form';
+import RoomAssign from '../modules/Assign';
 
-const DEFAULT_ROOM = {
-    name: "",
-    user_id: []
-};
+import { DEFAULT_ROOM } from "../modules/const";
 
-function Room({notify, setLoading, loading}) {
+export default function Room({ notify, setLoading, loading }) {
     const [rooms, setRooms] = useState([]);
     const [room, setRoom] = useState(DEFAULT_ROOM);
     const [price, setPrice] = useState([]);
@@ -103,7 +98,7 @@ function Room({notify, setLoading, loading}) {
                 title: 'Contract Information',
                 dataIndex: "contract_id",
                 render: (text, record) => (
-                    <span className="gx-link">
+                    <span className='gx-link'>
                         <Link to={`rooms/${record._id}/contracts`}>
                             View contracts ({text.length})
                         </Link>
@@ -116,17 +111,17 @@ function Room({notify, setLoading, loading}) {
                 render: (text, record) => room._id ? <span>None</span> : (
                     <span>
                         <PopConfirm
-                            title="Are you sure to delete this genre?"
+                            title='Are you sure to delete this genre?'
                             task={hdRemove.bind(this, record._id)}
-                            okText="Sure, remove it"
-                            cancelText="Not now"
+                            okText='Sure, remove it'
+                            cancelText='Not now'
                         >
-                            <span className="gx-link">Delete</span>
+                            <span className='gx-link'>Delete</span>
                         </PopConfirm>
-                        <Divider type="vertical"/>
-                        <span className="gx-link" onClick={hdEdit.bind(this, record)}>Edit</span>
-                        <Divider type="vertical"/>
-                        <span className="gx-link" onClick={hdAssign.bind(this, record)}>Assign</span>
+                        <Divider type='vertical'/>
+                        <span className='gx-link' onClick={hdEdit.bind(this, record)}>Edit</span>
+                        <Divider type='vertical'/>
+                        <span className='gx-link' onClick={hdAssign.bind(this, record)}>Assign</span>
                     </span>
                 )
             }
@@ -152,15 +147,15 @@ function Room({notify, setLoading, loading}) {
                     </Col>
                 }
                 <Col md={(assign || form) ? 14 : 24}>
-                    <Card title="List of available room">
+                    <Card title='List of available room'>
                         <Spin spinning={loading}>
                             {
-                                form || <Button type="primary" onClick={() => toggleForm(true)}>Add new room information</Button>
+                                form || <Button type='primary' onClick={() => toggleForm(true)}>Add new room information</Button>
                             }
                             <Table
-                                className="gx-table-responsive"
+                                className='gx-table-responsive'
                                 dataSource={rooms}
-                                rowKey="_id"
+                                rowKey='_id'
                                 columns={controlCols()}
                             />
                         </Spin>
@@ -182,5 +177,3 @@ function Room({notify, setLoading, loading}) {
         </div>
     )
 }
-
-export default withBreadCrumb(withHelpers(Room));
