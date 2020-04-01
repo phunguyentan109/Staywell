@@ -1,43 +1,15 @@
 const db = require("../models");
 const {pushId, assignId, spliceId} = require("../utils/dbSupport");
 const mail = require("../utils/mail");
-const moment = require("moment");
-
-async function createContract(user_id, price_id, electricNumber, peopleNumber, roomName) {
-    let createdContract = await db.Contract.create({user_id, room: roomName});
-
-    // Get the duration from price to set the contract timeline
-    let priceData = await db.Price.findById(price_id).lean().exec();
-    for(let i = 1; i <= priceData.duration; i++) {
-
-        let isFirstBill = createdContract.bill_id.length === 0;
-
-        let endTime = isFirstBill ? moment().add(i, "months").subtract(1, "days") : moment().add(i, "months");
-
-        // create all bill of the contract
-        let createdBill = await db.Bill.create({
-            contract_id: createContract._id, endTime
-        })
-
-        // Add starting time point for each bill
-        let createdTimePoint = await db.TimePoint.create({
-            bill_id: createdBill._id,
-            people: isFirstBill ? peopleNumber : undefined,
-            time: isFirstBill ? moment() : endTime
-        });
-
-        createdBill.timePoint_id.push(createdTimePoint._id);
-        createdBill.save();
-
-        createdContract.bill_id.push(createdBill._id);
-        await createdContract.save();
-    }
-    await pushId("User", user_id, "contract_id", createdContract._id);
-}
 
 exports.get = async(req, res, next) => {
     try {
-        let list = await db.Room.find().populate("price_id").populate("user_id").lean().exec();
+        let list = await db.Room.find()
+        .populate("price_id")
+        .populate("user_id")
+        .populate("contract_id")
+        .lean().exec();
+
         return res.status(200).json(list);
     } catch(err) {
         return next(err);
@@ -46,7 +18,12 @@ exports.get = async(req, res, next) => {
 
 exports.getOne = async(req, res, next) => {
     try {
-        let one = await db.Room.findById(req.params.room_id).populate("price_id").populate("user_id").lean().exec();
+        let one = await db.Room.findById(req.params.room_id)
+        .populate("price_id")
+        .populate("user_id")
+        .populate("contract_id")
+        .lean().exec();
+
         return res.status(200).json(one);
     } catch(err) {
         return next(err);
@@ -102,9 +79,7 @@ exports.update = async(req, res, next) => {
 exports.assign = async(req, res, next) => {
     try {
         const {room_id} = req.params;
-        const {amount} = req.body;
         let foundRoom = await db.Room.findById(room_id).populate("price_id").exec();
-        let roomPeopleNumber = foundRoom.user_id.length; // get number of people in room (before)
 
         // Get only the id of user
         let user_id = req.body.user_id.map(user => user._id);
@@ -128,13 +103,6 @@ exports.assign = async(req, res, next) => {
             for(let id of oldUser) {
                 await assignId("User", id, "room_id", false);
 
-                // Close the contract
-                let foundContract = await db.Contract.findOne({user_id: id});
-                if(foundContract) {
-                    foundContract.active = false;
-                    foundContract.save();
-                }
-
                 // send mail to notify user about removing from the room
                 let foundUser = await db.User.findById(id).lean().exec();
                 let {email, username} = foundUser;
@@ -147,41 +115,10 @@ exports.assign = async(req, res, next) => {
             for(let id of newUser) {
                 await assignId("User", id, "room_id", foundRoom._id);
 
-                // Create contract with information of room and the timeline
-                await createContract(id, foundRoom.price_id, amount, roomPeopleNumber, foundRoom.name);
-
                 // send mail to notify people about new place
                 let foundUser = await db.User.findById(id).lean().exec();
                 let {email, username} = foundUser;
                 mail.getRoom(email, username, foundRoom.name);
-            }
-        }
-
-        if(curUser.length > 0) {
-            for(let people of curUser) {
-                let foundContract = await db.Contract.findOne({
-                    user_id: people._id,
-                    active: true
-                }).populate({
-                    path: "bill_id",
-                    populate: { path: "timePoint_id" }
-                }).lean().exec();
-
-                // get current bill
-                let currentBill_id = foundContract.bill_id.filter(b => moment(b.endTime).isSameOrAfter(moment()))[0]._id;
-                let foundBill = await db.Bill.findById(currentBill_id);
-
-                // create new time point
-                let createdTimePoint = await db.TimePoint.create({
-                    bill_id: currentBill_id,
-                    time: moment(),
-                    // time: moment().add(Math.random() * 5, "days"),
-                    people: roomPeopleNumber,
-                    number: amount
-                });
-
-                foundBill.timePoint_id.push(createdTimePoint._id);
-                await foundBill.save();
             }
         }
 

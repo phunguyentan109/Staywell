@@ -13,7 +13,10 @@ const contractSchema = new mongoose.Schema({
             ref: "Bill"
         }
     ],
-    room: String,
+    startingElectric: {
+        type: Number,
+        default: 0
+    },
     active: {
         type: Boolean,
         default: true

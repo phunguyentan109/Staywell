@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import {clearAuthData} from "appRedux/actions/user";
-import withResize from "hocs/withResize";
+import withHelpers from "hocs/withHelpers";
 
 function AuthNavbar({location, clearAuthData, device}) {
     const [isRegister, setRegister] = useState(false);
@@ -19,8 +19,8 @@ function AuthNavbar({location, clearAuthData, device}) {
 
     function getTitle() {
         if(!device.isMobile) {
-            if(isRegister) return " Create an account";
-            return " Try with different account?"
+            if(isRegister) return " Try with different account?";
+            return " Create an account";
         }
     }
 
@@ -41,4 +41,4 @@ function AuthNavbar({location, clearAuthData, device}) {
     )
 };
 
-export default withRouter(connect(null, {clearAuthData})(withResize(AuthNavbar)));
+export default withRouter(connect(null, {clearAuthData})(withHelpers(AuthNavbar)));

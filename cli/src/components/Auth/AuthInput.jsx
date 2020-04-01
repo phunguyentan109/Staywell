@@ -1,15 +1,15 @@
-import React, {useState} from "react";
+import React, { useState } from 'react';
 
-function AuthInput({icon, type, ...props}){
+export default function AuthInput({ icon, type, ...props }){
     const [focus, setFocus] = useState(false);
     const toggleFocus = () => setFocus(prev => !prev);
 
     return (
-        <div className="auth-input">
-            <i className={`${icon} ${focus ? "focus" : ""}`}></i>
+        <div className='auth-input'>
+            <i className={`${icon} ${focus ? 'focus' : ''}`}/>
             <input
-                type={type ? type : "text"}
-                className={`auth-input ${focus ? "focus" : ""}`}
+                type={type || 'text'}
+                className={`auth-input ${focus ? 'focus' : ''}`}
                 onFocus={toggleFocus}
                 onBlur={toggleFocus}
                 {...props}
@@ -17,5 +17,3 @@ function AuthInput({icon, type, ...props}){
         </div>
     );
 }
-
-export default AuthInput;
