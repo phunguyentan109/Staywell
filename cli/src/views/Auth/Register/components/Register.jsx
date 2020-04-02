@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import AuthInput from "components/Auth/AuthInput";
+import PropTypes from 'prop-types';
 
 import { DEFAULT_ACCOUNT } from "../modules/const";
 
@@ -82,3 +83,16 @@ export default function Register({ message, negative, sendAuthData, addMessage, 
         </div>
     )
 }
+
+Register.propsTypes = {
+    message: PropTypes.Object,
+    addMessage: PropTypes.func,
+    sendAuthData: PropTypes.func
+};
+
+Register.defaultProps = {
+    message: {
+        text: "",
+        isNegative: false
+    }
+};

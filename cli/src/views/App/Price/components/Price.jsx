@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Card, Spin, Table, Divider, Form, Input, Button } from "antd";
+import PropTypes from 'prop-types';
 import { apiPrice } from "constants/api";
 import PopConfirm from "components/App/Pop/PopConfirm";
 import { DEFAULT_PRICE } from '../modules/const';
@@ -249,3 +250,7 @@ export default function Price({ notify }) {
         </div>
     )
 }
+
+Price.propsTypes = {
+    notify: PropTypes.func
+};

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card, Spin, Table } from 'antd';
+import PropTypes from 'prop-types';
 import PopConfirm from 'components/App/Pop/PopConfirm';
 
 export default function PeopleTable({ title, dataSource, loading, hdRemove }) {
@@ -51,3 +52,15 @@ export default function PeopleTable({ title, dataSource, loading, hdRemove }) {
         </Card>
     )
 }
+
+PeopleTable.propsTypes = {
+    title: PropTypes.string,
+    dataSource: PropTypes.func,
+    loading: PropTypes.bool,
+    hdRemove: PropTypes.func
+};
+
+PeopleTable.defaultProps = {
+    title: "",
+    loading: true
+};

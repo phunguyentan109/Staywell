@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AuthInput from 'components/Auth/AuthInput';
 import { apiUser } from "constants/api";
+import PropTypes from 'prop-types';
 
 export default function Forgot({ message, negative, addMessage }) {
     const [email, setEmail] = useState('');
@@ -70,3 +71,15 @@ export default function Forgot({ message, negative, addMessage }) {
         </div>
     )
 }
+
+Forgot.propsTypes = {
+    message: PropTypes.object,
+    addMessage: PropTypes.func
+};
+
+Forgot.defaultProps = {
+    message: {
+        text: "",
+        isNegative: false
+    }
+};

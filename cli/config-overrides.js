@@ -1,5 +1,5 @@
 const path = require('path');
-const {override} = require('customize-cra');
+const { override } = require('customize-cra');
 
 const overrideProcessEnv = value => config => {
   config.resolve.modules = [

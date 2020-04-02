@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import AuthInput from 'components/Auth/AuthInput';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
 export default function Login({ message, sendAuthData, addMessage, device }) {
     const [account, setAccount] = useState({

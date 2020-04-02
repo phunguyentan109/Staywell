@@ -1,6 +1,7 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { apiUser } from 'constants/api';
 import * as permissions from 'constants/credentialControl';
+import PropTypes from 'prop-types';
 
 import PeopleTable from '../modules/PeopleTable';
 const { isPeople, isUnActive } = permissions;
@@ -60,3 +61,7 @@ export default function People({ notify }) {
         </div>
     )
 }
+
+People.propsTypes = {
+    notify: PropTypes.func
+};

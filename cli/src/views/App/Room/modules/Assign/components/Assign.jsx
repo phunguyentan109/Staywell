@@ -1,13 +1,14 @@
-import React, {useState, useEffect, useCallback} from "react";
-import {Spin, Table, Button, Card, Form, Input} from "antd";
+import React, { useState, useEffect, useCallback } from "react";
+import { Spin, Table, Button, Card, Form, Input } from "antd";
 import Widget from "components/Widget/index";
-import {apiUser, apiRoom} from "constants/api";
+import { apiUser, apiRoom } from "constants/api";
 import moment from "moment";
+import PropTypes from 'prop-types';
 
 const NOT_FOUND = -1;
 const FormItem = Form.Item;
 
-function RoomAssign({loading, selectedRoom, hdCancel, refresh, notify, setLoading}) {
+function RoomAssign({ loading, selectedRoom, hdCancel, refresh, notify, setLoading }) {
     const [room, setRoom] = useState({
         _id: selectedRoom._id,
         user_id: [...selectedRoom.user_id],
@@ -38,7 +39,7 @@ function RoomAssign({loading, selectedRoom, hdCancel, refresh, notify, setLoadin
         if(isAssigned(user._id)) {
             // if already assign, do unassign
             let rmUser = room.user_id.filter(u => user._id !== u._id);
-            setRoom(prev => ({...prev, user_id: rmUser}));
+            setRoom(prev => ({ ...prev, user_id: rmUser }));
             setUsers(prev => ([...prev, user]));
         } else {
             // if is unassigned, do assign
@@ -49,8 +50,8 @@ function RoomAssign({loading, selectedRoom, hdCancel, refresh, notify, setLoadin
     }
 
     function hdChange(e) {
-        const {name, value} = e.target;
-        setRoom(prev => ({...prev, [name]: value}));
+        const { name, value } = e.target;
+        setRoom(prev => ({ ...prev, [name]: value }));
     }
 
     async function hdConfirm() {
@@ -67,26 +68,30 @@ function RoomAssign({loading, selectedRoom, hdCancel, refresh, notify, setLoadin
 
     return (
         <div>
-            <Widget title={ <h2 className="h4 gx-text-capitalize gx-mb-0">Assign People For {selectedRoom.name}</h2> }>
+            <Widget title={ <h2 className='h4 gx-text-capitalize gx-mb-0'>Assign People For {selectedRoom.name}</h2> }>
             <Spin spinning={loading}>
-                <div className="gx-table-responsive">
+                <div className='gx-table-responsive'>
                     <Table
-                        className="gx-table-no-bordered"
+                        className='gx-table-no-bordered'
                         columns={[
                             {
                                 title: 'Username',
                                 dataIndex: 'username',
                                 render: (text, record) => {
-                                    return <div className="gx-flex-row gx-align-items-center">
-                                        <img className="gx-rounded-circle gx-size-30 gx-mr-2" src={record.avatar.link} alt=""/>
-                                        <p className="gx-mb-0">{text}</p>
+                                    return <div className='gx-flex-row gx-align-items-center'>
+                                        <img className='gx-rounded-circle gx-size-30 gx-mr-2'
+                                             src={record.avatar.link} alt=''
+                                        />
+                                        <p className='gx-mb-0'>{text}</p>
                                     </div>
                                 }
                             },
                             {
                                 title: 'Join At',
                                 dataIndex: 'createdAt',
-                                render: text => <span className="gx-text-grey">From {moment(text).format("MMM Do, YYYY")}</span>
+                                render: text => <span className='gx-text-grey'>
+                                    From {moment(text).format("MMM Do, YYYY")}
+                                </span>
                             },
                             {
                                 title: 'Action',
@@ -97,31 +102,31 @@ function RoomAssign({loading, selectedRoom, hdCancel, refresh, notify, setLoadin
                                     >
                                         {
                                             isAssigned(record._id)
-                                            ? <i className="icon icon-frequent gx-fs-sm gx-mr-2"/>
-                                            : <i className="icon icon-forward gx-fs-sm gx-mr-2"/>
+                                            ? <i className='icon icon-frequent gx-fs-sm gx-mr-2'/>
+                                            : <i className='icon icon-forward gx-fs-sm gx-mr-2'/>
                                         }
                                         { isAssigned(record._id) ? "Unassign" : "Assign" }
                                     </span>
                                 },
                             ]}
-                            rowKey="_id"
+                            rowKey='_id'
                             dataSource={[...room.user_id, ...users]}
-                            size="small"
+                            size='small'
                         />
                     </div>
                 </Spin>
             </Widget>
-            <Card className="gx-card" title="Current electric amount">
+            <Card className='gx-card' title='Current electric amount'>
                 <Spin spinning={loading}>
-                    <Form layout="horizontal">
+                    <Form layout='horizontal'>
                         <FormItem
-                            label="Current amount"
-                            labelCol={{xs: 24, sm: 8}}
-                            wrapperCol={{xs: 24, sm: 14}}
+                            label='Current amount'
+                            labelCol={{ xs: 24, sm: 8 }}
+                            wrapperCol={{ xs: 24, sm: 14 }}
                         >
                             <Input
                                 placeholder="Enter the room's name here..."
-                                name="amount"
+                                name='amount'
                                 value={room.amount}
                                 onChange={hdChange}
                             />
@@ -129,10 +134,10 @@ function RoomAssign({loading, selectedRoom, hdCancel, refresh, notify, setLoadin
                         <FormItem
                             wrapperCol={{
                                 xs: 24,
-                                sm: {span: 14, offset: 6}
+                                sm: { span: 14, offset: 6 }
                             }}
                         >
-                            <Button type="primary" onClick={hdConfirm}>Confirm</Button>
+                            <Button type='primary' onClick={hdConfirm}>Confirm</Button>
                             <Button onClick={hdCancel}>Cancel</Button>
                         </FormItem>
                     </Form>
@@ -143,3 +148,16 @@ function RoomAssign({loading, selectedRoom, hdCancel, refresh, notify, setLoadin
 }
 
 export default RoomAssign;
+
+RoomAssign.propsTypes = {
+    loading: PropTypes.bool,
+    setLoading: PropTypes.func,
+    selectedRoom: PropTypes.object,
+    hdCancel: PropTypes.func,
+    refresh: PropTypes.func,
+    notify: PropTypes.func
+};
+
+RoomAssign.defaultProps = {
+    loading: true
+};

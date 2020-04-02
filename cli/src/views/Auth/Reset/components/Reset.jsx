@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { apiUser } from 'constants/api';
 import { Link } from 'react-router-dom';
 import AuthInput from 'components/Auth/AuthInput';
+import PropTypes from 'prop-types';
 
 import { DEFAULT_ACCOUNT } from '../modules/const';
 
@@ -86,3 +87,16 @@ export default function ResetPassword({ message, negative, addMessage, match }) 
         </div>
     )
 }
+
+ResetPassword.propsTypes = {
+    message: PropTypes.object,
+    addMessage: PropTypes.func,
+    match: PropTypes.object
+};
+
+ResetPassword.defaultProps = {
+    message: {
+        text: "",
+        isNegative: false
+    }
+};

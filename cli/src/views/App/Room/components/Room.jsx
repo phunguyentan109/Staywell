@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Row, Col, Card, Spin, Table, Button, Divider } from "antd";
 import { Link } from "react-router-dom";
+import PropTypes from 'prop-types';
 import PopConfirm from 'components/App/Pop/PopConfirm';
 import { apiRoom, apiPrice } from 'constants/api';
 import RoomForm from '../modules/Form';
@@ -150,7 +151,9 @@ export default function Room({ notify, setLoading, loading }) {
                     <Card title='List of available room'>
                         <Spin spinning={loading}>
                             {
-                                form || <Button type='primary' onClick={() => toggleForm(true)}>Add new room information</Button>
+                                form || <Button type='primary' onClick={() => toggleForm(true)}>
+                                    Add new room information
+                                </Button>
                             }
                             <Table
                                 className='gx-table-responsive'
@@ -177,3 +180,13 @@ export default function Room({ notify, setLoading, loading }) {
         </div>
     )
 }
+
+Room.propsTypes = {
+    notify: PropTypes.func,
+    loading: PropTypes.bool,
+    setLoading: PropTypes.func
+};
+
+Room.defaultProps = {
+    loading: true
+};

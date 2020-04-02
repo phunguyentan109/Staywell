@@ -1,5 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { Col, Row, Card, Form, Input, Button, Spin, DatePicker } from 'antd';
+import PropTypes from 'prop-types';
 import About from 'components/profile/About';
 import Contact from 'components/profile/Contact';
 import Auxiliary from 'util/Auxiliary';
@@ -26,7 +27,8 @@ export default function Profile({ notify, user, role, sendReloadUser, ...props }
 
     async function changePassword() {
         setLoading(true);
-        if(password.change === password.confirm && password.current !=="" && password.change !=="" && password.confirm !=="") {
+        let { change, confirm, current } = password;
+        if(change === confirm && current !=="" && change !=="" && confirm !=="") {
             try {
                 await apiUser.changePassword(user._id, password);
                 setPassword(DEFAULT_PASSWORD);
@@ -158,7 +160,10 @@ export default function Profile({ notify, user, role, sendReloadUser, ...props }
                                             sm: { span: 14, offset: 6 }
                                         }}
                                     >
-                                        <Button type='primary' onClick={() => hdUpdateProfile(profile)}>Save changes</Button>
+                                        <Button
+                                            type='primary'
+                                            onClick={() => hdUpdateProfile(profile)}>Save changes
+                                        </Button>
                                     </FormItem>
                                 </Form>
                             </Spin>
@@ -228,3 +233,10 @@ export default function Profile({ notify, user, role, sendReloadUser, ...props }
         </Auxiliary>
     );
 }
+
+Profile.propsTypes = {
+    notify: PropTypes.func,
+    user: PropTypes.object,
+    role: PropTypes.object,
+    sendReloadUser: PropTypes.func
+};

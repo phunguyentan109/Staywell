@@ -1,6 +1,7 @@
 import React from "react";
 import { Switch, Route, withRouter, Redirect } from "react-router-dom";
 import RouteControl from 'containers/Route/RouteControl';
+import PropTypes from 'prop-types';
 
 import Login from './Login';
 import Register from './Register';
@@ -51,3 +52,7 @@ function AuthRoutes({ location }) {
 };
 
 export default withRouter(AuthRoutes);
+
+AuthRoutes.propsTypes = {
+    location: PropTypes.object
+};

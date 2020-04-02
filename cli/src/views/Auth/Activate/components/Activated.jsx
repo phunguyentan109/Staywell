@@ -1,5 +1,6 @@
 import React, { useEffect, useCallback, useState } from "react";
 import { apiUser } from 'constants/api';
+import PropTypes from 'prop-types';
 
 export default function Activated({ match, activateUser, history }) {
     const [loading, setLoading] = useState(true);
@@ -9,7 +10,7 @@ export default function Activated({ match, activateUser, history }) {
             await apiUser.activate(match.params.user_id);
             activateUser();
             setLoading(false);
-            setTimeout(() =>  history.push("/"), 3000)
+            setTimeout(() =>  history.push("/"), 3000);
         } catch (e) {
             history.push("/");
         }
@@ -38,3 +39,9 @@ export default function Activated({ match, activateUser, history }) {
         </div>
     )
 }
+
+Activated.propsTypes = {
+    match: PropTypes.object,
+    history: PropTypes.object,
+    activateUser: PropTypes.func
+};
