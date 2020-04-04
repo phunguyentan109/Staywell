@@ -74,10 +74,12 @@
         "extends": "react-app",
         "rules": {
             "key-spacing"          : "off",
-            "jsx-quotes"           : [2, "prefer-single"],
+            "quotes"               : ["error", "single"],
+            "jsx-quotes"           : ["error", "prefer-single"],
             "max-len"              : [2, 120, 2],
             "object-curly-spacing" : [2, "always"],
-            "comma-dangle"         : "off"
+            "comma-dangle"         : "off",
+            "semi"                 : ["error", "never"]
         }
     },
     "browserslist": {

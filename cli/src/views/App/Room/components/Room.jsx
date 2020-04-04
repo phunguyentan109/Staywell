@@ -1,92 +1,93 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Row, Col, Card, Spin, Table, Button, Divider } from "antd";
-import { Link } from "react-router-dom";
-import PopConfirm from 'components/App/Pop/PopConfirm';
-import { apiRoom, apiPrice } from 'constants/api';
-import RoomForm from '../modules/Form';
-import RoomAssign from '../modules/Assign';
+import React, { useState, useEffect, useCallback } from 'react'
+import { Row, Col, Card, Spin, Table, Button, Divider } from 'antd'
+import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
+import PopConfirm from 'components/App/Pop/PopConfirm'
+import { apiRoom, apiPrice } from 'constants/api'
+import RoomForm from '../modules/Form'
+import RoomAssign from '../modules/Assign'
 
-import { DEFAULT_ROOM } from "../modules/const";
+import { DEFAULT_ROOM } from '../modules/const'
 
 export default function Room({ notify, setLoading, loading }) {
-    const [rooms, setRooms] = useState([]);
-    const [room, setRoom] = useState(DEFAULT_ROOM);
-    const [price, setPrice] = useState([]);
-    const [form, toggleForm] = useState(false);
-    const [assign, toggleAssign] = useState(false);
+    const [rooms, setRooms] = useState([])
+    const [room, setRoom] = useState(DEFAULT_ROOM)
+    const [price, setPrice] = useState([])
+    const [form, toggleForm] = useState(false)
+    const [assign, toggleAssign] = useState(false)
 
     const load = useCallback(async() => {
         try {
-            let roomData = await apiRoom.get();
-            let priceData = await apiPrice.get();
-            setPrice(priceData);
-            setRooms(roomData);
-            setLoading(false);
+            let roomData = await apiRoom.get()
+            let priceData = await apiPrice.get()
+            setPrice(priceData)
+            setRooms(roomData)
+            setLoading(false)
         } catch (e) {
-            notify("error", "The data cannot be loaded!");
+            notify('error', 'The data cannot be loaded!')
         }
-    }, [notify, setLoading]);
+    }, [notify, setLoading])
 
     useEffect(() => {
-        load();
-    }, [load]);
+        load()
+    }, [load])
 
     async function hdRemove(room_id) {
-        setLoading(true);
+        setLoading(true)
         try {
-            await apiRoom.remove(room_id);
-            let newRooms = rooms.filter(r => r._id !== room_id);
-            setRooms(newRooms);
-            notify("success", "The process is completed", "The room information is removed successfully!");
+            await apiRoom.remove(room_id)
+            let newRooms = rooms.filter(r => r._id !== room_id)
+            setRooms(newRooms)
+            notify('success', 'The process is completed', 'The room information is removed successfully!')
         } catch (e) {
-            notify("error", "The process is not completed");
+            notify('error', 'The process is not completed')
         }
-        setLoading(false);
+        setLoading(false)
     }
 
     function hdEdit(room) {
-        toggleForm(true);
+        toggleForm(true)
         setRoom(prev => ({
             ...prev, ...room,
             price_id: room.price_id._id
-        }));
+        }))
     }
 
     function hdCancel() {
-        setRoom(DEFAULT_ROOM);
-        toggleForm(false);
-        toggleAssign(false);
+        setRoom(DEFAULT_ROOM)
+        toggleForm(false)
+        toggleAssign(false)
     }
 
     function hdAssign(room) {
-        setLoading(true);
+        setLoading(true)
         setRoom(prev => ({
             ...prev, ...room,
             user_id: [...room.user_id]
-        }));
-        toggleAssign(true);
+        }))
+        toggleAssign(true)
     }
 
     async function refreshRoom(record, message, isNewRecord) {
         if(isNewRecord) {
-            setRooms(prev => [...prev, record]);
+            setRooms(prev => [...prev, record])
         } else {
-            let newRooms = rooms.map(r => r._id === record._id ? record : r);
-            setRooms(newRooms);
+            let newRooms = rooms.map(r => r._id === record._id ? record : r)
+            setRooms(newRooms)
         }
-        notify("success", "Process is completed!", message);
-        hdCancel();
-        setLoading(false);
+        notify('success', 'Process is completed!', message)
+        hdCancel()
+        setLoading(false)
     }
 
     function controlCols() {
         let cols = [
             {
-                title: "Room Name",
+                title: 'Room Name',
                 dataIndex: 'name',
             },
             {
-                title: "People",
+                title: 'People',
                 dataIndex: 'user_id',
                 render: text => <span>{text.length} people</span>
             },
@@ -96,7 +97,7 @@ export default function Room({ notify, setLoading, loading }) {
             },
             {
                 title: 'Contract Information',
-                dataIndex: "contract_id",
+                dataIndex: 'contract_id',
                 render: (text, record) => (
                     <span className='gx-link'>
                         <Link to={`rooms/${record._id}/contracts`}>
@@ -125,10 +126,10 @@ export default function Room({ notify, setLoading, loading }) {
                     </span>
                 )
             }
-        ];
+        ]
 
         // If "Assign" or "Form" content is shown, then hide the action
-        return assign || form ? cols.filter(c => c.key !== "action") : cols;
+        return assign || form ? cols.filter(c => c.key !== 'action') : cols
     }
 
     return (
@@ -150,7 +151,9 @@ export default function Room({ notify, setLoading, loading }) {
                     <Card title='List of available room'>
                         <Spin spinning={loading}>
                             {
-                                form || <Button type='primary' onClick={() => toggleForm(true)}>Add new room information</Button>
+                                form || <Button type='primary' onClick={() => toggleForm(true)}>
+                                    Add new room information
+                                </Button>
                             }
                             <Table
                                 className='gx-table-responsive'
@@ -176,4 +179,14 @@ export default function Room({ notify, setLoading, loading }) {
             </Row>
         </div>
     )
+}
+
+Room.propsTypes = {
+    notify: PropTypes.func,
+    loading: PropTypes.bool,
+    setLoading: PropTypes.func
+}
+
+Room.defaultProps = {
+    loading: true
 }

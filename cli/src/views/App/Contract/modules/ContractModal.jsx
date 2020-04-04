@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { Button, Card, Modal } from "antd";
+import React, { useState } from 'react'
+import { Button, Card, Modal } from 'antd'
 
 export default function ContractModal() {
-  const [electric, setElectric] = useState(0);
+  const [electric, setElectric] = useState(0)
 
   // state = {
   //   ModalText: 'Content of the modal',
@@ -58,5 +58,5 @@ export default function ContractModal() {
         >
           <p>{ModalText}</p>
         </Modal>
-    );
+    )
 }

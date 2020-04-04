@@ -1,11 +1,11 @@
-import React, {useState, useEffect} from "react";
-import {MOBILE_SIZE, DESKTOP_SIZE} from "constants/variables";
-import {notification} from "antd";
+import React, { useState, useEffect } from "react";
+import { MOBILE_SIZE, DESKTOP_SIZE } from "constants/variables";
+import { notification } from "antd";
 
 const DEFAULT_DESC = "There may be some errors occuring in the process. Please wait and try again later.";
 
 export default function withHelpers(WrappedComponent) {
-    function Helpers({...props}) {
+    function Helpers({ ...props }) {
         const [device, setDevice] = useState({
             isMobile: false,
             isTablet: false,
@@ -23,15 +23,15 @@ export default function withHelpers(WrappedComponent) {
             let isMobile = window.innerWidth < MOBILE_SIZE;
             let isTablet = window.innerWidth >= MOBILE_SIZE && window.innerWidth < DESKTOP_SIZE;
             let isDesktop = window.innerWidth >= DESKTOP_SIZE;
-            setDevice({isMobile, isTablet, isDesktop});
+            setDevice({ isMobile, isTablet, isDesktop });
         }
 
         const openNotificationWithIcon = (type, message, description=DEFAULT_DESC) => {
-            notification[type]({message, description});
+            notification[type]({ message, description });
         };
 
         return <WrappedComponent
-            device={{...device}}
+            device={{ ...device }}
             notify={openNotificationWithIcon}
             loading={loading}
             setLoading={setLoading}

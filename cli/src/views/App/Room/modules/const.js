@@ -1,4 +1,4 @@
 export const DEFAULT_ROOM = {
-    name: "",
+    name: '',
     user_id: []
-};
+}

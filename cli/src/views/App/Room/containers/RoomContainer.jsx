@@ -1,5 +1,5 @@
 import Room from '../components/Room'
-import withHelpers from "hocs/withHelpers";
-import withBreadCrumb from "hocs/withBreadCrumb" ;
+import withHelpers from 'hocs/withHelpers'
+import withBreadCrumb from 'hocs/withBreadCrumb'
 
-export default withBreadCrumb(withHelpers(Room));
+export default withBreadCrumb(withHelpers(Room))
