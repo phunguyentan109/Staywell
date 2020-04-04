@@ -1,13 +1,13 @@
-import React from "react";
-import { Switch, Route, withRouter, Redirect } from "react-router-dom";
-import RouteControl from 'containers/Route/RouteControl';
-import PropTypes from 'prop-types';
+import React from 'react'
+import { Switch, Route, withRouter, Redirect } from 'react-router-dom'
+import RouteControl from 'containers/Route/RouteControl'
+import PropTypes from 'prop-types'
 
-import Login from './Login';
-import Register from './Register';
-import Forgot from './Forgot';
-import Reset from './Reset';
-import { Activate, Activated } from './Activate';
+import Login from './Login'
+import Register from './Register'
+import Forgot from './Forgot'
+import Reset from './Reset'
+import { Activate, Activated } from './Activate'
 
 function AuthRoutes({ location }) {
     return (
@@ -19,7 +19,7 @@ function AuthRoutes({ location }) {
                 redirectPath='/app'
                 component={Activate}
                 access={[
-                    "UNACTIVE_PERMISSION"
+                    'UNACTIVE_PERMISSION'
                 ]}
             />
             <RouteControl
@@ -27,7 +27,7 @@ function AuthRoutes({ location }) {
                 redirectPath='/activate'
                 component={Register}
                 access={[
-                    "GUEST_PERMISSION"
+                    'GUEST_PERMISSION'
                 ]}
             />
             <RouteControl
@@ -35,7 +35,7 @@ function AuthRoutes({ location }) {
                 redirectPath='/'
                 component={Forgot}
                 access={[
-                    "GUEST_PERMISSION"
+                    'GUEST_PERMISSION'
                 ]}
             />
             <RouteControl
@@ -43,16 +43,16 @@ function AuthRoutes({ location }) {
                 redirectPath='/activate'
                 component={Login}
                 access={[
-                    "GUEST_PERMISSION"
+                    'GUEST_PERMISSION'
                 ]}
             />
             <Redirect from={location.pathname} to='/'/>
         </Switch>
     )
-};
+}
 
-export default withRouter(AuthRoutes);
+export default withRouter(AuthRoutes)
 
 AuthRoutes.propsTypes = {
     location: PropTypes.object
-};
+}

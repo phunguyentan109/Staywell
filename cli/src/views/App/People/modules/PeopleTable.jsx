@@ -1,7 +1,7 @@
-import React from 'react';
-import { Card, Spin, Table } from 'antd';
-import PropTypes from 'prop-types';
-import PopConfirm from 'components/App/Pop/PopConfirm';
+import React from 'react'
+import { Card, Spin, Table } from 'antd'
+import PropTypes from 'prop-types'
+import PopConfirm from 'components/App/Pop/PopConfirm'
 
 export default function PeopleTable({ title, dataSource, loading, hdRemove }) {
     return (
@@ -13,7 +13,7 @@ export default function PeopleTable({ title, dataSource, loading, hdRemove }) {
                     rowKey='_id'
                     columns={[
                         {
-                            title: "Avatar",
+                            title: 'Avatar',
                             dataIndex: 'avatar.link',
                             render: (text, rec) => (
                                 <span className='user-cell'>
@@ -26,9 +26,9 @@ export default function PeopleTable({ title, dataSource, loading, hdRemove }) {
                             )
                         },
                         {
-                            title: "Room",
+                            title: 'Room',
                             dataIndex: 'room_id.name',
-                            render: text => <span>{text ? text : "Not Assigned"}</span>
+                            render: text => <span>{text ? text : 'Not Assigned'}</span>
                         },
                         {
                             title: 'Action',
@@ -55,12 +55,13 @@ export default function PeopleTable({ title, dataSource, loading, hdRemove }) {
 
 PeopleTable.propsTypes = {
     title: PropTypes.string,
-    dataSource: PropTypes.func,
+    dataSource: PropTypes.array,
     loading: PropTypes.bool,
     hdRemove: PropTypes.func
-};
+}
 
 PeopleTable.defaultProps = {
-    title: "",
-    loading: true
-};
+    title: '',
+    loading: true,
+    dataSource: []
+}

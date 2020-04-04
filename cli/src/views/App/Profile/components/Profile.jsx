@@ -1,68 +1,68 @@
-import React, { useCallback, useState, useEffect } from 'react';
-import { Col, Row, Card, Form, Input, Button, Spin, DatePicker } from 'antd';
-import PropTypes from 'prop-types';
-import About from 'components/profile/About';
-import Contact from 'components/profile/Contact';
-import Auxiliary from 'util/Auxiliary';
-import ProfileHeader from 'components/profile/ProfileHeader';
-import { apiUser } from 'constants/api';
-import moment from 'moment';
-import { DEFAULT_PROFILE, DEFAULT_PASSWORD } from "../modules/const";
+import React, { useCallback, useState, useEffect } from 'react'
+import { Col, Row, Card, Form, Input, Button, Spin, DatePicker } from 'antd'
+import PropTypes from 'prop-types'
+import About from 'components/profile/About'
+import Contact from 'components/profile/Contact'
+import Auxiliary from 'util/Auxiliary'
+import ProfileHeader from 'components/profile/ProfileHeader'
+import { apiUser } from 'constants/api'
+import moment from 'moment'
+import { DEFAULT_PROFILE, DEFAULT_PASSWORD } from '../modules/const'
 
-const FormItem = Form.Item;
+const FormItem = Form.Item
 
-export default function Profile({ notify, user, role, sendReloadUser, ...props }) {
-    const [password, setPassword] = useState(DEFAULT_PASSWORD);
-    const [profile, setProfile] = useState(DEFAULT_PROFILE);
-    const [loading, setLoading] = useState(true);
+export default function Profile({ notify, user, role, sendReloadUser }) {
+    const [password, setPassword] = useState(DEFAULT_PASSWORD)
+    const [profile, setProfile] = useState(DEFAULT_PROFILE)
+    const [loading, setLoading] = useState(true)
 
     const load = useCallback(async() => {
-        setProfile(user);
-        setLoading(false);
-    }, [user]);
+        setProfile(user)
+        setLoading(false)
+    }, [user])
 
     useEffect(() => {
-        load();
-    }, [load]);
+        load()
+    }, [load])
 
     async function changePassword() {
-        setLoading(true);
-        let { change, confirm, current } = password;
-        if(change === confirm && current !=="" && change !=="" && confirm !=="") {
+        setLoading(true)
+        let { change, confirm, current } = password
+        if(change === confirm && current && change && confirm) {
             try {
-                await apiUser.changePassword(user._id, password);
-                setPassword(DEFAULT_PASSWORD);
-                notify("success", "Process is completed!", "Your password has been changed successfully.");
+                await apiUser.changePassword(user._id, password)
+                setPassword(DEFAULT_PASSWORD)
+                notify('success', 'Process is completed!', 'Your password has been changed successfully.')
             } catch (e) {
-                notify("error", "The process is not completed", e);
+                notify('error', 'The process is not completed', e)
             }
         } else {
-            notify("error", "The process is not completed", "Please ensure that all your entered data are valid.");
+            notify('error', 'The process is not completed', 'Please ensure that all your entered data are valid.')
         }
-        return setLoading(false);
+        return setLoading(false)
     }
 
     function hdChangePassword(e) {
-        const { name, value } = e.target;
+        const { name, value } = e.target
         setPassword(prev => ({
             ...prev,
             [name]: value
-        }));
+        }))
     }
 
     function getRoleName() {
-        let roleName = "";
-        if(role.isOwner) roleName = "Owner";
-        if(role.isPeople) roleName = "People";
-        return `${roleName} at StayWell`;
+        let roleName = ''
+        if(role.isOwner) roleName = 'Owner'
+        if(role.isPeople) roleName = 'People'
+        return `${roleName} at StayWell`
     }
 
     function hdChange(e) {
-        const { name, value } = e.target;
+        const { name, value } = e.target
         setProfile(prev => ({ ...prev, [name]: value }))
     }
 
-    function setBirthDate(date, dateString) {
+    function setBirthDate(date) {
         return setProfile(prev => ({
             ...prev,
             birthDate: date
@@ -70,20 +70,20 @@ export default function Profile({ notify, user, role, sendReloadUser, ...props }
     }
 
     async function hdUpdateProfile(profile) {
-        setLoading(true);
+        setLoading(true)
         try {
-            if(profile.email !=="" && profile.job !=="" && profile.phone !=="") {
-                await apiUser.update(user._id, profile);
-                sendReloadUser(user._id);
-                setProfile(DEFAULT_PROFILE);
-                notify("success", "Process is completed!", "Your profile has been updated successfully.");
+            if(profile.email && profile.job && profile.phone) {
+                await apiUser.update(user._id, profile)
+                sendReloadUser(user._id)
+                setProfile(DEFAULT_PROFILE)
+                notify('success', 'Process is completed!', 'Your profile has been updated successfully.')
             } else {
-                notify("error", "Process is not completed!", "Please fill in empty form.");
+                notify('error', 'Process is not completed!', 'Please fill in empty form.')
             }
         } catch (err){
-            notify("error", "Process is not completed", "Profile data is not updated successfully")
+            notify('error', 'Process is not completed', 'Profile data is not updated successfully')
         }
-        setLoading(false);
+        setLoading(false)
     }
 
     return (
@@ -114,7 +114,7 @@ export default function Profile({ notify, user, role, sendReloadUser, ...props }
                                             name='email'
                                             value={profile.email}
                                             onChange={hdChange}
-                                            disabled={role.isOwner ? true : false}
+                                            disabled={role.isOwner}
                                         />
                                     </FormItem>
                                     <FormItem
@@ -231,7 +231,7 @@ export default function Profile({ notify, user, role, sendReloadUser, ...props }
                 </Row>
             </div>
         </Auxiliary>
-    );
+    )
 }
 
 Profile.propsTypes = {
@@ -239,4 +239,4 @@ Profile.propsTypes = {
     user: PropTypes.object,
     role: PropTypes.object,
     sendReloadUser: PropTypes.func
-};
+}

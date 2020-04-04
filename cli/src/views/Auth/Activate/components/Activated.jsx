@@ -1,24 +1,24 @@
-import React, { useEffect, useCallback, useState } from "react";
-import { apiUser } from 'constants/api';
-import PropTypes from 'prop-types';
+import React, { useEffect, useCallback, useState } from 'react'
+import { apiUser } from 'constants/api'
+import PropTypes from 'prop-types'
 
 export default function Activated({ match, activateUser, history }) {
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true)
 
     const load = useCallback(async() => {
         try {
-            await apiUser.activate(match.params.user_id);
-            activateUser();
-            setLoading(false);
-            setTimeout(() =>  history.push("/"), 3000);
+            await apiUser.activate(match.params.user_id)
+            activateUser()
+            setLoading(false)
+            setTimeout(() =>  history.push('/'), 3000)
         } catch (e) {
-            history.push("/");
+            history.push('/')
         }
-    }, [activateUser, history, match]);
+    }, [activateUser, history, match])
 
     useEffect(() => {
-        load();
-    }, [load]);
+        load()
+    }, [load])
 
     return (
         <div>
@@ -44,4 +44,4 @@ Activated.propsTypes = {
     match: PropTypes.object,
     history: PropTypes.object,
     activateUser: PropTypes.func
-};
+}

@@ -1,68 +1,68 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Spin, Table, Button, Card, Form, Input } from "antd";
-import Widget from "components/Widget/index";
-import { apiUser, apiRoom } from "constants/api";
-import moment from "moment";
-import PropTypes from 'prop-types';
+import React, { useState, useEffect, useCallback } from 'react'
+import { Spin, Table, Button, Card, Form, Input } from 'antd'
+import Widget from 'components/Widget/index'
+import { apiUser, apiRoom } from 'constants/api'
+import moment from 'moment'
+import PropTypes from 'prop-types'
 
-const NOT_FOUND = -1;
-const FormItem = Form.Item;
+const NOT_FOUND = -1
+const FormItem = Form.Item
 
 function RoomAssign({ loading, selectedRoom, hdCancel, refresh, notify, setLoading }) {
     const [room, setRoom] = useState({
         _id: selectedRoom._id,
         user_id: [...selectedRoom.user_id],
         amount: 0
-    });
-    const [users, setUsers] = useState([]);
+    })
+    const [users, setUsers] = useState([])
 
     const load = useCallback(async() => {
-        setLoading(true);
+        setLoading(true)
         try {
-            let userData = await apiUser.getAssign();
-            setUsers(userData);
+            let userData = await apiUser.getAssign()
+            setUsers(userData)
         } catch (e) {
-            notify("error", "Data is not loaded");
+            notify('error', 'Data is not loaded')
         }
-        setLoading(false);
-    }, [notify, setLoading]);
+        setLoading(false)
+    }, [notify, setLoading])
 
     useEffect(() => {
-        load();
-    }, [load]);
+        load()
+    }, [load])
 
     function isAssigned(user_id) {
-        return room.user_id.map(u => u._id).indexOf(user_id) !== NOT_FOUND;
+        return room.user_id.map(u => u._id).indexOf(user_id) !== NOT_FOUND
     }
 
     function hdAssign(user) {
         if(isAssigned(user._id)) {
             // if already assign, do unassign
-            let rmUser = room.user_id.filter(u => user._id !== u._id);
-            setRoom(prev => ({ ...prev, user_id: rmUser }));
-            setUsers(prev => ([...prev, user]));
+            let rmUser = room.user_id.filter(u => user._id !== u._id)
+            setRoom(prev => ({ ...prev, user_id: rmUser }))
+            setUsers(prev => ([...prev, user]))
         } else {
             // if is unassigned, do assign
-            let rmUser = users.filter(u => user._id !== u._id);
-            setUsers(rmUser);
-            setRoom(prev => ({ ...prev, user_id: [...prev.user_id, user] }));
+            let rmUser = users.filter(u => user._id !== u._id)
+            setUsers(rmUser)
+            setRoom(prev => ({ ...prev, user_id: [...prev.user_id, user] }))
         }
     }
 
     function hdChange(e) {
-        const { name, value } = e.target;
-        setRoom(prev => ({ ...prev, [name]: value }));
+        const { name, value } = e.target
+        setRoom(prev => ({ ...prev, [name]: value }))
     }
 
     async function hdConfirm() {
         try {
-            setLoading(true);
-            let assignRoom = await apiRoom.assign(room._id, room);
-            let assignRoomData = await apiRoom.getOne(assignRoom._id);
-            refresh(assignRoomData, "People are assigned to room successfully!", false);
+            setLoading(true)
+            let assignRoom = await apiRoom.assign(room._id, room)
+            let assignRoomData = await apiRoom.getOne(assignRoom._id)
+            refresh(assignRoomData, 'People are assigned to room successfully!', false)
         } catch (e) {
-            setLoading(false);
-            notify("error", "Process is not completed");
+            setLoading(false)
+            notify('error', 'Process is not completed')
         }
     }
 
@@ -90,14 +90,14 @@ function RoomAssign({ loading, selectedRoom, hdCancel, refresh, notify, setLoadi
                                 title: 'Join At',
                                 dataIndex: 'createdAt',
                                 render: text => <span className='gx-text-grey'>
-                                    From {moment(text).format("MMM Do, YYYY")}
+                                    From {moment(text).format('MMM Do, YYYY')}
                                 </span>
                             },
                             {
                                 title: 'Action',
-                                key: "action",
+                                key: 'action',
                                 render: (text, record) => <span
-                                    className={`gx-text-primary gx-pointer ${isAssigned(record._id) ? "app-assign" : ""}`}
+                                    className={`gx-text-primary gx-pointer ${isAssigned(record._id) ? 'app-assign' : ''}`}
                                     onClick={hdAssign.bind(this, record)}
                                     >
                                         {
@@ -105,7 +105,7 @@ function RoomAssign({ loading, selectedRoom, hdCancel, refresh, notify, setLoadi
                                             ? <i className='icon icon-frequent gx-fs-sm gx-mr-2'/>
                                             : <i className='icon icon-forward gx-fs-sm gx-mr-2'/>
                                         }
-                                        { isAssigned(record._id) ? "Unassign" : "Assign" }
+                                        { isAssigned(record._id) ? 'Unassign' : 'Assign' }
                                     </span>
                                 },
                             ]}
@@ -147,7 +147,7 @@ function RoomAssign({ loading, selectedRoom, hdCancel, refresh, notify, setLoadi
     )
 }
 
-export default RoomAssign;
+export default RoomAssign
 
 RoomAssign.propsTypes = {
     loading: PropTypes.bool,
@@ -156,8 +156,8 @@ RoomAssign.propsTypes = {
     hdCancel: PropTypes.func,
     refresh: PropTypes.func,
     notify: PropTypes.func
-};
+}
 
 RoomAssign.defaultProps = {
     loading: true
-};
+}

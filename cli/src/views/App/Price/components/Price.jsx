@@ -1,89 +1,89 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Card, Spin, Table, Divider, Form, Input, Button } from "antd";
-import PropTypes from 'prop-types';
-import { apiPrice } from "constants/api";
-import PopConfirm from "components/App/Pop/PopConfirm";
-import { DEFAULT_PRICE } from '../modules/const';
+import React, { useState, useEffect, useCallback } from 'react'
+import { Card, Spin, Table, Divider, Form, Input, Button } from 'antd'
+import PropTypes from 'prop-types'
+import { apiPrice } from 'constants/api'
+import PopConfirm from 'components/App/Pop/PopConfirm'
+import { DEFAULT_PRICE } from '../modules/const'
 
-const FormItem = Form.Item;
+const FormItem = Form.Item
 
 export default function Price({ notify }) {
-    const [listPrice, setListPrice] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [price, setPrice] = useState(DEFAULT_PRICE);
-    const [form, toggleForm] = useState(false);
+    const [listPrice, setListPrice] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [price, setPrice] = useState(DEFAULT_PRICE)
+    const [form, toggleForm] = useState(false)
 
     const load = useCallback(async() => {
         try {
-            let priceData = await apiPrice.get();
-            setListPrice(priceData);
-            setLoading(false);
+            let priceData = await apiPrice.get()
+            setListPrice(priceData)
+            setLoading(false)
         } catch (e) {
-            return notify("error", "Data is not loaded");
+            return notify('error', 'Data is not loaded')
         }
-    }, [notify]);
+    }, [notify])
 
     useEffect(() => {
-        load();
-    }, [load]);
+        load()
+    }, [load])
 
     function hdChange(e) {
-        const { name, value } = e.target;
+        const { name, value } = e.target
         setPrice(prev => ({ ...prev, [name]: value }))
     }
 
     async function hdSubmit() {
-        setLoading(true);
+        setLoading(true)
         try {
             if(!price._id) {
-                let createdPrice = await apiPrice.create(price);
-                setListPrice(prev => [...prev, createdPrice]);
-                notify("success", "Process is completed", "Price data is created successfully.");
+                let createdPrice = await apiPrice.create(price)
+                setListPrice(prev => [...prev, createdPrice])
+                notify('success', 'Process is completed', 'Price data is created successfully.')
             } else {
-                let updatePrice = await apiPrice.update(price._id, price);
+                let updatePrice = await apiPrice.update(price._id, price)
                 let updatePriceList = listPrice.map(v => {
                     if(v._id === updatePrice._id) {
-                        return updatePrice;
+                        return updatePrice
                     }
-                    return v;
-                });
-                setListPrice(updatePriceList);
-                notify("success", "Process is completed", "Price data is updated successfully.");
+                    return v
+                })
+                setListPrice(updatePriceList)
+                notify('success', 'Process is completed', 'Price data is updated successfully.')
             }
-            hdCancel();
+            hdCancel()
         } catch (e) {
-            notify("error", "Process is not completed", "Price data is not submitted successfully")
+            notify('error', 'Process is not completed', 'Price data is not submitted successfully')
         }
-        setLoading(false);
+        setLoading(false)
     }
 
     async function hdRemove(price_id) {
-        setLoading(true);
+        setLoading(true)
         try {
-            await apiPrice.remove(price_id);
-            let updatePriceList = listPrice.filter(v => v._id !== price_id);
-            setListPrice(updatePriceList);
-            notify("success", "Process is not completed", "Price data is removed successfully");
+            await apiPrice.remove(price_id)
+            let updatePriceList = listPrice.filter(v => v._id !== price_id)
+            setListPrice(updatePriceList)
+            notify('success', 'Process is not completed', 'Price data is removed successfully')
         } catch (err){
-            notify("error", "Process is not completed", "Price data is not remove");
+            notify('error', 'Process is not completed', 'Price data is not remove')
         }
-        setLoading(false);
+        setLoading(false)
     }
 
     function hdCancel() {
-        setPrice(DEFAULT_PRICE);
-        toggleForm(false);
+        setPrice(DEFAULT_PRICE)
+        toggleForm(false)
     }
 
     function hdEdit(price) {
-        setPrice(price);
-        toggleForm(true);
+        setPrice(price)
+        toggleForm(true)
     }
 
     return (
         <div>
             {
-            form && <Card className='gx-card' title={!price._id ? "Add New Price" : "Edit Price Information"}>
+            form && <Card className='gx-card' title={!price._id ? 'Add New Price' : 'Edit Price Information'}>
                 <Spin spinning={loading}>
                     <Form layout='horizontal'>
                         <FormItem
@@ -182,7 +182,7 @@ export default function Price({ notify }) {
                                 sm: { span: 14, offset: 6 }
                             }}
                         >
-                            <Button type='primary' onClick={hdSubmit}>{price._id ? "Save changes" : "Submit"}</Button>
+                            <Button type='primary' onClick={hdSubmit}>{price._id ? 'Save changes' : 'Submit'}</Button>
                             <Button onClick={hdCancel}>Cancel</Button>
                         </FormItem>
                     </Form>
@@ -198,15 +198,15 @@ export default function Price({ notify }) {
                         rowKey='_id'
                         columns={[
                             {
-                                title: "Price type",
+                                title: 'Price type',
                                 dataIndex: 'type',
                             },
                             {
-                                title: "Electric",
+                                title: 'Electric',
                                 dataIndex: 'electric'
                             },
                             {
-                                title: "Wifi",
+                                title: 'Wifi',
                                 dataIndex: 'wifi',
                             },
                             {
@@ -253,4 +253,4 @@ export default function Price({ notify }) {
 
 Price.propsTypes = {
     notify: PropTypes.func
-};
+}

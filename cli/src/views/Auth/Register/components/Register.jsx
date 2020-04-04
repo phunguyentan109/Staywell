@@ -1,41 +1,41 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import AuthInput from "components/Auth/AuthInput";
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import AuthInput from 'components/Auth/AuthInput'
+import PropTypes from 'prop-types'
 
-import { DEFAULT_ACCOUNT } from "../modules/const";
+import { DEFAULT_ACCOUNT } from '../modules/const'
 
 export default function Register({ message, negative, sendAuthData, addMessage, device }) {
-    const [account, setAccount] = useState(DEFAULT_ACCOUNT);
-    const [loading, setLoading] = useState(false);
+    const [account, setAccount] = useState(DEFAULT_ACCOUNT)
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        return () => addMessage();
-    },[addMessage]);
+        return () => addMessage()
+    },[addMessage])
 
     function hdSubmit(e) {
-        setLoading(true);
+        setLoading(true)
         try {
-            e.preventDefault();
-            let isValidPassword = account.password === account.cpassword;
-            let isNotEmpty = account.email.length > 0 && account.password.length > 0;
+            e.preventDefault()
+            let isValidPassword = account.password === account.cpassword
+            let isNotEmpty = account.email.length > 0 && account.password.length > 0
             if(isNotEmpty && isValidPassword) {
-                sendAuthData('signup', account);
-                setAccount(DEFAULT_ACCOUNT);
-                addMessage('An email has been sent, please check and follow to activate your account', false);
+                sendAuthData('signup', account)
+                setAccount(DEFAULT_ACCOUNT)
+                addMessage('An email has been sent, please check and follow to activate your account', false)
             } else {
-                addMessage('The entered information is not valid. Please try again');
-                setLoading(false);
+                addMessage('The entered information is not valid. Please try again')
+                setLoading(false)
             }
         } catch (err) {
-            addMessage(err);
+            addMessage(err)
         }
-        setLoading(false);
+        setLoading(false)
     }
 
     function hdChange(e) {
-        const { value, name } = e.target;
-        setAccount(prev => ({ ...prev, [name]: value }));
+        const { value, name } = e.target
+        setAccount(prev => ({ ...prev, [name]: value }))
     }
 
     return (
@@ -43,7 +43,7 @@ export default function Register({ message, negative, sendAuthData, addMessage, 
             <h1>Sign up</h1>
             <h4>Please fill in below to complete registration.</h4>
             {
-                message.length > 0 && <div className={`${negative ? "notify" : "great-notify"}`}>
+                message.length > 0 && <div className={`${negative ? 'notify' : 'great-notify'}`}>
                     <span>{message}</span>
                 </div>
             }
@@ -75,7 +75,7 @@ export default function Register({ message, negative, sendAuthData, addMessage, 
                     {
                         loading
                         ? <i className='fas fa-circle-notch fa-spin'/>
-                        : "Create account"
+                        : 'Create account'
                     }
                 </button>
             </form>
@@ -85,14 +85,13 @@ export default function Register({ message, negative, sendAuthData, addMessage, 
 }
 
 Register.propsTypes = {
-    message: PropTypes.Object,
+    message: PropTypes.string,
+    negative: PropTypes.bool,
     addMessage: PropTypes.func,
     sendAuthData: PropTypes.func
-};
+}
 
 Register.defaultProps = {
-    message: {
-        text: "",
-        isNegative: false
-    }
-};
+    message: '',
+    negative: false
+}

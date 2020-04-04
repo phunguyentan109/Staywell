@@ -1,21 +1,21 @@
-import React from 'react';
-import moment from 'moment';
+import React from 'react'
+import moment from 'moment'
 
 const Bill = () => {
     return (
         <div className='gx-card bill-record'>
             <i className='icon icon-datepicker gx-fs-xl gx-mr-2'/>
-            <h3 className='gx-text'>{moment().format("MMM Do, YYYY")}</h3>
+            <h3 className='gx-text'>{moment().format('MMM Do, YYYY')}</h3>
         </div>
-    );
-};
+    )
+}
 
 function PaidBill() {
     return (
         <div className='gx-card gx-blue-cyan-gradient gx-text-white paid-bill-record'>
             <div className='header'>
                 <i className='icon icon-tag-o gx-fs-xl gx-mr-2'/>
-                <h3 className='gx-text'>{moment().format("MMM Do, YYYY")}</h3>
+                <h3 className='gx-text'>{moment().format('MMM Do, YYYY')}</h3>
             </div>
             <div className='body'>
                 <div>
@@ -53,4 +53,4 @@ function PaidBill() {
     )
 }
 
-export { Bill, PaidBill };
+export { Bill, PaidBill }

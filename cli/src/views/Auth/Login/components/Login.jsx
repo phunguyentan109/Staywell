@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import AuthInput from 'components/Auth/AuthInput';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import AuthInput from 'components/Auth/AuthInput'
+import PropTypes from 'prop-types'
 
 export default function Login({ message, sendAuthData, addMessage, device }) {
     const [account, setAccount] = useState({
         email: '',
         password: ''
-    });
+    })
 
     useEffect(() => {
-        return () => addMessage();
-    }, [addMessage]);
+        return () => addMessage()
+    }, [addMessage])
 
     function hdSubmit(e) {
-        e.preventDefault();
-        sendAuthData("login", account);
+        e.preventDefault()
+        sendAuthData('login', account)
     }
 
     function hdChange(e) {
-        const { value, name } = e.target;
-        setAccount(prev => ({ ...prev, [name]: value }));
+        const { value, name } = e.target
+        setAccount(prev => ({ ...prev, [name]: value }))
     }
 
     return (
@@ -32,7 +32,7 @@ export default function Login({ message, sendAuthData, addMessage, device }) {
             }
             <h4>Please enter your account to continue.</h4>
             {
-                message.length > 0 && <div className='notify'>
+                message || <div className='notify'>
                     <span>{message}</span>
                 </div>
             }
@@ -60,14 +60,12 @@ export default function Login({ message, sendAuthData, addMessage, device }) {
 }
 
 Login.propsTypes = {
-    message: PropTypes.object,
-    addMessage: PropTypes.func,
-    history: PropTypes.object
-};
+    message: PropTypes.string,
+    negative: PropTypes.bool,
+    addMessage: PropTypes.func
+}
 
 Login.defaultProps = {
-    message: {
-        text: "",
-        isNegative: false
-    }
-};
+    message: '',
+    negative: false
+}

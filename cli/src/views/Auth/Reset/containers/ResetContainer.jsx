@@ -1,6 +1,6 @@
 import Reset from '../components/Reset'
-import { connect } from 'react-redux';
-import { addMessage } from 'appRedux/actions/message';
+import { connect } from 'react-redux'
+import { addMessage } from 'appRedux/actions/message'
 
 function mapState({ message }) {
     return {
@@ -9,4 +9,4 @@ function mapState({ message }) {
     }
 }
 
-export default connect(mapState, { addMessage })(Reset);
+export default connect(mapState, { addMessage })(Reset)
