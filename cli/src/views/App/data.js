@@ -1,5 +1,5 @@
 import React from "react";
-import {Avatar} from "antd";
+import { Avatar } from "antd";
 
 const userImageList = [
   {
@@ -57,10 +57,10 @@ export const aboutList = [
     id: 5,
     title: '4 Family Members',
     icon: 'family',
-    userList: [<ul className="gx-list-inline gx-mb-0" key={1}>
+    userList: [<ul className='gx-list-inline gx-mb-0' key={1}>
       {userImageList.map((user, index) =>
-          <li className="gx-mb-2" key={index}>
-            <Avatar className="gx-size-30" src={user.image}/>
+          <li className='gx-mb-2' key={index}>
+            <Avatar className='gx-size-30' src={user.image}/>
           </li>
         )
       }
@@ -98,13 +98,13 @@ export const contactList = [
     id: 1,
     title: 'Email',
     icon: 'email',
-    desc: [<span className="gx-link" key={1}>kiley.brown@example.com</span>]
+    desc: [<span className='gx-link' key={1}>kiley.brown@example.com</span>]
   },
   {
     id: 2,
     title: 'Web page',
     icon: 'link',
-    desc: [<span className="gx-link" key={2}>example.com</span>]
+    desc: [<span className='gx-link' key={2}>example.com</span>]
   }, {
     id: 3,
     title: 'Phone',

@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-const db = require("./index");
-const {spliceId, assignId} = require("../utils/dbSupport");
+const {spliceId} = require("../utils/dbSupport");
 
 const roomSchema = new mongoose.Schema({
     name: {
@@ -12,6 +11,12 @@ const roomSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Price"
     },
+    contract_id: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Contract"
+        }
+    ],
     user_id: [
         {
             type: mongoose.Schema.Types.ObjectId,

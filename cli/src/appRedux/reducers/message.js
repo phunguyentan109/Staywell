@@ -1,15 +1,15 @@
-import {ADD_MESSAGE} from "constants/ActionTypes";
+import { ADD_MESSAGE } from "constants/ActionTypes";
 
 const DEFAULT_STATE = {
-    content: "",
-    isNegative: true
+    text: "",
+    isNegative: false
 }
 
 export default (state = DEFAULT_STATE, action) => {
-    const {type, value} = action;
+    const { type, value } = action;
     switch(type){
         case ADD_MESSAGE:
-            return { ...state, ...value};
+            return { ...state, ...value };
         default:
             return state;
     }

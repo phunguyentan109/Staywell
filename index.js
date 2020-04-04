@@ -3,7 +3,6 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const mw = require("./middleware");
 const hdl = require("./handlers");
 const path = require('path');
 
@@ -21,13 +20,10 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname+'/cli/build/index.html'));
 });
 
-app.use((req, res, next) => {
-    let err = new Error("Route not found!");
-    err.status = 404;
-    next(err);
-});
+app.use(hdl.Error.invalidRoute);
 
-app.use(hdl.Error.handle);
+// All the error will be turned into JSON in here
+app.use(hdl.Error.wrapErr);
 
 app.listen(process.env.PORT, () =>
     console.log(`[ SERVER IS STARTED ON PORT ${process.env.PORT} ]`)

@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "",
     "engines": {
-        "node": "10.17.0",
+        "node": "10.19.0",
         "npm": "6.10.1"
     },
     "main": "index.js",
@@ -38,6 +38,12 @@
         "request": "^2.88.0"
     },
     "devDependencies": {
+        "eslint": "^6.8.0",
+        "eslint-plugin-flowtype": "^4.6.0",
+        "eslint-plugin-import": "^2.20.1",
+        "eslint-plugin-jsx-a11y": "^6.2.3",
+        "eslint-plugin-react": "^7.18.3",
+        "eslint-plugin-react-hooks": "^2.5.0",
         "expect.js": "^0.3.1",
         "mocha": "^6.2.2",
         "node-mocks-http": "^1.8.1",

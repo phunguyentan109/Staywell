@@ -41,5 +41,9 @@
         &.focus {
             background-color: #ffffff30;
         }
+
+        @include mobile {
+            width: 270px;
+        }
     }
 }

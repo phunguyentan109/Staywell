@@ -16,4 +16,10 @@
         padding-right: 5px;
         color: #17a2b8;
     }
+
+    @include mobile {
+        right: 0px;
+        text-align: center;
+        width: 100%;
+    }
 }

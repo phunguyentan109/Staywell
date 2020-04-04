@@ -29,16 +29,12 @@ const userSchema = mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    resetPwToken: String,
+    resetPwExpires: Date,
     room_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Room"
-    },
-    bill_id: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Bill"
-        }
-    ]
+    }
 }, {timestamps: true});
 
 userSchema.pre("save", async function(next){
