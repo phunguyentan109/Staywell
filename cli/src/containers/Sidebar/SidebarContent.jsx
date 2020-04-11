@@ -66,7 +66,7 @@ class SidebarContent extends Component {
                 >
                   <Menu.Item key='/app'>
                     <Link to='/app'><i className='icon icon-dasbhoard'/>
-                      <IntlMessages id='sidebar.dashboard'/>
+                      <span>Dashboard</span>
                     </Link>
                   </Menu.Item>
                 </MenuItemGroup>
@@ -78,17 +78,17 @@ class SidebarContent extends Component {
                 >
                   <Menu.Item key='/app/people'>
                     <Link to='/app/people'><i className='icon icon-auth-screen'/>
-                      <IntlMessages id='sidebar.people'/>
+                      <span>Manage People</span>
                     </Link>
                   </Menu.Item>
                   <Menu.Item key='/app/rooms'>
                     <Link to='/app/rooms'><i className='icon icon-widgets'/>
-                      <IntlMessages id='sidebar.room'/>
+                      <span>Manage Room</span>
                     </Link>
                   </Menu.Item>
                   <Menu.Item key='/app/price'>
                     <Link to='/app/price'><i className='icon icon-pricing-table'/>
-                      <IntlMessages id='sidebar.price'/>
+                      <span>Manage Price</span>
                     </Link>
                   </Menu.Item>
                 </MenuItemGroup>
