@@ -306,5 +306,8 @@
   "sidebar.map.weather": "Weather map",
   "sidebar.extensions.shuffle": "Shuffle",
   "sidebar.extensions.profile": "Profile",
-  "sidebar.social": "Social Apps"
+  "sidebar.social": "Social Apps",
+  "sidebar.people": "Manage People",
+  "sidebar.room": "Manage Room",
+  "sidebar.price": "Manage Price"
 }
