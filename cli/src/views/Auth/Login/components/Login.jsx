@@ -32,7 +32,7 @@ export default function Login({ message, sendAuthData, addMessage, device }) {
             }
             <h4>Please enter your account to continue.</h4>
             {
-                message || <div className='notify'>
+                message && <div className='notify'>
                     <span>{message}</span>
                 </div>
             }
