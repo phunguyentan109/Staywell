@@ -1,14 +1,14 @@
 module.exports = [
   {
     type: 'OWNER CONTROL',
-    code: 0
+    code: '000'
   },
   {
     type: 'PEOPLE CONTROL',
-    code: 1
+    code: '001'
   },
   {
     type: 'UNACTIVE CONTROL',
-    code: 2
+    code: '002'
   }
 ]
