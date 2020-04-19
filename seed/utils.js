@@ -1,11 +1,9 @@
-const db = require('../../models')
-const { connection } = require('mongoose')
+const db = require('../models')
 
-async function clear(model, collection) {
+async function clear(model, target) {
   try {
-    let data = await db[model].find().lean().exec()
-    let existData = data.length > 0
-    existData && await connection.db.dropCollection(collection)
+    console.log(`Removing old ${target}...`)
+    await db[model].deleteMany({})
   } catch(err) {
     console.log(err)
   }

@@ -1,6 +1,5 @@
 const db = require('../../models')
 const { OWNER, PEOPLE } = require('./data')
-const { clear } = require('../utils')
 
 async function createUserWithRole(_user, role) {
   let user = await db.User.create(_user)
@@ -9,8 +8,8 @@ async function createUserWithRole(_user, role) {
 
 async function createOwner() {
   try {
-    let role = await db.Role.findOne({ code: '000' }).lean().exec()
-    await db.UserRole.create(OWNER, role)
+    let role = await db.Role.findOne({ code: 0 }).lean().exec()
+    await createUserWithRole(OWNER, role)
   } catch(err) {
     console.log(err)
   }
@@ -18,7 +17,7 @@ async function createOwner() {
 
 async function createPeople() {
   try {
-    let role = await db.Role.findOne({ code: '001' }).lean().exec()
+    let role = await db.Role.findOne({ code: 1 }).lean().exec()
     for(let people of PEOPLE) {
       await createUserWithRole(people, role)
     }
@@ -28,16 +27,7 @@ async function createPeople() {
 }
 
 module.exports = async function() {
-  // Remove old data
-  await clear('UserRole', 'userroles')
-  await clear('User', 'users')
-
-  let users = await db.User.find()
-  let existUser = users.length > 0
-  existUser
-
-  console.log('Seeding owner with role...')
+  console.log('Seeding owner and user...')
   await createOwner()
-  console.log('Seeding people with role...')
   await createPeople()
 }
