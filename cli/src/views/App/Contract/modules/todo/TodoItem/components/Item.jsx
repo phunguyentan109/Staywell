@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Avatar, Badge, Checkbox } from 'antd'
 
-import labels from '../../../../components/Todo/data/labels'
-import users from '../../../../components/Todo/data/users'
+import { DEFAULT_LABELS, DEFAULT_USERS } from '../../../const'
 
 
-const ToDoItem = (({ todo, onTodoSelect, onTodoChecked, onMarkAsStart }) => {
+const Item = (({ todo, onTodoSelect, onTodoChecked, onMarkAsStart }) => {
+  const [users, setUsers] = useState(DEFAULT_USERS)
+  const [labels, setLabels] = useState(DEFAULT_LABELS)
+
   let user = null
   if (todo.user > 0)  user = users[todo.user - 1]
 
@@ -43,7 +45,7 @@ const ToDoItem = (({ todo, onTodoSelect, onTodoChecked, onMarkAsStart }) => {
           <div className='gx-manage-margin'>
             {labels.map((label, index) => {
               return (todo.labels).includes(label.id) &&
-                <Badge key={index} count={label.title} style={{ backgroundColor: label.color }}/>
+                                <Badge key={index} count={label.title} style={{ backgroundColor: label.color }}/>
             })}
           </div>
         </div>
@@ -58,4 +60,4 @@ const ToDoItem = (({ todo, onTodoSelect, onTodoChecked, onMarkAsStart }) => {
   )
 })
 
-export default ToDoItem
+export default Item
