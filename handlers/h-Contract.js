@@ -44,11 +44,11 @@ exports.create = async(req, res, next) => {
     crContract.save()
 
     // Format timeline
-    let start = moment(crContract.start.date).format('MMMM Do YYYY')
+    let begin = moment(crContract.start.date).format('MMMM Do YYYY')
     let end = moment(endDate).format('MMMM Do YYYY')
 
     return res.status(200).json({
-      timeline: `From ${start} to ${end}`,
+      begin, end,
       ...crContract.toJSON()
     })
   } catch (e) {
