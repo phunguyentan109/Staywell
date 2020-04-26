@@ -25,23 +25,32 @@ exports.getOne = async(req, res, next) => {
 exports.create = async(req, res, next) => {
   try {
     let { room_id } = req.params
-    let createdContract = await db.Contract.create(req.body)
-    createdContract.room_id = room_id
-    createdContract.save()
+    let crContract = await db.Contract.create({ ...req.body, room_id })
 
     // Save contract id to room
-    await pushId('Room', room_id, 'contract_id', createdContract._id)
+    await pushId('Room', room_id, 'contract_id', crContract._id)
 
     // Initial empty bills
-    for (let i = 0; i < createdContract.duration; i++) {
-      let futureMonth = moment(createdContract.start.date).add(i, 'M')
-      let cBill = await db.Bill.create({
+    let endDate
+    for (let i = 0; i < crContract.duration; i++) {
+      let futureMonth = moment(crContract.start.date).add(i, 'M')
+      let crBill = await db.Bill.create({
         deadline: moment(futureMonth).endOf('month'),
-        contract_id: createdContract._id
+        contract_id: crContract._id
       })
+      crContract.bill_id.push(crBill._id)
+      if (i === crContract.duration - 1) endDate = crBill.deadline
     }
+    crContract.save()
 
-    return res.status(200).json({ contract_id: createdContract._id })
+    // Format timeline
+    let start = moment(crContract.start.date).format('MMMM Do YYYY')
+    let end = moment(endDate).format('MMMM Do YYYY')
+
+    return res.status(200).json({
+      timeline: `From ${start} to ${end}`,
+      ...crContract.toJSON()
+    })
   } catch (e) {
     return next(e)
   }
