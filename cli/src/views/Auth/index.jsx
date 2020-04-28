@@ -10,49 +10,49 @@ import Reset from './Reset'
 import { Activate, Activated } from './Activate'
 
 function AuthRoutes({ location }) {
-    return (
-        <Switch>
-            <Route path='/activate/:user_id' component={Activated}/>
-            <Route path='/reset/:token' component={Reset}/>
-            <RouteControl
-                path='/activate'
-                redirectPath='/app'
-                component={Activate}
-                access={[
-                    'UNACTIVE_PERMISSION'
-                ]}
-            />
-            <RouteControl
-                path='/register'
-                redirectPath='/activate'
-                component={Register}
-                access={[
-                    'GUEST_PERMISSION'
-                ]}
-            />
-            <RouteControl
-                path='/forgot'
-                redirectPath='/'
-                component={Forgot}
-                access={[
-                    'GUEST_PERMISSION'
-                ]}
-            />
-            <RouteControl
-                path='/'
-                redirectPath='/activate'
-                component={Login}
-                access={[
-                    'GUEST_PERMISSION'
-                ]}
-            />
-            <Redirect from={location.pathname} to='/'/>
-        </Switch>
-    )
+  return (
+    <Switch>
+      <Route path='/activate/:user_id' component={Activated}/>
+      <Route path='/reset/:token' component={Reset}/>
+      <RouteControl
+        path='/activate'
+        redirectPath='/app'
+        component={Activate}
+        access={[
+          'UNACTIVE_PERMISSION'
+        ]}
+      />
+      <RouteControl
+        path='/register'
+        redirectPath='/activate'
+        component={Register}
+        access={[
+          'GUEST_PERMISSION'
+        ]}
+      />
+      <RouteControl
+        path='/forgot'
+        redirectPath='/'
+        component={Forgot}
+        access={[
+          'GUEST_PERMISSION'
+        ]}
+      />
+      <RouteControl
+        path='/'
+        redirectPath='/activate'
+        component={Login}
+        access={[
+          'GUEST_PERMISSION'
+        ]}
+      />
+      <Redirect from={location.pathname} to='/'/>
+    </Switch>
+  )
 }
 
 export default withRouter(AuthRoutes)
 
 AuthRoutes.propsTypes = {
-    location: PropTypes.object
+  location: PropTypes.object
 }

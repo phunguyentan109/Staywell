@@ -1,5 +1,12 @@
-import React from 'react'
+import { connect } from 'react-redux'
+import mapState from '../modules/func'
 
-export default function PeoplePermission({ children }) {
-  if()
+function PeoplePermission({ children, isPeople, noAccess }) {
+  return isPeople ? children : noAccess
 }
+
+PeoplePermission.defaultProps = {
+  noAccess: null
+}
+
+export default connect(mapState, null)(PeoplePermission)
