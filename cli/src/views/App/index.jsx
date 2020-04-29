@@ -1,7 +1,7 @@
 import React from 'react'
 import { Switch, Redirect, Route, withRouter } from 'react-router-dom'
 import RouteControl from 'containers/Route/RouteControl'
-import { PeoplePermission, OwnerPermission } from 'components/Permissions'
+import { OwnerPermission } from 'components/Permissions'
 
 // Views
 import Dashboard from './Dashboard'
@@ -16,28 +16,22 @@ function AppRoutes(props) {
   return (
     <div className='gx-main-content-wrapper'>
       <Switch>
-        <OwnerPermission noAccess={ <Redirect to={`${url}/`}/> }>
-          <Route path={`${url}/contracts`} component={Contract} />
-        </OwnerPermission>
-        <OwnerPermission noAccess={ <Redirect to={`${url}/`}/> }>
-          <Route path={`${url}/rooms`} component={Contract} />
-        </OwnerPermission>
-        {/*<RouteControl*/}
-        {/*  path={`${url}/contracts`}*/}
-        {/*  redirectPath={`${url}/`}*/}
-        {/*  component={Contract}*/}
-        {/*  access={[*/}
-        {/*    'OWNER_PERMISSION'*/}
-        {/*  ]}*/}
-        {/*/>*/}
-        {/*<RouteControl*/}
-        {/*  path={`${url}/rooms`}*/}
-        {/*  redirectPath={`${url}/`}*/}
-        {/*  component={Room}*/}
-        {/*  access={[*/}
-        {/*    'OWNER_PERMISSION'*/}
-        {/*  ]}*/}
-        {/*/>*/}
+        <RouteControl
+          path={`${url}/contracts`}
+          redirectPath={`${url}/`}
+          component={Contract}
+          access={[
+            'OWNER_PERMISSION'
+          ]}
+        />
+        <RouteControl
+          path={`${url}/rooms`}
+          redirectPath={`${url}/`}
+          component={Room}
+          access={[
+            'OWNER_PERMISSION'
+          ]}
+        />
         <RouteControl
           path={`${url}/people`}
           redirectPath={`${url}/`}
@@ -63,7 +57,7 @@ function AppRoutes(props) {
             'PEOPLE_PERMISSION'
           ]}
         />
-        <Route path={`${url}/`} component={Dashboard}/>
+        <Route exact path={`${url}/`} component={Dashboard}/>
         <Redirect from={props.location.pathname} to={`${url}/`}/>
       </Switch>
     </div>
