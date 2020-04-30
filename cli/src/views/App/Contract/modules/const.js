@@ -2,38 +2,38 @@ export const DEFAULT_FILTERS =  [
   {
     'id': 0,
     'handle': 'starred',
-    'title': 'Starred',
-    'icon': 'star'
+    'title': 'Room 1',
+    'icon': 'badge'
   },
   {
     'id': 1,
     'handle': 'important',
-    'title': 'Priority',
-    'icon': 'important'
+    'title': 'Room 2',
+    'icon': 'badge'
   },
   {
     'id': 2,
     'handle': 'dueDate',
-    'title': 'Sheduled',
-    'icon': 'schedule'
+    'title': 'Room 3',
+    'icon': 'badge'
   },
   {
     'id': 3,
     'handle': 'today',
-    'title': 'Today',
-    'icon': 'calendar'
+    'title': 'Room 4',
+    'icon': 'badge'
   },
   {
     'id': 4,
     'handle': 'completed',
-    'title': 'Done',
-    'icon': 'check-circle-o'
+    'title': 'Room 5',
+    'icon': 'home'
   },
   {
     'id': 5,
     'handle': 'deleted',
-    'title': 'Deleted',
-    'icon': 'trash'
+    'title': 'Room 6',
+    'icon': 'home'
   }
 ]
 
@@ -41,26 +41,26 @@ export const DEFAULT_LABELS = [
   {
     'id': 1,
     'handle': 'frontend',
-    'title': 'HTML',
+    'title': 'Extra',
     'color': 'teal'
   },
   {
     'id': 2,
     'handle': 'backend',
-    'title': 'CSS',
+    'title': 'Collect',
     'color': 'indigo'
   },
   {
     'id': 3,
     'handle': 'api',
-    'title': 'Laravel',
+    'title': 'Active',
     'color': 'green'
   },
   {
     'id': 4,
     'handle': 'issue',
-    'title': 'Node JS',
-    'color': 'info'
+    'title': 'Expired',
+    'color': 'danger'
   }
 ]
 

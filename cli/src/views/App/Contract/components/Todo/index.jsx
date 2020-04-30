@@ -11,6 +11,7 @@ import {
   DEFAULT_TODO_CONVERSATION
 } from '../../modules/const'
 
+import CreateContract from '../../modules/CreateContract'
 import TodoItem from '../../modules/todo/TodoItem'
 import AppModuleHeader from 'components/AppModuleHeader'
 import IntlMessages from 'util/IntlMessages'
@@ -430,18 +431,21 @@ export default function ToDo({}) {
     return <div className='gx-module-side'>
       <div className='gx-module-side-header'>
         <div className='gx-module-logo'>
-          <i className='icon icon-check-circle-o gx-mr-4'/>
-          <IntlMessages id='sidebar.todoApp'/>
+          <i className='icon icon-wysiwyg gx-mr-3'/>
+          <span>CONTRACTS</span>
         </div>
 
       </div>
       <div className='gx-module-side-content'>
         <CustomScrollbars className='gx-module-side-scroll'>
           <div className='gx-module-add-task'>
-            <Button variant='raised' type='primary' className='gx-btn-block'
-              onClick={() => {
-                setAddTodo(true)
-              }}> <IntlMessages id='todo.addTask'/> </Button>
+            {/*<Button variant='raised' type='primary' className='gx-btn-block'*/}
+            {/*  onClick={() => {*/}
+            {/*    setAddTodo(true)*/}
+            {/*  }}>*/}
+            {/*  <span>ADD CONTRACT</span>*/}
+            {/*</Button>*/}
+            <CreateContract/>
           </div>
           <ul className='gx-module-nav'>
 
@@ -456,13 +460,13 @@ export default function ToDo({}) {
             </li>
 
             <li className='gx-module-nav-label'>
-              <IntlMessages id='todo.filters'/>
+              <span>Room</span>
             </li>
 
             {getNavFilters()}
 
             <li className='gx-module-nav-label'>
-              <IntlMessages id='todo.labels'/>
+              <span>Tags</span>
             </li>
             {getNavLabels()}
           </ul>
