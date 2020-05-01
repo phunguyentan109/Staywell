@@ -1,22 +1,24 @@
 import React, { useCallback, useState, useEffect } from 'react'
 import { Col, Row, Card, Form, Input, Button, Spin, DatePicker } from 'antd'
 import PropTypes from 'prop-types'
+import moment from 'moment'
+
 import About from 'components/profile/About'
 import Contact from 'components/profile/Contact'
-import Auxiliary from 'util/Auxiliary'
 import ProfileHeader from 'components/profile/ProfileHeader'
+import { PermissionRender } from 'containers/Permissions'
+import Auxiliary from 'util/Auxiliary'
 import { apiUser } from 'constants/api'
-import moment from 'moment'
 import { DEFAULT_PROFILE, DEFAULT_PASSWORD } from '../modules/const'
 
 const FormItem = Form.Item
 
-export default function Profile({ notify, user, role, sendReloadUser }) {
+export default function Profile({ notify, user, sendReloadUser }) {
   const [password, setPassword] = useState(DEFAULT_PASSWORD)
   const [profile, setProfile] = useState(DEFAULT_PROFILE)
   const [loading, setLoading] = useState(true)
 
-  const load = useCallback(async() => {
+  const load = useCallback(async () => {
     setProfile(user)
     setLoading(false)
   }, [user])
@@ -28,7 +30,7 @@ export default function Profile({ notify, user, role, sendReloadUser }) {
   async function changePassword() {
     setLoading(true)
     let { change, confirm, current } = password
-    if(change === confirm && current && change && confirm) {
+    if (change === confirm && current && change && confirm) {
       try {
         await apiUser.changePassword(user._id, password)
         setPassword(DEFAULT_PASSWORD)
@@ -50,13 +52,6 @@ export default function Profile({ notify, user, role, sendReloadUser }) {
     }))
   }
 
-  function getRoleName() {
-    let roleName = ''
-    if(role.isOwner) roleName = 'Owner'
-    if(role.isPeople) roleName = 'People'
-    return `${roleName} at StayWell`
-  }
-
   function hdChange(e) {
     const { name, value } = e.target
     setProfile(prev => ({ ...prev, [name]: value }))
@@ -72,7 +67,7 @@ export default function Profile({ notify, user, role, sendReloadUser }) {
   async function hdUpdateProfile(profile) {
     setLoading(true)
     try {
-      if(profile.email && profile.job && profile.phone) {
+      if (profile.email && profile.job && profile.phone) {
         await apiUser.update(user._id, profile)
         sendReloadUser(user._id)
         setProfile(DEFAULT_PROFILE)
@@ -80,7 +75,7 @@ export default function Profile({ notify, user, role, sendReloadUser }) {
       } else {
         notify('error', 'Process is not completed!', 'Please fill in empty form.')
       }
-    } catch (err){
+    } catch (err) {
       notify('error', 'Process is not completed', 'Profile data is not updated successfully')
     }
     setLoading(false)
@@ -88,11 +83,7 @@ export default function Profile({ notify, user, role, sendReloadUser }) {
 
   return (
     <Auxiliary>
-      <ProfileHeader
-        username={user.username}
-        avatar={user.avatar.link}
-        role = {getRoleName()}
-      />
+      <ProfileHeader username={user.username} avatar={user.avatar.link}/>
       <div className='gx-profile-content'>
         <Row>
           <Col xl={16} lg={14} md={14} sm={24} xs={24}>
@@ -103,20 +94,21 @@ export default function Profile({ notify, user, role, sendReloadUser }) {
             <Card className='gx-card' title='Change your profile'>
               <Spin spinning={loading}>
                 <Form layout='horizontal'>
-                  <FormItem
-                    label='Your email'
-                    labelCol={{ xs: 24, sm: 6 }}
-                    wrapperCol={{ xs: 24, sm: 16 }}
-                  >
-                    <Input
-                      type='email'
-                      placeholder='Enter your email here...'
-                      name='email'
-                      value={profile.email}
-                      onChange={hdChange}
-                      disabled={role.isOwner}
-                    />
-                  </FormItem>
+                  <PermissionRender access={['PEOPLE_PM']}>
+                    <FormItem
+                      label='Your email'
+                      labelCol={{ xs: 24, sm: 6 }}
+                      wrapperCol={{ xs: 24, sm: 16 }}
+                    >
+                      <Input
+                        type='email'
+                        placeholder='Enter your email here...'
+                        name='email'
+                        value={profile.email}
+                        onChange={hdChange}
+                      />
+                    </FormItem>
+                  </PermissionRender>
                   <FormItem
                     label='Your job'
                     labelCol={{ xs: 24, sm: 6 }}

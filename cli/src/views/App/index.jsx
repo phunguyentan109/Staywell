@@ -1,6 +1,6 @@
 import React from 'react'
 import { Switch, Redirect, Route, withRouter } from 'react-router-dom'
-import RouteControl from 'containers/Route/RouteControl'
+import { PermissionRouter } from 'containers/Permissions'
 
 // Views
 import Dashboard from './Dashboard'
@@ -15,49 +15,33 @@ function AppRoutes(props) {
   return (
     <div className='gx-main-content-wrapper'>
       <Switch>
-        <RouteControl
+        <PermissionRouter
           path={`${url}/contracts`}
-          redirectPath={`${url}/`}
           component={Contract}
-          access={[
-            'OWNER_PERMISSION'
-          ]}
+          access={['OWNER_PM']}
         />
-        <RouteControl
+        <PermissionRouter
           path={`${url}/rooms`}
-          redirectPath={`${url}/`}
           component={Room}
-          access={[
-            'OWNER_PERMISSION'
-          ]}
+          access={['OWNER_PM']}
         />
-        <RouteControl
+        <PermissionRouter
           path={`${url}/people`}
-          redirectPath={`${url}/`}
           component={People}
-          access={[
-            'OWNER_PERMISSION'
-          ]}
+          access={['OWNER_PM']}
         />
-        <RouteControl
+        <PermissionRouter
           path={`${url}/price`}
-          redirectPath={`${url}/`}
           component={Price}
-          access={[
-            'OWNER_PERMISSION'
-          ]}
+          access={['OWNER_PM']}
         />
-        <RouteControl
+        <PermissionRouter
           path={`${url}/profile`}
-          redirectPath={`${url}/`}
           component={Profile}
-          access={[
-            'OWNER_PERMISSION',
-            'PEOPLE_PERMISSION'
-          ]}
+          access={['OWNER_PM', 'PEOPLE_PM']}
         />
-        <Route path={`${url}/`} component={Dashboard}/>
-        <Redirect from={props.location.pathname} to={`${url}/`}/>
+        <Route path={`${url}`} component={Dashboard}/>
+        <Redirect from={props.location.pathname} to={`${url}`}/>
       </Switch>
     </div>
   )
