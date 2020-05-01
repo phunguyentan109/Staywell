@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Button, Checkbox, Drawer, Dropdown, Menu, message } from 'antd'
+import { Checkbox, Drawer, Dropdown, Menu, message } from 'antd'
 
 import CustomScrollbars from 'util/CustomScrollbars'
 
@@ -202,7 +202,7 @@ export default function ToDo({}) {
     setAlertMessage('Label Deleted Successfully')
     setShowMessage(true)
     setAllToDos(toDos)
-    selectedToDos(selectedToDos)
+    setSelectedToDos(selectedToDos)
     setCurrentTodo(null)
     setToDos(toDos.filter((todo) => !todo.deleted))
   }
@@ -460,7 +460,7 @@ export default function ToDo({}) {
             </li>
 
             <li className='gx-module-nav-label'>
-              <span>Room</span>
+              <span>Rooms</span>
             </li>
 
             {getNavFilters()}
@@ -480,7 +480,10 @@ export default function ToDo({}) {
       setToDos(allToDos.filter((todo) => !todo.deleted))
     } else {
       const searchToDos = allToDos.filter((todo) =>
-        !todo.deleted && todo.title.toLowerCase().indexOf(searchText.toLowerCase()) > -1)
+        !todo.deleted
+          && todo.to.toLowerCase().indexOf(searchText.toLowerCase()) > -1
+          || todo.startDate.toLowerCase().indexOf(searchText.toLowerCase()) > -1
+      )
       setToDos(searchToDos)
     }
   }
@@ -546,6 +549,10 @@ export default function ToDo({}) {
     funcSearchTodo(evt.target.value)
   }
 
+  function onDeleteSelected(selectedToDos) {
+    onDeleteToDo(selectedToDos)
+  }
+
   return(
     <div className='gx-main-content'>
       <div className='gx-app-module'>
@@ -596,10 +603,14 @@ export default function ToDo({}) {
                   </Auxiliary> : null}
 
                 {( selectedToDos > 0) &&
-
-                    <Dropdown overlay={labelMenu()} placement='bottomRight' trigger={['click']}>
-                      <i className='gx-icon-btn icon icon-tag'/>
-                    </Dropdown>
+                    <div className='gx-flex-row gx-align-items-center'>
+                      <Dropdown overlay={labelMenu()} placement='bottomRight' trigger={['click']}>
+                        <i className='gx-icon-btn icon icon-tag'/>
+                      </Dropdown>
+                      <span onClick={onDeleteSelected.bind(this, selectedToDos)}>
+                        <i className='icon icon-trash gx-icon-btn'/>
+                      </span>
+                    </div>
                 }
               </div>
               :

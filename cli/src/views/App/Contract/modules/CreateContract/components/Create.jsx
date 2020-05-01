@@ -1,7 +1,18 @@
 import React, { useState } from 'react'
-import { Button, Menu, Dropdown, Modal, Input, DatePicker } from 'antd'
-// import { DownOutlined } from '@ant-design/icons'
+import { Button, Form, Modal, Input, DatePicker } from 'antd'
 import moment from 'moment'
+
+const FormItem = Form.Item
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 8 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 16 },
+  },
+}
 
 function CreateModal() {
   const [visible, setVisible] = useState(false)
@@ -16,7 +27,7 @@ function CreateModal() {
     setVisible(!visible)
   }
 
-  function handleOk() {
+  function handleSubmit() {
     setLoading(true)
 
     setTimeout(() => {
@@ -34,14 +45,6 @@ function CreateModal() {
     setContract({ ...contract, date: value })
   }
 
-  function range(start, end) {
-    const result = []
-    for (let i = start; i < end; i++) {
-      result.push(i)
-    }
-    return result
-  }
-
   function disabledDate(current) {
     let startMonth = moment().startOf('month')
     let afterDayTen = moment(current).startOf('month').add(10, 'day')
@@ -49,80 +52,75 @@ function CreateModal() {
     return current < startMonth || current > afterDayTen
   }
 
-  function disabledDateTime() {
-    return {
-      disabledHours: () => range(0, 24).splice(0, 24),
-      disabledMinutes: () => range(0, 60),
-      disabledSeconds: () => range(0, 60),
-    }
+  function onFinishFailed(errorInfo) {
+    console.log('Failed:', errorInfo)
   }
-
-  function handleMenuClick(e) {
-    console.log('click', e)
-  }
-
-  const menu = (
-    <Menu onClick={handleMenuClick}>
-      <Menu.Item key='1'>1st item</Menu.Item>
-      <Menu.Item key='2'>2nd item</Menu.Item>
-      <Menu.Item key='3'>3rd item</Menu.Item>
-    </Menu>
-  )
 
   return (
     <div>
-      <Button type='primary' className='gx-btn-block' onClick={handleModal}>
+      <Button type='primary' className='gx-btn-lg' onClick={handleModal}>
         <span>ADD CONTRACT</span>
       </Button>
       <Modal
         title='Create new contract'
         visible={visible}
         confirmLoading={loading}
-        onOk={handleOk}
+        onOk={handleSubmit}
         onCancel={handleModal}
         footer={[
           <Button key='back' onClick={handleModal}>
             Cancel
           </Button>,
-          <Button key='submit' type='primary' loading={loading} onClick={handleOk}>
+          <Button key='submit' type='primary' loading={loading} onClick={handleSubmit}>
             Submit
           </Button>,
         ]}
       >
-        <div className='gx-form-group'>
-          <h3>Starting electric number</h3>
-          <Input
-            name='electric'
-            placeholder='Please enter a number'
-            onChange={hdChange}
-            type='number'
-            value={contract.electric}
-          />
-        </div>
 
-        <div className='gx-form-group'>
-          <h3>Start date</h3>
-          <DatePicker
-            name='date'
-            className='gx-btn-block'
-            format='YYYY-MM-DD HH:mm:ss'
-            disabledDate={disabledDate}
-            disabledTime={disabledDateTime}
-            showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
-            onChange={hdChangeDate}
-            value={contract.date}
-          />
-        </div>
+        <Form onSubmit={handleSubmit} onFinishFailed={onFinishFailed}>
+          <FormItem
+            {...formItemLayout}
+            label='Starting electric number'
+            rules={[{ required: true, message: 'Please input electric number!' }]}
+          >
+            <Input
+              name='electric'
+              placeholder='Please enter a number'
+              onChange={hdChange}
+              type='number'
+              value={contract.electric}
+            />
+          </FormItem>
 
-        <div className='gx-form-group'>
-          <h3>Duration(months)</h3>
-          <Dropdown overlay={menu}>
-            <Button className='gx-btn-block'>
-            Actions
-              {/*<DownOutlined />*/}
-            </Button>
-          </Dropdown>
-        </div>
+          <FormItem
+            {...formItemLayout}
+            label='Start date'
+            rules={[{ required: true, message: 'Please input start date!' }]}
+          >
+            <DatePicker
+              name='date'
+              className='gx-btn-block'
+              format='YYYY-MM-DD'
+              disabledDate={disabledDate}
+              value={contract.date}
+              onChange={hdChangeDate}
+            />
+          </FormItem>
+
+          <FormItem
+            {...formItemLayout}
+            label='Duration (months)'
+            rules={[{ required: true, message: 'Please input number duration!' }]}
+          >
+            <Input
+              name='month'
+              placeholder='Please enter a number duration'
+              onChange={hdChange}
+              type='number'
+              value={contract.month}
+            />
+          </FormItem>
+        </Form>
       </Modal>
     </div>
   )
