@@ -20,4 +20,3 @@ export const breadNames = {
   '/app/people/contract': {
     name: 'Manage Contract',
   },
-}
