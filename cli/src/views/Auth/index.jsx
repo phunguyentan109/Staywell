@@ -1,6 +1,6 @@
 import React from 'react'
 import { Switch, Route, withRouter, Redirect } from 'react-router-dom'
-import RouteControl from 'containers/Route/RouteControl'
+import { PermissionRouter } from 'containers/Permissions'
 import PropTypes from 'prop-types'
 
 import Login from './Login'
@@ -14,37 +14,27 @@ function AuthRoutes({ location }) {
     <Switch>
       <Route path='/activate/:user_id' component={Activated}/>
       <Route path='/reset/:token' component={Reset}/>
-      <RouteControl
+      <PermissionRouter
         path='/activate'
-        redirectPath='/app'
         component={Activate}
-        access={[
-          'UNACTIVE_PERMISSION'
-        ]}
+        access={['INACTIVE_PM']}
       />
-      <RouteControl
+      <PermissionRouter
         path='/register'
-        redirectPath='/activate'
+        redirect='/activate'
         component={Register}
-        access={[
-          'GUEST_PERMISSION'
-        ]}
+        access={['GUEST_PM']}
       />
-      <RouteControl
+      <PermissionRouter
         path='/forgot'
-        redirectPath='/'
         component={Forgot}
-        access={[
-          'GUEST_PERMISSION'
-        ]}
+        access={['GUEST_PM']}
       />
-      <RouteControl
+      <PermissionRouter
         path='/'
-        redirectPath='/activate'
+        redirect='/activate'
         component={Login}
-        access={[
-          'GUEST_PERMISSION'
-        ]}
+        access={['GUEST_PM']}
       />
       <Redirect from={location.pathname} to='/'/>
     </Switch>

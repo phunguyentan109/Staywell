@@ -1,8 +1,8 @@
 import React from 'react'
-import { Switch, Route } from 'react-router-dom'
-import RouteControl from 'containers/Route/RouteControl'
 import { connect } from 'react-redux'
+import { Switch, Route } from 'react-router-dom'
 
+import { PermissionRouter } from 'containers/Permissions'
 import AppLayout from 'containers/Layout/AppLayout'
 import AuthLayout from 'containers/Layout/AuthLayout'
 import Accessing from './Accessing'
@@ -19,26 +19,25 @@ function RootRoutes({ user }) {
   } else {
     return (
       <Switch>
-        <RouteControl
+        <PermissionRouter
           path='/app'
-          redirectPath='/'
+          redirect='/'
           component={AppLayout}
-          access={[
-            'OWNER_PERMISSION',
-            'PEOPLE_PERMISSION'
-          ]}
+          access={['OWNER_PM', 'PEOPLE_PM']}
         />
-        <Route path='/' component={AuthLayout}/>
+        <PermissionRouter
+          path='/'
+          redirect='/app'
+          component={AuthLayout}
+          access={['GUEST_PM', 'INACTIVE_PM']}
+        />
       </Switch>
     )
   }
-
 }
 
 function mapState({ user }) {
-  return {
-    user: user.data
-  }
+  return { user: user.data }
 }
 
 export default connect(mapState, null)(RootRoutes)
