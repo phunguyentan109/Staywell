@@ -4,14 +4,14 @@ import PropTypes from 'prop-types'
 
 import { apiPrice } from 'constants/api'
 import PopConfirm from 'components/App/Pop/PopConfirm'
-import { DEFAULT_PRICE } from '../modules/const'
-import PriceForm from '../modules/PriceForm'
+import { DEFAULT_PRICE, PRICE_COLS, PRICE_INPUTS } from '../modules/const'
+
+const FormItem = Form.Item
 
 export default function Price({ notify, setLoading }) {
   const [listPrice, setListPrice] = useState([])
   const [price, setPrice] = useState(DEFAULT_PRICE)
-  const form = useRef()
-  // const [form, toggleForm] = useState(false)
+  const [visible, setVisible] = useState(false)
 
   const load = useCallback(async() => {
     try {
@@ -24,11 +24,6 @@ export default function Price({ notify, setLoading }) {
   }, [notify, setLoading])
 
   useEffect(() => { load() }, [load])
-
-  // function hdChange(e) {
-  //   const { name, value } = e.target
-  //   setPrice(prev => ({ ...prev, [name]: value }))
-  // }
 
   async function hdSubmit() {
     setLoading(true)
@@ -48,11 +43,18 @@ export default function Price({ notify, setLoading }) {
         setListPrice(updatePriceList)
         notify('success')
       }
-      hdCancel()
+      // hdCancel()
     } catch (e) {
       notify('error')
     }
     setLoading(false)
+  }
+
+  function hdOk() {}
+
+  function hdChange(e) {
+    let { value, name } = e.target
+    setPrice(prev => ({ ...prev, [name]: value }))
   }
 
   async function hdRemove(price_id) {
@@ -68,11 +70,6 @@ export default function Price({ notify, setLoading }) {
     setLoading(false)
   }
 
-  function hdCancel() {
-    setPrice(DEFAULT_PRICE)
-    // toggleForm(false)
-  }
-
   function hdEdit(price) {
     setPrice(price)
     // toggleForm(true)
@@ -80,46 +77,17 @@ export default function Price({ notify, setLoading }) {
 
   return (
     <Fragment>
-      {/*{*/}
-      {/*  form && <Card className='gx-card' title={!price._id ? 'Add New Price' : 'Edit Price Information'}>*/}
-      {/*    <Spin spinning={loading}>*/}
-
-      {/*    </Spin>*/}
-      {/*  </Card>*/}
-      {/*}*/}
-      <PriceForm ref={form} />
       <Card title='List of available price'>
         <Spin spinning={loading}>
-          <Button type='primary' onClick={() => form.current.toggleVisible()}>Add new price</Button>
+          <Button type='primary' onClick={() => setVisible(prev => !prev)}>
+            Add new price
+          </Button>
           <Table
             className='gx-table-responsive'
             dataSource={listPrice}
             rowKey='_id'
             columns={[
-              {
-                title: 'Price type',
-                dataIndex: 'type',
-              },
-              {
-                title: 'Electric',
-                dataIndex: 'electric'
-              },
-              {
-                title: 'Wifi',
-                dataIndex: 'wifi',
-              },
-              {
-                title: 'Water',
-                dataIndex: 'water'
-              },
-              {
-                title: 'House',
-                dataIndex: 'house'
-              },
-              {
-                title: 'Extra',
-                dataIndex: 'extra'
-              },
+              ...PRICE_COLS,
               {
                 title: 'Action',
                 key: 'action',
@@ -142,6 +110,33 @@ export default function Price({ notify, setLoading }) {
           />
         </Spin>
       </Card>
+      <Modal
+        title='Create New Price'
+        visible={visible}
+        onOk={hdOk}
+        onCancel={hdOk}
+      >
+        <Form layout='horizontal'>
+          {
+            PRICE_INPUTS.map((input, i) => (
+              <FormItem
+                key={i}
+                label={input.label}
+                labelCol={{ xs: 24, sm: 6 }}
+                wrapperCol={{ xs: 24, sm: 16 }}
+              >
+                <Input
+                  type={input.type || 'number'}
+                  placeholder={`Please enter the ${input.name}`}
+                  name={input.name}
+                  value={price[input.name]}
+                  onChange={hdChange}
+                />
+              </FormItem>
+            ))
+          }
+        </Form>
+      </Modal>
     </Fragment>
   )
 }
