@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, Fragment } from 'react'
 import { Card, Table, Divider, Form, Input, Button } from 'antd'
 import PropTypes from 'prop-types'
 
 import { apiPrice } from 'constants/api'
 import PopConfirm from 'components/App/Pop/PopConfirm'
 import { DEFAULT_PRICE } from '../modules/const'
-
-const FormItem = Form.Item
+import PriceForm from '../modules/PriceForm'
 
 export default function Price({ notify, setLoading }) {
   const [listPrice, setListPrice] = useState([])
   const [price, setPrice] = useState(DEFAULT_PRICE)
-  const [form, toggleForm] = useState(false)
+  const form = useRef()
+  // const [form, toggleForm] = useState(false)
 
   const load = useCallback(async() => {
     try {
@@ -25,10 +25,10 @@ export default function Price({ notify, setLoading }) {
 
   useEffect(() => { load() }, [load])
 
-  function hdChange(e) {
-    const { name, value } = e.target
-    setPrice(prev => ({ ...prev, [name]: value }))
-  }
+  // function hdChange(e) {
+  //   const { name, value } = e.target
+  //   setPrice(prev => ({ ...prev, [name]: value }))
+  // }
 
   async function hdSubmit() {
     setLoading(true)
@@ -70,161 +70,79 @@ export default function Price({ notify, setLoading }) {
 
   function hdCancel() {
     setPrice(DEFAULT_PRICE)
-    toggleForm(false)
+    // toggleForm(false)
   }
 
   function hdEdit(price) {
     setPrice(price)
-    toggleForm(true)
+    // toggleForm(true)
   }
 
   return (
-    <div>
-      {
-        form && <Card className='gx-card' title={!price._id ? 'Add New Price' : 'Edit Price Information'}>
-          <Form layout='horizontal'>
-            <FormItem
-              label='Type'
-              labelCol={{ xs: 24, sm: 6 }}
-              wrapperCol={{ xs: 24, sm: 10 }}
-            >
-              <Input
-                placeholder="Enter the price's type here..."
-                name='type'
-                value={price.type}
-                onChange={hdChange}
-              />
-            </FormItem>
-            <FormItem
-              label='Electric'
-              labelCol={{ xs: 24, sm: 6 }}
-              wrapperCol={{ xs: 24, sm: 10 }}
-            >
-              <Input
-                type='Number'
-                placeholder='Enter the electric price here...'
-                name='electric'
-                value={price.electric}
-                onChange={hdChange}
-              />
-            </FormItem>
-            <FormItem
-              label='Wifi'
-              labelCol={{ xs: 24, sm: 6 }}
-              wrapperCol={{ xs: 24, sm: 10 }}
-            >
-              <Input
-                type='Number'
-                placeholder='Enter the wifi price here...'
-                name='wifi'
-                value={price.wifi}
-                onChange={hdChange}
-              />
-            </FormItem>
-            <FormItem
-              label='Water'
-              labelCol={{ xs: 24, sm: 6 }}
-              wrapperCol={{ xs: 24, sm: 10 }}
-            >
-              <Input
-                type='Number'
-                placeholder='Enter the water price here...'
-                name='water'
-                value={price.water}
-                onChange={hdChange}
-              />
-            </FormItem>
-            <FormItem
-              label='House'
-              labelCol={{ xs: 24, sm: 6 }}
-              wrapperCol={{ xs: 24, sm: 10 }}
-            >
-              <Input
-                type='Number'
-                placeholder='Enter the house price here...'
-                name='house'
-                value={price.house}
-                onChange={hdChange}
-              />
-            </FormItem>
-            <FormItem
-              label='Extra'
-              labelCol={{ xs: 24, sm: 6 }}
-              wrapperCol={{ xs: 24, sm: 10 }}
-            >
-              <Input
-                type='Number'
-                placeholder='Enter the extra price here...'
-                name='extra'
-                value={price.extra}
-                onChange={hdChange}
-              />
-            </FormItem>
-            <FormItem
-              wrapperCol={{
-                xs: 24,
-                sm: { span: 14, offset: 6 }
-              }}
-            >
-              <Button type='primary' onClick={hdSubmit}>{price._id ? 'Save changes' : 'Submit'}</Button>
-              <Button onClick={hdCancel}>Cancel</Button>
-            </FormItem>
-          </Form>
-        </Card>
-      }
+    <Fragment>
+      {/*{*/}
+      {/*  form && <Card className='gx-card' title={!price._id ? 'Add New Price' : 'Edit Price Information'}>*/}
+      {/*    <Spin spinning={loading}>*/}
+
+      {/*    </Spin>*/}
+      {/*  </Card>*/}
+      {/*}*/}
+      <PriceForm ref={form} />
       <Card title='List of available price'>
-        {form || <Button type='primary' onClick={() => toggleForm(true)}>Add new price</Button>}
-        <Table
-          className='gx-table-responsive'
-          dataSource={listPrice}
-          rowKey='_id'
-          columns={[
-            {
-              title: 'Price type',
-              dataIndex: 'type',
-            },
-            {
-              title: 'Electric',
-              dataIndex: 'electric'
-            },
-            {
-              title: 'Wifi',
-              dataIndex: 'wifi',
-            },
-            {
-              title: 'Water',
-              dataIndex: 'water'
-            },
-            {
-              title: 'House',
-              dataIndex: 'house'
-            },
-            {
-              title: 'Extra',
-              dataIndex: 'extra'
-            },
-            {
-              title: 'Action',
-              key: 'action',
-              render: (text, record) => (
-                <span>
-                  <PopConfirm
-                    title='Are you sure to delete this genre?'
-                    task={hdRemove.bind(this, record._id)}
-                    okText='Sure, remove it'
-                    cancelText='Not now'
-                  >
-                    <span className='gx-link'>Delete</span>
-                  </PopConfirm>
-                  <Divider type='vertical'/>
-                  <span className='gx-link' onClick={hdEdit.bind(this, record)}>Edit</span>
-                </span>
-              )
-            }
-          ]}
-        />
+        <Spin spinning={loading}>
+          <Button type='primary' onClick={() => form.current.toggleVisible()}>Add new price</Button>
+          <Table
+            className='gx-table-responsive'
+            dataSource={listPrice}
+            rowKey='_id'
+            columns={[
+              {
+                title: 'Price type',
+                dataIndex: 'type',
+              },
+              {
+                title: 'Electric',
+                dataIndex: 'electric'
+              },
+              {
+                title: 'Wifi',
+                dataIndex: 'wifi',
+              },
+              {
+                title: 'Water',
+                dataIndex: 'water'
+              },
+              {
+                title: 'House',
+                dataIndex: 'house'
+              },
+              {
+                title: 'Extra',
+                dataIndex: 'extra'
+              },
+              {
+                title: 'Action',
+                key: 'action',
+                render: (text, record) => (
+                  <span>
+                    <PopConfirm
+                      title='Are you sure to delete this genre?'
+                      task={hdRemove.bind(this, record._id)}
+                      okText='Sure, remove it'
+                      cancelText='Not now'
+                    >
+                      <span className='gx-link'>Delete</span>
+                    </PopConfirm>
+                    <Divider type='vertical'/>
+                    <span className='gx-link' onClick={hdEdit.bind(this, record)}>Edit</span>
+                  </span>
+                )
+              }
+            ]}
+          />
+        </Spin>
       </Card>
-    </div>
+    </Fragment>
   )
 }
 
