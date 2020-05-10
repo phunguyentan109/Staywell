@@ -93,7 +93,3 @@ RoomForm.propsTypes = {
   editRoom: PropTypes.object,
   price: PropTypes.array
 }
-
-RoomForm.defaultProps = {
-  loading: true
-}
