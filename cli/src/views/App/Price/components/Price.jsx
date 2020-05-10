@@ -36,7 +36,7 @@ export default function Price({ notify, setLoading }) {
       if(!price._id) {
         let createdPrice = await apiPrice.create(price)
         setListPrice(prev => [...prev, createdPrice])
-        notify('success', 'Process is completed', 'Price data is created successfully.')
+        notify('success')
       } else {
         let updatePrice = await apiPrice.update(price._id, price)
         let updatePriceList = listPrice.map(v => {
@@ -46,11 +46,11 @@ export default function Price({ notify, setLoading }) {
           return v
         })
         setListPrice(updatePriceList)
-        notify('success', 'Process is completed', 'Price data is updated successfully.')
+        notify('success')
       }
       hdCancel()
     } catch (e) {
-      notify('error', 'Process is not completed', 'Price data is not submitted successfully')
+      notify('error')
     }
     setLoading(false)
   }
@@ -61,9 +61,9 @@ export default function Price({ notify, setLoading }) {
       await apiPrice.remove(price_id)
       let updatePriceList = listPrice.filter(v => v._id !== price_id)
       setListPrice(updatePriceList)
-      notify('success', 'Process is not completed', 'Price data is removed successfully')
+      notify('success', 'Price data is removed successfully')
     } catch (err){
-      notify('error', 'Process is not completed', 'Price data is not remove')
+      notify('error', 'Price data is not remove')
     }
     setLoading(false)
   }

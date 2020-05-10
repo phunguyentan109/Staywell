@@ -24,9 +24,9 @@ export default function People({ notify, setLoading }) {
     try {
       await apiUser.remove(user_id)
       setPeople(prev => prev.filter(p => p.user_id._id !== user_id))
-      return notify('success', 'Process is completed successfully!', 'People data is removed successfully.')
+      return notify('success', 'People data is removed successfully.')
     } catch (e) {
-      return notify('error', 'Process is not completed', 'People data cannot be removed properly')
+      return notify('error', 'People data cannot be removed properly')
     }
   }
 
