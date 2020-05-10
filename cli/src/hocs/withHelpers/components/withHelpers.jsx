@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { MOBILE_SIZE, DESKTOP_SIZE } from 'constants/variables'
 import { notification, Spin } from 'antd'
 
-const DEFAULT_DESC = 'There may be some errors occuring in the process. Please wait and try again later.'
+import { MOBILE_SIZE, DESKTOP_SIZE } from 'constants/variables'
+import { CASES } from '../modules/const'
 
 export default function withHelpers(WrappedComponent) {
   function Helpers({ ...props }) {
@@ -26,8 +26,8 @@ export default function withHelpers(WrappedComponent) {
       setDevice({ isMobile, isTablet, isDesktop })
     }
 
-    const openNotificationWithIcon = (type, message, description=DEFAULT_DESC) => {
-      notification[type]({ message, description })
+    const openNotificationWithIcon = (type, description) => {
+      notification[type]({ message: CASES[type].msg, description })
     }
 
     return (

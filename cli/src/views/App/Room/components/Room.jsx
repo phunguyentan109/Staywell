@@ -36,7 +36,7 @@ export default function Room({ notify, setLoading }) {
       await apiRoom.remove(room_id)
       let newRooms = rooms.filter(r => r._id !== room_id)
       setRooms(newRooms)
-      notify('success', 'The process is completed', 'The room information is removed successfully!')
+      notify('success', 'The room information is removed successfully!')
     } catch (e) {
       notify('error', 'The process is not completed')
     }
@@ -70,7 +70,7 @@ export default function Room({ notify, setLoading }) {
       let newRooms = rooms.map(r => r._id === record._id ? record : r)
       setRooms(newRooms)
     }
-    notify('success', 'Process is completed!', message)
+    notify('success', message)
     hdCancel()
     setLoading(false)
   }

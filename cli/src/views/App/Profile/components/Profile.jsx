@@ -34,12 +34,12 @@ export default function Profile({ notify, user, sendReloadUser }) {
       try {
         await apiUser.changePassword(user._id, password)
         setPassword(DEFAULT_PASSWORD)
-        notify('success', 'Process is completed!', 'Your password has been changed successfully.')
+        notify('success', 'Your password has been changed successfully.')
       } catch (e) {
         notify('error', 'The process is not completed', e)
       }
     } else {
-      notify('error', 'The process is not completed', 'Please ensure that all your entered data are valid.')
+      notify('error', 'Please ensure that all your entered data are valid.')
     }
     return setLoading(false)
   }
@@ -71,12 +71,12 @@ export default function Profile({ notify, user, sendReloadUser }) {
         await apiUser.update(user._id, profile)
         sendReloadUser(user._id)
         setProfile(DEFAULT_PROFILE)
-        notify('success', 'Process is completed!', 'Your profile has been updated successfully.')
+        notify('success', 'Your profile has been updated successfully.')
       } else {
-        notify('error', 'Process is not completed!', 'Please fill in empty form.')
+        notify('error', 'Please fill in empty form.')
       }
     } catch (err) {
-      notify('error', 'Process is not completed', 'Profile data is not updated successfully')
+      notify('error', 'Profile data is not updated successfully')
     }
     setLoading(false)
   }
