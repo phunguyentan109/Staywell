@@ -50,6 +50,14 @@ export default function Price({ notify, setLoading }) {
     setLoading(false)
   }
 
+  // function createPrice() {
+  //   try {
+
+  //   } catcb(e) {
+  //     return notify('error', )
+  //   }
+  // }
+
   function hdOk() {}
 
   function hdChange(e) {
@@ -75,13 +83,15 @@ export default function Price({ notify, setLoading }) {
     // toggleForm(true)
   }
 
+  function toggleModal() {
+    setVisible(prev => !prev)
+  }
+
   return (
     <Fragment>
       <Card title='List of available price'>
         <Spin spinning={loading}>
-          <Button type='primary' onClick={() => setVisible(prev => !prev)}>
-            Add new price
-          </Button>
+          <Button type='primary' onClick={toggleModal}>Add new price</Button>
           <Table
             className='gx-table-responsive'
             dataSource={listPrice}
@@ -98,7 +108,7 @@ export default function Price({ notify, setLoading }) {
                       task={hdRemove.bind(this, record._id)}
                       okText='Sure, remove it'
                       cancelText='Not now'
-                    >
+                    > 
                       <span className='gx-link'>Delete</span>
                     </PopConfirm>
                     <Divider type='vertical'/>
@@ -114,7 +124,7 @@ export default function Price({ notify, setLoading }) {
         title='Create New Price'
         visible={visible}
         onOk={hdOk}
-        onCancel={hdOk}
+        onCancel={toggleModal}
       >
         <Form layout='horizontal'>
           {
