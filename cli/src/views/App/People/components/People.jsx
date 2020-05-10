@@ -1,12 +1,12 @@
-import React, { useEffect, useCallback, useState } from 'react'
+import React, { useEffect, useCallback, useState, Fragment } from 'react'
+import PropTypes from 'prop-types'
+
 import { apiUser } from 'constants/api'
 import { PEOPLE_PM, INACTIVE_PM } from 'containers/Permissions/modules/const'
-import PropTypes from 'prop-types'
 import PeopleTable from '../modules/PeopleTable'
 
-export default function People({ notify }) {
+export default function People({ notify, setLoading }) {
   const [people, setPeople] = useState([])
-  const [loading, setLoading] = useState(true)
 
   const load = useCallback(async() => {
     try {
@@ -16,11 +16,9 @@ export default function People({ notify }) {
     } catch (e) {
       return notify('error', 'Data is not loaded')
     }
-  }, [notify])
+  }, [notify, setLoading])
 
-  useEffect(() => {
-    load()
-  }, [load])
+  useEffect(() => { load() }, [load])
 
   async function hdRemove(user_id) {
     try {
@@ -32,31 +30,25 @@ export default function People({ notify }) {
     }
   }
 
-  function getUnActive() {
-    return people.filter(p => p.role_id.code === INACTIVE_PM)
-  }
-
-  function getActive() {
-    return people.filter(p => p.role_id.code === PEOPLE_PM)
+  function getActiveType(type) {
+    return people.filter(p => p.role_id.code === type)
   }
 
   return (
-    <div>
+    <Fragment>
       {
-        getUnActive().length > 0 && <PeopleTable
-          title='List of UnActive People'
-          dataSource={getUnActive()}
-          loading={loading}
+        getActiveType(INACTIVE_PM).length > 0 && <PeopleTable
+          title='List of Inactive People'
+          dataSource={getActiveType(INACTIVE_PM)}
           hdRemove={hdRemove}
         />
       }
       <PeopleTable
         title='List of People'
-        dataSource={getActive()}
-        loading={loading}
+        dataSource={getActiveType(PEOPLE_PM)}
         hdRemove={hdRemove}
       />
-    </div>
+    </Fragment>
   )
 }
 

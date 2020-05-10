@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Row, Col, Card, Spin, Table, Button, Divider } from 'antd'
+import { Row, Col, Card, Table, Button, Divider } from 'antd'
 import PropTypes from 'prop-types'
+
 import PopConfirm from 'components/App/Pop/PopConfirm'
 import { apiRoom, apiPrice } from 'constants/api'
 import RoomForm from '../modules/Form'
@@ -8,7 +9,7 @@ import RoomAssign from '../modules/Assign'
 
 import { DEFAULT_ROOM } from '../modules/const'
 
-export default function Room({ notify, setLoading, loading }) {
+export default function Room({ notify, setLoading }) {
   const [rooms, setRooms] = useState([])
   const [room, setRoom] = useState(DEFAULT_ROOM)
   const [price, setPrice] = useState([])
@@ -27,9 +28,7 @@ export default function Room({ notify, setLoading, loading }) {
     }
   }, [notify, setLoading])
 
-  useEffect(() => {
-    load()
-  }, [load])
+  useEffect(() => { load() }, [load])
 
   async function hdRemove(room_id) {
     setLoading(true)
@@ -46,10 +45,7 @@ export default function Room({ notify, setLoading, loading }) {
 
   function hdEdit(room) {
     toggleForm(true)
-    setRoom(prev => ({
-      ...prev, ...room,
-      price_id: room.price_id._id
-    }))
+    setRoom(prev => ({ ...prev, ...room, price_id: room.price_id._id }))
   }
 
   function hdCancel() {
@@ -121,63 +117,50 @@ export default function Room({ notify, setLoading, loading }) {
   }
 
   return (
-    <div>
-      <Row>
-        {
-          form && <Col md={10}>
-            <RoomForm
-              price={price}
-              loading={loading}
-              setLoading={setLoading}
-              editRoom={room}
-              refresh={refreshRoom}
-              hdCancel={hdCancel}
-            />
-          </Col>
-        }
-        <Col md={(assign || form) ? 14 : 24}>
-          <Card title='List of available room'>
-            <Spin spinning={loading}>
-              {
-                form || <Button
-                  type='primary'
-                  onClick={() => toggleForm(true)}
-                >
-                  Add new room information
-                </Button>
-              }
-              <Table
-                className='gx-table-responsive'
-                dataSource={rooms}
-                rowKey='_id'
-                columns={controlCols()}
-              />
-            </Spin>
-          </Card>
+    <Row>
+      {
+        form && <Col md={10}>
+          <RoomForm
+            price={price}
+            editRoom={room}
+            refresh={refreshRoom}
+            hdCancel={hdCancel}
+          />
         </Col>
-        {
-          assign && <Col md={10}>
-            <RoomAssign
-              loading={loading}
-              setLoading={setLoading}
-              refresh={refreshRoom}
-              selectedRoom={room}
-              hdCancel={hdCancel}
-              notify={notify}
-            />
-          </Col>
-        }
-      </Row>
-    </div>
+      }
+      <Col md={(assign || form) ? 14 : 24}>
+        <Card title='List of available room'>
+          {
+            form || <Button
+              type='primary'
+              onClick={() => toggleForm(true)}
+            >
+                Add new room information
+            </Button>
+          }
+          <Table
+            className='gx-table-responsive'
+            dataSource={rooms}
+            rowKey='_id'
+            columns={controlCols()}
+          />
+        </Card>
+      </Col>
+      {
+        assign && <Col md={10}>
+          <RoomAssign
+            refresh={refreshRoom}
+            selectedRoom={room}
+            hdCancel={hdCancel}
+            notify={notify}
+          />
+        </Col>
+      }
+    </Row>
   )
 }
 
 Room.propsTypes = {
   notify: PropTypes.func,
-  loading: PropTypes.bool,
   setLoading: PropTypes.func
-}
-
-Room.defaultProps = {
-  loading: true
 }
