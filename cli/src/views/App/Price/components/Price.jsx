@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, Fragment } from 'react'
 import { Card, Table, Divider, Button } from 'antd'
+import { cloneDeep } from 'lodash'
 import PropTypes from 'prop-types'
 
 import { apiPrice } from 'constants/api'
@@ -10,6 +11,7 @@ import { DEFAULT_PRICE, PRICE_COLS } from '../modules/const'
 export default function Price({ notify, setLoading }) {
   const [listPrice, setListPrice] = useState([])
   const [price, setPrice] = useState(DEFAULT_PRICE)
+  const [visible, setVisible] = useState(false)
 
   const load = useCallback(async() => {
     try {
@@ -23,26 +25,18 @@ export default function Price({ notify, setLoading }) {
 
   useEffect(() => { load() }, [load])
 
-  // async function hdSubmit() {
-  //   setLoading(true)
-  //   try {
-  //     if(!price._id) {
-  //       let createdPrice = await apiPrice.create(price)
-  //       setListPrice(prev => [...prev, createdPrice])
-  //     } else {
-  //       let updatePrice = await apiPrice.update(price._id, price)
-  //       let updatePriceList = listPrice.map(v => v._id === updatePrice._id ? updatePrice : v)
-  //       setListPrice(updatePriceList)
-  //     }
-  //     notify('success')
-  //   } catch (e) {
-  //     notify('error')
-  //   }
-  //   setLoading(false)
-  // }
+  function toggle() {
+    setVisible(prev => !prev)
+  }
 
   function hdRefresh (newPrice) {
-    
+    let newListPrice = cloneDeep(listPrice)
+    let foundIdx = newListPrice.findIndex(price => price._id === newPrice._id)
+    if (foundIdx !== -1) {
+      newListPrice[foundIdx] = cloneDeep(newPrice)
+      return setListPrice(newListPrice)
+    }
+    return setListPrice(prev => [...prev, newPrice])
   }
 
   async function hdRemove(price_id) {
@@ -64,8 +58,15 @@ export default function Price({ notify, setLoading }) {
 
   return (
     <Fragment>
+      <PriceModal
+        visible={visible}
+        refresh={hdRefresh}
+        price={price}
+        toggle={toggle}
+        notify={notify}
+      />
       <Card title='List of available price'>
-        <Button type='primary' onClick={toggleModal}>Add new price</Button>
+        <Button type='primary' onClick={toggle}>Add new price</Button>
         <Table
           className='gx-table-responsive'
           dataSource={listPrice}
@@ -93,34 +94,6 @@ export default function Price({ notify, setLoading }) {
           ]}
         />
       </Card>
-      <PriceModal />
-      {/* <Modal
-        title='Create New Price'
-        visible={visible}
-        onOk={hdOk}
-        onCancel={toggleModal}
-      >
-        <Form layout='horizontal'>
-          {
-            PRICE_INPUTS.map((input, i) => (
-              <FormItem
-                key={i}
-                label={input.label}
-                labelCol={{ xs: 24, sm: 6 }}
-                wrapperCol={{ xs: 24, sm: 16 }}
-              >
-                <Input
-                  type={input.type || 'number'}
-                  placeholder={`Please enter the ${input.name}`}
-                  name={input.name}
-                  value={price[input.name]}
-                  onChange={hdChange}
-                />
-              </FormItem>
-            ))
-          }
-        </Form>
-      </Modal> */}
     </Fragment>
   )
 }
