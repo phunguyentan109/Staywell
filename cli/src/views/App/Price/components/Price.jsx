@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, Fragment } from 'react'
-import { Card, Table, Divider, Form, Input, Button } from 'antd'
+import { Card, Table, Divider, Form, Input, Button, Modal } from 'antd'
 import PropTypes from 'prop-types'
 
 import { apiPrice } from 'constants/api'
@@ -31,38 +31,23 @@ export default function Price({ notify, setLoading }) {
       if(!price._id) {
         let createdPrice = await apiPrice.create(price)
         setListPrice(prev => [...prev, createdPrice])
-        notify('success')
       } else {
         let updatePrice = await apiPrice.update(price._id, price)
-        let updatePriceList = listPrice.map(v => {
-          if(v._id === updatePrice._id) {
-            return updatePrice
-          }
-          return v
-        })
+        let updatePriceList = listPrice.map(v => v._id === updatePrice._id ? updatePrice : v)
         setListPrice(updatePriceList)
-        notify('success')
       }
-      // hdCancel()
+      notify('success')
     } catch (e) {
       notify('error')
     }
     setLoading(false)
   }
 
-  // function createPrice() {
-  //   try {
-
-  //   } catcb(e) {
-  //     return notify('error', )
-  //   }
-  // }
-
   function hdOk() {}
 
   function hdChange(e) {
     let { value, name } = e.target
-    setPrice(prev => ({ ...prev, [name]: value }))
+    setPrice(prev => ({ ...prev, [name]: value }))  
   }
 
   async function hdRemove(price_id) {
@@ -90,35 +75,33 @@ export default function Price({ notify, setLoading }) {
   return (
     <Fragment>
       <Card title='List of available price'>
-        <Spin spinning={loading}>
-          <Button type='primary' onClick={toggleModal}>Add new price</Button>
-          <Table
-            className='gx-table-responsive'
-            dataSource={listPrice}
-            rowKey='_id'
-            columns={[
-              ...PRICE_COLS,
-              {
-                title: 'Action',
-                key: 'action',
-                render: (text, record) => (
-                  <span>
-                    <PopConfirm
-                      title='Are you sure to delete this genre?'
-                      task={hdRemove.bind(this, record._id)}
-                      okText='Sure, remove it'
-                      cancelText='Not now'
-                    > 
-                      <span className='gx-link'>Delete</span>
-                    </PopConfirm>
-                    <Divider type='vertical'/>
-                    <span className='gx-link' onClick={hdEdit.bind(this, record)}>Edit</span>
-                  </span>
-                )
-              }
-            ]}
-          />
-        </Spin>
+        <Button type='primary' onClick={toggleModal}>Add new price</Button>
+        <Table
+          className='gx-table-responsive'
+          dataSource={listPrice}
+          rowKey='_id'
+          columns={[
+            ...PRICE_COLS,
+            {
+              title: 'Action',
+              key: 'action',
+              render: (text, record) => (
+                <span>
+                  <PopConfirm
+                    title='Are you sure to delete this genre?'
+                    task={hdRemove.bind(this, record._id)}
+                    okText='Sure, remove it'
+                    cancelText='Not now'
+                  > 
+                    <span className='gx-link'>Delete</span>
+                  </PopConfirm>
+                  <Divider type='vertical'/>
+                  <span className='gx-link' onClick={hdEdit.bind(this, record)}>Edit</span>
+                </span>
+              )
+            }
+          ]}
+        />
       </Card>
       <Modal
         title='Create New Price'
