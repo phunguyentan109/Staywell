@@ -1,17 +1,15 @@
 import React, { useState, useEffect, useCallback, Fragment } from 'react'
-import { Card, Table, Divider, Form, Input, Button, Modal } from 'antd'
+import { Card, Table, Divider, Button } from 'antd'
 import PropTypes from 'prop-types'
 
 import { apiPrice } from 'constants/api'
+import PriceModal from '../modules/PriceModal'
 import PopConfirm from 'components/App/Pop/PopConfirm'
-import { DEFAULT_PRICE, PRICE_COLS, PRICE_INPUTS } from '../modules/const'
-
-const FormItem = Form.Item
+import { DEFAULT_PRICE, PRICE_COLS } from '../modules/const'
 
 export default function Price({ notify, setLoading }) {
   const [listPrice, setListPrice] = useState([])
   const [price, setPrice] = useState(DEFAULT_PRICE)
-  const [visible, setVisible] = useState(false)
 
   const load = useCallback(async() => {
     try {
@@ -25,29 +23,26 @@ export default function Price({ notify, setLoading }) {
 
   useEffect(() => { load() }, [load])
 
-  async function hdSubmit() {
-    setLoading(true)
-    try {
-      if(!price._id) {
-        let createdPrice = await apiPrice.create(price)
-        setListPrice(prev => [...prev, createdPrice])
-      } else {
-        let updatePrice = await apiPrice.update(price._id, price)
-        let updatePriceList = listPrice.map(v => v._id === updatePrice._id ? updatePrice : v)
-        setListPrice(updatePriceList)
-      }
-      notify('success')
-    } catch (e) {
-      notify('error')
-    }
-    setLoading(false)
-  }
+  // async function hdSubmit() {
+  //   setLoading(true)
+  //   try {
+  //     if(!price._id) {
+  //       let createdPrice = await apiPrice.create(price)
+  //       setListPrice(prev => [...prev, createdPrice])
+  //     } else {
+  //       let updatePrice = await apiPrice.update(price._id, price)
+  //       let updatePriceList = listPrice.map(v => v._id === updatePrice._id ? updatePrice : v)
+  //       setListPrice(updatePriceList)
+  //     }
+  //     notify('success')
+  //   } catch (e) {
+  //     notify('error')
+  //   }
+  //   setLoading(false)
+  // }
 
-  function hdOk() {}
-
-  function hdChange(e) {
-    let { value, name } = e.target
-    setPrice(prev => ({ ...prev, [name]: value }))  
+  function hdRefresh (newPrice) {
+    
   }
 
   async function hdRemove(price_id) {
@@ -57,19 +52,14 @@ export default function Price({ notify, setLoading }) {
       let updatePriceList = listPrice.filter(v => v._id !== price_id)
       setListPrice(updatePriceList)
       notify('success', 'Price data is removed successfully')
-    } catch (err){
-      notify('error', 'Price data is not remove')
+    } catch (err) {
+      notify('error')
     }
     setLoading(false)
   }
 
   function hdEdit(price) {
     setPrice(price)
-    // toggleForm(true)
-  }
-
-  function toggleModal() {
-    setVisible(prev => !prev)
   }
 
   return (
@@ -103,7 +93,8 @@ export default function Price({ notify, setLoading }) {
           ]}
         />
       </Card>
-      <Modal
+      <PriceModal />
+      {/* <Modal
         title='Create New Price'
         visible={visible}
         onOk={hdOk}
@@ -129,7 +120,7 @@ export default function Price({ notify, setLoading }) {
             ))
           }
         </Form>
-      </Modal>
+      </Modal> */}
     </Fragment>
   )
 }
