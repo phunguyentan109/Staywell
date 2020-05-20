@@ -29,7 +29,7 @@ export default function Price({ notify, setLoading }) {
     setVisible(prev => !prev)
   }
 
-  function hdRefresh (newPrice) {
+  function hdRefresh(newPrice) {
     let newListPrice = cloneDeep(listPrice)
     let foundIdx = newListPrice.findIndex(price => price._id === newPrice._id)
     if (foundIdx !== -1) {

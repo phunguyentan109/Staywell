@@ -38,7 +38,7 @@ exports.remove = async(req, res, next) => {
   }
 }
 
-exports.update  = async(req, res, next) => {
+exports.update = async(req, res, next) => {
   try {
     let updatedPrice = await db.Price.findByIdAndUpdate(req.params.price_id, req.body, { new: true })
     return res.status(200).json(updatedPrice)
