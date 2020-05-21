@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useCallback, Fragment } from 'react'
 import { Card, Table, Divider, Button } from 'antd'
-import { cloneDeep } from 'lodash'
 import PropTypes from 'prop-types'
 
 import { apiPrice } from 'constants/api'
 import PriceModal from '../modules/PriceModal'
 import PopConfirm from 'components/App/Pop/PopConfirm'
 import { DEFAULT_PRICE, PRICE_COLS } from '../modules/const'
+import useList from 'hooks/useList'
 
 export default function Price({ notify, setLoading }) {
-  const [listPrice, setListPrice] = useState([])
+  const [listPrice, setListPrice, updateListPrice] = useList([])
   const [price, setPrice] = useState(DEFAULT_PRICE)
   const [visible, setVisible] = useState(false)
 
@@ -21,22 +21,12 @@ export default function Price({ notify, setLoading }) {
     } catch (e) {
       return notify('error', 'Data is not loaded')
     }
-  }, [notify, setLoading])
+  }, [setListPrice, notify, setLoading])
 
   useEffect(() => { load() }, [load])
 
   function toggle() {
     setVisible(prev => !prev)
-  }
-
-  function hdRefresh(newPrice) {
-    let newListPrice = cloneDeep(listPrice)
-    let foundIdx = newListPrice.findIndex(price => price._id === newPrice._id)
-    if (foundIdx !== -1) {
-      newListPrice[foundIdx] = cloneDeep(newPrice)
-      return setListPrice(newListPrice)
-    }
-    return setListPrice(prev => [...prev, newPrice])
   }
 
   async function hdRemove(price_id) {
@@ -60,7 +50,7 @@ export default function Price({ notify, setLoading }) {
     <Fragment>
       <PriceModal
         visible={visible}
-        refresh={hdRefresh}
+        refresh={updateListPrice}
         price={price}
         toggle={toggle}
         notify={notify}
@@ -98,7 +88,7 @@ export default function Price({ notify, setLoading }) {
   )
 }
 
-Price.propsTypes = {
+Price.propTypes = {
   notify: PropTypes.func,
   setLoading: PropTypes.func
 }
