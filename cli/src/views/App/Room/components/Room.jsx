@@ -4,13 +4,14 @@ import PropTypes from 'prop-types'
 
 import PopConfirm from 'components/App/Pop/PopConfirm'
 import { apiRoom, apiPrice } from 'constants/api'
-import RoomForm from '../modules/Form'
+import FormModal from '../modules/Form'
 import RoomAssign from '../modules/Assign'
+import useList from 'hooks/useList'
 
 import { DEFAULT_ROOM } from '../modules/const'
 
 export default function Room({ notify, setLoading }) {
-  const [rooms, setRooms] = useState([])
+  const [rooms, setRooms, updateRooms] = useList([])
   const [room, setRoom] = useState(DEFAULT_ROOM)
   const [price, setPrice] = useState([])
   const [form, toggleForm] = useState(false)
@@ -63,64 +64,11 @@ export default function Room({ notify, setLoading }) {
     toggleAssign(true)
   }
 
-  async function refreshRoom(record, message, isNewRecord) {
-    if(isNewRecord) {
-      setRooms(prev => [...prev, record])
-    } else {
-      let newRooms = rooms.map(r => r._id === record._id ? record : r)
-      setRooms(newRooms)
-    }
-    notify('success', message)
-    hdCancel()
-    setLoading(false)
-  }
-
-  function controlCols() {
-    let cols = [
-      {
-        title: 'Room Name',
-        dataIndex: 'name',
-      },
-      {
-        title: 'People',
-        dataIndex: 'user_id',
-        render: text => <span>{text.length} people</span>
-      },
-      {
-        title: 'Price Type',
-        dataIndex: 'price_id.type'
-      },
-      {
-        title: 'Action',
-        key: 'action',
-        render: (text, record) => room._id ? <span>None</span> : (
-          <span>
-            <PopConfirm
-              title='Are you sure to delete this genre?'
-              task={hdRemove.bind(this, record._id)}
-              okText='Sure, remove it'
-              cancelText='Not now'
-            >
-              <span className='gx-link'>Delete</span>
-            </PopConfirm>
-            <Divider type='vertical'/>
-            <span className='gx-link' onClick={hdEdit.bind(this, record)}>Edit</span>
-            <Divider type='vertical'/>
-            <span className='gx-link' onClick={hdAssign.bind(this, record)}>Assign</span>
-          </span>
-        )
-      }
-    ]
-
-    // If "Assign" or "Form" content is shown, then hide the action
-    return assign || form ? cols.filter(c => c.key !== 'action') : cols
-  }
-
   return (
     <Row>
       {
         form && <Col md={10}>
-          <RoomForm
+          <FormModal
             price={price}
             editRoom={room}
             refresh={refreshRoom}
@@ -128,21 +76,54 @@ export default function Room({ notify, setLoading }) {
           />
         </Col>
       }
-      <Col md={(assign || form) ? 14 : 24}>
+      <Col md={24}>
         <Card title='List of available room'>
-          {
-            form || <Button
-              type='primary'
-              onClick={() => toggleForm(true)}
-            >
-                Add new room information
-            </Button>
+          <Button
+            type='primary'
+            onClick={() => toggleForm(true)}
+          >
+            Add new room information
+          </Button>
           }
           <Table
             className='gx-table-responsive'
             dataSource={rooms}
             rowKey='_id'
-            columns={controlCols()}
+            columns={[
+              {
+                title: 'Room Name',
+                dataIndex: 'name',
+              },
+              {
+                title: 'People',
+                dataIndex: 'user_id',
+                render: text => <span>{text.length} people</span>
+              },
+              {
+                title: 'Price Type',
+                dataIndex: 'price_id.type'
+              },
+              {
+                title: 'Action',
+                key: 'action',
+                render: (text, record) => room._id ? <span>None</span> : (
+                  <span>
+                    <PopConfirm
+                      title='Are you sure to delete this genre?'
+                      task={hdRemove.bind(this, record._id)}
+                      okText='Sure, remove it'
+                      cancelText='Not now'
+                    >
+                      <span className='gx-link'>Delete</span>
+                    </PopConfirm>
+                    <Divider type='vertical'/>
+                    <span className='gx-link' onClick={hdEdit.bind(this, record)}>Edit</span>
+                    <Divider type='vertical'/>
+                    <span className='gx-link' onClick={hdAssign.bind(this, record)}>Assign</span>
+                  </span>
+                )
+              }
+            ]}
           />
         </Card>
       </Col>
