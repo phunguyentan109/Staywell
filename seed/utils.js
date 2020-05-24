@@ -9,4 +9,6 @@ async function clear(model, target) {
   }
 }
 
-module.exports = { clear }
+const isDevMode = process.env.ENV_MODE === 'develop'
+
+module.exports = { clear, isDevMode }

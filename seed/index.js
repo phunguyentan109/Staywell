@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { clear } = require('./utils')
+const { clear, isDevMode } = require('./utils')
 
 const seedPrice = require('./Price')
 const seedUser = require('./User')
@@ -14,26 +14,18 @@ async function clearData() {
   console.log('=> Done')
 }
 
-async function seedSample() {
-  console.log('\n----- SEEDING NEW DATA FOR DEVELOPMENT -----')
+async function seed() {
+  await clearData()
+
+  console.log('\n----- SEEDING NEW DATA -----')
   await seedRole()
   await seedUser()
+  isDevMode && await seedSample()
+  console.log('=> Done')
+}
+
+async function seedSample () {
   await seedPrice()
 }
 
-async function seedData() {
-  console.log('\n----- SEEDING NEW DATA FOR PRODUCTION -----')
-  await seedRole()
-  await seedUser()
-}
-
-clearData()
-
-if(process.env.ENV_MODE === 'develop') {
-  seedSample()
-} else {
-  seedData()
-}
-
-console.log('=> Done')
-process.exit()
+seed().then(() => process.exit())

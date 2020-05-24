@@ -1,6 +1,7 @@
 require('dotenv').config()
 const db = require('../../models')
 const { OWNER, PEOPLE } = require('./data')
+const { isDevMode } = require('../utils')
 
 async function createUserWithRole(_user, role) {
   let user = await db.User.create(_user)
@@ -30,7 +31,5 @@ async function createPeople() {
 module.exports = async function() {
   console.log('Seeding user...')
   await createOwner()
-  if(process.env.ENV_MODE === 'develop') {
-    await createPeople()
-  }
+  isDevMode && await createPeople()
 }
