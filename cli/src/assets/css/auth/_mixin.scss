@@ -19,14 +19,6 @@ $mobile-width: 480px;
 $tablet-width: 768px;
 $desktop-width: 1024px;
 
-/* EXAMPLE USAGE
-  a {
-    @include desktop {
-      display: none;
-    }
-  }
-*/
-
 @mixin mobile { @media (max-width: #{$mobile-width - 1px}) {
   @content;
 }}

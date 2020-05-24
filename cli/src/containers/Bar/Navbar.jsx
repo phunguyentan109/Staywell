@@ -1,44 +1,42 @@
-import React, {useEffect, useCallback, useState} from "react";
-import {Link} from "react-router-dom";
-import {withRouter} from "react-router-dom";
-import {connect} from "react-redux";
-import {clearAuthData} from "appRedux/actions/user";
-import withHelpers from "hocs/withHelpers";
+import React, { useEffect, useCallback, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { clearAuthData } from 'appRedux/actions/user'
 
-function AuthNavbar({location, clearAuthData, device}) {
-    const [isRegister, setRegister] = useState(false);
+function AuthNavbar({ location, clearAuthData }) {
+  const [isRegister, setRegister] = useState(false)
 
-    const load = useCallback(() => {
-        if(location.pathname !== "/")  return setRegister(true);
-        setRegister(false);
-    }, [location.pathname])
+  const load = useCallback(() => {
+    if(location.pathname !== '/')  return setRegister(true)
+    setRegister(false)
+  }, [location.pathname])
 
-    useEffect(() => {
-        load();
-    }, [load])
+  useEffect(() => {
+    load()
+  }, [load])
 
-    function getTitle() {
-        if(!device.isMobile) {
-            if(isRegister) return " Try with different account?";
-            return " Create an account";
-        }
-    }
-
+  function renderNavItem() {
+    let to = isRegister ? '/' : '/register'
+    let icon = isRegister ? 'fas fa-door-open' : 'fas fa-user-plus'
+    let label = isRegister ? 'Try with different account?' : 'Create an account'
     return (
-        <div className="auth-navbar">
-            <Link to="/">Staywell</Link>
-            <div>
-                {
-                    isRegister
-                    ? <Link to="/" onClick={clearAuthData}><i className="fas fa-door-open"/>{getTitle()}</Link>
-                    : <Link to="/register"><i className="fas fa-user-plus"/>{getTitle()}</Link>
-                }
-                {
-                    device.isMobile && <Link to="/forgot"><i className="fas fa-key"/></Link>
-                }
-            </div>
-        </div>
+      <Link to={to}>
+        <i className={icon} onClick={isRegister ? clearAuthData: null}/>
+        <span>{label}</span>
+      </Link>
     )
-};
+  }
 
-export default withRouter(connect(null, {clearAuthData})(withHelpers(AuthNavbar)));
+  return (
+    <div className='auth-navbar'>
+      <Link to='/'>Staywell</Link>
+      <div>
+        { renderNavItem() }
+        <Link to='/forgot' id='forgot'><i className='fas fa-key'/></Link>
+      </div>
+    </div>
+  )
+}
+
+export default withRouter(connect(null, { clearAuthData })(AuthNavbar))
