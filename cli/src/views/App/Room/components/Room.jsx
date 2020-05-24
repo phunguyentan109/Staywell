@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 import PopConfirm from 'components/App/Pop/PopConfirm'
 import { apiRoom, apiPrice } from 'constants/api'
-import FormModal from '../modules/Form'
+import FormModal from '../modules/FormModal'
 import RoomAssign from '../modules/Assign'
 import useList from 'hooks/useList'
 
@@ -71,7 +71,7 @@ export default function Room({ notify, setLoading }) {
           <FormModal
             price={price}
             editRoom={room}
-            refresh={refreshRoom}
+            refresh={updateRooms}
             hdCancel={hdCancel}
           />
         </Col>
@@ -130,7 +130,7 @@ export default function Room({ notify, setLoading }) {
       {
         assign && <Col md={10}>
           <RoomAssign
-            refresh={refreshRoom}
+            refresh={updateRooms}
             selectedRoom={room}
             hdCancel={hdCancel}
             notify={notify}
