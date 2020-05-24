@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import AuthInput from 'components/Auth/AuthInput'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
 export default function Login({ message, sendAuthData, addMessage }) {
   const [account, setAccount] = useState({
@@ -25,11 +25,8 @@ export default function Login({ message, sendAuthData, addMessage }) {
 
   return (
     <div className='content'>
-      {
-        device.isMobile
-          ? <h1>What a nice day,</h1>
-          : <h1>Welcome to Staywell,</h1>
-      }
+      <h1>Welcome to Staywell,</h1>
+      <h1>What a nice day,</h1>
       <h4>Please enter your account to continue.</h4>
       {
         message && <div className='notify'>
@@ -54,7 +51,7 @@ export default function Login({ message, sendAuthData, addMessage }) {
         />
         <button className='signin'>Get access</button>
       </form>
-      {/*{device.isMobile || <Link to='/forgot'>Forgot your password?</Link>}*/}
+      <Link to='/forgot'>Forgot your password?</Link>
     </div>
   )
 }

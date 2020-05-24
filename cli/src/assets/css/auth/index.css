@@ -1,10 +1,3 @@
-/* EXAMPLE USAGE
-  a {
-    @include desktop {
-      display: none;
-    }
-  }
-*/
 @keyframes fromTop {
   from {
     transform: translate(0, -100px);
@@ -98,18 +91,18 @@
       align-items: center;
       font-family: "Ubuntu", sans-serif; }
       .auth-bg > div > .content > h1 {
-        margin: 0;
         text-align: center;
         color: #bababa;
         font-size: 40px;
-        margin-bottom: 8px;
+        margin: 0 0 8px;
         animation-name: fromTop;
         animation-duration: 1.2s;
         animation-delay: 0.3s;
         animation-fill-mode: backwards; }
+        .auth-bg > div > .content > h1:nth-of-type(2) {
+          display: none; }
       .auth-bg > div > .content > h4 {
-        margin: 0;
-        margin-top: 20px;
+        margin: 20px 0 0;
         color: #939393;
         font-size: 15px;
         animation-name: fromTop;
@@ -152,7 +145,7 @@
         animation-duration: 1.2s;
         animation-delay: 1.2s;
         animation-fill-mode: backwards; }
-      .auth-bg > div > .content a {
+      .auth-bg > div > .content > a {
         animation-name: fromBottom;
         animation-duration: 1.2s;
         animation-delay: 1.5s;
@@ -160,6 +153,12 @@
       @media (max-width: 479px) {
         .auth-bg > div > .content > h1 {
           font-size: 30px; }
+          .auth-bg > div > .content > h1:nth-of-type(1) {
+            display: none; }
+          .auth-bg > div > .content > h1:nth-of-type(2) {
+            display: initial; }
+        .auth-bg > div > .content > a {
+          display: none; }
         .auth-bg > div > .content > h4 {
           font-size: 14px; } }
 
@@ -173,15 +172,24 @@
     font-size: 14px !important;
     font-weight: 300 !important;
     margin-bottom: 16px; }
+    .auth-credit p:nth-of-type(2) {
+      display: initial; }
+    .auth-credit p:nth-of-type(1) {
+      display: none; }
   .auth-credit i {
     padding-left: 5px;
     padding-right: 5px;
     color: #17a2b8; }
   @media (max-width: 479px) {
     .auth-credit {
-      right: 0px;
+      right: 0;
       text-align: center;
-      width: 100%; } }
+      width: 100%;
+      margin-bottom: 15px; }
+      .auth-credit p:nth-of-type(2) {
+        display: none; }
+      .auth-credit p:nth-of-type(1) {
+        display: initial; } }
 
 .auth-navbar {
   display: flex;
@@ -213,6 +221,8 @@
         margin-right: 8px; }
       .auth-navbar > div > a:nth-of-type(1) {
         margin-right: 6px; }
+      .auth-navbar > div > a:nth-of-type(2) {
+        display: none; }
       @media (max-width: 479px) {
         .auth-navbar > div > a {
           background-color: #bbbbbb14;
@@ -221,12 +231,14 @@
           font-size: 13px; }
           .auth-navbar > div > a > i {
             margin-right: 0;
-            font-size: 12px; } }
+            font-size: 12px; }
+          .auth-navbar > div > a:nth-of-type(1) > span {
+            display: none; }
+          .auth-navbar > div > a:nth-of-type(2) {
+            display: initial; } }
   @media (max-width: 479px) {
     .auth-navbar {
-      padding: 30px;
-      padding-left: 25px;
-      padding-right: 25px; }
+      padding: 30px 25px; }
       .auth-navbar > a {
         font-size: 20px; } }
 
