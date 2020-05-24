@@ -3,7 +3,6 @@ const { clear } = require('./utils')
 
 const seedPrice = require('./Price')
 const seedUser = require('./User')
-const seedOwner = require('./Owner')
 const seedRole = require('./Role')
 
 async function clearData() {
@@ -25,20 +24,16 @@ async function seedSample() {
 async function seedData() {
   console.log('\n----- SEEDING NEW DATA FOR PRODUCTION -----')
   await seedRole()
-  await seedOwner()
+  await seedUser()
 }
 
-async function seed() {
-  clearData()
+clearData()
 
-  if(process.env.ENV_MODE === 'develop') {
-    seedSample()
-  } else {
-    seedData()
-  }
+if(process.env.ENV_MODE === 'develop') {
+  seedSample()
+} else {
+  seedData()
+}
 
-  console.log('=> Done')
-  process.exit()
-} 
-
-seed()
+console.log('=> Done')
+process.exit()

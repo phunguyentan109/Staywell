@@ -1,3 +1,4 @@
+require('dotenv').config()
 const db = require('../../models')
 const { OWNER, PEOPLE } = require('./data')
 
@@ -27,7 +28,12 @@ async function createPeople() {
 }
 
 module.exports = async function() {
-  console.log('Seeding owner and user...')
-  await createOwner()
-  await createPeople()
+  if(process.env.ENV_MODE === 'develop') {
+    console.log('Seeding owner and user...')
+    await createOwner()
+    await createPeople()
+  } else {
+    console.log('Seeding owner...')
+    await createOwner()
+  }
 }
