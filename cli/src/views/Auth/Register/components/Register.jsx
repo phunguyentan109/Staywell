@@ -79,7 +79,7 @@ export default function Register({ message, negative, sendAuthData, addMessage }
           }
         </button>
       </form>
-      {/*{device.isMobile || <Link to='/forgot'>Forgot your password?</Link>}*/}
+      <Link to='/forgot'>Forgot your password?</Link>
     </div>
   )
 }
