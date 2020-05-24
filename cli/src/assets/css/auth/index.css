@@ -1,3 +1,10 @@
+/* EXAMPLE USAGE
+  a {
+    @include desktop {
+      display: none;
+    }
+  }
+*/
 @keyframes fromTop {
   from {
     transform: translate(0, -100px);

@@ -3,15 +3,15 @@ $f-poppins: "Poppins", sans-serif;
 $f-montserrat: "Montserrat", sans-serif;
 
 @mixin k-frame($ani-name) {
-    @keyframes #{$ani-name} {
-        @content;
-    }
-    @-webkit-keyframes #{$ani-name} {
-        @content;
-    }
-    @-moz-keyframes #{$ani-name} {
-        @content;
-    }
+  @keyframes #{$ani-name} {
+    @content;
+  }
+  @-webkit-keyframes #{$ani-name} {
+    @content;
+  }
+  @-moz-keyframes #{$ani-name} {
+    @content;
+  }
 }
 
 // For responsive on devices
@@ -19,14 +19,22 @@ $mobile-width: 480px;
 $tablet-width: 768px;
 $desktop-width: 1024px;
 
+/* EXAMPLE USAGE
+  a {
+    @include desktop {
+      display: none;
+    }
+  }
+*/
+
 @mixin mobile { @media (max-width: #{$mobile-width - 1px}) {
-    @content;
+  @content;
 }}
 
 @mixin tablet { @media (min-width: #{$tablet-width}) and (max-width: #{$desktop-width - 1}) {
-    @content;
+  @content;
 }}
 
 @mixin desktop { @media (min-width: #{$desktop-width}) {
-    @content;
+  @content;
 }}
