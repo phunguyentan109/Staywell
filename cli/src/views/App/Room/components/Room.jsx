@@ -16,7 +16,7 @@ export default function Room({ notify, setLoading }) {
   const [rooms, setRooms, updateRooms] = useList([])
   const [room, setRoom] = useState(DEFAULT_ROOM)
   const [price, setPrice] = useState([])
-  const [form, toggleForm] = useState(false)
+  const [visible, setVisible] = useState(false)
   const [assign, toggleAssign] = useState(false)
   const [processing, setProcessing] = useState(false)
 
@@ -48,14 +48,18 @@ export default function Room({ notify, setLoading }) {
   }
 
   function hdEdit(room) {
-    toggleForm(true)
+    toggleVisible(true)
     setRoom(prev => ({ ...prev, ...room, price_id: room.price_id._id }))
   }
 
   function hdCancel() {
     setRoom(DEFAULT_ROOM)
-    toggleForm(false)
+    toggleVisible(false)
     toggleAssign(false)
+  }
+
+  function toggleVisible() {
+    setVisible(prev => !prev)
   }
 
   function hdAssign(room) {
@@ -90,11 +94,11 @@ export default function Room({ notify, setLoading }) {
   return (
     <Fragment>
       <Modal
-        title={_room._id ? 'Update Price Information' : 'Create New Price'}
+        title={room._id ? 'Update Price Information' : 'Create New Price'}
         visible={visible}
         onOk={hdOk}
         confirmLoading={processing}
-        onCancel={toggle}
+        onCancel={toggleVisible}
       >
         <Form layout='horizontal'>
           <FormItem
@@ -131,7 +135,7 @@ export default function Room({ notify, setLoading }) {
             }}
           >
             <Button type='primary' onClick={hdOk}>Submit</Button>
-            <Button onClick={toggle}>Cancel</Button>
+            <Button onClick={toggleVisible}>Cancel</Button>
           </FormItem>
         </Form>
       </Modal>
@@ -150,7 +154,7 @@ export default function Room({ notify, setLoading }) {
           <Card title='List of available room'>
             <Button
               type='primary'
-              onClick={() => toggleForm(true)}
+              onClick={toggleVisible}
             >
               Add new room information
             </Button>
