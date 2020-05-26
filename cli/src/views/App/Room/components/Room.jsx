@@ -4,11 +4,9 @@ import PropTypes from 'prop-types'
 
 import PopConfirm from 'components/App/Pop/PopConfirm'
 import { apiRoom, apiPrice } from 'constants/api'
-import FormModal from '../modules/FormModal'
-import RoomAssign from '../modules/Assign'
 import useList from 'hooks/useList'
-
 import { DEFAULT_ROOM } from '../modules/const'
+
 const FormItem = Form.Item
 const Option = Select.Option
 
@@ -17,7 +15,7 @@ export default function Room({ notify, setLoading }) {
   const [room, setRoom] = useState(DEFAULT_ROOM)
   const [price, setPrice] = useState([])
   const [visible, setVisible] = useState(false)
-  const [assign, toggleAssign] = useState(false)
+  const [assign, setAssign] = useState(false)
   const [processing, setProcessing] = useState(false)
 
   const load = useCallback(async() => {
@@ -48,27 +46,16 @@ export default function Room({ notify, setLoading }) {
   }
 
   function hdEdit(room) {
-    toggleVisible(true)
     setRoom(prev => ({ ...prev, ...room, price_id: room.price_id._id }))
-  }
-
-  function hdCancel() {
-    setRoom(DEFAULT_ROOM)
-    toggleVisible(false)
-    toggleAssign(false)
+    toggleVisible(true)
   }
 
   function toggleVisible() {
     setVisible(prev => !prev)
   }
 
-  function hdAssign(room) {
-    setLoading(true)
-    setRoom(prev => ({
-      ...prev, ...room,
-      user_id: [...room.user_id]
-    }))
-    toggleAssign(true)
+  function toggleAssign() {
+    setAssign(prev => !prev)
   }
 
   function hdSelectPrice(price_id) {
@@ -93,6 +80,74 @@ export default function Room({ notify, setLoading }) {
 
   return (
     <Fragment>
+      <Row>
+        <Col md={24}>
+          <Card title='List of available room'>
+            <Button type='primary' onClick={toggleVisible}>
+              Add new room information
+            </Button>
+            <Table
+              className='gx-table-responsive'
+              dataSource={rooms}
+              rowKey='_id'
+              columns={[
+                {
+                  title: 'Room Name',
+                  dataIndex: 'name',
+                },
+                {
+                  title: 'People',
+                  dataIndex: 'user_id',
+                  render: text => <span>{text.length} people</span>
+                },
+                {
+                  title: 'Price Type',
+                  dataIndex: 'price_id.type'
+                },
+                {
+                  title: 'Action',
+                  key: 'action',
+                  render: (text, record) => room._id ? <span>None</span> : (
+                    <span>
+                      <PopConfirm
+                        title='Are you sure to delete this genre?'
+                        task={hdRemove.bind(this, record._id)}
+                        okText='Sure, remove it'
+                        cancelText='Not now'
+                      >
+                        <span className='gx-link'>Delete</span>
+                      </PopConfirm>
+                      <Divider type='vertical'/>
+                      <span className='gx-link' onClick={hdEdit.bind(this, record)}>Edit</span>
+                      <Divider type='vertical'/>
+                      <span className='gx-link' onClick={hdAssign.bind(this, record)}>Assign</span>
+                    </span>
+                  )
+                }
+              ]}
+            />
+          </Card>
+        </Col>
+      </Row>
+      <Modal
+        title={room._id ? 'Update Price Information' : 'Create New Price'}
+        visible={assign}
+        onOk={hdOk}
+        confirmLoading={processing}
+        onCancel={toggleVisible}
+      >
+        <TableTransfer
+          showSearch
+          dataSource={mockData}
+          targetKeys={targetKeys}
+          onChange={this.onChange}
+          filterOption={(inputValue, item) =>
+            item.title.indexOf(inputValue) !== -1 || item.tag.indexOf(inputValue) !== -1
+          }
+          leftTableColumns={leftTableColumns}
+          rightTableColumns={rightTableColumns}
+        />
+      </Modal>
       <Modal
         title={room._id ? 'Update Price Information' : 'Create New Price'}
         visible={visible}
@@ -139,69 +194,6 @@ export default function Room({ notify, setLoading }) {
           </FormItem>
         </Form>
       </Modal>
-      {
-        assign && <Col md={10}>
-          <RoomAssign
-            refresh={updateRooms}
-            selectedRoom={room}
-            hdCancel={hdCancel}
-            notify={notify}
-          />
-        </Col>
-      }
-      <Row>
-        <Col md={24}>
-          <Card title='List of available room'>
-            <Button
-              type='primary'
-              onClick={toggleVisible}
-            >
-              Add new room information
-            </Button>
-            }
-            <Table
-              className='gx-table-responsive'
-              dataSource={rooms}
-              rowKey='_id'
-              columns={[
-                {
-                  title: 'Room Name',
-                  dataIndex: 'name',
-                },
-                {
-                  title: 'People',
-                  dataIndex: 'user_id',
-                  render: text => <span>{text.length} people</span>
-                },
-                {
-                  title: 'Price Type',
-                  dataIndex: 'price_id.type'
-                },
-                {
-                  title: 'Action',
-                  key: 'action',
-                  render: (text, record) => room._id ? <span>None</span> : (
-                    <span>
-                      <PopConfirm
-                        title='Are you sure to delete this genre?'
-                        task={hdRemove.bind(this, record._id)}
-                        okText='Sure, remove it'
-                        cancelText='Not now'
-                      >
-                        <span className='gx-link'>Delete</span>
-                      </PopConfirm>
-                      <Divider type='vertical'/>
-                      <span className='gx-link' onClick={hdEdit.bind(this, record)}>Edit</span>
-                      <Divider type='vertical'/>
-                      <span className='gx-link' onClick={hdAssign.bind(this, record)}>Assign</span>
-                    </span>
-                  )
-                }
-              ]}
-            />
-          </Card>
-        </Col>
-      </Row>
     </Fragment>
   )
 }
