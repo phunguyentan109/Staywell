@@ -1,8 +1,6 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-
 import {toggleCollapsedSideNav} from "../../../appRedux/actions/setting";
-import IntlMessages from "util/IntlMessages";
 
 class NoHeaderNotification extends Component {
 
@@ -20,7 +18,9 @@ class NoHeaderNotification extends Component {
         <div className="gx-no-header-horizontal-top">
           <div className="gx-no-header-horizontal-top-center">
             <i className="icon icon-alert gx-mr-3"/>
-            <p className="gx-mb-0 gx-text-truncate"><IntlMessages id="app.announced"/></p>
+            <p className="gx-mb-0 gx-text-truncate">
+             <span>A new version will be released on December 25th. Stay tuned!</span>
+            </p>
           </div>
         </div>
       </div>

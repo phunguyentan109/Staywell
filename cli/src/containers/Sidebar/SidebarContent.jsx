@@ -16,7 +16,6 @@ import {
 import { connect } from 'react-redux'
 import * as permissions from 'constants/credentialControl'
 import { clearAuthData } from 'appRedux/actions/user'
-import IntlMessages from '../../util/IntlMessages'
 
 // const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup
