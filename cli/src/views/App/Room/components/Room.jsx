@@ -6,6 +6,7 @@ import PopConfirm from 'components/App/Pop/PopConfirm'
 import { apiRoom, apiPrice } from 'constants/api'
 import useList from 'hooks/useList'
 import { DEFAULT_ROOM } from '../modules/const'
+import TableTransfer from '../modules/TableTransfer'
 
 const FormItem = Form.Item
 const Option = Select.Option
@@ -66,6 +67,8 @@ export default function Room({ notify, setLoading }) {
     const { name, value } = e.target
     setRoom(prev => ({ ...prev, [name]: value }))
   }
+
+  function hdAssign() {}
 
   async function hdOk() {
     setProcessing(true)
@@ -129,25 +132,25 @@ export default function Room({ notify, setLoading }) {
           </Card>
         </Col>
       </Row>
-      <Modal
-        title={room._id ? 'Update Price Information' : 'Create New Price'}
-        visible={assign}
-        onOk={hdOk}
-        confirmLoading={processing}
-        onCancel={toggleVisible}
-      >
-        <TableTransfer
-          showSearch
-          dataSource={mockData}
-          targetKeys={targetKeys}
-          onChange={this.onChange}
-          filterOption={(inputValue, item) =>
-            item.title.indexOf(inputValue) !== -1 || item.tag.indexOf(inputValue) !== -1
-          }
-          leftTableColumns={leftTableColumns}
-          rightTableColumns={rightTableColumns}
-        />
-      </Modal>
+      {/*<Modal*/}
+      {/*  title={room._id ? 'Update Price Information' : 'Create New Price'}*/}
+      {/*  visible={assign}*/}
+      {/*  onOk={hdOk}*/}
+      {/*  confirmLoading={processing}*/}
+      {/*  onCancel={toggleVisible}*/}
+      {/*>*/}
+      {/*  <TableTransfer*/}
+      {/*    showSearch*/}
+      {/*    dataSource={mockData}*/}
+      {/*    targetKeys={targetKeys}*/}
+      {/*    onChange={this.onChange}*/}
+      {/*    filterOption={(inputValue, item) =>*/}
+      {/*      item.title.indexOf(inputValue) !== -1 || item.tag.indexOf(inputValue) !== -1*/}
+      {/*    }*/}
+      {/*    leftTableColumns={leftTableColumns}*/}
+      {/*    rightTableColumns={rightTableColumns}*/}
+      {/*  />*/}
+      {/*</Modal>*/}
       <Modal
         title={room._id ? 'Update Price Information' : 'Create New Price'}
         visible={visible}
