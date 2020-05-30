@@ -11,7 +11,6 @@ import MailNotification from "components/MailNotification";
 import HorizontalNav from "../HorizontalNav";
 import {Link} from "react-router-dom";
 import {switchLanguage, toggleCollapsedSideNav} from "../../../appRedux/actions/setting";
-import IntlMessages from "../../../util/IntlMessages";
 
 const {Header} = Layout;
 
@@ -64,7 +63,9 @@ class InsideHeader extends Component {
             <div className="gx-header-horizontal-top-flex">
               <div className="gx-header-horizontal-top-left">
                 <i className="icon icon-alert gx-mr-3"/>
-                <p className="gx-mb-0 gx-text-truncate"><IntlMessages id="app.announced"/></p>
+                <p className="gx-mb-0 gx-text-truncate">
+                  <span>A new version will be released on December 25th. Stay tuned!</span>
+                </p>
               </div>
               <ul className="gx-login-list">
                 <li>Login</li>
