@@ -5,7 +5,8 @@ import PropTypes from 'prop-types'
 import PopConfirm from 'components/App/Pop/PopConfirm'
 import { apiRoom, apiPrice } from 'constants/api'
 import useList from 'hooks/useList'
-import { DEFAULT_ROOM } from '../modules/const'
+import { DEFAULT_ROOM, LEFT_TABLE } from '../modules/const'
+import cloneDeep from 'lodash/cloneDeep'
 import TableTransfer from '../modules/TableTransfer'
 
 const FormItem = Form.Item
@@ -47,7 +48,10 @@ export default function Room({ notify, setLoading }) {
   }
 
   function hdEdit(room) {
-    setRoom(prev => ({ ...prev, ...room, price_id: room.price_id._id }))
+    setRoom({
+      ...cloneDeep(room),
+      price_id: room.price_id && room.price_id._id
+    })
     toggleVisible(true)
   }
 
@@ -55,9 +59,9 @@ export default function Room({ notify, setLoading }) {
     setVisible(prev => !prev)
   }
 
-  function toggleAssign() {
-    setAssign(prev => !prev)
-  }
+  // function toggleAssign() {
+  //   setAssign(prev => !prev)
+  // }
 
   function hdSelectPrice(price_id) {
     setRoom(prev => ({ ...prev, price_id }))
@@ -75,6 +79,7 @@ export default function Room({ notify, setLoading }) {
     try {
       let rs = room._id ? await apiRoom.update(room._id, room) : await apiRoom.create(room)
       updateRooms(rs)
+      toggleVisible()
     } catch (e) {
       notify('error')
     }
@@ -86,9 +91,7 @@ export default function Room({ notify, setLoading }) {
       <Row>
         <Col md={24}>
           <Card title='List of available room'>
-            <Button type='primary' onClick={toggleVisible}>
-              Add new room information
-            </Button>
+            <Button type='primary' onClick={toggleVisible}>Add new room</Button>
             <Table
               className='gx-table-responsive'
               dataSource={rooms}
@@ -110,7 +113,7 @@ export default function Room({ notify, setLoading }) {
                 {
                   title: 'Action',
                   key: 'action',
-                  render: (text, record) => room._id ? <span>None</span> : (
+                  render: (text, record) => (
                     <span>
                       <PopConfirm
                         title='Are you sure to delete this genre?'
@@ -132,25 +135,25 @@ export default function Room({ notify, setLoading }) {
           </Card>
         </Col>
       </Row>
-      {/*<Modal*/}
-      {/*  title={room._id ? 'Update Price Information' : 'Create New Price'}*/}
-      {/*  visible={assign}*/}
-      {/*  onOk={hdOk}*/}
-      {/*  confirmLoading={processing}*/}
-      {/*  onCancel={toggleVisible}*/}
-      {/*>*/}
-      {/*  <TableTransfer*/}
-      {/*    showSearch*/}
-      {/*    dataSource={mockData}*/}
-      {/*    targetKeys={targetKeys}*/}
-      {/*    onChange={this.onChange}*/}
-      {/*    filterOption={(inputValue, item) =>*/}
-      {/*      item.title.indexOf(inputValue) !== -1 || item.tag.indexOf(inputValue) !== -1*/}
-      {/*    }*/}
-      {/*    leftTableColumns={leftTableColumns}*/}
-      {/*    rightTableColumns={rightTableColumns}*/}
-      {/*  />*/}
-      {/*</Modal>*/}
+      <Modal
+        title={room._id ? 'Update Price Information' : 'Create New Price'}
+        visible={assign}
+        onOk={hdOk}
+        confirmLoading={processing}
+        onCancel={toggleVisible}
+      >
+        <TableTransfer
+          showSearch
+          dataSource={mockData}
+          targetKeys={targetKeys}
+          onChange={this.onChange}
+          filterOption={(inputValue, item) =>
+            item.title.indexOf(inputValue) !== -1 || item.tag.indexOf(inputValue) !== -1
+          }
+          leftTableColumns={LEFT_TABLE}
+          rightTableColumns={rightTableColumns}
+        />
+      </Modal>
       <Modal
         title={room._id ? 'Update Price Information' : 'Create New Price'}
         visible={visible}
@@ -183,17 +186,8 @@ export default function Room({ notify, setLoading }) {
               onChange={hdSelectPrice}
               value={room.price_id}
             >
-              { price.map((v, i) => <Option value={v._id} key={i}>{v.type}</Option>) }
+              { price.map(v => <Option value={v._id} key={v._id}>{v.type}</Option>) }
             </Select>
-          </FormItem>
-          <FormItem
-            wrapperCol={{
-              xs: 24,
-              sm: { span: 14, offset: 6 }
-            }}
-          >
-            <Button type='primary' onClick={hdOk}>Submit</Button>
-            <Button onClick={toggleVisible}>Cancel</Button>
           </FormItem>
         </Form>
       </Modal>
