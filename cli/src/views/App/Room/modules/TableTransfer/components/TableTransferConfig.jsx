@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React from 'react'
 import { Transfer, Table } from 'antd'
 import difference from 'lodash/difference'
 
