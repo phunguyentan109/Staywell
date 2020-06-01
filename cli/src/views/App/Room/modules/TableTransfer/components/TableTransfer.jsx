@@ -1,53 +1,42 @@
-import React from 'react'
-import { Transfer, Table } from 'antd'
-import difference from 'lodash/difference'
+import React, { useState, useCallback, useEffect } from 'react'
+import TableTransferConfig from '../index'
+import { LEFT_TABLE } from '../../const'
+import { Modal } from 'antd'
 
-const TableTransfer = ({ leftTableColumns, rightTableColumns, ...restProps }) => (
-  <Transfer {...restProps} showSelectAll={false}>
-    {({
-      direction,
-      filteredItems,
-      onItemSelectAll,
-      onItemSelect,
-      selectedKeys: listSelectedKeys,
-      disabled: listDisabled,
-    }) => {
-      const columns = direction === 'left' ? leftTableColumns : rightTableColumns
+export default function TableTransfer({ notify }) {
+  const [assignPeople, setAssignPeople] = useState([])
 
-      const rowSelection = {
-        getCheckboxProps: item => ({ disabled: listDisabled || item.disabled }),
-        onSelectAll(selected, selectedRows) {
-          const treeSelectedKeys = selectedRows
-            .filter(item => !item.disabled)
-            .map(({ key }) => key)
-          const diffKeys = selected
-            ? difference(treeSelectedKeys, listSelectedKeys)
-            : difference(listSelectedKeys, treeSelectedKeys)
-          onItemSelectAll(diffKeys, selected)
-        },
-        onSelect({ key }, selected) {
-          onItemSelect(key, selected)
-        },
-        selectedRowKeys: listSelectedKeys,
-      }
+  const load = useCallback(() => {
+    try {
 
-      return (
-        <Table
-          rowSelection={rowSelection}
-          columns={columns}
-          dataSource={filteredItems}
-          size='small'
-          style={{ pointerEvents: listDisabled ? 'none' : null }}
-          onRow={({ key, disabled: itemDisabled }) => ({
-            onClick: () => {
-              if (itemDisabled || listDisabled) return
-              onItemSelect(key, !listSelectedKeys.includes(key))
-            },
-          })}
-        />
-      )
-    }}
-  </Transfer>
-)
+    } catch (e) {
+      notify('error')
+    }
+  }, [notify])
 
-export default TableTransfer
+  useEffect(() => {
+    load()
+  }, [load])
+  
+  return (
+    <Modal
+      title={room._id ? 'Update Price Information' : 'Create New Price'}
+      visible={assign}
+      onOk={hdOk}
+      confirmLoading={processing}
+      onCancel={toggleVisible}
+    >
+      <TableTransferConfig
+        showSearch
+        dataSource={mockData}
+        targetKeys={targetKeys}
+        onChange={this.onChange}
+        filterOption={(inputValue, item) =>
+          item.title.indexOf(inputValue) !== -1 || item.tag.indexOf(inputValue) !== -1
+        }
+        leftTableColumns={LEFT_TABLE}
+        rightTableColumns={rightTableColumns}
+      />
+    </Modal>
+  )
+}

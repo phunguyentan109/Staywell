@@ -135,25 +135,7 @@ export default function Room({ notify, setLoading }) {
           </Card>
         </Col>
       </Row>
-      <Modal
-        title={room._id ? 'Update Price Information' : 'Create New Price'}
-        visible={assign}
-        onOk={hdOk}
-        confirmLoading={processing}
-        onCancel={toggleVisible}
-      >
-        <TableTransfer
-          showSearch
-          dataSource={mockData}
-          targetKeys={targetKeys}
-          onChange={this.onChange}
-          filterOption={(inputValue, item) =>
-            item.title.indexOf(inputValue) !== -1 || item.tag.indexOf(inputValue) !== -1
-          }
-          leftTableColumns={LEFT_TABLE}
-          rightTableColumns={rightTableColumns}
-        />
-      </Modal>
+      <TableTransfer room={room}/>
       <Modal
         title={room._id ? 'Update Price Information' : 'Create New Price'}
         visible={visible}

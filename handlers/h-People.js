@@ -2,8 +2,13 @@ const db = require('../models')
 
 exports.get = async(req, res, next) => {
   try {
-    let people = await db.People.find().populate('room_id').populate('user_id').exec()
-    return res.status(200).json(people)
+    const { peopleIds } = res.locals
+    let foundPeople = await db.User.find({ _id: { $in: peopleIds } })
+      .populate('room_id')
+      .populate('user_id')
+      .lean()
+      .exec()
+    return res.status(200).json(foundPeople)
   } catch(err) {
     return next(err)
   }
@@ -11,8 +16,12 @@ exports.get = async(req, res, next) => {
 
 exports.getNoAssign = async(req, res, next) => {
   try {
-    let people = await db.People.find().populate('room_id').populate('user_id').exec()
-    return res.status(200).json(people)
+    const { peopleIds } = res.locals
+    let foundPeople = await db.User.find({ _id: { $in: peopleIds }, room_id: undefined })
+      .populate('user_id')
+      .lean()
+      .exec()
+    return res.status(200).json(foundPeople)
   } catch(err) {
     return next(err)
   }

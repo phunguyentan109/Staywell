@@ -1,29 +1,29 @@
-const express = require("express");
-const hdl = require("../handlers");
-const mw = require("../middleware");
-const router = express.Router({mergeParams: true});
+const express = require('express')
+const hdl = require('../handlers')
+const mw = require('../middleware')
+const router = express.Router({ mergeParams: true })
 
-router.route("/").get(hdl.User.get);
-router.route("/assign").get(hdl.User.getAssign);
+router.route('/').get(hdl.User.get)
+router.route('/assign').get(mw.User.getByRole, hdl.User.getAssign)
 
-router.route("/signup").post(mw.User.generateAvatar, hdl.User.signUp);
-router.route("/login").post(hdl.User.logIn);
-router.route("/forgot").post(hdl.User.forgot);
+router.route('/signup').post(mw.User.generateAvatar, hdl.User.signUp)
+router.route('/login').post(hdl.User.logIn)
+router.route('/forgot').post(hdl.User.forgot)
 
-router.route("/:user_id")
-.get(hdl.User.getOne)
-.delete(hdl.User.remove)
-.put(hdl.User.update);
+router.route('/:user_id')
+  .get(hdl.User.getOne)
+  .delete(hdl.User.remove)
+  .put(hdl.User.update)
 
-router.route("/:token/reset").put(hdl.User.resetPassword);
+router.route('/:token/reset').put(hdl.User.resetPassword)
 
-router.route("/:user_id/activate").put(hdl.User.activate);
-router.route("/:user_id/password").put(hdl.User.updatePassword);
-router.route("/:user_id/contact").post(hdl.User.contact);
+router.route('/:user_id/activate').put(hdl.User.activate)
+router.route('/:user_id/password').put(hdl.User.updatePassword)
+router.route('/:user_id/contact').post(hdl.User.contact)
 
-router.use("/:user_id/rooms", mw.User.isLogin, require("./r-Room"));
-router.use("/:user_id/price", mw.User.isLogin, require("./r-Price"));
-router.use("/:user_id/people", mw.User.isLogin, require("./r-People"));
-router.use("/:user_id/contracts", require("./r-Contract"));
+router.use('/:user_id/rooms', mw.User.isLogin, require('./r-Room'))
+router.use('/:user_id/price', mw.User.isLogin, require('./r-Price'))
+router.use('/:user_id/people', mw.User.isLogin, require('./r-People'))
+router.use('/:user_id/contracts', require('./r-Contract'))
 
-module.exports = router;
+module.exports = router
