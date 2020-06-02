@@ -1,26 +1,26 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import TableTransferConfig from '../index'
-import { LEFT_TABLE } from '../../const'
+import { TABLE_COLS } from '../../const'
 import { Modal } from 'antd'
+import { apiUser } from 'constants/api'
 
 export default function TableTransfer({ notify }) {
   const [assignPeople, setAssignPeople] = useState([])
 
-  const load = useCallback(() => {
+  const load = useCallback(async() => {
     try {
-
+      let people = await apiUser.getAssign()
+      setAssignPeople(people)
     } catch (e) {
       notify('error')
     }
   }, [notify])
 
-  useEffect(() => {
-    load()
-  }, [load])
+  useEffect(() => { load() }, [load])
   
   return (
     <Modal
-      title={room._id ? 'Update Price Information' : 'Create New Price'}
+      title='People Assignment'
       visible={assign}
       onOk={hdOk}
       confirmLoading={processing}
@@ -34,8 +34,8 @@ export default function TableTransfer({ notify }) {
         filterOption={(inputValue, item) =>
           item.title.indexOf(inputValue) !== -1 || item.tag.indexOf(inputValue) !== -1
         }
-        leftTableColumns={LEFT_TABLE}
-        rightTableColumns={rightTableColumns}
+        leftTableColumns={TABLE_COLS}
+        rightTableColumns={TABLE_COLS}
       />
     </Modal>
   )

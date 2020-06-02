@@ -5,7 +5,7 @@ export const DEFAULT_ROOM = {
   user_id: []
 }
 
-export const LEFT_TABLE = [
+export const TABLE_COLS = [
   {
     title: 'Username',
     dataIndex: 'people_id.username',
@@ -15,11 +15,4 @@ export const LEFT_TABLE = [
     title: 'Email',
     dataIndex: 'email'
   }
-]
-
-const RIGHT_TABLE = [
-  {
-    dataIndex: 'title',
-    title: 'Name',
-  },
 ]
