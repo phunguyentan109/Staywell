@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { Row, Col, Card, Table, Button, Divider } from 'antd'
 import PropTypes from 'prop-types'
 
-import PopConfirm from 'components/App/Pop/PopConfirm'
+import SweetAlert from 'react-bootstrap-sweetalert'
 import { apiRoom, apiPrice } from 'constants/api'
 import RoomForm from '../modules/Form'
 import RoomAssign from '../modules/Assign'
@@ -15,6 +15,7 @@ export default function Room({ notify, setLoading }) {
   const [price, setPrice] = useState([])
   const [form, toggleForm] = useState(false)
   const [assign, toggleAssign] = useState(false)
+  const [modal, setToggleModal] = useState(false)
 
   const load = useCallback(async() => {
     try {
@@ -30,12 +31,17 @@ export default function Room({ notify, setLoading }) {
 
   useEffect(() => { load() }, [load])
 
+  function onShowModal() {
+    setToggleModal(!modal)
+  }
+
   async function hdRemove(room_id) {
     setLoading(true)
     try {
       await apiRoom.remove(room_id)
       let newRooms = rooms.filter(r => r._id !== room_id)
       setRooms(newRooms)
+      setToggleModal(false)
       notify('success', 'The room information is removed successfully!')
     } catch (e) {
       notify('error', 'The process is not completed')
@@ -95,14 +101,20 @@ export default function Room({ notify, setLoading }) {
         key: 'action',
         render: (text, record) => room._id ? <span>None</span> : (
           <span>
-            <PopConfirm
-              title='Are you sure to delete this genre?'
-              task={hdRemove.bind(this, record._id)}
-              okText='Sure, remove it'
-              cancelText='Not now'
-            >
-              <span className='gx-link'>Delete</span>
-            </PopConfirm>
+            <span className='gx-link' onClick={onShowModal}>Delete</span>
+            {
+              modal && <SweetAlert
+                warning
+                showCancel
+                confirmBtnText='Yes, delete it !'
+                cancelBtnBsStyle='default'
+                title='Are you sure to delete ?'
+                onConfirm={hdRemove.bind(this, record._id)}
+                onCancel={onShowModal}
+              >
+                <span>You will not be able to recover this Room</span>
+              </SweetAlert>
+            }
             <Divider type='vertical'/>
             <span className='gx-link' onClick={hdEdit.bind(this, record)}>Edit</span>
             <Divider type='vertical'/>

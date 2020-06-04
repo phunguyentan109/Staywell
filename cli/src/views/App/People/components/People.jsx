@@ -7,6 +7,7 @@ import PeopleTable from '../modules/PeopleTable'
 
 export default function People({ notify, setLoading }) {
   const [people, setPeople] = useState([])
+  const [toggle, setToggle] = useState(false)
 
   const load = useCallback(async() => {
     try {
@@ -24,6 +25,7 @@ export default function People({ notify, setLoading }) {
     try {
       await apiUser.remove(user_id)
       setPeople(prev => prev.filter(p => p.user_id._id !== user_id))
+      setToggle(false)
       return notify('success', 'People data is removed successfully.')
     } catch (e) {
       return notify('error', 'People data cannot be removed properly')
@@ -32,6 +34,10 @@ export default function People({ notify, setLoading }) {
 
   function getActiveType(type) {
     return people.filter(p => p.role_id.code === type)
+  }
+
+  function onShowModal() {
+    setToggle(!toggle)
   }
 
   return (
@@ -47,6 +53,8 @@ export default function People({ notify, setLoading }) {
         title='List of People'
         dataSource={getActiveType(PEOPLE_PM)}
         hdRemove={hdRemove}
+        onShowModal={onShowModal}
+        toggle={toggle}
       />
     </Fragment>
   )

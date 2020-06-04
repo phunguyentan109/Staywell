@@ -3,7 +3,7 @@ import { Card, Table, Divider, Form, Input, Button } from 'antd'
 import PropTypes from 'prop-types'
 
 import { apiPrice } from 'constants/api'
-import PopConfirm from 'components/App/Pop/PopConfirm'
+import SweetAlert from 'react-bootstrap-sweetalert'
 import { DEFAULT_PRICE } from '../modules/const'
 
 const FormItem = Form.Item
@@ -12,6 +12,7 @@ export default function Price({ notify, setLoading }) {
   const [listPrice, setListPrice] = useState([])
   const [price, setPrice] = useState(DEFAULT_PRICE)
   const [form, toggleForm] = useState(false)
+  const [modal, setToggleModal] = useState(false)
 
   const load = useCallback(async() => {
     try {
@@ -55,12 +56,17 @@ export default function Price({ notify, setLoading }) {
     setLoading(false)
   }
 
+  function onShowModal() {
+    setToggleModal(!modal)
+  }
+
   async function hdRemove(price_id) {
     setLoading(true)
     try {
       await apiPrice.remove(price_id)
       let updatePriceList = listPrice.filter(v => v._id !== price_id)
       setListPrice(updatePriceList)
+      setToggleModal(false)
       notify('success', 'Price data is removed successfully')
     } catch (err){
       notify('error', 'Price data is not remove')
@@ -208,14 +214,20 @@ export default function Price({ notify, setLoading }) {
               key: 'action',
               render: (text, record) => (
                 <span>
-                  <PopConfirm
-                    title='Are you sure to delete this genre?'
-                    task={hdRemove.bind(this, record._id)}
-                    okText='Sure, remove it'
-                    cancelText='Not now'
-                  >
-                    <span className='gx-link'>Delete</span>
-                  </PopConfirm>
+                  <span className='gx-link' onClick={onShowModal}>Delete</span>
+                  {
+                    modal && <SweetAlert
+                      warning
+                      showCancel
+                      confirmBtnText='Yes, delete it !'
+                      cancelBtnBsStyle='default'
+                      title='Are you sure to delete ?'
+                      onConfirm={hdRemove.bind(this, record._id)}
+                      onCancel={onShowModal}
+                    >
+                      <span>You will not be able to recover this Price</span>
+                    </SweetAlert>
+                  }
                   <Divider type='vertical'/>
                   <span className='gx-link' onClick={hdEdit.bind(this, record)}>Edit</span>
                 </span>
