@@ -1,22 +1,29 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import TableTransferConfig from '../index'
+import PropTypes from 'prop-types'
+
+import TransferConfig from './TransferConfig'
 import { TABLE_COLS } from '../../const'
 import { Modal } from 'antd'
 import { apiUser } from 'constants/api'
 
-export default function TableTransfer({ notify }) {
+export default function TableTransfer({ notify, assign, room }) {
   const [assignPeople, setAssignPeople] = useState([])
+  const [processing, setProcessing] = useState(false)
 
   const load = useCallback(async() => {
     try {
-      let people = await apiUser.getAssign()
-      setAssignPeople(people)
+      let noAssignPeople = await apiUser.getNoAssign()
+      setAssignPeople(noAssignPeople)
     } catch (e) {
       notify('error')
     }
   }, [notify])
 
   useEffect(() => { load() }, [load])
+
+  function hdOk() {
+
+  }
   
   return (
     <Modal
@@ -26,10 +33,10 @@ export default function TableTransfer({ notify }) {
       confirmLoading={processing}
       onCancel={toggleVisible}
     >
-      <TableTransferConfig
+      <TransferConfig
         showSearch
-        dataSource={mockData}
-        targetKeys={targetKeys}
+        dataSource={room.people_id}
+        targetKeys={assignPeople}
         onChange={this.onChange}
         filterOption={(inputValue, item) =>
           item.title.indexOf(inputValue) !== -1 || item.tag.indexOf(inputValue) !== -1
@@ -39,4 +46,10 @@ export default function TableTransfer({ notify }) {
       />
     </Modal>
   )
+}
+
+TableTransfer.propTypes = {
+  notify: PropTypes.func,
+  assign: PropTypes.bool,
+  room: PropTypes.object.isRequired
 }

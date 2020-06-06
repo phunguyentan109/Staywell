@@ -1,8 +1,9 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Transfer, Table } from 'antd'
 import difference from 'lodash/difference'
 
-function TableTransferConfig ({ leftTableColumns, rightTableColumns, notify, ...restProps }) {
+function TransferConfig ({ leftTableColumns, rightTableColumns, ...restProps }) {
   return (
     <Transfer {...restProps} showSelectAll={false}>
       {({
@@ -52,4 +53,9 @@ function TableTransferConfig ({ leftTableColumns, rightTableColumns, notify, ...
   )
 }
 
-export default TableTransferConfig
+export default TransferConfig
+
+TransferConfig.propTypes = {
+  leftTableColumns: PropTypes.array.isRequired,
+  rightTableColumns: PropTypes.array.isRequired
+}

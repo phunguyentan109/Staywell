@@ -3,9 +3,9 @@ import { Row, Col, Card, Table, Button, Divider, Form, Input, Select, Modal } fr
 import PropTypes from 'prop-types'
 
 import PopConfirm from 'components/App/Pop/PopConfirm'
-import { apiRoom, apiPrice } from 'constants/api'
+import { apiPrice, apiRoom } from 'constants/api'
 import useList from 'hooks/useList'
-import { DEFAULT_ROOM, LEFT_TABLE } from '../modules/const'
+import { DEFAULT_ROOM } from '../modules/const'
 import cloneDeep from 'lodash/cloneDeep'
 import TableTransfer from '../modules/TableTransfer'
 
@@ -59,9 +59,9 @@ export default function Room({ notify, setLoading }) {
     setVisible(prev => !prev)
   }
 
-  // function toggleAssign() {
-  //   setAssign(prev => !prev)
-  // }
+  function toggleAssign() {
+    setAssign(prev => !prev)
+  }
 
   function hdSelectPrice(price_id) {
     setRoom(prev => ({ ...prev, price_id }))
@@ -135,7 +135,10 @@ export default function Room({ notify, setLoading }) {
           </Card>
         </Col>
       </Row>
-      <TableTransfer room={room}/>
+      <TableTransfer
+        room={room}
+        assign={assign}
+      />
       <Modal
         title={room._id ? 'Update Price Information' : 'Create New Price'}
         visible={visible}
@@ -168,7 +171,7 @@ export default function Room({ notify, setLoading }) {
               onChange={hdSelectPrice}
               value={room.price_id}
             >
-              { price.map(v => <Option value={v._id} key={v._id}>{v.type}</Option>) }
+              {price.map(v => <Option value={v._id} key={v._id}>{v.type}</Option>)}
             </Select>
           </FormItem>
         </Form>

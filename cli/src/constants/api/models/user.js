@@ -28,8 +28,8 @@ export async function get() {
   return await apiCall('get', '/api/user')
 }
 
-export async function getAssign() {
-  return await apiCall('get', '/api/user/assign')
+export async function getNoAssign() {
+  return await apiCall('get', '/api/user/not-assign')
 }
 
 export async function remove(user_id) {
