@@ -6,18 +6,17 @@ import PopConfirm from 'components/App/Pop/PopConfirm'
 import { apiPrice, apiRoom } from 'constants/api'
 import useList from 'hooks/useList'
 import { DEFAULT_ROOM } from '../modules/const'
-import cloneDeep from 'lodash/cloneDeep'
+import _ from 'lodash'
 import TableTransfer from '../modules/TableTransfer'
 
 const FormItem = Form.Item
 const Option = Select.Option
 
-export default function Room({ notify, setLoading }) {
+export default function Room ({ notify, setLoading }) {
   const [rooms, setRooms, updateRooms] = useList([])
   const [room, setRoom] = useState(DEFAULT_ROOM)
   const [price, setPrice] = useState([])
-  const [visible, setVisible] = useState(false)
-  const [assign, setAssign] = useState(false)
+  const [modal, setModal] = useState({ form: false, transfer: false })
   const [processing, setProcessing] = useState(false)
 
   const load = useCallback(async() => {
@@ -34,6 +33,8 @@ export default function Room({ notify, setLoading }) {
 
   useEffect(() => { load() }, [load])
 
+  const toggle = modal => setModal(prev => ({ ...prev, [modal]: !prev[modal] }))
+
   async function hdRemove(room_id) {
     setLoading(true)
     try {
@@ -49,18 +50,10 @@ export default function Room({ notify, setLoading }) {
 
   function hdEdit(room) {
     setRoom({
-      ...cloneDeep(room),
-      price_id: room.price_id && room.price_id._id
+      ..._.cloneDeep(room),
+      price_id: _.get(room, 'price_id._id', '')
     })
-    toggleVisible(true)
-  }
-
-  function toggleVisible() {
-    setVisible(prev => !prev)
-  }
-
-  function toggleAssign() {
-    setAssign(prev => !prev)
+    toggle('form')
   }
 
   function hdSelectPrice(price_id) {
@@ -72,14 +65,17 @@ export default function Room({ notify, setLoading }) {
     setRoom(prev => ({ ...prev, [name]: value }))
   }
 
-  function hdAssign() {}
+  function hdAssign(room) {
+    setRoom(room)
+    toggle('transfer')
+  }
 
   async function hdOk() {
     setProcessing(true)
     try {
       let rs = room._id ? await apiRoom.update(room._id, room) : await apiRoom.create(room)
       updateRooms(rs)
-      toggleVisible()
+      toggle('form')
     } catch (e) {
       notify('error')
     }
@@ -91,7 +87,7 @@ export default function Room({ notify, setLoading }) {
       <Row>
         <Col md={24}>
           <Card title='List of available room'>
-            <Button type='primary' onClick={toggleVisible}>Add new room</Button>
+            <Button type='primary' onClick={toggle.bind(this, 'form')}>Add new room</Button>
             <Table
               className='gx-table-responsive'
               dataSource={rooms}
@@ -137,14 +133,15 @@ export default function Room({ notify, setLoading }) {
       </Row>
       <TableTransfer
         room={room}
-        assign={assign}
+        assign={modal.transfer}
+        toggleModal={toggle.bind(this, 'transfer')}
       />
       <Modal
         title={room._id ? 'Update Price Information' : 'Create New Price'}
-        visible={visible}
+        visible={modal.form}
         onOk={hdOk}
         confirmLoading={processing}
-        onCancel={toggleVisible}
+        onCancel={toggle.bind(this, 'form')}
       >
         <Form layout='horizontal'>
           <FormItem
@@ -171,7 +168,7 @@ export default function Room({ notify, setLoading }) {
               onChange={hdSelectPrice}
               value={room.price_id}
             >
-              {price.map(v => <Option value={v._id} key={v._id}>{v.type}</Option>)}
+              { price.map(v => <Option value={v._id} key={v._id}>{v.type}</Option>) }
             </Select>
           </FormItem>
         </Form>
@@ -180,7 +177,7 @@ export default function Room({ notify, setLoading }) {
   )
 }
 
-Room.propsTypes = {
+Room.propTypes = {
   notify: PropTypes.func,
   setLoading: PropTypes.func
 }

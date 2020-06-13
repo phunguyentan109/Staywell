@@ -9,7 +9,11 @@ export const TABLE_COLS = [
   {
     title: 'Username',
     dataIndex: 'people_id.username',
-    render: (text, rec) => <span>{rec.avatar.link} {text}</span>
+    render: (text, rec) => (
+      <span className='transfer'>
+        <img src={rec.avatar.link} alt='img'/>{text}
+      </span>
+    )
   },
   {
     title: 'Email',

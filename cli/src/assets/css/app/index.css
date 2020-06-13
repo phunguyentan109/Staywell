@@ -1,5 +1,10 @@
-.app-assign {
-  color: #e87422 !important; }
+.transfer {
+  display: flex;
+  align-items: center; }
+  .transfer img {
+    margin-right: 10px;
+    width: 50px;
+    border-radius: 5px; }
 
 .bill-record {
   display: flex;

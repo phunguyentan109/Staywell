@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Switch, Redirect, Route, withRouter } from 'react-router-dom'
 import { PermissionRouter } from 'containers/Permissions'
 
@@ -40,11 +41,16 @@ function AppRoutes(props) {
           component={Profile}
           access={['OWNER_PM', 'PEOPLE_PM']}
         />
-        <Route path={`${url}`} component={Dashboard}/>
-        <Redirect from={props.location.pathname} to={`${url}`}/>
+        <Route path={url} component={Dashboard}/>
+        <Redirect from={props.location.pathname} to={url}/>
       </Switch>
     </div>
   )
+}
+
+AppRoutes.propTypes = {
+  match: PropTypes.object,
+  location: PropTypes.object
 }
 
 export default withRouter(AppRoutes)

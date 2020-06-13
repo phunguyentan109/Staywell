@@ -6,7 +6,7 @@ import { TABLE_COLS } from '../../const'
 import { Modal } from 'antd'
 import { apiUser } from 'constants/api'
 
-export default function TableTransfer({ notify, assign, room }) {
+export default function TableTransfer({ notify, assign, room, toggleModal }) {
   const [assignPeople, setAssignPeople] = useState([])
   const [processing, setProcessing] = useState(false)
 
@@ -21,26 +21,33 @@ export default function TableTransfer({ notify, assign, room }) {
 
   useEffect(() => { load() }, [load])
 
-  function hdOk() {
+  const toggleProcess = () => setProcessing(prev => !prev)
 
+  function hdOk() {
+    toggleProcess()
+
+    toggleProcess()
   }
-  
+
+  function handleChange() {}
+
+  function handleFilter(value, item) {}
+
   return (
     <Modal
       title='People Assignment'
       visible={assign}
       onOk={hdOk}
       confirmLoading={processing}
-      onCancel={toggleVisible}
+      onCancel={toggleModal}
+      width={1200}
     >
       <TransferConfig
         showSearch
-        dataSource={room.people_id}
-        targetKeys={assignPeople}
-        onChange={this.onChange}
-        filterOption={(inputValue, item) =>
-          item.title.indexOf(inputValue) !== -1 || item.tag.indexOf(inputValue) !== -1
-        }
+        dataSource={assignPeople}
+        targetKeys={room.people_id}
+        onChange={handleChange}
+        filterOption={handleFilter}
         leftTableColumns={TABLE_COLS}
         rightTableColumns={TABLE_COLS}
       />
@@ -51,5 +58,12 @@ export default function TableTransfer({ notify, assign, room }) {
 TableTransfer.propTypes = {
   notify: PropTypes.func,
   assign: PropTypes.bool,
+  toggleModal: PropTypes.func,
   room: PropTypes.object.isRequired
+}
+
+TableTransfer.defaultProps = {
+  room: {
+    people_id: []
+  }
 }

@@ -9,7 +9,7 @@ exports.get = async(req, res, next) => {
       .lean().exec()
 
     return res.status(200).json(list)
-  } catch(err) {
+  } catch (err) {
     return next(err)
   }
 }
@@ -22,7 +22,7 @@ exports.getOne = async(req, res, next) => {
       .lean().exec()
 
     return res.status(200).json(one)
-  } catch(err) {
+  } catch (err) {
     return next(err)
   }
 }
@@ -37,7 +37,7 @@ exports.create = async(req, res, next) => {
     createdRoom = await createdRoom.save()
 
     return res.status(200).json(createdRoom)
-  } catch(err) {
+  } catch (err) {
     return next(err)
   }
 }
@@ -45,9 +45,9 @@ exports.create = async(req, res, next) => {
 exports.remove = async(req, res, next) => {
   try {
     let foundRoom = await db.Room.findById(req.params.room_id)
-    if(foundRoom) await foundRoom.remove()
+    if (foundRoom) await foundRoom.remove()
     return res.status(200).json(foundRoom)
-  } catch(err) {
+  } catch (err) {
     return next(err)
   }
 }
