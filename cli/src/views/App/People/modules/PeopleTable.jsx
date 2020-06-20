@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Card, Table } from 'antd'
 import PropTypes from 'prop-types'
-import SweetAlert from 'react-bootstrap-sweetalert'
+import SweetAlert from 'components/extraComponents/SweetAlert'
 
 export default function PeopleTable({ title, dataSource, hdRemove, toggle, onShowModal }) {
 
@@ -38,15 +38,10 @@ export default function PeopleTable({ title, dataSource, hdRemove, toggle, onSho
                 <span className='gx-link' onClick={onShowModal.bind(this)}>Delete</span>
                 {
                   toggle && <SweetAlert
-                    warning
-                    showCancel
-                    confirmBtnText='Yes, delete it !'
-                    cancelBtnBsStyle='default'
-                    title='Are you sure delete ?'
-                    onConfirm={hdRemove.bind(this, record._id)}
-                    onCancel={onShowModal.bind(this)}
+                    hdConfirm={hdRemove.bind(this, record._id)}
+                    hdCancel={onShowModal}
                   >
-                    <span>You will not be able to recover this People</span>
+                    <span>You will not be able to recover this Price</span>
                   </SweetAlert>
                 }
               </span>

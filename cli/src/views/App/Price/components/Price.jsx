@@ -3,7 +3,7 @@ import { Card, Table, Divider, Form, Input, Button } from 'antd'
 import PropTypes from 'prop-types'
 
 import { apiPrice } from 'constants/api'
-import SweetAlert from 'react-bootstrap-sweetalert'
+import SweetAlert from 'components/extraComponents/SweetAlert'
 import { DEFAULT_PRICE } from '../modules/const'
 
 const FormItem = Form.Item
@@ -217,13 +217,8 @@ export default function Price({ notify, setLoading }) {
                   <span className='gx-link' onClick={onShowModal}>Delete</span>
                   {
                     modal && <SweetAlert
-                      warning
-                      showCancel
-                      confirmBtnText='Yes, delete it !'
-                      cancelBtnBsStyle='default'
-                      title='Are you sure to delete ?'
-                      onConfirm={hdRemove.bind(this, record._id)}
-                      onCancel={onShowModal}
+                      hdConfirm={hdRemove.bind(this, record._id)}
+                      hdCancel={onShowModal}
                     >
                       <span>You will not be able to recover this Price</span>
                     </SweetAlert>
