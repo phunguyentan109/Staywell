@@ -12,7 +12,7 @@ async function createOwner() {
   try {
     let role = await db.Role.findOne({ code: '000' }).lean().exec()
     await createUserWithRole(OWNER, role)
-  } catch(err) {
+  } catch (err) {
     console.log(err)
   }
 }
@@ -20,10 +20,10 @@ async function createOwner() {
 async function createPeople() {
   try {
     let role = await db.Role.findOne({ code: '001' }).lean().exec()
-    for(let people of PEOPLE) {
+    for (let people of PEOPLE) {
       await createUserWithRole(people, role)
     }
-  } catch(err) {
+  } catch (err) {
     console.log(err)
   }
 }

@@ -132,8 +132,8 @@ export default function Room ({ notify, setLoading }) {
         </Col>
       </Row>
       <TableTransfer
-        room={room}
-        assign={modal.transfer}
+        people={room.user_id}
+        visible={modal.transfer}
         toggleModal={toggle.bind(this, 'transfer')}
       />
       <Modal

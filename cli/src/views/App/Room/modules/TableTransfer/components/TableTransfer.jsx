@@ -6,14 +6,15 @@ import { TABLE_COLS } from '../../const'
 import { Modal } from 'antd'
 import { apiUser } from 'constants/api'
 
-export default function TableTransfer({ notify, assign, room, toggleModal }) {
-  const [assignPeople, setAssignPeople] = useState([])
+export default function TableTransfer({ notify, visible, people, toggleModal }) {
+  const [noCheckIn, setNoCheckIn] = useState([])
+  const [checkedIn, setCheckedIn] = useState(people.length > 0 ? people : [])
   const [processing, setProcessing] = useState(false)
 
   const load = useCallback(async() => {
     try {
       let noAssignPeople = await apiUser.getNoAssign()
-      setAssignPeople(noAssignPeople)
+      setNoCheckIn(noAssignPeople)
     } catch (e) {
       notify('error')
     }
@@ -29,14 +30,17 @@ export default function TableTransfer({ notify, assign, room, toggleModal }) {
     toggleProcess()
   }
 
-  function handleChange() {}
+  function hdChange(targets) {
+    console.log('target', targets)
+    setCheckedIn(targets)
+  }
 
-  function handleFilter(value, item) {}
+  const hdFilter = (value, item) => item.username.includes(value) || item.email.includes(value)
 
   return (
     <Modal
       title='People Assignment'
-      visible={assign}
+      visible={visible}
       onOk={hdOk}
       confirmLoading={processing}
       onCancel={toggleModal}
@@ -44,10 +48,10 @@ export default function TableTransfer({ notify, assign, room, toggleModal }) {
     >
       <TransferConfig
         showSearch
-        dataSource={assignPeople}
-        targetKeys={room.people_id}
-        onChange={handleChange}
-        filterOption={handleFilter}
+        dataSource={noCheckIn}
+        targetKeys={checkedIn}
+        onChange={hdChange}
+        filterOption={hdFilter}
         leftTableColumns={TABLE_COLS}
         rightTableColumns={TABLE_COLS}
       />
@@ -57,13 +61,12 @@ export default function TableTransfer({ notify, assign, room, toggleModal }) {
 
 TableTransfer.propTypes = {
   notify: PropTypes.func,
-  assign: PropTypes.bool,
+  visible: PropTypes.bool,
   toggleModal: PropTypes.func,
-  room: PropTypes.object.isRequired
+  people: PropTypes.array
 }
 
 TableTransfer.defaultProps = {
-  room: {
-    people_id: []
-  }
+  people: [],
+  visible: false
 }
