@@ -32,6 +32,9 @@ export default function Room ({ notify, setLoading }) {
   }, [notify, setLoading, setRooms])
 
   useEffect(() => { load() }, [load])
+  useEffect(() => {
+    !modal.form && !modal.transfer && !_.isEqual(room, DEFAULT_ROOM) && setRoom(DEFAULT_ROOM)
+  }, [modal.form, modal.transfer, room])
 
   const toggle = modal => setModal(prev => ({ ...prev, [modal]: !prev[modal] }))
 
@@ -93,19 +96,13 @@ export default function Room ({ notify, setLoading }) {
               dataSource={rooms}
               rowKey='_id'
               columns={[
-                {
-                  title: 'Room Name',
-                  dataIndex: 'name',
-                },
+                { title: 'Room Name', dataIndex: 'name' },
                 {
                   title: 'People',
                   dataIndex: 'user_id',
                   render: text => <span>{text.length} people</span>
                 },
-                {
-                  title: 'Price Type',
-                  dataIndex: 'price_id.type'
-                },
+                { title: 'Price Type', dataIndex: 'price_id.type' },
                 {
                   title: 'Action',
                   key: 'action',
@@ -132,7 +129,9 @@ export default function Room ({ notify, setLoading }) {
         </Col>
       </Row>
       <TableTransfer
+        roomId={room._id}
         people={room.user_id}
+        updateRooms={updateRooms}
         visible={modal.transfer}
         toggleModal={toggle.bind(this, 'transfer')}
       />

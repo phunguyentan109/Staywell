@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+export const spec = id => id ? `/${id}` : ''
+
 export function setTokenHeader(token) {
   if (token) {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`

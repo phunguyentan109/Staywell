@@ -33,15 +33,6 @@ export default function TransferConfig ({ leftTableColumns, rightTableColumns, .
           selectedRowKeys: listSelectedKeys,
         }
 
-        function hdRow(rec) {
-          return {
-            onClick: () => {
-              console.log('click', rec)
-              onItemSelect(rec, !listSelectedKeys.includes(rec._id))
-            }
-          }
-        }
-
         return (
           <Table
             rowKey='_id'
@@ -49,7 +40,11 @@ export default function TransferConfig ({ leftTableColumns, rightTableColumns, .
             columns={columns}
             dataSource={filteredItems}
             style={{ pointerEvents: listDisabled ? 'none' : null }}
-            onRow={hdRow}
+            onRow={rec => ({
+              onClick: () => {
+                onItemSelect(rec._id, !listSelectedKeys.includes(rec._id))
+              }
+            })}
           />
         )
       }}

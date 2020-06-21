@@ -7,11 +7,11 @@ const db = require('../models')
 exports.spliceId = async(findSchema, findId, spliceCol, spliceId) => {
   try {
     let foundDoc = await db[findSchema].findById(findId)
-    if(foundDoc){
+    if (foundDoc){
       foundDoc[spliceCol].splice(foundDoc[spliceCol].indexOf(spliceId), 1)
       await foundDoc.save()
     }
-  } catch(err) {
+  } catch (err) {
     console.log(err)
   }
 }
@@ -23,11 +23,11 @@ exports.spliceId = async(findSchema, findId, spliceCol, spliceId) => {
 exports.pushId = async(findSchema, findId, pushCol, pushId) => {
   try {
     let foundDoc = await db[findSchema].findById(findId)
-    if(foundDoc) {
+    if (foundDoc) {
       foundDoc[pushCol].push(pushId)
       await foundDoc.save()
     }
-  } catch(err) {
+  } catch (err) {
     console.log(err)
   }
 }
@@ -39,12 +39,22 @@ exports.pushId = async(findSchema, findId, pushCol, pushId) => {
 exports.assignId = async(findSchema, findId, assignCol, assignId) => {
   try {
     let foundDoc = await db[findSchema].findById(findId)
-    if(foundDoc) {
+    if (foundDoc) {
       foundDoc[assignCol] = assignId
       await foundDoc.save()
     }
-  } catch(err) {
+  } catch (err) {
     console.log(err)
+  }
+}
+
+exports.assignByIds = async(schema, ids, assignObj) => {
+  try {
+    for (let id of ids) {
+      await db[schema].findByIdAndUpdate(id, assignObj)
+    }
+  } catch (err) {
+    throw new Error(err)
   }
 }
 
@@ -53,11 +63,11 @@ exports.assignId = async(findSchema, findId, assignCol, assignId) => {
 */
 exports.casDeleteMany = async(schema, listId) => {
   try {
-    for(let id of listId){
+    for (let id of listId){
       let foundDoc = await db[schema].findById(id)
-      if(foundDoc) await foundDoc.remove()
+      if (foundDoc) await foundDoc.remove()
     }
-  } catch(err) {
+  } catch (err) {
     console.log(err)
   }
 }
@@ -68,8 +78,8 @@ exports.casDeleteMany = async(schema, listId) => {
 exports.casDelete = async(findSchema, findCol, findVal) => {
   try {
     let fDoc = await db[findSchema].findOne({ [findCol]: findVal })
-    if(fDoc) await fDoc.remove()
-  } catch(err) {
+    if (fDoc) await fDoc.remove()
+  } catch (err) {
     console.log(err)
   }
 }

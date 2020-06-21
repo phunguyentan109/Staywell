@@ -1,6 +1,7 @@
 const db = require('../models')
-const { pushId, spliceId, assignId } = require('../utils/dbSupport')
-const mail = require('../utils/mail')
+const { pushId, spliceId, assignByIds } = require('../utils/dbSupport')
+const { difference, forEach, cloneDeep } = require('lodash')
+const { leaveRoom, getRoom } = require('../utils/mail')
 
 exports.update = async(req, res, next) => {
   try {
@@ -10,10 +11,10 @@ exports.update = async(req, res, next) => {
 
     // update room
     foundRoom.name = name
-    if(foundRoom.price_id && !foundRoom.price_id.equals(price_id)) {
+    if (foundRoom.price_id && !foundRoom.price_id.equals(price_id)) {
       await spliceId('Price', foundRoom.price_id, 'room_id', foundRoom._id)
     }
-    if(price_id) {
+    if (price_id) {
       foundRoom.price_id = price_id
       await pushId('Price', price_id, 'room_id', foundRoom._id)
     }
@@ -28,53 +29,24 @@ exports.update = async(req, res, next) => {
 exports.assign = async(req, res, next) => {
   try {
     const { room_id } = req.params
-    let foundRoom = await db.Room.findById(room_id).populate('price_id').exec()
-
-    // Get only the id of user
-    let user_id = req.body.user_id.map(user => user._id)
+    let inputUserIds = cloneDeep(req.body.user_id)
+    let foundRoom = await db.Room.findByIdAndUpdate(room_id, { user_id: inputUserIds })
 
     // determine old people and current user
-    let newUser = [], oldUser = [], curUser = []
-    for(let id of foundRoom.user_id) {
-      let isExist = user_id.some(uid => id.equals(uid))
-      if(isExist) curUser.push(id)
-      else oldUser.push(id)
-    }
+    let oldUserIds = difference(foundRoom.user_id, inputUserIds)
+    let newUserIds = difference(inputUserIds, foundRoom.user_id)
 
-    // determine new user
-    for(let uid of user_id) {
-      let isExist = foundRoom.user_id.some(id => id.equals(uid))
-      if(!isExist) newUser.push(uid)
-    }
-
-    // remove room id of old user
-    if(oldUser.length > 0) {
-      for(let id of oldUser) {
-        await assignId('User', id, 'room_id')
-
-        // send mail to notify user about removing from the room
-        let foundUser = await db.User.findById(id).lean().exec()
-        let { email, username } = foundUser
-        mail.leaveRoom(email, username, foundRoom.name)
-      }
-    }
+    // remove room id from old user data
+    await assignByIds('User', oldUserIds, { room_id: undefined })
+    let oldUsers = await db.User.find({ _id: { $in: oldUserIds } }).lean().exec()
+    forEach(oldUsers, ({ email, username }) => leaveRoom(email, username, foundRoom.name))
 
     // assign room id for new people
-    if(newUser.length > 0) {
-      for(let id of newUser) {
-        await assignId('User', id, 'room_id', foundRoom._id)
+    await assignByIds('User', newUserIds, { room_id: foundRoom._id })
+    let newUsers = await db.User.find({ _id: { $in: newUserIds } }).lean().exec()
+    forEach(newUsers, ({ email, username }) => getRoom(email, username, foundRoom.name))
 
-        // send mail to notify people about new place
-        let foundUser = await db.User.findById(id).lean().exec()
-        let { email, username } = foundUser
-        mail.getRoom(email, username, foundRoom.name)
-      }
-    }
-
-    foundRoom.user_id = [...curUser, ...newUser]
-    foundRoom = await foundRoom.save()
-
-    return res.status(200).json(foundRoom)
+    return next()
   } catch (e) {
     return next(e)
   }

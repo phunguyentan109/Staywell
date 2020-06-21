@@ -48,7 +48,7 @@ This is the automatic email from the system, please do not reply.`
   return await send(to, subject, text)
 }
 
-async function getRoom(to, viewName, roomName) {
+function getRoom(to, viewName, roomName) {
   let subject = emoji.emojify(':house_with_garden: Your new place is ready, start living now - Staywell')
   let text = `
 Good day ${viewName}, this mail comes from Staywell,
@@ -56,10 +56,10 @@ Good day ${viewName}, this mail comes from Staywell,
 Your place has been arranged, everything is ready and you will stay in room ${roomName}. You can come and live from now.
 
 This is the automatic email from the system, please do not reply.`
-  return await send(to, subject, text)
+  return send(to, subject, text)
 }
 
-async function leaveRoom(to, viewName, roomName) {
+function leaveRoom(to, viewName, roomName) {
   let subject = emoji.emojify(':dash: Your staying contract has come to the end - Staywell')
   let text = `
 Good day ${viewName}, this mail comes from Staywell,
@@ -68,7 +68,7 @@ You have been removed from room ${roomName}.
 We will notify you about your place as soon as possible if there are any changes made.
 
 This is the automatic email from the system, please do not reply.`
-  return await send(to, subject, text)
+  return send(to, subject, text)
 }
 
 async function forgotPassword(to, viewName, token, host) {
