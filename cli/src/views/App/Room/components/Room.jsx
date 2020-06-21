@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, Fragment } from 'react'
 import { Row, Col, Card, Table, Button, Divider, Form, Input, Select, Modal } from 'antd'
 import PropTypes from 'prop-types'
 
-import PopConfirm from 'components/App/Pop/PopConfirm'
+import DeleteAction from 'components/DeleteAction'
 import { apiPrice, apiRoom } from 'constants/api'
 import useList from 'hooks/useList'
 import { DEFAULT_ROOM } from '../modules/const'
@@ -112,14 +112,7 @@ export default function Room ({ notify, setLoading }) {
                   key: 'action',
                   render: (text, record) => (
                     <span>
-                      <PopConfirm
-                        title='Are you sure to delete this genre?'
-                        task={hdRemove.bind(this, record._id)}
-                        okText='Sure, remove it'
-                        cancelText='Not now'
-                      >
-                        <span className='gx-link'>Delete</span>
-                      </PopConfirm>
+                      <DeleteAction onConfirm={hdRemove.bind(this, record._id)}/>
                       <Divider type='vertical'/>
                       <span className='gx-link' onClick={hdEdit.bind(this, record)}>Edit</span>
                       <Divider type='vertical'/>

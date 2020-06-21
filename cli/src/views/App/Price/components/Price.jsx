@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback, Fragment } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Card, Table, Divider, Button, Form, Input, Modal } from 'antd'
 import PropTypes from 'prop-types'
 
 import { apiPrice } from 'constants/api'
-import PopConfirm from 'components/App/Pop/PopConfirm'
+import DeleteAction from 'components/DeleteAction'
 import { DEFAULT_PRICE, PRICE_COLS, PRICE_INPUTS } from '../modules/const'
 import useList from 'hooks/useList'
 
@@ -62,7 +62,7 @@ export default function Price({ notify, setLoading }) {
   }
 
   return (
-    <Fragment>
+    <>
       <Card title='List of available price'>
         <Button type='primary' onClick={toggle}>Add new price</Button>
         <Table
@@ -75,15 +75,8 @@ export default function Price({ notify, setLoading }) {
               title: 'Action',
               key: 'action',
               render: (text, record) => (
-                <span>
-                  <PopConfirm
-                    title='Are you sure to delete this genre?'
-                    task={hdRemove.bind(this, record._id)}
-                    okText='Sure, remove it'
-                    cancelText='Not now'
-                  >
-                    <span className='gx-link'>Delete</span>
-                  </PopConfirm>
+                <span> 
+                  <DeleteAction onConfirm={hdRemove.bind(this, record._id)}/>
                   <Divider type='vertical'/>
                   <span className='gx-link' onClick={() => setPrice(record)}>Edit</span>
                 </span>
@@ -120,7 +113,7 @@ export default function Price({ notify, setLoading }) {
           }
         </Form>
       </Modal>
-    </Fragment>
+    </>
   )
 }
 

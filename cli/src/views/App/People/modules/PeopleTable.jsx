@@ -1,9 +1,10 @@
 import React from 'react'
 import { Card, Table } from 'antd'
 import PropTypes from 'prop-types'
-import PopConfirm from 'components/App/Pop/PopConfirm'
+import DeleteAction from 'components/DeleteAction'
 
 export default function PeopleTable({ title, dataSource, hdRemove }) {
+
   return (
     <Card title={title}>
       <Table
@@ -34,14 +35,10 @@ export default function PeopleTable({ title, dataSource, hdRemove }) {
             key: 'action',
             render: (text, record) => record.room_id ? <span>None</span> : (
               <span>
-                <PopConfirm
-                  title='Are you sure to delete this genre?'
-                  task={hdRemove.bind(this, record._id)}
-                  okText='Sure, remove it'
-                  cancelText='Not now'
-                >
-                  <span className='gx-link'>Delete</span>
-                </PopConfirm>
+                <DeleteAction
+                  onRemove={hdRemove.bind(this, record._id)}
+                  message='You will not be able to recover this People'
+                />
               </span>
             )
           }
@@ -55,7 +52,9 @@ PeopleTable.propsTypes = {
   title: PropTypes.string,
   dataSource: PropTypes.array,
   loading: PropTypes.bool,
-  hdRemove: PropTypes.func
+  hdRemove: PropTypes.func,
+  toggle: PropTypes.bool,
+  onShowModal: PropTypes.func
 }
 
 PeopleTable.defaultProps = {
