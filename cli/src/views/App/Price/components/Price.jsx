@@ -3,7 +3,7 @@ import { Card, Table, Divider, Form, Input, Button } from 'antd'
 import PropTypes from 'prop-types'
 
 import { apiPrice } from 'constants/api'
-import SweetAlert from 'components/extraComponents/SweetAlert'
+import DeleteAlert from 'components/extraComponents/SweetAlert'
 import { DEFAULT_PRICE } from '../modules/const'
 
 const FormItem = Form.Item
@@ -12,7 +12,6 @@ export default function Price({ notify, setLoading }) {
   const [listPrice, setListPrice] = useState([])
   const [price, setPrice] = useState(DEFAULT_PRICE)
   const [form, toggleForm] = useState(false)
-  const [modal, setToggleModal] = useState(false)
 
   const load = useCallback(async() => {
     try {
@@ -56,17 +55,12 @@ export default function Price({ notify, setLoading }) {
     setLoading(false)
   }
 
-  function onShowModal() {
-    setToggleModal(!modal)
-  }
-
   async function hdRemove(price_id) {
     setLoading(true)
     try {
       await apiPrice.remove(price_id)
       let updatePriceList = listPrice.filter(v => v._id !== price_id)
       setListPrice(updatePriceList)
-      setToggleModal(false)
       notify('success', 'Price data is removed successfully')
     } catch (err){
       notify('error', 'Price data is not remove')
@@ -213,16 +207,13 @@ export default function Price({ notify, setLoading }) {
               title: 'Action',
               key: 'action',
               render: (text, record) => (
-                <span>
-                  <span className='gx-link' onClick={onShowModal}>Delete</span>
-                  {
-                    modal && <SweetAlert
-                      hdConfirm={hdRemove.bind(this, record._id)}
-                      hdCancel={onShowModal}
-                    >
-                      <span>You will not be able to recover this Price</span>
-                    </SweetAlert>
-                  }
+                <span> 
+                  <DeleteAlert
+                    row_id={record._id}
+                    onRemove={hdRemove}
+                  >
+                    <span>You will not be able to recover this Price</span>
+                  </DeleteAlert>
                   <Divider type='vertical'/>
                   <span className='gx-link' onClick={hdEdit.bind(this, record)}>Edit</span>
                 </span>

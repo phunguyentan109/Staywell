@@ -1,20 +1,35 @@
-import React from 'react'
-import Sweetalert from 'react-bootstrap-sweetalert'
+import React, { useState } from 'react'
+import SweetAlert from 'react-bootstrap-sweetalert'
 
-export default function SweetAlert({ hdConfirm, hdCancel, ...props }) {
-  // console.log(hdConfirm())
+export default function DeleteAlert({ onRemove, row_id, ...props }) {
+  const [modal, setToggleModal] = useState(false)
+
+  function onShowModal() {
+    setToggleModal(!modal)
+  }
+
+  function hdConfirm() {
+    onRemove(row_id)
+    setToggleModal(false)
+  }
+
   return (
-    <Sweetalert
-      warning
-      showCancel
-      confirmBtnText='Yes, delete it !'
-      cancelBtnBsStyle='default'
-      title='Are you sure to delete ?'
-      onConfirm={hdConfirm.bind(this)}
-      onCancel={hdCancel.bind(this)}
-      {...props}
-    >
-      {props.children}
-    </Sweetalert>
+    <>
+      <span className='gx-link' onClick={onShowModal}>Delete</span>
+      {
+        modal && <SweetAlert
+          warning
+          showCancel
+          confirmBtnText='Yes, delete it !'
+          cancelBtnBsStyle='default'
+          title='Are you sure to delete ?'
+          onConfirm={hdConfirm}
+          onCancel={onShowModal}
+          {...props}
+        >
+          {props.children}
+        </SweetAlert>
+      }
+    </>
   )
 }

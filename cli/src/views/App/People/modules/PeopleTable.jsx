@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Card, Table } from 'antd'
 import PropTypes from 'prop-types'
-import SweetAlert from 'components/extraComponents/SweetAlert'
+import DeleteAlert from 'components/extraComponents/SweetAlert'
 
-export default function PeopleTable({ title, dataSource, hdRemove, toggle, onShowModal }) {
+export default function PeopleTable({ title, dataSource, hdRemove }) {
 
   return (
     <Card title={title}>
@@ -35,15 +35,12 @@ export default function PeopleTable({ title, dataSource, hdRemove, toggle, onSho
             key: 'action',
             render: (text, record) => record.room_id ? <span>None</span> : (
               <span>
-                <span className='gx-link' onClick={onShowModal.bind(this)}>Delete</span>
-                {
-                  toggle && <SweetAlert
-                    hdConfirm={hdRemove.bind(this, record._id)}
-                    hdCancel={onShowModal}
-                  >
-                    <span>You will not be able to recover this Price</span>
-                  </SweetAlert>
-                }
+                <DeleteAlert
+                  row_id={record._id}
+                  onRemove={hdRemove}
+                >
+                  <span>You will not be able to recover this People</span>
+                </DeleteAlert>
               </span>
             )
           }
