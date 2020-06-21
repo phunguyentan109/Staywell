@@ -1,34 +1,43 @@
 import React, { useState } from 'react'
 import SweetAlert from 'react-bootstrap-sweetalert'
+import PropTypes from 'prop-types'
 
-export default function DeleteAction({ onRemove, message }) {
-  const [modal, setToggleModal] = useState(false)
-
-  function onShowModal() {
-    setToggleModal(!modal)
-  }
+export default function DeleteAction({ onConfirm, message, ...props }) {
+  const [modal, toggleModal] = useState(false)
+  const toggle = () => toggleModal(prev => !prev)
 
   function hdConfirm() {
-    onRemove(this)
-    setToggleModal(false)
+    onConfirm()
+    toggle()
   }
 
   return (
     <>
-      <span className='gx-link' onClick={onShowModal}>Delete</span>
+      <span className='gx-link' onClick={toggle}>Delete</span>
       {
-        modal && <SweetAlert
-          warning
-          showCancel
-          confirmBtnText='Yes, delete it !'
-          cancelBtnBsStyle='default'
-          title='Are you sure to delete ?'
-          onConfirm={hdConfirm}
-          onCancel={onShowModal}
-        >
+        modal && <SweetAlert onConfirm={hdConfirm} onCancel={toggle} {...props}>
           <span>{message}</span>
         </SweetAlert>
       }
     </>
   )
+}
+
+DeleteAction.propTypes = {
+  onConfirm: PropTypes.func.isRequired,
+  warning: PropTypes.bool,
+  showCancel: PropTypes.bool,
+  confirmBtnText: PropTypes.string,
+  cancelBtnBsStyle: PropTypes.string,
+  title: PropTypes.string,
+  message: PropTypes.string
+}
+
+DeleteAction.defaultProps = {
+  warning: true,
+  showCancel: true,
+  confirmBtnText: 'Yes, delete it!',
+  cancelBtnBsStyle: 'default',
+  title: 'Are you sure to delete ?',
+  message: 'You will not be able to recover this data'
 }
