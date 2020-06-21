@@ -3,7 +3,7 @@ import { Card, Table, Divider, Form, Input, Button } from 'antd'
 import PropTypes from 'prop-types'
 
 import { apiPrice } from 'constants/api'
-import DeleteAlert from 'components/extraComponents/SweetAlert'
+import DeleteAction from 'components/DeleteAction'
 import { DEFAULT_PRICE } from '../modules/const'
 
 const FormItem = Form.Item
@@ -208,12 +208,10 @@ export default function Price({ notify, setLoading }) {
               key: 'action',
               render: (text, record) => (
                 <span> 
-                  <DeleteAlert
-                    row_id={record._id}
-                    onRemove={hdRemove}
-                  >
-                    <span>You will not be able to recover this Price</span>
-                  </DeleteAlert>
+                  <DeleteAction
+                    onRemove={hdRemove.bind(this, record._id)}
+                    message='You will not be able to recover this Price'
+                  />
                   <Divider type='vertical'/>
                   <span className='gx-link' onClick={hdEdit.bind(this, record)}>Edit</span>
                 </span>

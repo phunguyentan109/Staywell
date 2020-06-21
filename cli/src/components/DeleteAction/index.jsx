@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import SweetAlert from 'react-bootstrap-sweetalert'
 
-export default function DeleteAlert({ onRemove, row_id, ...props }) {
+export default function DeleteAction({ onRemove, message }) {
   const [modal, setToggleModal] = useState(false)
 
   function onShowModal() {
@@ -9,7 +9,7 @@ export default function DeleteAlert({ onRemove, row_id, ...props }) {
   }
 
   function hdConfirm() {
-    onRemove(row_id)
+    onRemove(this)
     setToggleModal(false)
   }
 
@@ -25,9 +25,8 @@ export default function DeleteAlert({ onRemove, row_id, ...props }) {
           title='Are you sure to delete ?'
           onConfirm={hdConfirm}
           onCancel={onShowModal}
-          {...props}
         >
-          {props.children}
+          <span>{message}</span>
         </SweetAlert>
       }
     </>

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card, Table } from 'antd'
 import PropTypes from 'prop-types'
-import DeleteAlert from 'components/extraComponents/SweetAlert'
+import DeleteAction from 'components/DeleteAction'
 
 export default function PeopleTable({ title, dataSource, hdRemove }) {
 
@@ -35,12 +35,10 @@ export default function PeopleTable({ title, dataSource, hdRemove }) {
             key: 'action',
             render: (text, record) => record.room_id ? <span>None</span> : (
               <span>
-                <DeleteAlert
-                  row_id={record._id}
-                  onRemove={hdRemove}
-                >
-                  <span>You will not be able to recover this People</span>
-                </DeleteAlert>
+                <DeleteAction
+                  onRemove={hdRemove.bind(this, record._id)}
+                  message='You will not be able to recover this People'
+                />
               </span>
             )
           }

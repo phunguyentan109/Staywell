@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { Row, Col, Card, Table, Button, Divider } from 'antd'
 import PropTypes from 'prop-types'
 
-import SweetAlert from 'react-bootstrap-sweetalert'
+import DeleteAction from 'components/DeleteAction'
 import { apiRoom, apiPrice } from 'constants/api'
 import RoomForm from '../modules/Form'
 import RoomAssign from '../modules/Assign'
@@ -102,19 +102,10 @@ export default function Room({ notify, setLoading }) {
         render: (text, record) => room._id ? <span>None</span> : (
           <span>
             <span className='gx-link' onClick={onShowModal}>Delete</span>
-            {
-              modal && <SweetAlert
-                warning
-                showCancel
-                confirmBtnText='Yes, delete it !'
-                cancelBtnBsStyle='default'
-                title='Are you sure to delete ?'
-                onConfirm={hdRemove.bind(this, record._id)}
-                onCancel={onShowModal}
-              >
-                <span>You will not be able to recover this Room</span>
-              </SweetAlert>
-            }
+            <DeleteAction
+              onRemove={hdRemove.bind(this, record._id)}
+              message='You will not be able to recover this Room'
+            />
             <Divider type='vertical'/>
             <span className='gx-link' onClick={hdEdit.bind(this, record)}>Edit</span>
             <Divider type='vertical'/>
