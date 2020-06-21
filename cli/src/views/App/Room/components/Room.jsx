@@ -102,7 +102,11 @@ export default function Room ({ notify, setLoading }) {
                   dataIndex: 'user_id',
                   render: text => <span>{text.length} people</span>
                 },
-                { title: 'Price Type', dataIndex: 'price_id.type' },
+                {
+                  title: 'Price Type',
+                  dataIndex: 'price_id.type',
+                  render: col => <span>{col ? col.type : <i>No price applied</i>}</span>
+                },
                 {
                   title: 'Action',
                   key: 'action',

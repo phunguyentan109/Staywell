@@ -8,7 +8,7 @@ import { apiUser, apiRoom } from 'constants/api'
 
 export default function TableTransfer({ notify, roomId, visible, people, toggleModal, updateRooms }) {
   const [available, setAvailable] = useState([])
-  const [checkedIn, setCheckedIn] = useState(people)
+  const [checkedIn, setCheckedIn] = useState([])
   const [processing, setProcessing] = useState(false)
 
   const load = useCallback(async() => {
@@ -22,8 +22,8 @@ export default function TableTransfer({ notify, roomId, visible, people, toggleM
 
   useEffect(() => {
     load()
-    setCheckedIn([])
-  }, [load, roomId])
+    setCheckedIn(people.map(u => u._id))
+  }, [load, roomId, people])
 
   const toggleProcess = () => setProcessing(prev => !prev)
 
@@ -52,7 +52,7 @@ export default function TableTransfer({ notify, roomId, visible, people, toggleM
     >
       <TransferConfig
         showSearch
-        dataSource={available}
+        dataSource={[...available, ...people]}
         targetKeys={checkedIn}
         onChange={ts => setCheckedIn(ts)}
         filterOption={hdFilter}
