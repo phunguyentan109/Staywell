@@ -6,29 +6,29 @@ const OWNER = {
 
 const PEOPLE = [
   {
-    email: 'magazine.group1213@gmail.com',
+    email: 'magazine.group@gmail.com',
     password: '123',
-    username: 'magazine.group1213'
+    username: 'magazine.group'
   },
   {
-    email: 'ma.gazine.group1213@gmail.com',
+    email: 'nothinglike1@gmail.com',
     password: '123',
-    username: 'm.agazine.group1213@gmail.com'
+    username: 'nothinglike1'
   },
   {
-    email: 'maga.zine.group1213@gmail.com',
+    email: 'great121@gmail.com',
     password: '123',
-    username: 'maga.zine.group1213@gmail.com'
+    username: 'great121'
   },
   {
-    email: 'magazi.ne.group1213@gmail.com',
+    email: 'becauseopu13@gmail.com',
     password: '123',
-    username: 'magazi.ne.group1213@gmail.com'
+    username: 'becauseopu13'
   },
   {
-    email: 'magazine.group1.213@gmail.com',
+    email: 'newbb213@gmail.com',
     password: '123',
-    username: 'magazine.group1.213@gmail.com'
+    username: 'newbb213'
   }
 ]
 

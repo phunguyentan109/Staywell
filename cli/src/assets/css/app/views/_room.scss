@@ -1,3 +1,10 @@
-.app-assign {
-    color: #e87422 !important;
+.transfer {
+  display: flex;
+  align-items: center;
+
+  img {
+    margin-right: 10px;
+    width: 30px;
+    border-radius: 5px;
+  }
 }

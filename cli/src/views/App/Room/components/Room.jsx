@@ -1,20 +1,23 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import { Row, Col, Card, Table, Button, Divider } from 'antd'
+import React, { useState, useEffect, useCallback, Fragment } from 'react'
+import { Row, Col, Card, Table, Button, Divider, Form, Input, Select, Modal } from 'antd'
 import PropTypes from 'prop-types'
 
 import PopConfirm from 'components/App/Pop/PopConfirm'
-import { apiRoom, apiPrice } from 'constants/api'
-import RoomForm from '../modules/Form'
-import RoomAssign from '../modules/Assign'
-
+import { apiPrice, apiRoom } from 'constants/api'
+import useList from 'hooks/useList'
 import { DEFAULT_ROOM } from '../modules/const'
+import _ from 'lodash'
+import TableTransfer from '../modules/TableTransfer'
 
-export default function Room({ notify, setLoading }) {
-  const [rooms, setRooms] = useState([])
+const FormItem = Form.Item
+const Option = Select.Option
+
+export default function Room ({ notify, setLoading }) {
+  const [rooms, setRooms, updateRooms] = useList([])
   const [room, setRoom] = useState(DEFAULT_ROOM)
   const [price, setPrice] = useState([])
-  const [form, toggleForm] = useState(false)
-  const [assign, toggleAssign] = useState(false)
+  const [modal, setModal] = useState({ form: false, transfer: false })
+  const [processing, setProcessing] = useState(false)
 
   const load = useCallback(async() => {
     try {
@@ -26,9 +29,14 @@ export default function Room({ notify, setLoading }) {
     } catch (e) {
       notify('error', 'The data cannot be loaded!')
     }
-  }, [notify, setLoading])
+  }, [notify, setLoading, setRooms])
 
   useEffect(() => { load() }, [load])
+  useEffect(() => {
+    !modal.form && !modal.transfer && !_.isEqual(room, DEFAULT_ROOM) && setRoom(DEFAULT_ROOM)
+  }, [modal.form, modal.transfer, room])
+
+  const toggle = modal => setModal(prev => ({ ...prev, [modal]: !prev[modal] }))
 
   async function hdRemove(room_id) {
     setLoading(true)
@@ -44,123 +52,135 @@ export default function Room({ notify, setLoading }) {
   }
 
   function hdEdit(room) {
-    toggleForm(true)
-    setRoom(prev => ({ ...prev, ...room, price_id: room.price_id._id }))
+    setRoom({
+      ..._.cloneDeep(room),
+      price_id: _.get(room, 'price_id._id', '')
+    })
+    toggle('form')
   }
 
-  function hdCancel() {
-    setRoom(DEFAULT_ROOM)
-    toggleForm(false)
-    toggleAssign(false)
+  function hdSelectPrice(price_id) {
+    setRoom(prev => ({ ...prev, price_id }))
+  }
+
+  function hdChange(e) {
+    const { name, value } = e.target
+    setRoom(prev => ({ ...prev, [name]: value }))
   }
 
   function hdAssign(room) {
-    setLoading(true)
-    setRoom(prev => ({
-      ...prev, ...room,
-      user_id: [...room.user_id]
-    }))
-    toggleAssign(true)
+    setRoom(room)
+    toggle('transfer')
   }
 
-  async function refreshRoom(record, message, isNewRecord) {
-    if(isNewRecord) {
-      setRooms(prev => [...prev, record])
-    } else {
-      let newRooms = rooms.map(r => r._id === record._id ? record : r)
-      setRooms(newRooms)
+  async function hdOk() {
+    setProcessing(true)
+    try {
+      let rs = room._id ? await apiRoom.update(room._id, room) : await apiRoom.create(room)
+      updateRooms(rs)
+      toggle('form')
+    } catch (e) {
+      notify('error')
     }
-    notify('success', message)
-    hdCancel()
-    setLoading(false)
-  }
-
-  function controlCols() {
-    let cols = [
-      {
-        title: 'Room Name',
-        dataIndex: 'name',
-      },
-      {
-        title: 'People',
-        dataIndex: 'user_id',
-        render: text => <span>{text.length} people</span>
-      },
-      {
-        title: 'Price Type',
-        dataIndex: 'price_id.type'
-      },
-      {
-        title: 'Action',
-        key: 'action',
-        render: (text, record) => room._id ? <span>None</span> : (
-          <span>
-            <PopConfirm
-              title='Are you sure to delete this genre?'
-              task={hdRemove.bind(this, record._id)}
-              okText='Sure, remove it'
-              cancelText='Not now'
-            >
-              <span className='gx-link'>Delete</span>
-            </PopConfirm>
-            <Divider type='vertical'/>
-            <span className='gx-link' onClick={hdEdit.bind(this, record)}>Edit</span>
-            <Divider type='vertical'/>
-            <span className='gx-link' onClick={hdAssign.bind(this, record)}>Assign</span>
-          </span>
-        )
-      }
-    ]
-
-    // If "Assign" or "Form" content is shown, then hide the action
-    return assign || form ? cols.filter(c => c.key !== 'action') : cols
+    setProcessing(false)
   }
 
   return (
-    <Row>
-      {
-        form && <Col md={10}>
-          <RoomForm
-            price={price}
-            editRoom={room}
-            refresh={refreshRoom}
-            hdCancel={hdCancel}
-          />
+    <Fragment>
+      <Row>
+        <Col md={24}>
+          <Card title='List of available room'>
+            <Button type='primary' onClick={toggle.bind(this, 'form')}>Add new room</Button>
+            <Table
+              className='gx-table-responsive'
+              dataSource={rooms}
+              rowKey='_id'
+              columns={[
+                { title: 'Room Name', dataIndex: 'name' },
+                {
+                  title: 'People',
+                  dataIndex: 'user_id',
+                  render: text => <span>{text.length} people</span>
+                },
+                {
+                  title: 'Price Type',
+                  dataIndex: 'price_id.type',
+                  render: col => <span>{col ? col.type : <i>No price applied</i>}</span>
+                },
+                {
+                  title: 'Action',
+                  key: 'action',
+                  render: (text, record) => (
+                    <span>
+                      <PopConfirm
+                        title='Are you sure to delete this genre?'
+                        task={hdRemove.bind(this, record._id)}
+                        okText='Sure, remove it'
+                        cancelText='Not now'
+                      >
+                        <span className='gx-link'>Delete</span>
+                      </PopConfirm>
+                      <Divider type='vertical'/>
+                      <span className='gx-link' onClick={hdEdit.bind(this, record)}>Edit</span>
+                      <Divider type='vertical'/>
+                      <span className='gx-link' onClick={hdAssign.bind(this, record)}>Assign</span>
+                    </span>
+                  )
+                }
+              ]}
+            />
+          </Card>
         </Col>
-      }
-      <Col md={(assign || form) ? 14 : 24}>
-        <Card title='List of available room'>
-          {
-            form || <Button
-              type='primary'
-              onClick={() => toggleForm(true)}
+      </Row>
+      <TableTransfer
+        roomId={room._id}
+        people={room.user_id}
+        updateRooms={updateRooms}
+        visible={modal.transfer}
+        toggleModal={toggle.bind(this, 'transfer')}
+      />
+      <Modal
+        title={room._id ? 'Update Price Information' : 'Create New Price'}
+        visible={modal.form}
+        onOk={hdOk}
+        confirmLoading={processing}
+        onCancel={toggle.bind(this, 'form')}
+      >
+        <Form layout='horizontal'>
+          <FormItem
+            label='Type'
+            labelCol={{ xs: 24, sm: 6 }}
+            wrapperCol={{ xs: 24, sm: 16 }}
+          >
+            <Input
+              placeholder="Enter the room's name here..."
+              name='name'
+              value={room.name}
+              onChange={hdChange}
+            />
+          </FormItem>
+          <FormItem
+            label='Select price'
+            labelCol={{ xs: 24, sm: 6 }}
+            wrapperCol={{ xs: 24, sm: 16 }}
+          >
+            <Select
+              mode='single'
+              style={{ width: '100%' }}
+              placeholder='Pick a price'
+              onChange={hdSelectPrice}
+              value={room.price_id}
             >
-                Add new room information
-            </Button>
-          }
-          <Table
-            className='gx-table-responsive'
-            dataSource={rooms}
-            rowKey='_id'
-            columns={controlCols()}
-          />
-        </Card>
-      </Col>
-      {
-        assign && <Col md={10}>
-          <RoomAssign
-            refresh={refreshRoom}
-            selectedRoom={room}
-            hdCancel={hdCancel}
-            notify={notify}
-          />
-        </Col>
-      }
-    </Row>
+              { price.map(v => <Option value={v._id} key={v._id}>{v.type}</Option>) }
+            </Select>
+          </FormItem>
+        </Form>
+      </Modal>
+    </Fragment>
   )
 }
 
-Room.propsTypes = {
+Room.propTypes = {
   notify: PropTypes.func,
   setLoading: PropTypes.func
 }
