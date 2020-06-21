@@ -6,3 +6,39 @@ export const DEFAULT_PRICE = {
   house: 0,
   extra: 0
 }
+
+export const PRICE_INPUTS = [
+  { label: 'Type', name: 'type', type: 'text' },
+  { label: 'Electric', name: 'electric' },
+  { label: 'Wifi', name: 'wifi' },
+  { label: 'Water', name: 'water' },
+  { label: 'House', name: 'house' },
+  { label: 'Extra', name: 'extra' }
+]
+
+export const PRICE_COLS = [
+  {
+    title: 'Price type',
+    dataIndex: 'type',
+  },
+  {
+    title: 'Electric',
+    dataIndex: 'electric'
+  },
+  {
+    title: 'Wifi',
+    dataIndex: 'wifi',
+  },
+  {
+    title: 'Water',
+    dataIndex: 'water'
+  },
+  {
+    title: 'House',
+    dataIndex: 'house'
+  },
+  {
+    title: 'Extra',
+    dataIndex: 'extra'
+  }
+]

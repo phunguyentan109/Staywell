@@ -13,7 +13,6 @@ import {switchLanguage, toggleCollapsedSideNav} from "../../../appRedux/actions/
 import {TAB_SIZE} from "../../../constants/ThemeSetting";
 import HorizontalNav from "../HorizontalNav";
 import {Link} from "react-router-dom";
-import IntlMessages from "../../../util/IntlMessages";
 
 const {Header} = Layout;
 
@@ -84,11 +83,13 @@ class AboveHeader extends Component {
             <div className="gx-header-horizontal-top-flex">
               <div className="gx-header-horizontal-top-left">
                 <i className="icon icon-alert gx-mr-3"/>
-                <p className="gx-mb-0 gx-text-truncate"><IntlMessages id="app.announced"/></p>
+                <p className="gx-mb-0 gx-text-truncate">
+                  <span>A new version will be released on December 25th. Stay tuned!</span>
+                </p>
               </div>
               <ul className="gx-login-list">
-                <li><IntlMessages id="app.userAuth.login"/></li>
-                <li><IntlMessages id="app.userAuth.signUp"/></li>
+                <li><span>Login</span></li>
+                <li><span>Sign Up</span></li>
               </ul>
             </div>
           </div>

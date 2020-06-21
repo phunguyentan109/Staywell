@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const rs = require('request')
+const db = require('../models')
 
 exports.generateAvatar = (req, res, next) => {
   const url = 'https://source.unsplash.com/random'
@@ -11,19 +12,28 @@ exports.generateAvatar = (req, res, next) => {
   })
 }
 
-exports.generateToken = (id, viewname, email, profileImg, roles) => {
-  let userToken = jwt.sign({ id, viewname, profileImg, roles }, process.env.SECRET)
-  let lockToken = jwt.sign({ viewname, email, profileImg }, process.env.SECRET)
-  return { userToken, lockToken }
+exports.getByRole = async(req, res, next) => {
+  try {
+    let all = await db.UserRole.find().populate('role_id').lean().exec()
+    let peopleData = all.filter(u => u.role_id.code === '001')
+    let ownerData = all.filter(u => u.role_id.code === '000')[0]
+    res.locals = {
+      peopleIds: peopleData.map(p => p.user_id),
+      ownerId: ownerData.user_id
+    }
+    return next()
+  } catch (e) {
+    return next(e)
+  }
 }
 
 exports.isLogin = async(req, res, next) => {
   try {
     const token = req.headers.authorization.split(' ')[1]
     const payload = await jwt.verify(token, process.env.SECRET)
-    if(payload) return next()
+    if (payload) return next()
     return next({ status: 401, message: 'Please login first!' })
-  } catch(err) {
+  } catch (err) {
     return next(err)
   }
 }
@@ -32,9 +42,9 @@ exports.isCorrect = async(req, res, next) => {
   try {
     const token = req.headers.authorization.split(' ')[1]
     const payload = await jwt.verify(token, process.env.SECRET)
-    if(payload && payload._id === req.params.user_id) return next()
+    if (payload && payload._id === req.params.user_id) return next()
     return next({ status: 401, message: 'Unauthorized!' })
-  } catch(err) {
+  } catch (err) {
     return next(err)
   }
 }
@@ -49,7 +59,7 @@ exports.isPermit = async(req, res, next) => {
       status: 405,
       message: 'Action is not permitted!'
     })
-  } catch(err) {
+  } catch (err) {
     return next(err)
   }
 }

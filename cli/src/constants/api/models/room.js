@@ -1,25 +1,10 @@
-import { apiCall } from '../call';
+import { apiCall, spec } from '../call'
+const common = '/api/rooms'
 
-export async function get() {
-    return await apiCall('get', `/api/rooms`);
-}
+export const get = async(id) => await apiCall('get', `${common}${spec(id)}`)
+export const create = async(room) => await apiCall('post', common, room)
 
-export async function create(room) {
-    return await apiCall('post', '/api/rooms', room)
-}
-
-export async function getOne(room_id) {
-    return await apiCall('get', `/api/rooms/${room_id}`)
-}
-
-export async function remove(room_id) {
-    return await apiCall('delete', `/api/rooms/${room_id}`)
-}
-
-export async function update(room_id, room) {
-    return await apiCall('put', `/api/rooms/${room_id}`, room)
-}
-
-export async function assign(room_id, room) {
-    return await apiCall('put', `/api/rooms/${room_id}/assign`)
-}
+export const getOne = async(id) => await apiCall('get', `${common}/${id}`)
+export const remove = async(id) => await apiCall('delete', `${common}/${id}`)
+export const update = async(id, data) => await apiCall('put', `${common}/${id}`, data)
+export const assign = async(id, data) => await apiCall('put', `${common}/${id}/assign`, data)
