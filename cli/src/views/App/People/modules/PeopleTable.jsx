@@ -33,14 +33,7 @@ export default function PeopleTable({ title, dataSource, hdRemove }) {
           {
             title: 'Action',
             key: 'action',
-            render: (text, record) => record.room_id ? <span>None</span> : (
-              <span>
-                <DeleteAction
-                  onRemove={hdRemove.bind(this, record._id)}
-                  message='You will not be able to recover this People'
-                />
-              </span>
-            )
+            render: (text, record) => <DeleteAction onConfirm={hdRemove.bind(this, record._id)}/>
           }
         ]}
       />
@@ -48,7 +41,7 @@ export default function PeopleTable({ title, dataSource, hdRemove }) {
   )
 }
 
-PeopleTable.propsTypes = {
+PeopleTable.propTypes = {
   title: PropTypes.string,
   dataSource: PropTypes.array,
   loading: PropTypes.bool,
