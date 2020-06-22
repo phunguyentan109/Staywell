@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { notification, Spin } from 'antd'
-
+import { Spin } from 'antd'
 import { MOBILE_SIZE, DESKTOP_SIZE } from 'constants/variables'
-import { CASES } from '../modules/const'
 
 export default function withHelpers(WrappedComponent) {
   function Helpers({ ...props }) {
@@ -26,15 +24,10 @@ export default function withHelpers(WrappedComponent) {
       setDevice({ isMobile, isTablet, isDesktop })
     }
 
-    const openNotificationWithIcon = (type, description) => {
-      notification[type]({ message: CASES[type].msg, description })
-    }
-
     return (
       <Spin spinning={loading} size='large'>
         <WrappedComponent
           device={{ ...device }}
-          notify={openNotificationWithIcon}
           setLoading={setLoading}
           {...props}
         />
