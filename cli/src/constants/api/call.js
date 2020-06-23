@@ -24,7 +24,7 @@ export async function apiCall(method, path, data) {
   try {
     return (await axios[method](path, data)).data
   } catch (err) {
-    notify('error')
+    localStorage.swToken && notify('error')
     console.error(err)
   }
 }

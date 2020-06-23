@@ -3,7 +3,7 @@ import { Row, Col, Card, Table, Button, Divider, Form, Input, Select, Modal } fr
 import PropTypes from 'prop-types'
 
 import DeleteAction from 'components/DeleteAction'
-import { apiPrice, apiRoom } from 'constants/api'
+import { apiPrice, apiRoom, notify } from 'constants/api'
 import useList from 'hooks/useList'
 import { DEFAULT_ROOM } from '../modules/const'
 import _ from 'lodash'
@@ -12,7 +12,7 @@ import TableTransfer from '../modules/TableTransfer'
 const FormItem = Form.Item
 const Option = Select.Option
 
-export default function Room ({ notify, setLoading }) {
+export default function Room ({ setLoading }) {
   const [rooms, setRooms, updateRooms] = useList([])
   const [room, setRoom] = useState(DEFAULT_ROOM)
   const [price, setPrice] = useState([])
@@ -20,16 +20,12 @@ export default function Room ({ notify, setLoading }) {
   const [processing, setProcessing] = useState(false)
 
   const load = useCallback(async() => {
-    try {
-      let roomData = await apiRoom.get()
-      let priceData = await apiPrice.get()
-      setPrice(priceData)
-      setRooms(roomData)
-      setLoading(false)
-    } catch (e) {
-      notify('error', 'The data cannot be loaded!')
-    }
-  }, [notify, setLoading, setRooms])
+    let roomData = await apiRoom.get()
+    let priceData = await apiPrice.get()
+    setPrice(priceData)
+    setRooms(roomData)
+    setLoading(false)
+  }, [setLoading, setRooms])
 
   useEffect(() => { load() }, [load])
   useEffect(() => {
@@ -40,14 +36,10 @@ export default function Room ({ notify, setLoading }) {
 
   async function hdRemove(room_id) {
     setLoading(true)
-    try {
-      await apiRoom.remove(room_id)
-      let newRooms = rooms.filter(r => r._id !== room_id)
-      setRooms(newRooms)
-      notify('success', 'The room information is removed successfully!')
-    } catch (e) {
-      notify('error', 'The process is not completed')
-    }
+    await apiRoom.remove(room_id)
+    let newRooms = rooms.filter(r => r._id !== room_id)
+    setRooms(newRooms)
+    notify('success', 'The room information is removed successfully!')
     setLoading(false)
   }
 
@@ -75,13 +67,10 @@ export default function Room ({ notify, setLoading }) {
 
   async function hdOk() {
     setProcessing(true)
-    try {
-      let rs = room._id ? await apiRoom.update(room._id, room) : await apiRoom.create(room)
-      updateRooms(rs)
-      toggle('form')
-    } catch (e) {
-      notify('error')
-    }
+    let rs = room._id ? await apiRoom.update(room._id, room) : await apiRoom.create(room)
+    updateRooms(rs)
+    toggle('form')
+    notify('success', 'Room\'s list is updated successfully')
     setProcessing(false)
   }
 
@@ -176,6 +165,5 @@ export default function Room ({ notify, setLoading }) {
 }
 
 Room.propTypes = {
-  notify: PropTypes.func,
   setLoading: PropTypes.func
 }
