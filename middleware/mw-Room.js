@@ -3,6 +3,22 @@ const { pushId, spliceId, assignByIds } = require('../utils/dbSupport')
 const { difference, forEach, cloneDeep } = require('lodash')
 const { leaveRoom, getRoom } = require('../utils/mail')
 
+exports.create = async(req, res, next) => {
+  try {
+    let createdRoom = await db.Room.create(req.body)
+    const { price_id } = req.body
+
+    // add room_id to price and user
+    await pushId('Price', price_id, 'room_id', createdRoom._id)
+    createdRoom = await createdRoom.save()
+    res.locals.roomId = createdRoom._id
+
+    return next()
+  } catch (err) {
+    return next(err)
+  }
+}
+
 exports.update = async(req, res, next) => {
   try {
     const { room_id } = req.params

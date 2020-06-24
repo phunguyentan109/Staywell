@@ -70,8 +70,8 @@ export default function Room ({ setLoading }) {
     let rs = room._id ? await apiRoom.update(room._id, room) : await apiRoom.create(room)
     updateRooms(rs)
     toggle('form')
-    notify('success', 'Room\'s list is updated successfully')
     setProcessing(false)
+    notify('success', 'Room\'s list is updated successfully')
   }
 
   return (
