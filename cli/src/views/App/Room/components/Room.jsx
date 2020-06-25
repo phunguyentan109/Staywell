@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, Fragment } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Row, Col, Card, Table, Button, Divider, Form, Input, Select, Modal } from 'antd'
 import PropTypes from 'prop-types'
 
@@ -44,10 +44,8 @@ export default function Room ({ setLoading }) {
   }
 
   function hdEdit(room) {
-    setRoom({
-      ..._.cloneDeep(room),
-      price_id: _.get(room, 'price_id._id', '')
-    })
+    let price_id = _.get(room, 'price_id._id', '')
+    setRoom({ ..._.cloneDeep(room), price_id })
     toggle('form')
   }
 
@@ -75,7 +73,7 @@ export default function Room ({ setLoading }) {
   }
 
   return (
-    <Fragment>
+    <>
       <Row>
         <Col md={24}>
           <Card title='List of available room'>
@@ -160,7 +158,7 @@ export default function Room ({ setLoading }) {
           </FormItem>
         </Form>
       </Modal>
-    </Fragment>
+    </>
   )
 }
 
