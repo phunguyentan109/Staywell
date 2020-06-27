@@ -5,7 +5,7 @@ import ContainerHeader from 'components/ContainerHeader'
 import PropTypes from 'prop-types'
 import moment from 'moment'
 
-export default function Contract({ notify, hdCancel, room, match, loading, setLoading }) {
+export default function Contract({ notify, hdCancel, room, match, loading }) {
   return (
     <Row>This is contract page</Row>
   )

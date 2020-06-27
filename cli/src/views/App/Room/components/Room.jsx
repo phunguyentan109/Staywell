@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback, Fragment } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Row, Col, Card, Table, Button, Divider, Form, Input, Select, Modal } from 'antd'
 import PropTypes from 'prop-types'
 
 import DeleteAction from 'components/DeleteAction'
-import { apiPrice, apiRoom } from 'constants/api'
+import { apiPrice, apiRoom, notify } from 'constants/api'
 import useList from 'hooks/useList'
 import { DEFAULT_ROOM } from '../modules/const'
 import _ from 'lodash'
@@ -12,7 +12,7 @@ import TableTransfer from '../modules/TableTransfer'
 const FormItem = Form.Item
 const Option = Select.Option
 
-export default function Room ({ notify, setLoading }) {
+export default function Room ({ loading }) {
   const [rooms, setRooms, updateRooms] = useList([])
   const [room, setRoom] = useState(DEFAULT_ROOM)
   const [price, setPrice] = useState([])
@@ -20,16 +20,12 @@ export default function Room ({ notify, setLoading }) {
   const [processing, setProcessing] = useState(false)
 
   const load = useCallback(async() => {
-    try {
-      let roomData = await apiRoom.get()
-      let priceData = await apiPrice.get()
-      setPrice(priceData)
-      setRooms(roomData)
-      setLoading(false)
-    } catch (e) {
-      notify('error', 'The data cannot be loaded!')
-    }
-  }, [notify, setLoading, setRooms])
+    let roomData = await apiRoom.get()
+    let priceData = await apiPrice.get()
+    setPrice(priceData)
+    setRooms(roomData)
+    loading(false)
+  }, [loading, setRooms])
 
   useEffect(() => { load() }, [load])
   useEffect(() => {
@@ -39,23 +35,17 @@ export default function Room ({ notify, setLoading }) {
   const toggle = modal => setModal(prev => ({ ...prev, [modal]: !prev[modal] }))
 
   async function hdRemove(room_id) {
-    setLoading(true)
-    try {
-      await apiRoom.remove(room_id)
-      let newRooms = rooms.filter(r => r._id !== room_id)
-      setRooms(newRooms)
-      notify('success', 'The room information is removed successfully!')
-    } catch (e) {
-      notify('error', 'The process is not completed')
-    }
-    setLoading(false)
+    loading(true)
+    await apiRoom.remove(room_id)
+    let newRooms = rooms.filter(r => r._id !== room_id)
+    setRooms(newRooms)
+    notify('success', 'The room information is removed successfully!')
+    loading(false)
   }
 
   function hdEdit(room) {
-    setRoom({
-      ..._.cloneDeep(room),
-      price_id: _.get(room, 'price_id._id', '')
-    })
+    let price_id = _.get(room, 'price_id._id', '')
+    setRoom({ ..._.cloneDeep(room), price_id })
     toggle('form')
   }
 
@@ -75,18 +65,15 @@ export default function Room ({ notify, setLoading }) {
 
   async function hdOk() {
     setProcessing(true)
-    try {
-      let rs = room._id ? await apiRoom.update(room._id, room) : await apiRoom.create(room)
-      updateRooms(rs)
-      toggle('form')
-    } catch (e) {
-      notify('error')
-    }
+    let rs = room._id ? await apiRoom.update(room._id, room) : await apiRoom.create(room)
+    updateRooms(rs)
+    toggle('form')
     setProcessing(false)
+    notify('success', 'Room\'s list is updated successfully')
   }
 
   return (
-    <Fragment>
+    <>
       <Row>
         <Col md={24}>
           <Card title='List of available room'>
@@ -171,11 +158,10 @@ export default function Room ({ notify, setLoading }) {
           </FormItem>
         </Form>
       </Modal>
-    </Fragment>
+    </>
   )
 }
 
 Room.propTypes = {
-  notify: PropTypes.func,
-  setLoading: PropTypes.func
+  loading: PropTypes.func
 }

@@ -2,28 +2,24 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { Card, Table, Divider, Button, Form, Input, Modal } from 'antd'
 import PropTypes from 'prop-types'
 
-import { apiPrice } from 'constants/api'
+import { apiPrice, notify } from 'constants/api'
 import DeleteAction from 'components/DeleteAction'
 import { DEFAULT_PRICE, PRICE_COLS, PRICE_INPUTS } from '../modules/const'
 import useList from 'hooks/useList'
 
 const FormItem = Form.Item
 
-export default function Price({ notify, setLoading }) {
+export default function Price({ loading }) {
   const [listPrice, setListPrice, updateListPrice] = useList([])
   const [price, setPrice] = useState(DEFAULT_PRICE)
   const [visible, setVisible] = useState(false)
   const [processing, setProcessing] = useState(false)
 
   const load = useCallback(async() => {
-    try {
-      let priceData = await apiPrice.get()
-      setListPrice(priceData)
-      setLoading(false)
-    } catch (e) {
-      return notify('error', 'Data is not loaded')
-    }
-  }, [setListPrice, notify, setLoading])
+    let priceData = await apiPrice.get()
+    setListPrice(priceData)
+    loading(false)
+  }, [setListPrice, loading])
 
   useEffect(() => { load() }, [load])
 
@@ -32,33 +28,23 @@ export default function Price({ notify, setLoading }) {
     setPrice(prev => ({ ...prev, [name]: value }))
   }
 
-  function toggle() {
-    setVisible(prev => !prev)
-  }
+  const toggle = () => setVisible(prev => !prev)
 
   async function hdOk () {
     setProcessing(true)
-    try {
-      let data = price._id ? await apiPrice.update(price._id, price) : await apiPrice.create(price)
-      updateListPrice(data)
-      notify('success')
-    } catch (error) {
-      notify('error')
-    }
+    let data = price._id ? await apiPrice.update(price._id, price) : await apiPrice.create(price)
+    updateListPrice(data)
+    notify('success')
     setProcessing(false)
   }
 
   async function hdRemove(price_id) {
-    setLoading(true)
-    try {
-      await apiPrice.remove(price_id)
-      let updatePriceList = listPrice.filter(v => v._id !== price_id)
-      setListPrice(updatePriceList)
-      notify('success', 'Price data is removed successfully')
-    } catch (err) {
-      notify('error')
-    }
-    setLoading(false)
+    loading(true)
+    await apiPrice.remove(price_id)
+    let updatePriceList = listPrice.filter(v => v._id !== price_id)
+    setListPrice(updatePriceList)
+    notify('success', 'Price data is removed successfully')
+    loading(false)
   }
 
   return (
@@ -119,5 +105,5 @@ export default function Price({ notify, setLoading }) {
 
 Price.propTypes = {
   notify: PropTypes.func,
-  setLoading: PropTypes.func
+  loading: PropTypes.func
 }

@@ -4,21 +4,17 @@ import PropTypes from 'prop-types'
 import TransferConfig from './TransferConfig'
 import { TABLE_COLS } from '../../const'
 import { Modal } from 'antd'
-import { apiUser, apiRoom } from 'constants/api'
+import { apiUser, apiRoom, notify } from 'constants/api'
 
-export default function TableTransfer({ notify, roomId, visible, people, toggleModal, updateRooms }) {
+export default function TableTransfer({ roomId, visible, people, toggleModal, updateRooms }) {
   const [available, setAvailable] = useState([])
   const [checkedIn, setCheckedIn] = useState([])
   const [processing, setProcessing] = useState(false)
 
   const load = useCallback(async() => {
-    try {
-      let availablePeople = await apiUser.getAvailable()
-      setAvailable(availablePeople)
-    } catch (e) {
-      notify('error')
-    }
-  }, [notify])
+    let availablePeople = await apiUser.getAvailable()
+    setAvailable(availablePeople)
+  }, [])
 
   useEffect(() => {
     load()
@@ -29,14 +25,11 @@ export default function TableTransfer({ notify, roomId, visible, people, toggleM
 
   async function hdOk() {
     toggleProcess()
-    try {
-      let room = await apiRoom.assign(roomId, { user_id: checkedIn })
-      updateRooms(room)
-      toggleModal()
-    } catch (e) {
-      return notify(e)
-    }
+    let room = await apiRoom.assign(roomId, { user_id: checkedIn })
+    updateRooms(room)
+    toggleModal()
     toggleProcess()
+    notify('success', 'Room\'s list is updated successfully')
   }
 
   const hdFilter = (value, item) => item.username.includes(value) || item.email.includes(value)

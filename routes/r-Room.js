@@ -5,7 +5,7 @@ const mw = require('../middleware')
 
 router.route('/')
   .get(hdl.Room.get)
-  .post(mw.User.isPermit, hdl.Room.create)
+  .post(mw.User.isPermit, mw.Room.create, hdl.Room.getOne)
 
 router.route('/:room_id')
   .get(mw.User.isPermit, hdl.Room.getOne)
