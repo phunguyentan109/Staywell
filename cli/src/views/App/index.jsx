@@ -42,7 +42,7 @@ function AppRoutes(props) {
           component={Profile}
           access={['OWNER_PM', 'PEOPLE_PM']}
         />
-        <Route path={url} component={Dashboard}/>
+        <PermissionRouter path={url} component={Dashboard}/>
         <Redirect from={props.location.pathname} to={url}/>
       </Switch>
     </div>

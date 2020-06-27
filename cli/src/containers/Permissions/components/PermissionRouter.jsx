@@ -8,8 +8,10 @@ import { mapState } from '../modules/func'
 import withCommon from 'hocs/withCommon'
 
 function PermissionRouter({ access, inAccess, path, component, redirect, verifyAccess, useCommon }) {
-  let allowAccess = verifyAccess(access, inAccess)
-  if (!allowAccess) return <Redirect to={redirect || defaultUrl(path)}/>
+  if (access) {
+    let allowAccess = verifyAccess(access, inAccess)
+    if (!allowAccess) return <Redirect to={redirect || defaultUrl(path)}/>
+  }
   return <Route path={path} component={useCommon ? withCommon(component) : component}/>
 }
 
