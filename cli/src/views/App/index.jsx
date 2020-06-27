@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Switch, Redirect, Route, withRouter } from 'react-router-dom'
 import { PermissionRouter } from 'containers/Permissions'
+import withCommon from 'hocs/withCommon'
 
 // Views
 import Dashboard from './Dashboard'
@@ -50,7 +51,8 @@ function AppRoutes(props) {
 
 AppRoutes.propTypes = {
   match: PropTypes.object,
-  location: PropTypes.object
+  location: PropTypes.object,
+  loading: PropTypes.func
 }
 
 export default withRouter(AppRoutes)

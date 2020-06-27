@@ -10,7 +10,7 @@ import Accessing from './Accessing'
 function RootRoutes({ user }) {
   let isRememberAuth = localStorage.swtoken && Object.keys(user).length === 0
 
-  if(isRememberAuth) {
+  if (isRememberAuth) {
     return (
       <Switch>
         <Route path='/' component={Accessing}/>
@@ -24,12 +24,14 @@ function RootRoutes({ user }) {
           redirect='/'
           component={AppLayout}
           access={['OWNER_PM', 'PEOPLE_PM']}
+          useCommon={false}
         />
         <PermissionRouter
           path='/'
           redirect='/app'
           component={AuthLayout}
           access={['GUEST_PM', 'INACTIVE_PM']}
+          useCommon={false}
         />
       </Switch>
     )

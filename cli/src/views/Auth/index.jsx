@@ -18,23 +18,27 @@ function AuthRoutes({ location }) {
         path='/activate'
         component={Activate}
         access={['INACTIVE_PM']}
+        useCommon={false}
       />
       <PermissionRouter
         path='/register'
         redirect='/activate'
         component={Register}
         access={['GUEST_PM']}
+        useCommon={false}
       />
       <PermissionRouter
         path='/forgot'
         component={Forgot}
         access={['GUEST_PM']}
+        useCommon={false}
       />
       <PermissionRouter
         path='/'
         redirect='/activate'
         component={Login}
         access={['GUEST_PM']}
+        useCommon={false}
       />
       <Redirect from={location.pathname} to='/'/>
     </Switch>
@@ -43,6 +47,6 @@ function AuthRoutes({ location }) {
 
 export default withRouter(AuthRoutes)
 
-AuthRoutes.propsTypes = {
+AuthRoutes.propTypes = {
   location: PropTypes.object
 }

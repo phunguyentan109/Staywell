@@ -9,7 +9,7 @@ import useList from 'hooks/useList'
 
 const FormItem = Form.Item
 
-export default function Price({ setLoading }) {
+export default function Price({ loading }) {
   const [listPrice, setListPrice, updateListPrice] = useList([])
   const [price, setPrice] = useState(DEFAULT_PRICE)
   const [visible, setVisible] = useState(false)
@@ -18,8 +18,8 @@ export default function Price({ setLoading }) {
   const load = useCallback(async() => {
     let priceData = await apiPrice.get()
     setListPrice(priceData)
-    setLoading(false)
-  }, [setListPrice, setLoading])
+    loading(false)
+  }, [setListPrice, loading])
 
   useEffect(() => { load() }, [load])
 
@@ -39,12 +39,12 @@ export default function Price({ setLoading }) {
   }
 
   async function hdRemove(price_id) {
-    setLoading(true)
+    loading(true)
     await apiPrice.remove(price_id)
     let updatePriceList = listPrice.filter(v => v._id !== price_id)
     setListPrice(updatePriceList)
     notify('success', 'Price data is removed successfully')
-    setLoading(false)
+    loading(false)
   }
 
   return (
@@ -105,5 +105,5 @@ export default function Price({ setLoading }) {
 
 Price.propTypes = {
   notify: PropTypes.func,
-  setLoading: PropTypes.func
+  loading: PropTypes.func
 }

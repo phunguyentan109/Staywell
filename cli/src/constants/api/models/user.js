@@ -1,12 +1,13 @@
-import { apiCall } from '../call'
+import { apiCall, apiCallV2, config } from '../call'
 const common = '/api/user'
 
 export async function auth(authType, authData) {
   return await apiCall('post', `${common}/${authType}`, authData)
 }
 
-export async function getOne(user_id) {
-  return await apiCall('get', `${common}/${user_id}`)
+export async function getOne(user_id, getErr) {
+  let cf = config('get', `${common}/${user_id}`)
+  return await apiCallV2({ ...cf }, getErr)
 }
 
 export async function activate(user_id) {

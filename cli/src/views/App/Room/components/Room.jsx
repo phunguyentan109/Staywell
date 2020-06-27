@@ -12,7 +12,7 @@ import TableTransfer from '../modules/TableTransfer'
 const FormItem = Form.Item
 const Option = Select.Option
 
-export default function Room ({ setLoading }) {
+export default function Room ({ loading }) {
   const [rooms, setRooms, updateRooms] = useList([])
   const [room, setRoom] = useState(DEFAULT_ROOM)
   const [price, setPrice] = useState([])
@@ -24,8 +24,8 @@ export default function Room ({ setLoading }) {
     let priceData = await apiPrice.get()
     setPrice(priceData)
     setRooms(roomData)
-    setLoading(false)
-  }, [setLoading, setRooms])
+    loading(false)
+  }, [loading, setRooms])
 
   useEffect(() => { load() }, [load])
   useEffect(() => {
@@ -35,12 +35,12 @@ export default function Room ({ setLoading }) {
   const toggle = modal => setModal(prev => ({ ...prev, [modal]: !prev[modal] }))
 
   async function hdRemove(room_id) {
-    setLoading(true)
+    loading(true)
     await apiRoom.remove(room_id)
     let newRooms = rooms.filter(r => r._id !== room_id)
     setRooms(newRooms)
     notify('success', 'The room information is removed successfully!')
-    setLoading(false)
+    loading(false)
   }
 
   function hdEdit(room) {
@@ -163,5 +163,5 @@ export default function Room ({ setLoading }) {
 }
 
 Room.propTypes = {
-  setLoading: PropTypes.func
+  loading: PropTypes.func
 }

@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import DeleteAction from 'components/DeleteAction'
 
 export default function PeopleTable({ title, dataSource, hdRemove }) {
-
   return (
     <Card title={title}>
       <Table
