@@ -9,7 +9,7 @@ const CASES = {
 export const spec = id => id ? `/${id}` : ''
 export const config = (method, url, data) => ({ method, url, data })
 
-export const notify = (type, description) => {
+export function notify(type, description) {
   notification[type]({ message: CASES[type].msg, description })
 }
 
@@ -21,20 +21,11 @@ export function setTokenHeader(token) {
   }
 }
 
-export async function apiCallV2({ method, path, data }, getErr) {
+export async function apiCall({ method, path, data }, throwErr) {
   try {
-    return (await axios[method](path, data)).data
+    return (await axios[method || 'get'](path, data)).data
   } catch (err) {
-    if (getErr) return err
-    notify('error')
-    console.error(err)
-  }
-}
-
-export async function apiCall(method, path, data) {
-  try {
-    return (await axios[method](path, data)).data
-  } catch (err) {
+    if (throwErr) return err
     notify('error')
     console.error(err)
   }

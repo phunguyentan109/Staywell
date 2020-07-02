@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Switch, Redirect, Route, withRouter } from 'react-router-dom'
 import { PermissionRouter } from 'containers/Permissions'
-import withCommon from 'hocs/withCommon'
 
 // Views
 import Dashboard from './Dashboard'

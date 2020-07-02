@@ -28,7 +28,10 @@ export default function Profile({ loading, user, sendReloadUser }) {
     loading(true)
     let { change, confirm, current } = password
     if (change === confirm && current && change && confirm) {
-      await apiUser.changePassword(user._id, password)
+      await apiUser('password',{
+        params: { user_id: user._id },
+        data: password
+      })
       setPassword(DEFAULT_PASSWORD)
       notify('success', 'Your password has been changed successfully.')
     } else {
