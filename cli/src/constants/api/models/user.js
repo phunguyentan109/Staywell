@@ -1,43 +1,63 @@
-import { apiCall, apiCallV2, config } from '../call'
+import { apiCall, spec } from '../call'
 const common = '/api/user'
 
-export async function auth(authType, authData) {
-  return await apiCall('post', `${common}/${authType}`, authData)
+export default async function (name, { data, params } = {}, throwErr) {
+  let config, { type, user_id, token } = params
+  switch (name) {
+    case 'get': {
+      config = { url: spec(user_id) }
+      break
+    }
+    case 'remove': {
+      config = { method: 'delete', url: `/${user_id}` }
+      break
+    }
+    case 'update': {
+      config = { url: `/${user_id}` }
+      break
+    }
+    case 'auth': {
+      config = { method: 'post', url: `/${type}` }
+      break
+    }
+    case 'activate': {
+      config = { method: 'put', url: `/${user_id}/activate` }
+      break
+    }
+    case 'forgot': {
+      config = { method: 'post', url: '/forgot' }
+      break
+    }
+    case 'reset': {
+      config = { method: 'put', url: `/${token}/reset` }
+      break
+    }
+    case 'password': {
+      config = { method: 'put', url: `/${user_id}/password` }
+      break
+    }
+    case 'available': {
+      config = { url: '/available' }
+      break
+    }
+    default: config = {}
+  }
+  // Call api
+  config.url = common + config.url
+  return await apiCall({ ...config, data }, throwErr)
 }
 
-export async function getOne(user_id, getErr) {
-  let cf = config('get', `${common}/${user_id}`)
-  return await apiCallV2({ ...cf }, getErr)
-}
-
-export async function activate(user_id) {
-  return await apiCall('put', `${common}/${user_id}/activate`)
-}
-
-export async function forgot(email) {
-  return await apiCall('post', `${common}/forgot`, email)
-}
-
-export async function resetPassword(token, password) {
-  return await apiCall('put', `${common}/${token}/reset`, password)
-}
-
-export async function changePassword(user_id, password) {
-  return await apiCall('put', `${common}/${user_id}/password`, password)
-}
-
-export async function get() {
-  return await apiCall('get', common)
-}
-
-export async function getAvailable() {
-  return await apiCall('get', `${common}/available`)
-}
-
-export async function remove(user_id) {
-  return await apiCall('delete', `${common}/${user_id}`)
-}
-
-export async function update(user_id, user) {
-  return await apiCall('put', `${common}/${user_id}`, user)
-}
+// export async function changePassword(user_id, password) {
+//   return await apiCall('put', `${common}/${user_id}/password`, password)
+// }
+// export async function getAvailable() {
+//   return await apiCall('get', `${common}/available`)
+// }
+//
+// export async function remove(user_id) {
+//   return await apiCall('delete', `${common}/${user_id}`)
+// }
+//
+// export async function update(user_id, user) {
+//   return await apiCall('put', `${common}/${user_id}`, user)
+// }

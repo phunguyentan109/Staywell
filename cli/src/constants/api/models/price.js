@@ -1,4 +1,4 @@
-import { apiCall } from '../call'
+import { apiCall, spec } from '../call'
 
 export async function get() {
   return await apiCall('get', '/api/price')

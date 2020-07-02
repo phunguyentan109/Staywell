@@ -74,7 +74,7 @@ export default function Profile({ loading, user, sendReloadUser }) {
                     <FormItem
                       label={inp.label}
                       labelCol={{ xs: 24, sm: 6 }}
-                      wrapperCol={{ xs: 24, sm: 16 }}    
+                      wrapperCol={{ xs: 24, sm: 16 }}
                     >
                       <Input
                         type={inp.type || 'text'}
