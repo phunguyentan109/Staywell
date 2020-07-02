@@ -9,7 +9,7 @@ import ProfileHeader from 'components/profile/ProfileHeader'
 import { PermissionRender } from 'containers/Permissions'
 import Auxiliary from 'util/Auxiliary'
 import { apiUser, notify } from 'constants/api'
-import { DEFAULT_PROFILE, DEFAULT_PASSWORD } from '../modules/const'
+import { DEFAULT_PROFILE, DEFAULT_PASSWORD, PROFILE_INPUT, PASSWORD_INPUT } from '../modules/const'
 
 const FormItem = Form.Item
 
@@ -37,17 +37,22 @@ export default function Profile({ loading, user, sendReloadUser }) {
     loading(false)
   }
 
-  function hdChangePassword(e) {
-    const { name, value } = e.target
-    setPassword(prev => ({ ...prev, [name]: value }))
-  }
-
   function hdChange(e) {
-    const { name, value } = e.target
-    setProfile(prev => ({ ...prev, [name]: value }))
-  }
+    // setBirthDate input
+    if (e._isAMomentObject) {
+      setProfile(prev => ({ ...prev, birthDate: e }))
+    } else {
+      const { name, value } = e.target
 
-  const setBirthDate = birthDate => setProfile(prev => ({ ...prev, birthDate }))
+      // setProfile input
+      if (DEFAULT_PROFILE.hasOwnProperty(name)) {
+        setProfile(prev => ({ ...prev, [name]: value }))
+      } else {
+        // setPassword input
+        setPassword(prev => ({ ...prev, [name]: value }))
+      }
+    }
+  }
 
   async function hdUpdateProfile(profile) {
     loading(true)
@@ -86,32 +91,23 @@ export default function Profile({ loading, user, sendReloadUser }) {
                     />
                   </FormItem>
                 </PermissionRender>
-                <FormItem
-                  label='Your job'
-                  labelCol={{ xs: 24, sm: 6 }}
-                  wrapperCol={{ xs: 24, sm: 16 }}
-                >
-                  <Input
-                    type='text'
-                    placeholder='Enter your job here...'
-                    name='job'
-                    value={profile.job}
-                    onChange={hdChange}
-                  />
-                </FormItem>
-                <FormItem
-                  label='Your Phone'
-                  labelCol={{ xs: 24, sm: 6 }}
-                  wrapperCol={{ xs: 24, sm: 16 }}
-                >
-                  <Input
-                    type='number'
-                    placeholder='Enter your phone here...'
-                    name='phone'
-                    value={profile.phone}
-                    onChange={hdChange}
-                  />
-                </FormItem>
+                {
+                  PROFILE_INPUT.map((cur, index) => <FormItem
+                    key={cur.name}
+                    label={cur.label}
+                    labelCol={{ xs: 24, sm: 6 }}
+                    wrapperCol={{ xs: 24, sm: 16 }}    
+                  >
+                    <Input
+                      type={cur.type}
+                      placeholder={cur.placeholder}
+                      name={cur.name}
+                      value={[profile.job, profile.phone][index]}
+                      onChange={hdChange}
+                    />
+                  </FormItem>
+                  )
+                }
                 <FormItem
                   label='Your birthday'
                   labelCol={{ xs: 24, sm: 6 }}
@@ -119,7 +115,8 @@ export default function Profile({ loading, user, sendReloadUser }) {
                 >
                   <DatePicker
                     className='gx-mb-3 gx-w-100'
-                    onChange={setBirthDate}
+                    name='birthDate'
+                    onChange={hdChange}
                     value={moment(profile.birthDate)}
                   />
                 </FormItem>
@@ -141,45 +138,23 @@ export default function Profile({ loading, user, sendReloadUser }) {
             <Contact email={user.email} phone={user.phone}/>
             <Card className='gx-card' title='Change your password'>
               <Form layout='horizontal'>
-                <FormItem
-                  label='Current Password'
-                  labelCol={{ xs: 24, sm: 7 }}
-                  wrapperCol={{ xs: 24, sm: 22 }}
-                >
-                  <Input
-                    type='password'
-                    placeholder='Enter the current password here...'
-                    name='current'
-                    value={password.current}
-                    onChange={hdChangePassword}
-                  />
-                </FormItem>
-                <FormItem
-                  label='New Password'
-                  labelCol={{ xs: 24, sm: 7 }}
-                  wrapperCol={{ xs: 24, sm: 22 }}
-                >
-                  <Input
-                    type='password'
-                    placeholder='Enter the new password here...'
-                    name='change'
-                    value={password.change}
-                    onChange={hdChangePassword}
-                  />
-                </FormItem>
-                <FormItem
-                  label='Confirm New Password'
-                  labelCol={{ xs: 24, sm: 10 }}
-                  wrapperCol={{ xs: 24, sm: 22 }}
-                >
-                  <Input
-                    type='password'
-                    placeholder='Confirm your password here...'
-                    name='confirm'
-                    value={password.confirm}
-                    onChange={hdChangePassword}
-                  />
-                </FormItem>
+                {
+                  PASSWORD_INPUT.map((cur, index) => <FormItem
+                    key={cur.name}
+                    label={cur.label}
+                    labelCol={{ xs: 24, sm: 7 }}
+                    wrapperCol={{ xs: 24, sm: 22 }}
+                  >
+                    <Input
+                      type='password'
+                      placeholder={cur.placeholder}
+                      name={cur.name}
+                      value={[password.current, password.change, password.confirm][index]}
+                      onChange={hdChange}
+                    />
+                  </FormItem>
+                  )
+                }
                 <FormItem
                   wrapperCol={{
                     xs: 24,
