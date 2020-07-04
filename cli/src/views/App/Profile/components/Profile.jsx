@@ -76,21 +76,6 @@ export default function Profile({ loading, user, sendReloadUser }) {
             <About job={user.job} birthDate={user.birthDate}/>
             <Card className='gx-card' title='Change your profile'>
               <Form layout='horizontal'>
-                {/* <PermissionRender access={['PEOPLE_PM']}>
-                  <FormItem
-                    label='Your email'
-                    labelCol={{ xs: 24, sm: 6 }}
-                    wrapperCol={{ xs: 24, sm: 16 }}
-                  >
-                    <Input
-                      type='email'
-                      placeholder='Enter your email here...'
-                      name='email'
-                      value={profile.email}
-                      onChange={hdChange}
-                    />
-                  </FormItem>
-                </PermissionRender> */}
                 {
                   
                   PROFILE_INPUT.map((cur, index) => <PermissionRender 
@@ -144,20 +129,24 @@ export default function Profile({ loading, user, sendReloadUser }) {
             <Card className='gx-card' title='Change your password'>
               <Form layout='horizontal'>
                 {
-                  PASSWORD_INPUT.map((cur, index) => <FormItem
+                  PASSWORD_INPUT.map((cur, index) => <PermissionRender 
+                    access={cur.access}
                     key={cur.name}
-                    label={cur.label}
-                    labelCol={{ xs: 24, sm: 7 }}
-                    wrapperCol={{ xs: 24, sm: 22 }}
                   >
-                    <Input
-                      type='password'
-                      placeholder={cur.placeholder}
-                      name={cur.name}
-                      value={[password.current, password.change, password.confirm][index]}
-                      onChange={hdChange}
-                    />
-                  </FormItem>
+                    <FormItem
+                      label={cur.label}
+                      labelCol={{ xs: 24, sm: 7 }}
+                      wrapperCol={{ xs: 24, sm: 22 }}
+                    >
+                      <Input
+                        type='password'
+                        placeholder={cur.placeholder}
+                        name={cur.name}
+                        value={[password.current, password.change, password.confirm][index]}
+                        onChange={hdChange}
+                      />
+                    </FormItem>
+                  </PermissionRender>
                   )
                 }
                 <FormItem

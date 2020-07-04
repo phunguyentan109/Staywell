@@ -52,8 +52,8 @@ export const PASSWORD_INPUT = [
   },
   {
     access: [''],
-    label:'Confirm New Password',
-    placeholder:'Confirm your password here...',
+    label:'Confirm Password',
+    placeholder:'Confirm your new password here...',
     name:'confirm'
   }
 ]
