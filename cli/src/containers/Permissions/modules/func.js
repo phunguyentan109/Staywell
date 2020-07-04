@@ -5,7 +5,7 @@ export function verifyPm(_pms = [{ code: pm.GUEST_PM }]) {
   return (access, inAccess = []) => {
     let considerAccept = pmsCode.some(p => access.some(a => pm[a] === p))
     let considerDeny = pmsCode.some(p => inAccess.some(a => pm[a] === p))
-    return considerAccept && !considerDeny
+    return access.some(acc => acc === '') || considerAccept && !considerDeny
   }
 }
 

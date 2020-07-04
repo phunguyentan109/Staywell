@@ -76,7 +76,7 @@ export default function Profile({ loading, user, sendReloadUser }) {
             <About job={user.job} birthDate={user.birthDate}/>
             <Card className='gx-card' title='Change your profile'>
               <Form layout='horizontal'>
-                <PermissionRender access={['PEOPLE_PM']}>
+                {/* <PermissionRender access={['PEOPLE_PM']}>
                   <FormItem
                     label='Your email'
                     labelCol={{ xs: 24, sm: 6 }}
@@ -90,22 +90,27 @@ export default function Profile({ loading, user, sendReloadUser }) {
                       onChange={hdChange}
                     />
                   </FormItem>
-                </PermissionRender>
+                </PermissionRender> */}
                 {
-                  PROFILE_INPUT.map((cur, index) => <FormItem
+                  
+                  PROFILE_INPUT.map((cur, index) => <PermissionRender 
+                    access={cur.access}
                     key={cur.name}
-                    label={cur.label}
-                    labelCol={{ xs: 24, sm: 6 }}
-                    wrapperCol={{ xs: 24, sm: 16 }}    
                   >
-                    <Input
-                      type={cur.type}
-                      placeholder={cur.placeholder}
-                      name={cur.name}
-                      value={[profile.job, profile.phone][index]}
-                      onChange={hdChange}
-                    />
-                  </FormItem>
+                    <FormItem
+                      label={cur.label}
+                      labelCol={{ xs: 24, sm: 6 }}
+                      wrapperCol={{ xs: 24, sm: 16 }}    
+                    >
+                      <Input
+                        type={cur.type}
+                        placeholder={cur.placeholder}
+                        name={cur.name}
+                        value={[profile.email, profile.job, profile.phone][index]}
+                        onChange={hdChange}
+                      />
+                    </FormItem>
+                  </PermissionRender>
                   )
                 }
                 <FormItem
