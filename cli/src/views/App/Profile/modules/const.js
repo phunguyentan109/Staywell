@@ -1,16 +1,13 @@
 import moment from 'moment'
 
-export const DEFAULT_PASSWORD = {
-  current: '',
-  change: '',
-  confirm: ''
-}
-
 export const DEFAULT_PROFILE = {
   email: '',
   job: '',
   phone:'',
-  birthDate: moment()
+  birthDay: moment(),
+  current: '',
+  change: '',
+  confirm: ''
 }
 
 export const PROFILE_INPUT = [
@@ -22,14 +19,11 @@ export const PROFILE_INPUT = [
     name: 'email'
   },
   {
-    access: [''],
     label:'Your job',
-    type:'text',
     placeholder:'Enter your job here...',
     name:'job'
   },
   {
-    access: [''],
     label:'Your phone',
     type:'number',
     placeholder:'Enter your phone here...',
@@ -39,19 +33,16 @@ export const PROFILE_INPUT = [
 
 export const PASSWORD_INPUT = [
   {
-    access: [''],
     label:'Current Password',
     placeholder:'Enter the current password here...',
-    name:'current'
+    name:'current',
   },
   {
-    access: [''],
     label:'New Password',
     placeholder:'Enter the new password here...',
     name:'change'
   },
   {
-    access: [''],
     label:'Confirm Password',
     placeholder:'Confirm your new password here...',
     name:'confirm'
