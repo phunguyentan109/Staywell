@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import { apiPrice, notify } from 'constants/api'
 import DeleteAction from 'components/DeleteAction'
 import { DEFAULT_PRICE, PRICE_COLS, PRICE_INPUTS } from '../modules/const'
+import CustomModal from 'components/App/Modal/CustomModal'
 import useList from 'hooks/useList'
 
 const FormItem = Form.Item
@@ -28,7 +29,7 @@ export default function Price({ loading }) {
     setPrice(prev => ({ ...prev, [name]: value }))
   }
 
-  const toggle = () => setVisible(prev => !prev)
+  // const toggle = () => setVisible(prev => !prev)
 
   async function hdOk () {
     setProcessing(true)
@@ -36,7 +37,8 @@ export default function Price({ loading }) {
     let data = await apiPrice[price._id ? 'update' : 'create'](submit)
     updateListPrice(data)
     notify('success')
-    setProcessing(false)
+    return data
+    // setProcessing(false)
   }
 
   async function hdRemove(price_id) {
@@ -51,7 +53,33 @@ export default function Price({ loading }) {
   return (
     <>
       <Card title='List of available price'>
-        <Button type='primary' onClick={toggle}>Add new price</Button>
+        {/* <Button type='primary' onClick={toggle}>Add new price</Button> */}
+        <CustomModal
+          btnName='Add new price'
+          title={price._id ? 'Update Price Information' : 'Create New Price'}
+          hdOK={hdOk}
+        >
+          <Form layout='horizontal'>
+            {
+              PRICE_INPUTS.map((input, i) => (
+                <FormItem
+                  key={i}
+                  label={input.label}
+                  labelCol={{ xs: 24, sm: 6 }}
+                  wrapperCol={{ xs: 24, sm: 16 }}
+                >
+                  <Input
+                    type={input.type || 'number'}
+                    placeholder={`Please enter the ${input.name}`}
+                    name={input.name}
+                    value={price[input.name]}
+                    onChange={hdChange}
+                  />
+                </FormItem>
+              ))
+            }
+          </Form>
+        </CustomModal>
         <Table
           className='gx-table-responsive'
           dataSource={listPrice}
@@ -72,7 +100,7 @@ export default function Price({ loading }) {
           ]}
         />
       </Card>
-      <Modal
+      {/* <Modal
         title={price._id ? 'Update Price Information' : 'Create New Price'}
         visible={visible}
         onOk={hdOk}
@@ -99,7 +127,7 @@ export default function Price({ loading }) {
             ))
           }
         </Form>
-      </Modal>
+      </Modal> */}
     </>
   )
 }
