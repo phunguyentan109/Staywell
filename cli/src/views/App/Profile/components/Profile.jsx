@@ -78,7 +78,7 @@ export default function Profile({ loading, user, sendReloadUser }) {
               <Form layout='horizontal'>
                 {
                   
-                  PROFILE_INPUT.map((cur, index) => <PermissionRender 
+                  PROFILE_INPUT.map((cur) => <PermissionRender 
                     access={cur.access}
                     key={cur.name}
                   >
@@ -91,7 +91,7 @@ export default function Profile({ loading, user, sendReloadUser }) {
                         type={cur.type}
                         placeholder={cur.placeholder}
                         name={cur.name}
-                        value={[profile.email, profile.job, profile.phone][index]}
+                        value={profile[cur.name]}
                         onChange={hdChange}
                       />
                     </FormItem>
@@ -129,7 +129,7 @@ export default function Profile({ loading, user, sendReloadUser }) {
             <Card className='gx-card' title='Change your password'>
               <Form layout='horizontal'>
                 {
-                  PASSWORD_INPUT.map((cur, index) => <PermissionRender 
+                  PASSWORD_INPUT.map((cur) => <PermissionRender 
                     access={cur.access}
                     key={cur.name}
                   >
@@ -142,7 +142,7 @@ export default function Profile({ loading, user, sendReloadUser }) {
                         type='password'
                         placeholder={cur.placeholder}
                         name={cur.name}
-                        value={[password.current, password.change, password.confirm][index]}
+                        value={password[cur.name]}
                         onChange={hdChange}
                       />
                     </FormItem>
