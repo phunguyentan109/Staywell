@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
-import { Button, Modal } from 'antd'
+import { Modal } from 'antd'
 import PropTypes from 'prop-types'
 
-export default function CustomModal({ btnName, title, hdOK, ...props }) {
-  const [visible, setVisible] = useState(false)
+export default function CustomModal({ title, hdOK, toggle, visible, ...props }) {
   const [processing, setProcessing] = useState(false)
 
-  const toggle = () => setVisible((prev) => !prev)
   
   async function hdCreate() {
     setProcessing(true)
@@ -17,7 +15,6 @@ export default function CustomModal({ btnName, title, hdOK, ...props }) {
 
   return (
     <>
-      <Button type='primary' onClick={toggle}>{btnName}</Button>
       <Modal
         title={title}
         visible={visible}
@@ -32,13 +29,14 @@ export default function CustomModal({ btnName, title, hdOK, ...props }) {
 }
 
 CustomModal.propTypes = {
-  btnName: PropTypes.string,
   title: PropTypes.string,
   hdOK: PropTypes.func,
-  children: PropTypes.element.isRequired
+  children: PropTypes.element.isRequired,
+  visible: PropTypes.bool,
+  toggle: PropTypes.func,
 }
 
 CustomModal.defaultProps = {
-  btnName: '',
   title: '',
+  visible: false,
 }

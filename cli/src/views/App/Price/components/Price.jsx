@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Card, Table, Divider, Form, Input } from 'antd'
+import { Card, Table, Divider, Form, Input, Button } from 'antd'
 import PropTypes from 'prop-types'
 
 import { apiPrice, notify } from 'constants/api'
@@ -10,7 +10,7 @@ import useList from 'hooks/useList'
 
 const FormItem = Form.Item
 
-export default function Price({ loading }) {
+export default function Price({ loading, toggle, visible }) {
   const [listPrice, setListPrice, updateListPrice] = useList([])
   const [price, setPrice] = useState(DEFAULT_PRICE)
 
@@ -49,8 +49,11 @@ export default function Price({ loading }) {
   return (
     <>
       <Card title='List of available price'>
+        <Button type='primary' onClick={toggle}>Add new price</Button>
         <CustomModal
           btnName='Add new price'
+          toggle={toggle}
+          visible={visible}
           title={price._id ? 'Update Price Information' : 'Create New Price'}
           hdOK={hdOk}
         >
@@ -88,7 +91,7 @@ export default function Price({ loading }) {
                 <span> 
                   <DeleteAction onConfirm={hdRemove.bind(this, record._id)}/>
                   <Divider type='vertical'/>
-                  <span className='gx-link' onClick={() => setPrice(record)}>Edit</span>
+                  <span className='gx-link' onClick={() => toggle() || setPrice(record)}>Edit</span>
                 </span>
               )
             }
