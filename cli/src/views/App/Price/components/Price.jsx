@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Card, Table, Divider, Button, Form, Input, Modal } from 'antd'
+import { Card, Table, Divider, Form, Input } from 'antd'
 import PropTypes from 'prop-types'
 
 import { apiPrice, notify } from 'constants/api'
@@ -13,8 +13,6 @@ const FormItem = Form.Item
 export default function Price({ loading }) {
   const [listPrice, setListPrice, updateListPrice] = useList([])
   const [price, setPrice] = useState(DEFAULT_PRICE)
-  const [visible, setVisible] = useState(false)
-  const [processing, setProcessing] = useState(false)
 
   const load = useCallback(async() => {
     let priceData = await apiPrice.get()
@@ -28,8 +26,6 @@ export default function Price({ loading }) {
     let { value, name } = e.target
     setPrice(prev => ({ ...prev, [name]: value }))
   }
-
-  // const toggle = () => setVisible(prev => !prev)
 
   async function hdOk () {
     setProcessing(true)
@@ -53,7 +49,6 @@ export default function Price({ loading }) {
   return (
     <>
       <Card title='List of available price'>
-        {/* <Button type='primary' onClick={toggle}>Add new price</Button> */}
         <CustomModal
           btnName='Add new price'
           title={price._id ? 'Update Price Information' : 'Create New Price'}
@@ -100,34 +95,6 @@ export default function Price({ loading }) {
           ]}
         />
       </Card>
-      {/* <Modal
-        title={price._id ? 'Update Price Information' : 'Create New Price'}
-        visible={visible}
-        onOk={hdOk}
-        confirmLoading={processing}
-        onCancel={toggle}
-      >
-        <Form layout='horizontal'>
-          {
-            PRICE_INPUTS.map((input, i) => (
-              <FormItem
-                key={i}
-                label={input.label}
-                labelCol={{ xs: 24, sm: 6 }}
-                wrapperCol={{ xs: 24, sm: 16 }}
-              >
-                <Input
-                  type={input.type || 'number'}
-                  placeholder={`Please enter the ${input.name}`}
-                  name={input.name}
-                  value={price[input.name]}
-                  onChange={hdChange}
-                />
-              </FormItem>
-            ))
-          }
-        </Form>
-      </Modal> */}
     </>
   )
 }

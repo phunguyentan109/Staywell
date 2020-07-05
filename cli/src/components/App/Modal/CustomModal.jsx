@@ -7,14 +7,12 @@ export default function CustomModal({ btnName, title, hdOK, ...props }) {
   const [processing, setProcessing] = useState(false)
 
   const toggle = () => setVisible((prev) => !prev)
-
-  function hdProcessing() {
+  
+  async function hdCreate() {
     setProcessing(true)
-    console.log("hdOK")
-    // let okData = () => hdOK
-    // console.log(okData)
-    // okData && setProcessing(false)
-    // toggle()
+    let okData = hdOK()
+    okData && setProcessing(false)
+    toggle()
   }
 
   return (
@@ -23,9 +21,9 @@ export default function CustomModal({ btnName, title, hdOK, ...props }) {
       <Modal
         title={title}
         visible={visible}
-        onOK={hdProcessing}
-        confirmLoading={processing}
         onCancel={toggle}
+        onOk={hdCreate}
+        confirmLoading={processing}
       >
         {props.children}
       </Modal>
@@ -38,4 +36,9 @@ CustomModal.propTypes = {
   title: PropTypes.string,
   hdOK: PropTypes.func,
   children: PropTypes.element.isRequired
+}
+
+CustomModal.defaultProps = {
+  btnName: '',
+  title: '',
 }

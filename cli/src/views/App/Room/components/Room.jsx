@@ -16,7 +16,7 @@ export default function Room ({ loading }) {
   const [rooms, setRooms, updateRooms] = useList([])
   const [room, setRoom] = useState(DEFAULT_ROOM)
   const [price, setPrice] = useState([])
-  const [modal, setModal] = useState({ form: false, transfer: false })
+  const [visible, setVisible] = useState({ form: false, transfer: false })
   const [processing, setProcessing] = useState(false)
 
   const load = useCallback(async() => {
@@ -29,10 +29,10 @@ export default function Room ({ loading }) {
 
   useEffect(() => { load() }, [load])
   useEffect(() => {
-    !modal.form && !modal.transfer && !_.isEqual(room, DEFAULT_ROOM) && setRoom(DEFAULT_ROOM)
-  }, [modal.form, modal.transfer, room])
+    !visible.form && !visible.transfer && !_.isEqual(room, DEFAULT_ROOM) && setRoom(DEFAULT_ROOM)
+  }, [visible.form, visible.transfer, room])
 
-  const toggle = modal => setModal(prev => ({ ...prev, [modal]: !prev[modal] }))
+  const toggle = visible => setVisible(prev => ({ ...prev, [visible]: !prev[visible] }))
 
   async function hdRemove(room_id) {
     loading(true)
@@ -119,12 +119,12 @@ export default function Room ({ loading }) {
         roomId={room._id}
         people={room.user_id}
         updateRooms={updateRooms}
-        visible={modal.transfer}
+        visible={visible.transfer}
         toggleModal={toggle.bind(this, 'transfer')}
       />
       <Modal
         title={room._id ? 'Update Price Information' : 'Create New Price'}
-        visible={modal.form}
+        visible={visible.form}
         onOk={hdOk}
         confirmLoading={processing}
         onCancel={toggle.bind(this, 'form')}
