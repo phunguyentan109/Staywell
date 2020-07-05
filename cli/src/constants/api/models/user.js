@@ -46,18 +46,3 @@ export default async function (name, { data, params } = {}, throwErr) {
   config.url = common + config.url
   return await apiCall({ ...config, data }, throwErr)
 }
-
-// export async function changePassword(user_id, password) {
-//   return await apiCall('put', `${common}/${user_id}/password`, password)
-// }
-// export async function getAvailable() {
-//   return await apiCall('get', `${common}/available`)
-// }
-//
-// export async function remove(user_id) {
-//   return await apiCall('delete', `${common}/${user_id}`)
-// }
-//
-// export async function update(user_id, user) {
-//   return await apiCall('put', `${common}/${user_id}`, user)
-// }

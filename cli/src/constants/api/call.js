@@ -21,13 +21,13 @@ export function setTokenHeader(token) {
   }
 }
 
-export async function apiCall({ method, path, data }, throwErr) {
+export async function apiCall({ method, url, data }, throwErr) {
   try {
-    return (await axios[method || 'get'](path, data)).data
+    return (await axios[method || 'get'](url, data)).data
   } catch (err) {
-    if (throwErr) return err
+    if (throwErr) return err.response.data
     notify('error')
-    console.error(err)
+    console.error(err.response)
   }
 }
 
