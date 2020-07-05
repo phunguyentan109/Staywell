@@ -1,17 +1,24 @@
 import { apiCall, spec } from '../call'
+const common = '/api/price'
 
-export async function get() {
-  return await apiCall('get', '/api/price')
-}
-
-export async function create(price) {
-  return await apiCall('post', '/api/price', price)
-}
-
-export async function remove(price_id) {
-  return await apiCall('delete', `/api/price/${price_id}`)
-}
-
-export async function update(price_id, price) {
-  return await apiCall('put', `/api/price/${price_id}`, price)
+export default async function (name, { data, params } = {}, throwErr) {
+  let config, { price_id } = params
+  switch (name) {
+    case 'get': {
+      config = { url: spec(price_id) }
+      break
+    }
+    case 'remove': {
+      config = { method: 'delete', url: `/${price_id}` }
+      break
+    }
+    case 'update': {
+      config = { url: `/${price_id}` }
+      break
+    }
+    default: config = { url: '' }
+  }
+  // Call api
+  config.url = common + config.url
+  return await apiCall({ ...config, data }, throwErr)
 }
