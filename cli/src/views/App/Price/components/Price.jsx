@@ -28,13 +28,20 @@ export default function Price({ loading, toggle, visible }) {
   }
 
   async function hdOk () {
-    setProcessing(true)
-    const submit = price._id ? { price_id: price._id, data: price } : { data: price }
-    let data = await apiPrice[price._id ? 'update' : 'create'](submit)
-    updateListPrice(data)
-    notify('success')
-    return data
-    // setProcessing(false)
+    // spread price but remove extra option
+    let petPrice = { ...price }
+    delete petPrice.extra
+
+    let objIsEmpty = Object.values(petPrice).some(val => val === 0 || '')
+
+    if (!objIsEmpty) {
+      const submit = price._id ? { price_id: price._id, data: price } : { data: price }
+      let data = await apiPrice[price._id ? 'update' : 'create'](submit)
+      updateListPrice(data)
+      notify('success')
+    } else {
+      notify('error', 'Please full field Price before submit!')
+    }
   }
 
   async function hdRemove(price_id) {
@@ -104,5 +111,11 @@ export default function Price({ loading, toggle, visible }) {
 
 Price.propTypes = {
   notify: PropTypes.func,
-  loading: PropTypes.func
+  loading: PropTypes.func,
+  visible: PropTypes.bool,
+  toggle: PropTypes.func,
+}
+
+Price.defaultProps = {
+  visible: false,
 }

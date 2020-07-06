@@ -6,10 +6,9 @@ export default function CustomModal({ title, hdOK, toggle, visible, ...props }) 
   const [processing, setProcessing] = useState(false)
 
   
-  async function hdCreate() {
+  async function hdProcess() {
     setProcessing(true)
-    let okData = hdOK()
-    okData && setProcessing(false)
+    hdOK() && setProcessing(false)
     toggle()
   }
 
@@ -19,7 +18,7 @@ export default function CustomModal({ title, hdOK, toggle, visible, ...props }) 
         title={title}
         visible={visible}
         onCancel={toggle}
-        onOk={hdCreate}
+        onOk={hdProcess}
         confirmLoading={processing}
       >
         {props.children}
