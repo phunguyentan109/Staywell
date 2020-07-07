@@ -77,7 +77,6 @@ export default function Room ({ loading, toggle, visible, setVisible }) {
           <Card title='List of available room'>
             <Button type='primary' onClick={toggle.bind(this, 'form')}>Add new room</Button>
             <CustomModal
-              btnName='Add new room'
               toggle={toggle.bind(this, 'form')}
               visible={visible.form}
               title={room._id ? 'Update Room Information' : 'Create New Room'}

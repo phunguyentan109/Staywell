@@ -18,7 +18,11 @@ export default function Price({ loading, toggle, visible }) {
     let priceData = await apiPrice.get()
     setListPrice(priceData)
     loading(false)
-  }, [setListPrice, loading])
+
+    if (visible === false) {
+      setPrice(DEFAULT_PRICE)
+    }
+  }, [setListPrice, loading, visible])
 
   useEffect(() => { load() }, [load])
 
@@ -31,10 +35,11 @@ export default function Price({ loading, toggle, visible }) {
     // spread price but remove extra option
     let petPrice = { ...price }
     delete petPrice.extra
+    delete petPrice.__v
 
-    let objIsEmpty = Object.values(petPrice).some(val => val === 0 || '')
+    let objIsEmpty = Object.values(petPrice).some(val => !val)
 
-    if (!objIsEmpty) {
+    if (objIsEmpty === false) {
       const submit = price._id ? { price_id: price._id, data: price } : { data: price }
       let data = await apiPrice[price._id ? 'update' : 'create'](submit)
       updateListPrice(data)
@@ -53,12 +58,16 @@ export default function Price({ loading, toggle, visible }) {
     loading(false)
   }
 
+  function hdEdit(price) {
+    toggle()
+    setPrice(price)
+  }
+
   return (
     <>
       <Card title='List of available price'>
         <Button type='primary' onClick={toggle}>Add new price</Button>
         <CustomModal
-          btnName='Add new price'
           toggle={toggle}
           visible={visible}
           title={price._id ? 'Update Price Information' : 'Create New Price'}
@@ -98,7 +107,7 @@ export default function Price({ loading, toggle, visible }) {
                 <span> 
                   <DeleteAction onConfirm={hdRemove.bind(this, record._id)}/>
                   <Divider type='vertical'/>
-                  <span className='gx-link' onClick={() => toggle() || setPrice(record)}>Edit</span>
+                  <span className='gx-link' onClick={hdEdit.bind(this, record)}>Edit</span>
                 </span>
               )
             }
