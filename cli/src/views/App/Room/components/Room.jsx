@@ -18,10 +18,8 @@ export default function Room ({ loading, toggle, visible, setVisible }) {
   const [room, setRoom] = useState(DEFAULT_ROOM)
   const [price, setPrice] = useState([])
   
-
   const load = useCallback(async() => {
     setVisible({ form: false, transfer: false })
-    
     let roomData = await apiRoom.get()
     let priceData = await apiPrice.get()
     setPrice(priceData)

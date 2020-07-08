@@ -12,7 +12,6 @@ export default function withToggleModal(WrappedComponent) {
       toggle = modal => setVisible(prev => ({ ...prev, [modal]: !prev[modal] }))
     }
 
-
     return (
       <WrappedComponent
         toggle={toggle}

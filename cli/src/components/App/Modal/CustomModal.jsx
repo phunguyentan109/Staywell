@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 export default function CustomModal({ title, hdOK, toggle, visible, ...props }) {
   const [processing, setProcessing] = useState(false)
 
-  
   async function hdProcess() {
     setProcessing(true)
     hdOK() && setProcessing(false)
