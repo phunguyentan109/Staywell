@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { notification } from 'antd'
+import _ from 'lodash'
 
 const CASES = {
   error: { msg: 'Process is not completed.' },
@@ -11,6 +12,15 @@ export const config = (method, url, data) => ({ method, url, data })
 
 export function notify(type, description) {
   notification[type]({ message: CASES[type].msg, description })
+}
+
+export function initApiFunc(apiList, common = '') {
+  return _.reduce(apiList, (a, { name, url, type }) => {
+    a[name] = async function({ data, ...params }, throwErr) {
+      return await apiCall({ type, url: `${common}${url(params)}`, data }, throwErr)
+    }
+    return a
+  }, {})
 }
 
 export function setTokenHeader(token) {
