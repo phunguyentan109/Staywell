@@ -23,8 +23,7 @@ export default function ResetPassword({ message, negative, addMessage, match }) 
       } else if (password !== cpassword) {
         addMessage('Your entered password is invalid. Please try again')
       } else {
-        let params = { token }, data = { password }
-        await apiUser('reset', { params, data }, true)
+        await apiUser.reset({ token, data: { password } }, true)
         setAccount(DEFAULT_ACCOUNT)
         addMessage('Your reset link has been sent to your mail.', false)
       }

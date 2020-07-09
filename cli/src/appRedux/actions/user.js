@@ -10,7 +10,7 @@ import {
 export function sendAuthData(type, data){
   return {
     type: SEND_AUTH_DATA,
-    value: { params: { type }, data }
+    value: { type, data }
   }
 }
 
@@ -36,8 +36,6 @@ export function activateUser() {
 export function sendReloadUser(user_id) {
   return {
     type: SEND_RELOAD_USER,
-    value: {
-      params: { user_id }
-    }
+    value: { user_id }
   }
 }

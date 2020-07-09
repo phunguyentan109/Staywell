@@ -1,24 +1,10 @@
-import { apiCall, spec } from '../call'
-const common = '/api/price'
+import { initApiFunc, spec } from '../call'
 
-export default async function (name, { data, params } = {}, throwErr) {
-  let config, { price_id } = params
-  switch (name) {
-    case 'get': {
-      config = { url: spec(price_id) }
-      break
-    }
-    case 'remove': {
-      config = { method: 'delete', url: `/${price_id}` }
-      break
-    }
-    case 'update': {
-      config = { url: `/${price_id}` }
-      break
-    }
-    default: config = { url: '' }
-  }
-  // Call api
-  config.url = common + config.url
-  return await apiCall({ ...config, data }, throwErr)
-}
+const apiList = [
+  { name: 'get', url: ({ price_id }) => spec(price_id) },
+  { name: 'create', method: 'post', url: () => '' },
+  { name: 'remove', method: 'delete', url: ({ price_id }) => `/${price_id}` },
+  { name: 'update', method: 'put', url: ({ price_id }) => `/${price_id}` }
+]
+
+export default initApiFunc(apiList, '/api/price')

@@ -7,9 +7,7 @@ export default function Forgot({ message, negative, addMessage }) {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
-    return () => addMessage()
-  }, [addMessage])
+  useEffect(() => { return () => addMessage() }, [addMessage])
 
   async function hdSubmit(e) {
     e.preventDefault()
@@ -17,7 +15,7 @@ export default function Forgot({ message, negative, addMessage }) {
     try {
       if (email.length > 0) {
         if (email.indexOf('@') !== -1) {
-          await apiUser.forgot({ email })
+          await apiUser.forgot({ data: { email } }, true)
           setEmail('')
           addMessage('Reset password successfully', false)
         } else {
@@ -25,7 +23,7 @@ export default function Forgot({ message, negative, addMessage }) {
           setLoading(false)
         }
       } else {
-        addMessage('Please enter your email. Please try again!')
+        addMessage('Please enter your email before submission.')
         setLoading(false)
       }
     } catch (err) {
@@ -35,22 +33,14 @@ export default function Forgot({ message, negative, addMessage }) {
     setLoading(false)
   }
 
-  function hdChange(e) {
-    setEmail(e.target.value)
-  }
-
   return (
     <div className='content'>
       <h1>Forgot password?</h1>
       <h4>Please fill in your email below to reset password.</h4>
       {
-        message
-          ? <div className={`${negative ? 'notify' : 'great-notify'}`}>
-            <span>
-              { message ? message : '' }
-            </span>
-          </div>
-          : <span/>
+        message && <div className={`${negative ? 'notify' : 'great-notify'}`}>
+          <span>{ message ? message : '' }</span>
+        </div>
       }
       <form className='auth-form' onSubmit={hdSubmit}>
         <AuthInput
@@ -58,7 +48,7 @@ export default function Forgot({ message, negative, addMessage }) {
           name='email'
           icon='far fa-envelope'
           value={email}
-          onChange={hdChange}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <button className='signup' disabled={loading}>
           {
@@ -72,9 +62,10 @@ export default function Forgot({ message, negative, addMessage }) {
   )
 }
 
-Forgot.propsTypes = {
+Forgot.propTypes = {
   message: PropTypes.object,
-  addMessage: PropTypes.func
+  addMessage: PropTypes.func,
+  negative: PropTypes.bool
 }
 
 Forgot.defaultProps = {

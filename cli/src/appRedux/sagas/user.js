@@ -13,7 +13,8 @@ import _ from 'lodash'
 
 function* hdAuthData({ value }) {
   const type = _.get(value, 'params', '')
-  let auth = yield call(apiUser, 'auth', value, true)
+  let auth = yield call(apiUser.auth, value, true)
+
   // If error, then finish here
   if (auth.errorMsg) return yield put(addMessage(auth.errorMsg))
     
@@ -44,7 +45,7 @@ function* hdAfterActivate() {
 }
 
 function* hdReloadUser({ value }) {
-  let data = yield call(apiUser, 'get', value)
+  let data = yield call(apiUser.get, value)
   if (!data.errorMsg) {
     const { token, ...user } = data
     sessionStorage.setItem('auth', JSON.stringify(user))

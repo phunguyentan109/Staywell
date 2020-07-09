@@ -12,7 +12,7 @@ export default function TableTransfer({ roomId, visible, people, toggleModal, up
   const [processing, setProcessing] = useState(false)
 
   const load = useCallback(async() => {
-    let availablePeople = await apiUser.getAvailable()
+    let availablePeople = await apiUser.available()
     setAvailable(availablePeople)
   }, [])
 
@@ -25,7 +25,7 @@ export default function TableTransfer({ roomId, visible, people, toggleModal, up
 
   async function hdOk() {
     toggleProcess()
-    let room = await apiRoom.assign(roomId, { user_id: checkedIn })
+    let room = await apiRoom.assign({ room_id: roomId, data: { user_id: checkedIn } })
     updateRooms(room)
     toggleModal()
     toggleProcess()

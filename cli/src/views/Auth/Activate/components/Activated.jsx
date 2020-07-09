@@ -8,7 +8,7 @@ export default function Activated({ match, activateUser, history }) {
   const load = useCallback(async() => {
     try {
       const { user_id } = match.params
-      await apiUser('activate', { params: { user_id } }, true)
+      await apiUser.activate({ user_id }, true)
       activateUser()
       setLoading(false)
       setTimeout(() =>  history.push('/'), 3000)

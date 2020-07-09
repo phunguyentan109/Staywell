@@ -1,28 +1,11 @@
-import { apiCall, spec } from '../call'
-const common = '/api/rooms'
+import { spec, initApiFunc } from '../call'
 
-export default async function (name, { data, params } = {}, throwErr) {
-  let config, { room_id } = params
-  switch (name) {
-    case 'get': {
-      config = { url: spec(room_id) }
-      break
-    }
-    case 'remove': {
-      config = { method: 'delete', url: `/${room_id}` }
-      break
-    }
-    case 'update': {
-      config = { url: `/${room_id}` }
-      break
-    }
-    case 'assign': {
-      config = { url: `/${room_id}/assign` }
-      break
-    }
-    default: config = { url: '' }
-  }
-  // Call api
-  config.url = common + config.url
-  return await apiCall({ ...config, data }, throwErr)
-}
+const apiList = [
+  { name: 'get', url: ({ room_id }) => spec(room_id) },
+  { name: 'create', method: 'post', url: () => '' },
+  { name: 'remove', method: 'delete', url: ({ room_id }) => `/${room_id}` },
+  { name: 'update', method: 'put', url: ({ room_id }) => `/${room_id}` },
+  { name: 'assign', method: 'put', url: ({ room_id }) => `/${room_id}/assign` }
+]
+
+export default initApiFunc(apiList, '/api/rooms')

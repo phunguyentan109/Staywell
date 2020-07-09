@@ -29,8 +29,7 @@ export default function Profile({ loading, user, sendReloadUser }) {
     loading(true)
     let { change, confirm, current } = profile
     if (current && change && change === confirm) {
-      const params = { user_id: user._id }, data = { password: change }
-      await apiUser('password', { params, data })
+      await apiUser.password({ user_id: user._id, data: { password: change } })
       clearProfile('current', 'change', 'confirm')
       notify('success', 'Your password has been updated.')
     } else {
@@ -48,8 +47,7 @@ export default function Profile({ loading, user, sendReloadUser }) {
     loading(true)
     if (profile.email) {
       let keys = ['email', 'job', 'phone', 'birthDay']
-      const params = { user_id: user._id }, data = _.pick(profile, keys)
-      await apiUser('update', { params, data })
+      await apiUser.update({ user_id: user._id, data: _.pick(profile, keys) })
       sendReloadUser(user._id)
       clearProfile(...keys)
       notify('success', 'Your profile has been updated successfully.')

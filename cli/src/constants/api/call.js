@@ -15,9 +15,10 @@ export function notify(type, description) {
 }
 
 export function initApiFunc(apiList, common = '') {
-  return _.reduce(apiList, (a, { name, url, type }) => {
-    a[name] = async function({ data, ...params }, throwErr) {
-      return await apiCall({ type, url: `${common}${url(params)}`, data }, throwErr)
+  return _.reduce(apiList, (a, { name, url, method }) => {
+    a[name] = async function({ data, ...params } = {}, throwErr) {
+      const _url = `${common}${url(params)}`
+      return await apiCall({ method, url: _url, data }, throwErr)
     }
     return a
   }, {})
