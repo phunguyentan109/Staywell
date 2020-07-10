@@ -5,8 +5,8 @@ import PropTypes from 'prop-types'
 import { apiPrice, notify } from 'constants/api'
 import DeleteAction from 'components/DeleteAction'
 import { DEFAULT_PRICE, PRICE_COLS, PRICE_INPUTS } from '../modules/const'
-import CustomModal from 'components/App/Modal/CustomModal'
 import useList from 'hooks/useList'
+import { ButtonCreate, EditAction } from '../modules/ModalAction'
 
 const FormItem = Form.Item
 
@@ -66,13 +66,7 @@ export default function Price({ loading, toggle, visible }) {
   return (
     <>
       <Card title='List of available price'>
-        <Button type='primary' onClick={toggle}>Add new price</Button>
-        <CustomModal
-          toggle={toggle}
-          visible={visible}
-          title={price._id ? 'Update Price Information' : 'Create New Price'}
-          hdOK={hdOk}
-        >
+        <ButtonCreate hdOK={hdOk} title='Add new price'>
           <Form layout='horizontal'>
             {
               PRICE_INPUTS.map((input, i) => (
@@ -93,7 +87,7 @@ export default function Price({ loading, toggle, visible }) {
               ))
             }
           </Form>
-        </CustomModal>
+        </ButtonCreate>
         <Table
           className='gx-table-responsive'
           dataSource={listPrice}
@@ -104,10 +98,15 @@ export default function Price({ loading, toggle, visible }) {
               title: 'Action',
               key: 'action',
               render: (text, record) => (
-                <span> 
+                <span>
                   <DeleteAction onConfirm={hdRemove.bind(this, record._id)}/>
                   <Divider type='vertical'/>
-                  <span className='gx-link' onClick={hdEdit.bind(this, record)}>Edit</span>
+                  <EditAction 
+                    className='gx-link' 
+                    title='Update Price Information'
+                    onClick={hdEdit.bind(this, record)}
+                    hdOK={hdOk}
+                  />
                 </span>
               )
             }
