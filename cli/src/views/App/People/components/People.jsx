@@ -17,7 +17,7 @@ export default function People({ loading }) {
   useEffect(() => { load() }, [load])
 
   async function hdRemove(user_id) {
-    await apiUser.remove(user_id)
+    await apiUser.remove({ user_id })
     setPeople(prev => prev.filter(p => p.user_id._id !== user_id))
     notify('success', 'People data is removed successfully.')
   }

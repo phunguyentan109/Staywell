@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { notification } from 'antd'
+import _ from 'lodash'
 
 const CASES = {
   error: { msg: 'Process is not completed.' },
@@ -9,8 +10,18 @@ const CASES = {
 export const spec = id => id ? `/${id}` : ''
 export const config = (method, url, data) => ({ method, url, data })
 
-export const notify = (type, description) => {
+export function notify(type, description) {
   notification[type]({ message: CASES[type].msg, description })
+}
+
+export function initApiFunc(apiList, common = '') {
+  return _.reduce(apiList, (a, { name, url, method }) => {
+    a[name] = async function({ data, ...params } = {}, throwErr) {
+      const _url = `${common}${url(params)}`
+      return await apiCall({ method, url: _url, data }, throwErr)
+    }
+    return a
+  }, {})
 }
 
 export function setTokenHeader(token) {
@@ -21,22 +32,13 @@ export function setTokenHeader(token) {
   }
 }
 
-export async function apiCallV2({ method, path, data }, getErr) {
+export async function apiCall({ method, url, data }, throwErr) {
   try {
-    return (await axios[method](path, data)).data
+    return (await axios[method || 'get'](url, data)).data
   } catch (err) {
-    if (getErr) return err
+    if (throwErr) return err.response.data
     notify('error')
-    console.error(err)
-  }
-}
-
-export async function apiCall(method, path, data) {
-  try {
-    return (await axios[method](path, data)).data
-  } catch (err) {
-    notify('error')
-    console.error(err)
+    console.error(err.response)
   }
 }
 

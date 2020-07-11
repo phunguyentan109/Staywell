@@ -32,7 +32,8 @@ export default function Price({ loading }) {
 
   async function hdOk () {
     setProcessing(true)
-    let data = price._id ? await apiPrice.update(price._id, price) : await apiPrice.create(price)
+    const submit = price._id ? { price_id: price._id, data: price } : { data: price }
+    let data = await apiPrice[price._id ? 'update' : 'create'](submit)
     updateListPrice(data)
     notify('success')
     setProcessing(false)
@@ -40,7 +41,7 @@ export default function Price({ loading }) {
 
   async function hdRemove(price_id) {
     loading(true)
-    await apiPrice.remove(price_id)
+    await apiPrice.remove({ price_id })
     let updatePriceList = listPrice.filter(v => v._id !== price_id)
     setListPrice(updatePriceList)
     notify('success', 'Price data is removed successfully')

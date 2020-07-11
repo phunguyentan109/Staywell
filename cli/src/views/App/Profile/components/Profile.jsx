@@ -29,7 +29,7 @@ export default function Profile({ loading, user, sendReloadUser }) {
     loading(true)
     let { change, confirm, current } = profile
     if (current && change && change === confirm) {
-      await apiUser.changePassword(user._id, { password: change })
+      await apiUser.password({ user_id: user._id, data: { password: change } })
       clearProfile('current', 'change', 'confirm')
       notify('success', 'Your password has been updated.')
     } else {
@@ -47,7 +47,7 @@ export default function Profile({ loading, user, sendReloadUser }) {
     loading(true)
     if (profile.email) {
       let keys = ['email', 'job', 'phone', 'birthDay']
-      await apiUser.update(user._id, _.pick(profile, keys))
+      await apiUser.update({ user_id: user._id, data: _.pick(profile, keys) })
       sendReloadUser(user._id)
       clearProfile(...keys)
       notify('success', 'Your profile has been updated successfully.')
@@ -74,7 +74,7 @@ export default function Profile({ loading, user, sendReloadUser }) {
                     <FormItem
                       label={inp.label}
                       labelCol={{ xs: 24, sm: 6 }}
-                      wrapperCol={{ xs: 24, sm: 16 }}    
+                      wrapperCol={{ xs: 24, sm: 16 }}
                     >
                       <Input
                         type={inp.type || 'text'}

@@ -36,7 +36,7 @@ export default function Room ({ loading }) {
 
   async function hdRemove(room_id) {
     loading(true)
-    await apiRoom.remove(room_id)
+    await apiRoom.remove({ room_id })
     let newRooms = rooms.filter(r => r._id !== room_id)
     setRooms(newRooms)
     notify('success', 'The room information is removed successfully!')
@@ -65,7 +65,8 @@ export default function Room ({ loading }) {
 
   async function hdOk() {
     setProcessing(true)
-    let rs = room._id ? await apiRoom.update(room._id, room) : await apiRoom.create(room)
+    const submit = room._id ? { room_id: room._id, data: room } : { data: room }
+    let rs = await apiRoom[room._id ? 'update' : 'create'](submit)
     updateRooms(rs)
     toggle('form')
     setProcessing(false)

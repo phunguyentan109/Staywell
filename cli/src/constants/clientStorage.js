@@ -13,8 +13,8 @@ export default function extractStorage(store) {
     }
     setTimeout(async() => {
       try {
-        let tokenData = jwtDecode(localStorage.swtoken)
-        let { token, ...user } = await apiUser.getOne(tokenData._id)
+        let params = { user_id: jwtDecode(localStorage.swtoken)._id }
+        let { token, ...user } = await apiUser.get(params, true)
         sessionStorage.setItem('auth', JSON.stringify(user))
         store.dispatch(addUser(user))
       } catch (err) {

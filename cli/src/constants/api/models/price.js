@@ -1,17 +1,10 @@
-import { apiCall } from '../call'
+import { initApiFunc, spec } from '../call'
 
-export async function get() {
-  return await apiCall('get', '/api/price')
-}
+const apiList = [
+  { name: 'get', url: ({ price_id }) => spec(price_id) },
+  { name: 'create', method: 'post', url: () => '' },
+  { name: 'remove', method: 'delete', url: ({ price_id }) => `/${price_id}` },
+  { name: 'update', method: 'put', url: ({ price_id }) => `/${price_id}` }
+]
 
-export async function create(price) {
-  return await apiCall('post', '/api/price', price)
-}
-
-export async function remove(price_id) {
-  return await apiCall('delete', `/api/price/${price_id}`)
-}
-
-export async function update(price_id, price) {
-  return await apiCall('put', `/api/price/${price_id}`, price)
-}
+export default initApiFunc(apiList, '/api/price')

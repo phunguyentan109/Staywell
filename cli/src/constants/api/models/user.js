@@ -1,43 +1,17 @@
-import { apiCall, apiCallV2, config } from '../call'
-const common = '/api/user'
+import { spec, initApiFunc } from '../call'
 
-export async function auth(authType, authData) {
-  return await apiCall('post', `${common}/${authType}`, authData)
-}
+const apiList = [
+  { name: 'get', url: ({ user_id }) => spec(user_id) },
+  { name: 'available', url: () => '/available' },
+  { name: 'auth', method: 'post', url: ({ type }) => `/${type}` },
+  { name: 'forgot', method: 'post', url: () => '/forgot' },
+  { name: 'remove', method: 'delete', url: ({ user_id }) => `/${user_id}` },
+  { name: 'update', method: 'put', url: ({ user_id }) => `/${user_id}` },
+  { name: 'activate', method: 'put', url: ({ user_id }) => `/${user_id}/activate` },
+  { name: 'reset', method: 'put', url: ({ token }) => `/${token}/reset` },
+  { name: 'password', method: 'put', url: ({ user_id }) => `/${user_id}/password` }
+]
 
-export async function getOne(user_id, getErr) {
-  let cf = config('get', `${common}/${user_id}`)
-  return await apiCallV2({ ...cf }, getErr)
-}
+export default initApiFunc(apiList, '/api/user')
 
-export async function activate(user_id) {
-  return await apiCall('put', `${common}/${user_id}/activate`)
-}
 
-export async function forgot(email) {
-  return await apiCall('post', `${common}/forgot`, email)
-}
-
-export async function resetPassword(token, password) {
-  return await apiCall('put', `${common}/${token}/reset`, password)
-}
-
-export async function changePassword(user_id, password) {
-  return await apiCall('put', `${common}/${user_id}/password`, password)
-}
-
-export async function get() {
-  return await apiCall('get', common)
-}
-
-export async function getAvailable() {
-  return await apiCall('get', `${common}/available`)
-}
-
-export async function remove(user_id) {
-  return await apiCall('delete', `${common}/${user_id}`)
-}
-
-export async function update(user_id, user) {
-  return await apiCall('put', `${common}/${user_id}`, user)
-}

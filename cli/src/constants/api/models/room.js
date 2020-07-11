@@ -1,10 +1,11 @@
-import { apiCall, spec } from '../call'
-const common = '/api/rooms'
+import { spec, initApiFunc } from '../call'
 
-export const get = async(id) => await apiCall('get', `${common}${spec(id)}`)
-export const create = async(room) => await apiCall('post', common, room)
+const apiList = [
+  { name: 'get', url: ({ room_id }) => spec(room_id) },
+  { name: 'create', method: 'post', url: () => '' },
+  { name: 'remove', method: 'delete', url: ({ room_id }) => `/${room_id}` },
+  { name: 'update', method: 'put', url: ({ room_id }) => `/${room_id}` },
+  { name: 'assign', method: 'put', url: ({ room_id }) => `/${room_id}/assign` }
+]
 
-export const getOne = async(id) => await apiCall('get', `${common}/${id}`)
-export const remove = async(id) => await apiCall('delete', `${common}/${id}`)
-export const update = async(id, data) => await apiCall('put', `${common}/${id}`, data)
-export const assign = async(id, data) => await apiCall('put', `${common}/${id}/assign`, data)
+export default initApiFunc(apiList, '/api/rooms')

@@ -1,5 +1,7 @@
-import { apiCall } from "../call";
+import { initApiFunc } from '../call'
 
-export async function create(room_id, contract_id) {
-    return await apiCall('post', `/api/rooms/${room_id}/contracts/${contract_id}/bills`);
-}
+const apiList = [
+  { name: 'create', method: 'post', url: ({ contract_id }) => `/api/contracts/${contract_id}/bills` }
+]
+
+export default initApiFunc(apiList)

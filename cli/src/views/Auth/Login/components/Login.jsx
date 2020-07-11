@@ -9,9 +9,7 @@ export default function Login({ message, sendAuthData, addMessage }) {
     password: ''
   })
 
-  useEffect(() => {
-    return () => addMessage()
-  }, [addMessage])
+  useEffect(() => { return () => addMessage() }, [addMessage])
 
   function hdSubmit(e) {
     e.preventDefault()
@@ -56,9 +54,10 @@ export default function Login({ message, sendAuthData, addMessage }) {
   )
 }
 
-Login.propsTypes = {
+Login.propTypes = {
   message: PropTypes.string,
   negative: PropTypes.bool,
+  sendAuthData: PropTypes.func,
   addMessage: PropTypes.func
 }
 
