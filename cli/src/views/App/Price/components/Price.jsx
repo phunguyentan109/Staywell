@@ -58,11 +58,6 @@ export default function Price({ loading, toggle, visible }) {
     loading(false)
   }
 
-  function hdEdit(price) {
-    toggle()
-    setPrice(price)
-  }
-
   return (
     <>
       <Card title='List of available price'>
@@ -101,12 +96,34 @@ export default function Price({ loading, toggle, visible }) {
                 <span>
                   <DeleteAction onConfirm={hdRemove.bind(this, record._id)}/>
                   <Divider type='vertical'/>
-                  <EditAction 
-                    className='gx-link' 
-                    title='Update Price Information'
-                    onClick={hdEdit.bind(this, record)}
-                    hdOK={hdOk}
-                  />
+                  <span onClick={() => setPrice(record)}>
+                    <EditAction 
+                      className='gx-link' 
+                      title='Update Price Information'
+                      hdOK={hdOk}
+                    >
+                      <Form layout='horizontal'>
+                        {
+                          PRICE_INPUTS.map((input, i) => (
+                            <FormItem
+                              key={i}
+                              label={input.label}
+                              labelCol={{ xs: 24, sm: 6 }}
+                              wrapperCol={{ xs: 24, sm: 16 }}
+                            >
+                              <Input
+                                type={input.type || 'number'}
+                                placeholder={`Please enter the ${input.name}`}
+                                name={input.name}
+                                value={price[input.name]}
+                                onChange={hdChange}
+                              />
+                            </FormItem>
+                          ))
+                        }
+                      </Form>
+                    </EditAction>
+                  </span>
                 </span>
               )
             }
