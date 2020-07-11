@@ -48,30 +48,8 @@ export default function ToDo({}) {
   const [labels, setLabels] = useState(DEFAULT_LABELS)
   const [filters, setFilters] = useState(DEFAULT_FILTERS)
 
-
-  const load = useCallback(async () => {
-    manageHeight()
-  }, [manageHeight])
-
-  useEffect(() => {
-    load()
-  }, [load])
-
-  function manageHeight() {
-  }
-
   function onSortEnd({ oldIndex, newIndex }) {
     setToDos(toDos, oldIndex, newIndex)
-  }
-
-  function onLabelSelect(event) {
-    setAnchorEl(event.currentTarget)
-    setLabelMenuState(!labelMenuState)
-  }
-
-  function onOptionMenuSelect(event) {
-    setAnchorEl(event.currentTarget)
-    setOptionMenuState(!optionMenuState)
   }
 
   function onOptionMenuItemSelect(e) {
@@ -126,30 +104,6 @@ export default function ToDo({}) {
     setToDos(toDos)
   }
 
-  function onLabelUpdate(data, label) {
-    if (data.labels.includes(label.id)) {
-      data.labels = removeLabel(data, label.id)
-    } else {
-      data.labels = addLabel(data, label.id)
-    }
-
-    handleRequestClose()
-
-    const toDos = allToDos.map(todo => {
-      if (todo.id === data.id) {
-        return data
-      } else {
-        return todo
-      }
-    })
-
-    setAlertMessage('Label Updated Successfully')
-    setShowMessage(true)
-    setCurrentTodo(data)
-    setAllToDos(toDos)
-    setToDos(toDos)
-  }
-
   function onMarkAsStart(data) {
     const toDos = allToDos.map(todo => {
       if (todo.id === data.id) {
@@ -164,24 +118,6 @@ export default function ToDo({}) {
     setAllToDos(toDos)
     setToDos(toDos)
   }
-
-  function onToDoUpdate(data) {
-    handleRequestClose()
-    const toDos = allToDos.map(todo => {
-      if (todo.id === data.id) {
-        return data
-      } else {
-        return todo
-      }
-    })
-
-    setAlertMessage('Label Updated Successfully')
-    setShowMessage(true)
-    setCurrentTodo(data)
-    setAllToDos(toDos)
-    setToDos(toDos)
-  }
-
 
   function onDeleteToDo(data) {
     let selectedToDos = 0
@@ -211,7 +147,7 @@ export default function ToDo({}) {
     data.selected = !data.selected
     let selectedToDos = 0
     let todox
-    if(toDos.length > 0) {
+    if (toDos.length > 0) {
       todox = toDos.map(todo => {
         if (todo.selected) {
           selectedToDos++
@@ -238,11 +174,6 @@ export default function ToDo({}) {
     } else {
       getUnselectedAllTodo()
     }
-  }
-
-  function onTodoAdd(data) {
-    setToDos(allToDos.concat(data))
-    setAllToDos(allToDos.concat(data))
   }
 
   function onTodoSelect(todo) {
@@ -553,7 +484,7 @@ export default function ToDo({}) {
     onDeleteToDo(selectedToDos)
   }
 
-  return(
+  return (
     <div className='gx-main-content'>
       <div className='gx-app-module'>
         <div className='gx-d-block gx-d-lg-none'>
