@@ -1,2 +1,2 @@
-import { ButtonCreate, EditAction } from './components/ModalAction'
-export { ButtonCreate, EditAction }
+import { ButtonCreate, EditAction, FormModal } from './components/ModalAction'
+export { ButtonCreate, EditAction, FormModal }

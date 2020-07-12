@@ -6,7 +6,7 @@ import { apiPrice, notify } from 'constants/api'
 import DeleteAction from 'components/DeleteAction'
 import { DEFAULT_PRICE, PRICE_COLS, PRICE_INPUTS } from '../modules/const'
 import useList from 'hooks/useList'
-import { ButtonCreate, EditAction } from '../modules/ModalAction'
+import { ButtonCreate, EditAction, FormModal } from '../modules/ModalAction'
 
 const FormItem = Form.Item
 
@@ -62,26 +62,7 @@ export default function Price({ loading, toggle, visible }) {
     <>
       <Card title='List of available price'>
         <ButtonCreate hdOK={hdOk} title='Add new price'>
-          <Form layout='horizontal'>
-            {
-              PRICE_INPUTS.map((input, i) => (
-                <FormItem
-                  key={i}
-                  label={input.label}
-                  labelCol={{ xs: 24, sm: 6 }}
-                  wrapperCol={{ xs: 24, sm: 16 }}
-                >
-                  <Input
-                    type={input.type || 'number'}
-                    placeholder={`Please enter the ${input.name}`}
-                    name={input.name}
-                    value={price[input.name]}
-                    onChange={hdChange}
-                  />
-                </FormItem>
-              ))
-            }
-          </Form>
+          <FormModal hdChange={hdChange} price={price}/>
         </ButtonCreate>
         <Table
           className='gx-table-responsive'
@@ -97,31 +78,8 @@ export default function Price({ loading, toggle, visible }) {
                   <DeleteAction onConfirm={hdRemove.bind(this, record._id)}/>
                   <Divider type='vertical'/>
                   <span onClick={() => setPrice(record)}>
-                    <EditAction 
-                      className='gx-link' 
-                      title='Update Price Information'
-                      hdOK={hdOk}
-                    >
-                      <Form layout='horizontal'>
-                        {
-                          PRICE_INPUTS.map((input, i) => (
-                            <FormItem
-                              key={i}
-                              label={input.label}
-                              labelCol={{ xs: 24, sm: 6 }}
-                              wrapperCol={{ xs: 24, sm: 16 }}
-                            >
-                              <Input
-                                type={input.type || 'number'}
-                                placeholder={`Please enter the ${input.name}`}
-                                name={input.name}
-                                value={price[input.name]}
-                                onChange={hdChange}
-                              />
-                            </FormItem>
-                          ))
-                        }
-                      </Form>
+                    <EditAction title='Update Price Information' hdOK={hdOk}>
+                      <FormModal hdChange={hdChange} price={price}/>
                     </EditAction>
                   </span>
                 </span>
