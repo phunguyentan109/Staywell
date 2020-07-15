@@ -7,10 +7,11 @@ import DeleteAction from 'components/DeleteAction'
 import { DEFAULT_PRICE, PRICE_COLS } from '../modules/const'
 import useList from 'hooks/useList'
 import { ButtonCreate, EditAction, FormModal } from '../modules/ModalAction'
+import useInitState from 'hooks/useInitState'
 
 export default function Price({ loading, visible }) {
   const [listPrice, setListPrice, updateListPrice] = useList([])
-  const [price, setPrice] = useState(DEFAULT_PRICE)
+  const [price, setPrice, clearPrice] = useInitState(DEFAULT_PRICE)
 
   const load = useCallback(async() => {
     let priceData = await apiPrice.get()
@@ -29,22 +30,15 @@ export default function Price({ loading, visible }) {
     setPrice(prev => ({ ...prev, [name]: value }))
   }
 
-  async function hdOk () {
-    // spread price but remove extra option
-    let petPrice = { ...price }
-    delete petPrice.extra
-    delete petPrice.__v
+  async function hdEdit() {
+    let data = await apiPrice.update({ price_id: price._id, data: price })
+    updateListPrice(data)
+    notify('success')
+  }
 
-    let objIsEmpty = Object.values(petPrice).some(val => !val)
-
-    if (objIsEmpty === false) {
-      const submit = price._id ? { price_id: price._id, data: price } : { data: price }
-      let data = await apiPrice[price._id ? 'update' : 'create'](submit)
-      updateListPrice(data)
-      notify('success')
-    } else {
-      notify('error', 'Please full field Price before submit!')
-    }
+  async function hdCreate() {
+    let data = await apiPrice.create({ data: price })
+    updateListPrice(data)
   }
 
   async function hdRemove(price_id) {
@@ -59,7 +53,11 @@ export default function Price({ loading, visible }) {
   return (
     <>
       <Card title='List of available price'>
-        <ButtonCreate hdOK={hdOk} title='Add new price'>
+        <ButtonCreate
+          onSubmit={hdCreate}
+          onClick={clearPrice}
+          title='Add new price'
+        >
           <FormModal hdChange={hdChange} price={price}/>
         </ButtonCreate>
         <Table
@@ -78,7 +76,7 @@ export default function Price({ loading, visible }) {
                   <EditAction
                     onClick={() => setPrice(record)}
                     title='Update Price Information'
-                    hdOK={hdOk}
+                    onSubmit={hdEdit}
                   >
                     <FormModal hdChange={hdChange} price={price}/>
                   </EditAction>

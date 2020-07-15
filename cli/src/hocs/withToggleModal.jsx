@@ -3,7 +3,7 @@ import { Modal } from 'antd'
 import PropTypes from 'prop-types'
 
 export default function withToggleModal(WrappedComponent) {
-  function ToggleModal({ children, title, hdOK, onClick }) {
+  function ToggleModal({ children, title, onSubmit, onClick }) {
     const [state, setState] = useState({
       modal: false,
       process: false
@@ -13,7 +13,7 @@ export default function withToggleModal(WrappedComponent) {
 
     async function hdProcess() {
       toggle('process')
-      hdOK()
+      onSubmit()
       setState({ process: false, modal: false })
     }
 
@@ -42,7 +42,7 @@ export default function withToggleModal(WrappedComponent) {
 
   ToggleModal.propTypes = {
     title: PropTypes.string,
-    hdOK: PropTypes.func,
+    onSubmit: PropTypes.func,
     onClick: PropTypes.func,
     children: PropTypes.element
   }
