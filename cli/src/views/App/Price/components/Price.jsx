@@ -21,7 +21,7 @@ export default function Price({ loading, visible }) {
     if (visible === false) {
       setPrice(DEFAULT_PRICE)
     }
-  }, [setListPrice, loading, visible])
+  }, [setListPrice, loading, visible, setPrice])
 
   useEffect(() => { load() }, [load])
 
