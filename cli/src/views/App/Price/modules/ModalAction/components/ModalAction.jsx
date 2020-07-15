@@ -9,7 +9,7 @@ const FormItem = Form.Item
 export const ButtonCreate = withToggleModal(() => <Button type='primary'>Add new price</Button>)
 export const EditAction = withToggleModal(() => <span className='gx-link'>Edit</span>)
 
-export const FormModal = ({ hdChange, price }) => (
+export const FormModal = ({ onChange, price }) => (
   <Form layout='horizontal'>
     {
       PRICE_INPUTS.map((input, i) => (
@@ -24,7 +24,7 @@ export const FormModal = ({ hdChange, price }) => (
             placeholder={`Please enter the ${input.name}`}
             name={input.name}
             value={price[input.name]}
-            onChange={hdChange}
+            onChange={onChange}
           />
         </FormItem>
       ))
@@ -33,6 +33,6 @@ export const FormModal = ({ hdChange, price }) => (
 )
 
 FormModal.propTypes = {
-  hdChange: PropTypes.func,
+  onChange: PropTypes.func,
   price: PropTypes.object
 }

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Card, Table, Divider, Form, Input, Button } from 'antd'
+import { Card, Table, Divider } from 'antd'
 import PropTypes from 'prop-types'
 
 import { apiPrice, notify } from 'constants/api'
 import DeleteAction from 'components/DeleteAction'
-import { DEFAULT_PRICE, PRICE_COLS, PRICE_INPUTS } from '../modules/const'
+import { DEFAULT_PRICE, PRICE_COLS } from '../modules/const'
 import useList from 'hooks/useList'
 import { ButtonCreate, EditAction, FormModal } from '../modules/ModalAction'
 
