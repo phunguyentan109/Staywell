@@ -8,9 +8,7 @@ import { DEFAULT_PRICE, PRICE_COLS, PRICE_INPUTS } from '../modules/const'
 import useList from 'hooks/useList'
 import { ButtonCreate, EditAction, FormModal } from '../modules/ModalAction'
 
-const FormItem = Form.Item
-
-export default function Price({ loading, toggle, visible }) {
+export default function Price({ loading, visible }) {
   const [listPrice, setListPrice, updateListPrice] = useList([])
   const [price, setPrice] = useState(DEFAULT_PRICE)
 
@@ -77,11 +75,13 @@ export default function Price({ loading, toggle, visible }) {
                 <span>
                   <DeleteAction onConfirm={hdRemove.bind(this, record._id)}/>
                   <Divider type='vertical'/>
-                  <span onClick={() => setPrice(record)}>
-                    <EditAction title='Update Price Information' hdOK={hdOk}>
-                      <FormModal hdChange={hdChange} price={price}/>
-                    </EditAction>
-                  </span>
+                  <EditAction
+                    onClick={() => setPrice(record)}
+                    title='Update Price Information'
+                    hdOK={hdOk}
+                  >
+                    <FormModal hdChange={hdChange} price={price}/>
+                  </EditAction>
                 </span>
               )
             }

@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, Form, Input } from 'antd'
 import withToggleModal from 'hocs/withToggleModal'
 import { PRICE_INPUTS } from '../../const'
+import PropTypes from 'prop-types'
 
 const FormItem = Form.Item
 
@@ -31,4 +32,7 @@ export const FormModal = ({ hdChange, price }) => (
   </Form>
 )
 
-// export { ButtonCreate, EditAction }
+FormModal.propTypes = {
+  hdChange: PropTypes.func,
+  price: PropTypes.object
+}

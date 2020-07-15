@@ -11,7 +11,7 @@ router.route('/login').post(hdl.User.logIn)
 router.route('/forgot').post(hdl.User.forgot)
 
 router.route('/:user_id')
-  .get(hdl.User.getOne)
+  .get(mw.User.isLogin, hdl.User.getOne)
   .delete(hdl.User.remove)
   .put(hdl.User.update)
 
