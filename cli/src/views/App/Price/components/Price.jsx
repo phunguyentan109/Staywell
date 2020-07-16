@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { Card, Table, Divider } from 'antd'
 import PropTypes from 'prop-types'
 
@@ -9,7 +9,7 @@ import useList from 'hooks/useList'
 import { ButtonCreate, EditAction, FormModal } from '../modules/ModalAction'
 import useInitState from 'hooks/useInitState'
 
-export default function Price({ loading, visible }) {
+export default function Price({ loading }) {
   const [listPrice, setListPrice, updateListPrice] = useList([])
   const [price, setPrice, clearPrice] = useInitState(DEFAULT_PRICE)
 
@@ -17,11 +17,7 @@ export default function Price({ loading, visible }) {
     let priceData = await apiPrice.get()
     setListPrice(priceData)
     loading(false)
-
-    if (visible === false) {
-      setPrice(DEFAULT_PRICE)
-    }
-  }, [setListPrice, loading, visible, setPrice])
+  }, [setListPrice, loading])
 
   useEffect(() => { load() }, [load])
 
@@ -53,11 +49,7 @@ export default function Price({ loading, visible }) {
   return (
     <>
       <Card title='List of available price'>
-        <ButtonCreate
-          onSubmit={hdCreate}
-          onClick={clearPrice}
-          title='Add new price'
-        >
+        <ButtonCreate onSubmit={hdCreate} onClick={clearPrice} title='Add new price'>
           <FormModal hdChange={hdChange} price={price}/>
         </ButtonCreate>
         <Table
@@ -75,7 +67,7 @@ export default function Price({ loading, visible }) {
                   <Divider type='vertical'/>
                   <EditAction
                     onClick={() => setPrice(record)}
-                    title='Update Price Information'
+                    title='Edit price information'
                     onSubmit={hdEdit}
                   >
                     <FormModal hdChange={hdChange} price={price}/>
@@ -94,9 +86,9 @@ Price.propTypes = {
   notify: PropTypes.func,
   loading: PropTypes.func,
   visible: PropTypes.bool,
-  toggle: PropTypes.func,
+  toggle: PropTypes.func
 }
 
 Price.defaultProps = {
-  visible: false,
+  visible: false
 }
