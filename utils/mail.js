@@ -1,22 +1,14 @@
-const db = require('../models')
-const nodemailer = require('nodemailer')
-const crypto = require('crypto')
+const mailer = require('nodemailer')
 const emoji = require('node-emoji')
 const { google } = require('googleapis')
 const OAuth2 = google.auth.OAuth2
 const { GMAILUSER, CLIENTID, CLIENTSECRET, REFRESHTOKEN, GGOAUTHLINK } = process.env
 
-exports.genToken = async() => {
-  let buf = await crypto.randomBytes(20)
-  return buf.toString('hex')
-}
-
 const oauth2Client = new OAuth2(CLIENTID, CLIENTSECRET, GGOAUTHLINK)
 oauth2Client.setCredentials({ refresh_token: REFRESHTOKEN })
-const accessToken = oauth2Client.getAccessToken()
 
 async function send(to, subject, text) {
-  let transport = nodemailer.createTransport({
+  let transport = mailer.createTransport({
     service: 'Gmail',
     auth: {
       type: 'OAuth2',
@@ -24,7 +16,7 @@ async function send(to, subject, text) {
       clientId: CLIENTID,
       clientSecret: CLIENTSECRET,
       refreshToken: REFRESHTOKEN,
-      access: accessToken
+      access: await oauth2Client.getAccessToken()
     }
   })
   let mailOptions = {
@@ -48,7 +40,7 @@ This is the automatic email from the system, please do not reply.`
   return await send(to, subject, text)
 }
 
-function getRoom(to, viewName, roomName) {
+async function getRoom(to, viewName, roomName) {
   let subject = emoji.emojify(':house_with_garden: Your new place is ready, start living now - Staywell')
   let text = `
 Good day ${viewName}, this mail comes from Staywell,
@@ -56,10 +48,10 @@ Good day ${viewName}, this mail comes from Staywell,
 Your place has been arranged, everything is ready and you will stay in room ${roomName}. You can come and live from now.
 
 This is the automatic email from the system, please do not reply.`
-  return send(to, subject, text)
+  return await send(to, subject, text)
 }
 
-function leaveRoom(to, viewName, roomName) {
+async function leaveRoom(to, viewName, roomName) {
   let subject = emoji.emojify(':dash: Your staying contract has come to the end - Staywell')
   let text = `
 Good day ${viewName}, this mail comes from Staywell,
@@ -68,7 +60,7 @@ You have been removed from room ${roomName}.
 We will notify you about your place as soon as possible if there are any changes made.
 
 This is the automatic email from the system, please do not reply.`
-  return send(to, subject, text)
+  return await send(to, subject, text)
 }
 
 async function forgotPassword(to, viewName, token, host) {
