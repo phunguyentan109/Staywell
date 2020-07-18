@@ -3,7 +3,7 @@ import { Modal } from 'antd'
 import PropTypes from 'prop-types'
 
 export default function withToggleModal(WrappedComponent) {
-  function ToggleModal({ children, title, onSubmit, onClick }) {
+  function ToggleModal({ children, title, onSubmit, onClick, ...props }) {
     const [state, setState] = useState({
       modal: false,
       process: false
@@ -33,6 +33,7 @@ export default function withToggleModal(WrappedComponent) {
           onCancel={() => toggle('modal')}
           onOk={hdProcess}
           confirmLoading={state.process}
+          { ...props }
         >
           {children}
         </Modal>

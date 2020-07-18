@@ -8,7 +8,9 @@ import useList from 'hooks/useList'
 import { DEFAULT_ROOM } from '../modules/const'
 import _ from 'lodash'
 import TableTransfer from '../modules/TableTransfer'
-import { ButtonCreate, EditAction, FormModal } from '../../Price/modules/ModalAction'
+import { AssignAction, EditAction, ButtonCreate } from '../modules/ModalAction'
+import RoomForm from '../modules/RoomForm'
+
 import useInitState from 'hooks/useInitState'
 
 export default function Room ({ loading, toggle, visible, setVisible }) {
@@ -33,8 +35,7 @@ export default function Room ({ loading, toggle, visible, setVisible }) {
   async function hdRemove(room_id) {
     loading(true)
     await apiRoom.remove({ room_id })
-    let newRooms = rooms.filter(r => r._id !== room_id)
-    setRooms(newRooms)
+    setRooms(_.filter(rooms, r => r._id !== room_id))
     notify('success', 'The room information is removed successfully!')
     loading(false)
   }
@@ -65,7 +66,7 @@ export default function Room ({ loading, toggle, visible, setVisible }) {
         <Col md={24}>
           <Card title='List of available room'>
             <ButtonCreate onClick={clearRoom} onSubmit={hdCreate} title='Add new price'>
-              <FormModal onCollect={hdCollect} room={room} listPrice={price}/>
+              <RoomForm onCollect={hdCollect} room={room} listPrice={price}/>
             </ButtonCreate>
             <Table
               className='gx-table-responsive'
@@ -93,10 +94,16 @@ export default function Room ({ loading, toggle, visible, setVisible }) {
                       <DeleteAction onConfirm={hdRemove.bind(this, record._id)}/>
                       <Divider type='vertical'/>
                       <EditAction title='Edit price information' onSubmit={hdEdit} onClick={hdSelect}>
-                        <FormModal onCollect={hdCollect} room={room} listPrice={price}/>
+                        <RoomForm
+                          onCollect={hdCollect}
+                          room={room}
+                          listPrice={price}
+                        />
                       </EditAction>
                       <Divider type='vertical'/>
-                      <span className='gx-link' onClick={hdAssign.bind(this, record)}>Assign</span>
+                      <AssignAction title='People Assignment' onClick={hdAssign.bind(this, record)}>
+
+                      </AssignAction>
                     </span>
                   )
                 }

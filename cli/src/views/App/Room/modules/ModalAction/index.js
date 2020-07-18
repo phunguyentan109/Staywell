@@ -1,2 +1,1 @@
-import * as ModalAction from './components/ModalAction'
-export default ModalAction
+export * from './components/ModalAction'
