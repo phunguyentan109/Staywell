@@ -6,8 +6,12 @@ import { apiPrice, notify } from 'constants/api'
 import DeleteAction from 'components/DeleteAction'
 import { DEFAULT_PRICE, PRICE_COLS } from '../modules/const'
 import useList from 'hooks/useList'
-import { ButtonCreate, EditAction, FormModal } from '../modules/ModalAction'
+import { FormModal } from '../modules/ModalAction'
 import useInitState from 'hooks/useInitState'
+import { createCreateModal, createEditModal } from 'components/Modal'
+
+const CreateModal = createCreateModal('Add new price', 'Enter price\'s information')
+const EditModal = createEditModal('Edit', 'Edit price\'s information')
 
 export default function Price({ loading }) {
   const [listPrice, setListPrice, updateListPrice] = useList([])
@@ -49,9 +53,9 @@ export default function Price({ loading }) {
   return (
     <>
       <Card title='List of available price'>
-        <ButtonCreate onSubmit={hdCreate} onClick={clearPrice} title='Add new price'>
-          <FormModal hdChange={hdChange} price={price}/>
-        </ButtonCreate>
+        <CreateModal onSubmit={hdCreate} onClick={clearPrice}>
+          <FormModal onChange={hdChange} price={price}/>
+        </CreateModal>
         <Table
           className='gx-table-responsive'
           dataSource={listPrice}
@@ -61,19 +65,13 @@ export default function Price({ loading }) {
             {
               title: 'Action',
               key: 'action',
-              render: (text, record) => (
-                <span>
-                  <DeleteAction onConfirm={hdRemove.bind(this, record._id)}/>
-                  <Divider type='vertical'/>
-                  <EditAction
-                    onClick={() => setPrice(record)}
-                    title='Edit price information'
-                    onSubmit={hdEdit}
-                  >
-                    <FormModal hdChange={hdChange} price={price}/>
-                  </EditAction>
-                </span>
-              )
+              render: (text, record) => <>
+                <DeleteAction onConfirm={hdRemove.bind(this, record._id)}/>
+                <Divider type='vertical'/>
+                <EditModal onClick={() => setPrice(record)} onSubmit={hdEdit}>
+                  <FormModal onChange={hdChange} price={price}/>
+                </EditModal>
+              </>
             }
           ]}
         />

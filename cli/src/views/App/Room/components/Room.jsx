@@ -1,36 +1,35 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { Row, Col, Card, Table, Divider } from 'antd'
 import PropTypes from 'prop-types'
+import _ from 'lodash'
 
 import DeleteAction from 'components/DeleteAction'
 import { apiPrice, apiRoom, notify } from 'constants/api'
-import useList from 'hooks/useList'
 import { DEFAULT_ROOM } from '../modules/const'
-import _ from 'lodash'
 import TableTransfer from '../modules/TableTransfer'
-import { AssignAction, EditAction, ButtonCreate } from '../modules/ModalAction'
+import { createEditModal, createCreateModal } from 'components/Modal'
 import RoomForm from '../modules/RoomForm'
 
+import useList from 'hooks/useList'
 import useInitState from 'hooks/useInitState'
 
-export default function Room ({ loading, toggle, visible, setVisible }) {
+const CreateModal = createCreateModal('Add new room', 'Enter room\'s information')
+const EditModal = createEditModal('Edit', 'Edit room\'s information')
+
+export default function Room ({ loading }) {
   const [rooms, setRooms, updateRooms] = useList([])
   const [room, setRoom, clearRoom] = useInitState(DEFAULT_ROOM)
   const [price, setPrice] = useState([])
 
   const load = useCallback(async() => {
-    setVisible({ form: false, transfer: false })
     let roomData = await apiRoom.get()
     let priceData = await apiPrice.get()
     setPrice(priceData)
     setRooms(roomData)
     loading(false)
-  }, [loading, setRooms, setVisible])
+  }, [loading, setRooms])
 
   useEffect(() => { load() }, [load])
-  useEffect(() => {
-    !visible.form && !visible.transfer && !_.isEqual(room, DEFAULT_ROOM) && setRoom(DEFAULT_ROOM)
-  }, [visible.form, visible.transfer, room, setRoom])
 
   async function hdRemove(room_id) {
     loading(true)
@@ -46,7 +45,6 @@ export default function Room ({ loading, toggle, visible, setVisible }) {
   }
 
   const hdCollect = collect => setRoom(prev => ({ ...prev, ...collect }))
-  const hdAssign = room => setRoom(room)
 
   async function hdCreate() {
     let rs = await apiRoom.create({ data: room })
@@ -55,7 +53,7 @@ export default function Room ({ loading, toggle, visible, setVisible }) {
   }
 
   async function hdEdit() {
-    let rs = await apiRoom.create({ room_id: room._id, data: room })
+    let rs = await apiRoom.update({ room_id: room._id, data: room })
     updateRooms(rs)
     notify('success', 'Room\'s list is updated successfully')
   }
@@ -65,9 +63,9 @@ export default function Room ({ loading, toggle, visible, setVisible }) {
       <Row>
         <Col md={24}>
           <Card title='List of available room'>
-            <ButtonCreate onClick={clearRoom} onSubmit={hdCreate} title='Add new price'>
+            <CreateModal onClick={clearRoom} onSubmit={hdCreate}>
               <RoomForm onCollect={hdCollect} room={room} listPrice={price}/>
-            </ButtonCreate>
+            </CreateModal>
             <Table
               className='gx-table-responsive'
               dataSource={rooms}
@@ -90,21 +88,15 @@ export default function Room ({ loading, toggle, visible, setVisible }) {
                   title: 'Action',
                   key: 'action',
                   render: (text, record) => (
-                    <span>
+                    <>
                       <DeleteAction onConfirm={hdRemove.bind(this, record._id)}/>
                       <Divider type='vertical'/>
-                      <EditAction title='Edit price information' onSubmit={hdEdit} onClick={hdSelect}>
-                        <RoomForm
-                          onCollect={hdCollect}
-                          room={room}
-                          listPrice={price}
-                        />
-                      </EditAction>
+                      <EditModal onSubmit={hdEdit} onClick={hdSelect.bind(this, record)}>
+                        <RoomForm onCollect={hdCollect} room={room} listPrice={price}/>
+                      </EditModal>
                       <Divider type='vertical'/>
-                      <AssignAction title='People Assignment' onClick={hdAssign.bind(this, record)}>
-
-                      </AssignAction>
-                    </span>
+                      <TableTransfer people={record.user_id} roomId={record._id} updateRooms={updateRooms} />
+                    </>
                   )
                 }
               ]}
@@ -112,13 +104,6 @@ export default function Room ({ loading, toggle, visible, setVisible }) {
           </Card>
         </Col>
       </Row>
-      <TableTransfer
-        roomId={room._id}
-        people={room.user_id}
-        updateRooms={updateRooms}
-        visible={visible.transfer}
-        toggleModal={toggle.bind(this, 'transfer')}
-      />
     </>
   )
 }

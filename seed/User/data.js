@@ -1,5 +1,5 @@
 const OWNER = {
-  email: process.env.GMAILUSER,
+  email: process.env.GMAIL_USER,
   password: 'owner',
   username: 'owner'
 }

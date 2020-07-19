@@ -1,13 +1,9 @@
 import React from 'react'
-import { Button, Form, Input } from 'antd'
-import withToggleModal from 'hocs/withToggleModal'
+import { Form, Input } from 'antd'
 import { PRICE_INPUTS } from '../../const'
 import PropTypes from 'prop-types'
 
 const FormItem = Form.Item
-
-export const ButtonCreate = withToggleModal(() => <Button type='primary'>Add new price</Button>)
-export const EditAction = withToggleModal(() => <span className='gx-link'>Edit</span>)
 
 export const FormModal = ({ onChange, price }) => (
   <Form layout='horizontal'>

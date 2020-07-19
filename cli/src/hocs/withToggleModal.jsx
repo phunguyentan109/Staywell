@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Modal } from 'antd'
 import PropTypes from 'prop-types'
 
-export default function withToggleModal(WrappedComponent) {
+export default function withToggleModal(WrappedComponent, bindProps = {}) {
   function ToggleModal({ children, title, onSubmit, onClick, ...props }) {
     const [state, setState] = useState({
       modal: false,
@@ -13,8 +13,9 @@ export default function withToggleModal(WrappedComponent) {
 
     async function hdProcess() {
       toggle('process')
-      onSubmit()
-      setState({ process: false, modal: false })
+      let success = onSubmit()
+      // return false in case of handling wrong case
+      success === false || setState({ process: false, modal: false })
     }
 
     function hdClick() {
@@ -28,7 +29,7 @@ export default function withToggleModal(WrappedComponent) {
           <WrappedComponent/>
         </span>
         <Modal
-          title={title}
+          title={bindProps.title || title}
           visible={state.modal}
           onCancel={() => toggle('modal')}
           onOk={hdProcess}

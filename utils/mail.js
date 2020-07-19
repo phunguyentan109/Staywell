@@ -2,25 +2,25 @@ const mailer = require('nodemailer')
 const emoji = require('node-emoji')
 const { google } = require('googleapis')
 const OAuth2 = google.auth.OAuth2
-const { GMAILUSER, CLIENTID, CLIENTSECRET, REFRESHTOKEN, GGOAUTHLINK } = process.env
+const { GMAIL_USER, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, GG_OAUTH_LINK } = process.env
 
-const oauth2Client = new OAuth2(CLIENTID, CLIENTSECRET, GGOAUTHLINK)
-oauth2Client.setCredentials({ refresh_token: REFRESHTOKEN })
+const oauth2Client = new OAuth2(CLIENT_ID, CLIENT_SECRET, GG_OAUTH_LINK)
+oauth2Client.setCredentials({ refresh_token: REFRESH_TOKEN })
 
 async function send(to, subject, text) {
   let transport = mailer.createTransport({
     service: 'Gmail',
     auth: {
       type: 'OAuth2',
-      user: GMAILUSER,
-      clientId: CLIENTID,
-      clientSecret: CLIENTSECRET,
-      refreshToken: REFRESHTOKEN,
+      user: GMAIL_USER,
+      clientId: CLIENT_ID,
+      clientSecret: CLIENT_SECRET,
+      refreshToken: REFRESH_TOKEN,
       access: await oauth2Client.getAccessToken()
     }
   })
   let mailOptions = {
-    from: process.env.GMAILUSER,
+    from: process.env.GMAIL_USER,
     to, subject, text
   }
   await transport.sendMail(mailOptions)

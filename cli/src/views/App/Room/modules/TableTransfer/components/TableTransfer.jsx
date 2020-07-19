@@ -4,9 +4,9 @@ import PropTypes from 'prop-types'
 import TransferConfig from './TransferConfig'
 import { TABLE_COLS } from '../../const'
 import { apiUser, apiRoom, notify } from 'constants/api'
-import { AssignAction } from '../../ModalAction'
+import { AssignModal } from '../../ModalAction'
 
-export default function TableTransfer({ roomId, people, updateRooms }) {
+export default function TableTransfer({ people, roomId, updateRooms }) {
   const [available, setAvailable] = useState([])
   const [checkedIn, setCheckedIn] = useState([])
 
@@ -18,9 +18,9 @@ export default function TableTransfer({ roomId, people, updateRooms }) {
   useEffect(() => {
     load()
     setCheckedIn(people.map(u => u._id))
-  }, [load, roomId, people])
+  }, [load, people])
 
-  async function hdOk() {
+  async function hdAssign() {
     let room = await apiRoom.assign({ room_id: roomId, data: { user_id: checkedIn } })
     updateRooms(room)
     notify('success', 'Room\'s list is updated successfully')
@@ -29,11 +29,7 @@ export default function TableTransfer({ roomId, people, updateRooms }) {
   const hdFilter = (value, item) => item.username.includes(value) || item.email.includes(value)
 
   return (
-    <AssignAction
-      title='People Assignment'
-      onSubmit={hdOk}
-      width={1200}
-    >
+    <AssignModal onSubmit={hdAssign} width={1200}>
       <TransferConfig
         showSearch
         dataSource={[...available, ...people]}
@@ -44,7 +40,7 @@ export default function TableTransfer({ roomId, people, updateRooms }) {
         rightTableColumns={TABLE_COLS}
         rowKey={rec => rec._id}
       />
-    </AssignAction>
+    </AssignModal>
   )
 }
 
