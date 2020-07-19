@@ -10,6 +10,7 @@ import 'assets/wieldy.css'
 
 import 'assets/css/auth/index.css'
 import 'assets/css/app/index.css'
+import 'assets/css/components/index.css'
 
 import configureStore from 'appRedux'
 

@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const hdl = require('./handlers')
 const path = require('path')
+const { PORT } = process.env
 
 app.use(express.static(path.join(__dirname, 'cli/build')))
 
@@ -25,6 +26,4 @@ app.use(hdl.Error.invalidRoute)
 // All the error will be turned into JSON in here
 app.use(hdl.Error.wrapErr)
 
-app.listen(process.env.PORT, () =>
-  console.log(`[ SERVER IS STARTED ON PORT ${process.env.PORT} ]`)
-)
+app.listen(PORT, () => console.log(`[ SERVER IS STARTED ON PORT ${PORT} ]`))

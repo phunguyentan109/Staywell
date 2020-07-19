@@ -1,19 +1,21 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import { Card, Table, Divider, Button, Form, Input, Modal } from 'antd'
+import React, { useEffect, useCallback } from 'react'
+import { Card, Table, Divider } from 'antd'
 import PropTypes from 'prop-types'
 
 import { apiPrice, notify } from 'constants/api'
 import DeleteAction from 'components/DeleteAction'
-import { DEFAULT_PRICE, PRICE_COLS, PRICE_INPUTS } from '../modules/const'
+import { DEFAULT_PRICE, PRICE_COLS } from '../modules/const'
 import useList from 'hooks/useList'
+import { FormModal } from '../modules/ModalAction'
+import useInitState from 'hooks/useInitState'
+import { createCreateModal, createEditModal } from 'components/Modal'
 
-const FormItem = Form.Item
+const CreateModal = createCreateModal('Add new price', 'Enter price\'s information')
+const EditModal = createEditModal('Edit', 'Edit price\'s information')
 
 export default function Price({ loading }) {
   const [listPrice, setListPrice, updateListPrice] = useList([])
-  const [price, setPrice] = useState(DEFAULT_PRICE)
-  const [visible, setVisible] = useState(false)
-  const [processing, setProcessing] = useState(false)
+  const [price, setPrice, clearPrice] = useInitState(DEFAULT_PRICE)
 
   const load = useCallback(async() => {
     let priceData = await apiPrice.get()
@@ -28,15 +30,15 @@ export default function Price({ loading }) {
     setPrice(prev => ({ ...prev, [name]: value }))
   }
 
-  const toggle = () => setVisible(prev => !prev)
-
-  async function hdOk () {
-    setProcessing(true)
-    const submit = price._id ? { price_id: price._id, data: price } : { data: price }
-    let data = await apiPrice[price._id ? 'update' : 'create'](submit)
+  async function hdEdit() {
+    let data = await apiPrice.update({ price_id: price._id, data: price })
     updateListPrice(data)
     notify('success')
-    setProcessing(false)
+  }
+
+  async function hdCreate() {
+    let data = await apiPrice.create({ data: price })
+    updateListPrice(data)
   }
 
   async function hdRemove(price_id) {
@@ -51,7 +53,9 @@ export default function Price({ loading }) {
   return (
     <>
       <Card title='List of available price'>
-        <Button type='primary' onClick={toggle}>Add new price</Button>
+        <CreateModal onSubmit={hdCreate} onClick={clearPrice}>
+          <FormModal onChange={hdChange} price={price}/>
+        </CreateModal>
         <Table
           className='gx-table-responsive'
           dataSource={listPrice}
@@ -61,50 +65,28 @@ export default function Price({ loading }) {
             {
               title: 'Action',
               key: 'action',
-              render: (text, record) => (
-                <span> 
-                  <DeleteAction onConfirm={hdRemove.bind(this, record._id)}/>
-                  <Divider type='vertical'/>
-                  <span className='gx-link' onClick={() => setPrice(record)}>Edit</span>
-                </span>
-              )
+              render: (text, record) => <>
+                <DeleteAction onConfirm={hdRemove.bind(this, record._id)}/>
+                <Divider type='vertical'/>
+                <EditModal onClick={() => setPrice(record)} onSubmit={hdEdit}>
+                  <FormModal onChange={hdChange} price={price}/>
+                </EditModal>
+              </>
             }
           ]}
         />
       </Card>
-      <Modal
-        title={price._id ? 'Update Price Information' : 'Create New Price'}
-        visible={visible}
-        onOk={hdOk}
-        confirmLoading={processing}
-        onCancel={toggle}
-      >
-        <Form layout='horizontal'>
-          {
-            PRICE_INPUTS.map((input, i) => (
-              <FormItem
-                key={i}
-                label={input.label}
-                labelCol={{ xs: 24, sm: 6 }}
-                wrapperCol={{ xs: 24, sm: 16 }}
-              >
-                <Input
-                  type={input.type || 'number'}
-                  placeholder={`Please enter the ${input.name}`}
-                  name={input.name}
-                  value={price[input.name]}
-                  onChange={hdChange}
-                />
-              </FormItem>
-            ))
-          }
-        </Form>
-      </Modal>
     </>
   )
 }
 
 Price.propTypes = {
   notify: PropTypes.func,
-  loading: PropTypes.func
+  loading: PropTypes.func,
+  visible: PropTypes.bool,
+  toggle: PropTypes.func
+}
+
+Price.defaultProps = {
+  visible: false
 }

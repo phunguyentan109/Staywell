@@ -29,9 +29,11 @@ exports.getByRole = async(req, res, next) => {
 
 exports.isLogin = async(req, res, next) => {
   try {
-    const token = req.headers.authorization.split(' ')[1]
-    const payload = await jwt.verify(token, process.env.SECRET)
-    if (payload) return next()
+    if (req.headers.authorization) {
+      const token = req.headers.authorization.split(' ')[1]
+      const payload = await jwt.verify(token, process.env.SECRET)
+      if (payload) return next()
+    }
     return next({ status: 401, message: 'Please login first!' })
   } catch (err) {
     return next(err)

@@ -12,14 +12,14 @@ export default function DeleteAction({ onConfirm, message, ...props }) {
   }
 
   return (
-    <>
+    <span className='delete-action'>
       <span className='gx-link' onClick={toggle}>Delete</span>
       {
         modal && <SweetAlert onConfirm={hdConfirm} onCancel={toggle} {...props}>
           <span>{message}</span>
         </SweetAlert>
       }
-    </>
+    </span>
   )
 }
 

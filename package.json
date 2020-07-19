@@ -3,17 +3,15 @@
   "version": "1.0.0",
   "description": "",
   "engines": {
-    "node": "12.17.0",
+    "node": "^12.17.0",
     "npm": "6.10.1"
   },
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "start-dev": "concurrently \"nodemon index.js\" \"cd cli && yarn start\"",
+    "dev": "concurrently \"nodemon index.js\" \"cd cli && yarn start\"",
     "seed": "node seed",
-    "heroku-postbuild": "yarn seed && cd cli && yarn && yarn run build",
-    "test": "mocha test/**/*.test.js --timeout 10000",
-    "test-watch": "nodemon --exec npm test"
+    "heroku-postbuild": "yarn seed && cd cli && yarn && yarn run build"
   },
   "keywords": [],
   "author": "",
@@ -45,9 +43,6 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.18.3",
     "eslint-plugin-react-hooks": "^2.5.0",
-    "expect.js": "^0.3.1",
-    "mocha": "^6.2.2",
-    "node-mocks-http": "^1.8.1",
     "nodemon": "^2.0.2"
   }
 }

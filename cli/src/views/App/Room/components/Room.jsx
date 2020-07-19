@@ -1,23 +1,25 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Row, Col, Card, Table, Button, Divider, Form, Input, Select, Modal } from 'antd'
+import { Row, Col, Card, Table, Divider } from 'antd'
 import PropTypes from 'prop-types'
+import _ from 'lodash'
 
 import DeleteAction from 'components/DeleteAction'
 import { apiPrice, apiRoom, notify } from 'constants/api'
-import useList from 'hooks/useList'
 import { DEFAULT_ROOM } from '../modules/const'
-import _ from 'lodash'
 import TableTransfer from '../modules/TableTransfer'
+import { createEditModal, createCreateModal } from 'components/Modal'
+import RoomForm from '../modules/RoomForm'
 
-const FormItem = Form.Item
-const Option = Select.Option
+import useList from 'hooks/useList'
+import useInitState from 'hooks/useInitState'
+
+const CreateModal = createCreateModal('Add new room', 'Enter room\'s information')
+const EditModal = createEditModal('Edit', 'Edit room\'s information')
 
 export default function Room ({ loading }) {
   const [rooms, setRooms, updateRooms] = useList([])
-  const [room, setRoom] = useState(DEFAULT_ROOM)
+  const [room, setRoom, clearRoom] = useInitState(DEFAULT_ROOM)
   const [price, setPrice] = useState([])
-  const [modal, setModal] = useState({ form: false, transfer: false })
-  const [processing, setProcessing] = useState(false)
 
   const load = useCallback(async() => {
     let roomData = await apiRoom.get()
@@ -28,48 +30,31 @@ export default function Room ({ loading }) {
   }, [loading, setRooms])
 
   useEffect(() => { load() }, [load])
-  useEffect(() => {
-    !modal.form && !modal.transfer && !_.isEqual(room, DEFAULT_ROOM) && setRoom(DEFAULT_ROOM)
-  }, [modal.form, modal.transfer, room])
-
-  const toggle = modal => setModal(prev => ({ ...prev, [modal]: !prev[modal] }))
 
   async function hdRemove(room_id) {
     loading(true)
     await apiRoom.remove({ room_id })
-    let newRooms = rooms.filter(r => r._id !== room_id)
-    setRooms(newRooms)
+    setRooms(_.filter(rooms, r => r._id !== room_id))
     notify('success', 'The room information is removed successfully!')
     loading(false)
   }
 
-  function hdEdit(room) {
+  function hdSelect(room) {
     let price_id = _.get(room, 'price_id._id', '')
     setRoom({ ..._.cloneDeep(room), price_id })
-    toggle('form')
   }
 
-  function hdSelectPrice(price_id) {
-    setRoom(prev => ({ ...prev, price_id }))
-  }
+  const hdCollect = collect => setRoom(prev => ({ ...prev, ...collect }))
 
-  function hdChange(e) {
-    const { name, value } = e.target
-    setRoom(prev => ({ ...prev, [name]: value }))
-  }
-
-  function hdAssign(room) {
-    setRoom(room)
-    toggle('transfer')
-  }
-
-  async function hdOk() {
-    setProcessing(true)
-    const submit = room._id ? { room_id: room._id, data: room } : { data: room }
-    let rs = await apiRoom[room._id ? 'update' : 'create'](submit)
+  async function hdCreate() {
+    let rs = await apiRoom.create({ data: room })
     updateRooms(rs)
-    toggle('form')
-    setProcessing(false)
+    notify('success', 'Room\'s list is updated successfully')
+  }
+
+  async function hdEdit() {
+    let rs = await apiRoom.update({ room_id: room._id, data: room })
+    updateRooms(rs)
     notify('success', 'Room\'s list is updated successfully')
   }
 
@@ -78,7 +63,9 @@ export default function Room ({ loading }) {
       <Row>
         <Col md={24}>
           <Card title='List of available room'>
-            <Button type='primary' onClick={toggle.bind(this, 'form')}>Add new room</Button>
+            <CreateModal onClick={clearRoom} onSubmit={hdCreate}>
+              <RoomForm onCollect={hdCollect} room={room} listPrice={price}/>
+            </CreateModal>
             <Table
               className='gx-table-responsive'
               dataSource={rooms}
@@ -101,13 +88,15 @@ export default function Room ({ loading }) {
                   title: 'Action',
                   key: 'action',
                   render: (text, record) => (
-                    <span>
+                    <>
                       <DeleteAction onConfirm={hdRemove.bind(this, record._id)}/>
                       <Divider type='vertical'/>
-                      <span className='gx-link' onClick={hdEdit.bind(this, record)}>Edit</span>
+                      <EditModal onSubmit={hdEdit} onClick={hdSelect.bind(this, record)}>
+                        <RoomForm onCollect={hdCollect} room={room} listPrice={price}/>
+                      </EditModal>
                       <Divider type='vertical'/>
-                      <span className='gx-link' onClick={hdAssign.bind(this, record)}>Assign</span>
-                    </span>
+                      <TableTransfer people={record.user_id} roomId={record._id} updateRooms={updateRooms} />
+                    </>
                   )
                 }
               ]}
@@ -115,54 +104,19 @@ export default function Room ({ loading }) {
           </Card>
         </Col>
       </Row>
-      <TableTransfer
-        roomId={room._id}
-        people={room.user_id}
-        updateRooms={updateRooms}
-        visible={modal.transfer}
-        toggleModal={toggle.bind(this, 'transfer')}
-      />
-      <Modal
-        title={room._id ? 'Update Price Information' : 'Create New Price'}
-        visible={modal.form}
-        onOk={hdOk}
-        confirmLoading={processing}
-        onCancel={toggle.bind(this, 'form')}
-      >
-        <Form layout='horizontal'>
-          <FormItem
-            label='Type'
-            labelCol={{ xs: 24, sm: 6 }}
-            wrapperCol={{ xs: 24, sm: 16 }}
-          >
-            <Input
-              placeholder="Enter the room's name here..."
-              name='name'
-              value={room.name}
-              onChange={hdChange}
-            />
-          </FormItem>
-          <FormItem
-            label='Select price'
-            labelCol={{ xs: 24, sm: 6 }}
-            wrapperCol={{ xs: 24, sm: 16 }}
-          >
-            <Select
-              mode='single'
-              style={{ width: '100%' }}
-              placeholder='Pick a price'
-              onChange={hdSelectPrice}
-              value={room.price_id}
-            >
-              { price.map(v => <Option value={v._id} key={v._id}>{v.type}</Option>) }
-            </Select>
-          </FormItem>
-        </Form>
-      </Modal>
     </>
   )
 }
 
 Room.propTypes = {
-  loading: PropTypes.func
+  loading: PropTypes.func,
+  visible: PropTypes.object,
+  setVisible: PropTypes.func,
+  toggle: PropTypes.func,
+}
+
+Room.defaultProps = {
+  visible: {
+    form: false, transfer: false
+  },
 }
