@@ -58,9 +58,15 @@ function CreateModal() {
 
   return (
     <div>
-      <Button type='primary' className='gx-btn-lg' onClick={handleModal}>
-        <span>ADD CONTRACT</span>
-      </Button>
+      <div className='gx-module-add-task'>
+        <Button
+          variant='raised'
+          type='primary'
+          className='gx-btn-block'
+          onClick={() => {}}>
+          <span>NEW CONTRACT</span>
+        </Button>
+      </div>
       <Modal
         title='Create new contract'
         visible={visible}
