@@ -1,9 +1,8 @@
 import React from 'react'
-import CustomScrollbars from '../../../../../../util/CustomScrollbars'
-import { Button } from 'antd'
-import CreateContract from '../../CreateContract'
+import CustomScrollbars from 'util/CustomScrollbars'
+import PropTypes from 'prop-types'
 
-export default function ContractSidebar() {
+export default function ContractSidebar({ children }) {
   return (
     <div className='gx-module-side'>
       <div className='gx-module-side-header'>
@@ -15,33 +14,30 @@ export default function ContractSidebar() {
       </div>
       <div className='gx-module-side-content'>
         <CustomScrollbars className='gx-module-side-scroll'>
-          <CreateContract/>
+          { children }
           <ul className='gx-module-nav'>
-
-            <li onClick={() => {
-              // setCurrentTodo(null)
-              // setToDos(allToDos)
-            }}>
-              <span className='gx-link active'>
-                <i className='icon icon-all-contacts gx-pt-1'/>
-                {/*<span><IntlMessages id='todo.all'/></span>*/}
-                <span>All</span>
+            <li className='gx-module-nav-label'><span>Rooms</span></li>
+            <li onClick={() => {}}>
+              <span className={'gx-link active' || 'gx-link'}>
+                <i className={'icon icon-schedule'}/>
+                <span>Room 1</span>
               </span>
             </li>
 
-            <li className='gx-module-nav-label'>
-              <span>Rooms</span>
+            <li className='gx-module-nav-label'><span>Tags</span></li>
+            <li onClick={() => {}}>
+              <span className={'gx-link active' || 'gx-link'}>
+                <i className='icon icon-circle gx-text-green'/>
+                <span>HTML</span>
+              </span>
             </li>
-
-            {/*{getNavFilters()}*/}
-
-            <li className='gx-module-nav-label'>
-              <span>Tags</span>
-            </li>
-            {/*{getNavLabels()}*/}
           </ul>
         </CustomScrollbars>
       </div>
     </div>
   )
+}
+
+ContractSidebar.propTypes = {
+  children: PropTypes.any
 }

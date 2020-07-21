@@ -10,6 +10,7 @@ import { Checkbox, Drawer, Dropdown, message } from 'antd'
 // import Auxiliary from '../../../../util/Auxiliary'
 // import CircularProgress from '../../../../components/CircularProgress'
 import ContractSidebar from '../modules/ContractSidebar'
+import CreateContract from '../modules/CreateContract'
 
 export default function Contract({ loading }) {
   useEffect(() => { loading(false) }, [loading])
@@ -21,13 +22,17 @@ export default function Contract({ loading }) {
             placement='left'
             closable={false}
             visible={false}
-            onClose={() => {}}>
-            {/*{ToDoSideBar()}*/}
-            {/*<ContractSidebar />*/}
+            onClose={() => {}}
+          >
+            <ContractSidebar>
+              <CreateContract/>
+            </ContractSidebar>
           </Drawer>
         </div>
         <div className='gx-module-sidenav gx-d-none gx-d-lg-flex'>
-          <ContractSidebar />
+          <ContractSidebar>
+            <CreateContract/>
+          </ContractSidebar>
         </div>
 
         {/*  <div className='gx-module-box'>*/}
