@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 // import Todo from './Todo'
 // import { content } from 'googleapis/build/src/apis/content'
-import { Checkbox, Drawer, Dropdown, message } from 'antd'
+// import { Checkbox, Drawer, Dropdown, message } from 'antd'
 // import CustomScrollbars from '../../../../util/CustomScrollbars'
 // import CreateContract from '../modules/CreateContract'
 // import IntlMessages from '../../../../util/IntlMessages'
@@ -17,23 +17,9 @@ export default function Contract({ loading }) {
   return (
     <div className='gx-main-content'>
       <div className='gx-app-module'>
-        <div className='gx-d-block gx-d-lg-none'>
-          <Drawer
-            placement='left'
-            closable={false}
-            visible={false}
-            onClose={() => {}}
-          >
-            <ContractSidebar>
-              <CreateContract/>
-            </ContractSidebar>
-          </Drawer>
-        </div>
-        <div className='gx-module-sidenav gx-d-none gx-d-lg-flex'>
-          <ContractSidebar>
-            <CreateContract/>
-          </ContractSidebar>
-        </div>
+        <ContractSidebar>
+          <CreateContract />
+        </ContractSidebar>
 
         {/*  <div className='gx-module-box'>*/}
         {/*    <div className='gx-module-box-header'>*/}
