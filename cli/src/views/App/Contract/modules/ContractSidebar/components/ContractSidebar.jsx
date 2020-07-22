@@ -19,15 +19,11 @@ export default function ContractSidebar({ children }) {
           visible={false}
           onClose={() => {}}
         >
-          <ContractNavs>
-            { children }
-          </ContractNavs>
+          <ContractNavs>{ children }</ContractNavs>
         </Drawer>
       </div>
       <div className='gx-module-sidenav gx-d-none gx-d-lg-flex'>
-        <ContractNavs>
-          { children }
-        </ContractNavs>
+        <ContractNavs>{ children }</ContractNavs>
       </div>
     </>
   )
