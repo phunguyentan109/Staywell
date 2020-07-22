@@ -1,9 +1,11 @@
-import React, { useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { Drawer } from 'antd'
 import ContractNavs from '../modules/ContractNavs'
 
 export default function ContractSidebar({ children }) {
+  const [rooms, setRooms] = useState([])
+
   const load = useCallback(() => {
     console.log('load sidebar')
   }, [])
