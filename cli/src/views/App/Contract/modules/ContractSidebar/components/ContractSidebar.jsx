@@ -2,15 +2,18 @@ import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { Drawer } from 'antd'
 import ContractNavs from '../modules/ContractNavs'
+import { apiRoom } from 'constants/api'
 
-export default function ContractSidebar({ children }) {
+export default function ContractSidebar({ children, loading, ...props }) {
   const [rooms, setRooms] = useState([])
 
-  const load = useCallback(() => {
-    console.log('load sidebar')
-  }, [])
+  const init = useCallback(async() => {
+    let rooms = await apiRoom.get()
+    setRooms(rooms)
+    loading(false)
+  }, [loading])
 
-  useEffect(() => { load() }, [load])
+  useEffect(() => { init() }, [init])
 
   return (
     <>
@@ -21,16 +24,26 @@ export default function ContractSidebar({ children }) {
           visible={false}
           onClose={() => {}}
         >
-          <ContractNavs>{ children }</ContractNavs>
+          <ContractNavs rooms={rooms} {...props}>
+            { children }
+          </ContractNavs>
         </Drawer>
       </div>
       <div className='gx-module-sidenav gx-d-none gx-d-lg-flex'>
-        <ContractNavs>{ children }</ContractNavs>
+        <ContractNavs rooms={rooms} {...props}>
+          { children }
+        </ContractNavs>
       </div>
     </>
   )
 }
 
 ContractSidebar.propTypes = {
-  children: PropTypes.any
+  children: PropTypes.any,
+  loading: PropTypes.func
+}
+
+ContractSidebar.defaultProps = {
+  rooms: [],
+  loading: () => {}
 }
