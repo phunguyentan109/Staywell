@@ -1,13 +1,12 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { apiRoom, apiContract } from 'constants/api'
-// import Todo from './Todo'
+import { apiContract } from 'constants/api'
 // import { content } from 'googleapis/build/src/apis/content'
 // import { Checkbox, Drawer, Dropdown, message } from 'antd'
 // import CustomScrollbars from '../../../../util/CustomScrollbars'
 // import CreateContract from '../modules/CreateContract'
 // import IntlMessages from '../../../../util/IntlMessages'
-import AppModuleHeader from 'components/AppModuleHeader'
+import ContractHeader from '../modules/ContractHeader'
 // import Auxiliary from '../../../../util/Auxiliary'
 // import CircularProgress from '../../../../components/CircularProgress'
 import ContractSidebar from '../modules/ContractSidebar'
@@ -18,9 +17,11 @@ export default function Contract({ loading }) {
   const [contracts, setContracts] = useInitState([])
 
   const selectContract = useCallback(async(room_id) => {
+    loading(true)
     let contracts = await apiContract.get({ room_id })
     setContracts(contracts)
-  }, [setContracts])
+    loading(false)
+  }, [loading, setContracts])
 
   return (
     <div className='gx-main-content'>
@@ -38,14 +39,13 @@ export default function Contract({ loading }) {
                 onClick={() => {}}
               />
             </span>
-            <AppModuleHeader
-              placeholder='Search To Do'
+            <ContractHeader
               // user={user}
               user={{}}
               // onChange={updateSearch.bind(this)}
               onChange={() => {}}
               // value={searchTodo}
-              value={''}
+              value=''
             />
           </div>
           {/*<div className='gx-module-box-content'>*/}

@@ -1,10 +1,15 @@
-import React, { useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import CustomScrollbars from 'util/CustomScrollbars'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
 
 export default function ContractNavs({ children, rooms, onSelectRoom }) {
-  const selectRoom = useCallback(roomId => onSelectRoom(roomId), [onSelectRoom])
+  const [roomId, setRoomId] = useState({})
+
+  const selectRoom = useCallback(roomId => {
+    setRoomId(roomId)
+    onSelectRoom(roomId)
+  }, [onSelectRoom])
 
   return (
     <div className='gx-module-side'>
@@ -21,8 +26,8 @@ export default function ContractNavs({ children, rooms, onSelectRoom }) {
             <li className='gx-module-nav-label'><span>Rooms</span></li>
             {
               _.map(rooms, r => (
-                <li onClick={selectRoom.bind(r._id)} key={r._id}>
-                  <span className={'gx-link active' || 'gx-link'}>
+                <li onClick={selectRoom.bind(this, r._id)} key={r._id}>
+                  <span className={roomId === r._id ? 'gx-link active' : 'gx-link'}>
                     <i className='icon icon-schedule'/>
                     <span>{r.name}</span>
                   </span>

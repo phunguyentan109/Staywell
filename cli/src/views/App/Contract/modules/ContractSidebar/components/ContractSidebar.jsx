@@ -44,6 +44,5 @@ ContractSidebar.propTypes = {
 }
 
 ContractSidebar.defaultProps = {
-  rooms: [],
   loading: () => {}
 }
