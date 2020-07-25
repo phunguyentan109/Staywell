@@ -10,24 +10,30 @@ import ContractHeader from '../modules/ContractHeader'
 // import Auxiliary from '../../../../util/Auxiliary'
 // import CircularProgress from '../../../../components/CircularProgress'
 import ContractSidebar from '../modules/ContractSidebar'
-import CreateContract from '../modules/CreateContract'
+import ContractModal from '../modules/ContractModal'
 import useInitState from 'hooks/useInitState'
 
 export default function Contract({ loading }) {
-  const [contracts, setContracts] = useInitState([])
+  const [contracts, setContracts, clearContracts] = useInitState([])
+  const [roomId, setRoomId, clearRoomId] = useInitState(null)
 
   const selectContract = useCallback(async(room_id) => {
     loading(true)
     let contracts = await apiContract.get({ room_id })
     setContracts(contracts)
+    setRoomId(room_id)
     loading(false)
-  }, [loading, setContracts])
+  }, [loading, setContracts, setRoomId])
+  
+  const hdUpdateContract = useCallback(contract => {
+    setContracts(contract)
+  }, [setContracts])
 
   return (
     <div className='gx-main-content'>
       <div className='gx-app-module'>
         <ContractSidebar loading={loading} onSelectRoom={selectContract}>
-          <CreateContract />
+          <ContractModal onAfterCreate={hdUpdateContract} roomId={roomId}/>
         </ContractSidebar>
 
         <div className='gx-module-box'>
@@ -39,14 +45,7 @@ export default function Contract({ loading }) {
                 onClick={() => {}}
               />
             </span>
-            <ContractHeader
-              // user={user}
-              user={{}}
-              // onChange={updateSearch.bind(this)}
-              onChange={() => {}}
-              // value={searchTodo}
-              value=''
-            />
+            <ContractHeader onChange={() => {}} value=''/>
           </div>
           {/*<div className='gx-module-box-content'>*/}
           {/*  {currentTodo === null ?*/}

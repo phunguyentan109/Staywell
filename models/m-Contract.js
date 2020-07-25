@@ -36,7 +36,7 @@ const contractSchema = new mongoose.Schema({
 contractSchema.pre('save', async function(next) {
   try {
     // if the contract is not active, all the bill are in paid status
-    if(this.isModified('active') && !this.active && this.bill_id.length > 0) {
+    if (this.isModified('active') && !this.active && this.bill_id.length > 0) {
       await db.Bill.updateMany({ isPaid: false, contract_id: this._id }, {
         $set: {
           isPaid: true,

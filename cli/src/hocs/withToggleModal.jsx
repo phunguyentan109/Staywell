@@ -4,10 +4,7 @@ import PropTypes from 'prop-types'
 
 export default function withToggleModal(WrappedComponent, bindProps = {}) {
   function ToggleModal({ children, title, onSubmit, onClick, ...props }) {
-    const [state, setState] = useState({
-      modal: false,
-      process: false
-    })
+    const [state, setState] = useState({ modal: false, process: false })
 
     const toggle = type => setState(prev => ({ ...prev, [type]: !prev[type] }))
 
