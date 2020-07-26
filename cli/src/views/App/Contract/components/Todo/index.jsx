@@ -54,32 +54,32 @@ export default function ToDo({}) {
 
   function onOptionMenuItemSelect(e) {
     switch (e.key) {
-    case 'All':
-      handleRequestClose()
-      getAllTodo()
-      break
-    case 'None':
-      handleRequestClose()
-      getUnselectedAllTodo()
-      break
-    case 'Starred':
-      handleRequestClose()
-      getStarredToDo()
-      break
-    case 'Unstarred':
-      handleRequestClose()
-      getUnStarredTodo()
-      break
-    case 'Important':
-      handleRequestClose()
-      getImportantToDo()
-      break
-    case 'Unimportant':
-      handleRequestClose()
-      getUnimportantToDo()
-      break
-    default:
-      return ''
+      case 'All':
+        handleRequestClose()
+        getAllTodo()
+        break
+      case 'None':
+        handleRequestClose()
+        getUnselectedAllTodo()
+        break
+      case 'Starred':
+        handleRequestClose()
+        getStarredToDo()
+        break
+      case 'Unstarred':
+        handleRequestClose()
+        getUnStarredTodo()
+        break
+      case 'Important':
+        handleRequestClose()
+        getImportantToDo()
+        break
+      case 'Unimportant':
+        handleRequestClose()
+        getUnimportantToDo()
+        break
+      default:
+        return ''
     }
   }
 

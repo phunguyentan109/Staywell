@@ -8,7 +8,7 @@ import PropTypes from 'prop-types'
 
 const FormItem = Form.Item
 
-function ContractModal({ onAfterCreate, roomId }) {
+function ContractModal({ onPostCreate, roomId }) {
   const [contract, setContract] = useState({
     electric: 0,
     date: getInitDate(),
@@ -16,9 +16,9 @@ function ContractModal({ onAfterCreate, roomId }) {
   })
 
   const hdSubmit = useCallback(async() => {
-    let createdContract = await apiContract.create({ room_id: roomId })
-    onAfterCreate(createdContract)
-  }, [roomId, onAfterCreate])
+    let createdContract = await apiContract.create({ room_id: roomId, data: contract })
+    onPostCreate(createdContract)
+  }, [roomId, contract, onPostCreate])
 
   function hdChange(e) {
     const { name, value } = e.target
@@ -86,6 +86,6 @@ function ContractModal({ onAfterCreate, roomId }) {
 export default ContractModal
 
 ContractModal.propTypes = {
-  onAfterCreate: PropTypes.func,
+  onPostCreate: PropTypes.func,
   roomId: PropTypes.string.isRequired
 }

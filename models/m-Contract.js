@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const { casDeleteMany, spliceId } = require('../utils/dbSupport')
 const db = require('../models')
+const moment = require('moment')
 
 const contractSchema = new mongoose.Schema({
   room_id: {
@@ -13,25 +14,27 @@ const contractSchema = new mongoose.Schema({
       ref: 'Bill'
     }
   ],
-  start: {
-    electric: {
-      type: Number,
-      default: 0
-    },
-    date: {
+  info: {
+    electric: { type: Number, default: 0 },
+    from: {
       type: Date,
-      required: true
+      required: true,
+      get: v => moment(v).format('MMMM Do YYYY')
     }
   },
-  duration: {
-    type: Number,
-    required: true
-  },
-  active: {
-    type: Boolean,
-    default: true
-  }
-}, { timestamps: true })
+  duration: { type: Number, required: true },
+  active: { type: Boolean, default: true }
+}, {
+  timestamps: true,
+  toJSON: { virtuals: true, getters: true },
+  id: false
+})
+
+contractSchema.virtual('info.to').get(function() {
+  let from = this.get('info.from', { getters: false })
+  let to = moment(from).add(this.duration, 'month')
+  return to.format('MMMM Do YYYY')
+})
 
 contractSchema.pre('save', async function(next) {
   try {

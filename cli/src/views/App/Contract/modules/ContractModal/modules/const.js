@@ -2,7 +2,8 @@ import moment from 'moment'
 
 export function getInitDate() {
   let dayTenth = moment().startOf('month').add(10, 'day')
-  return moment().isAfter(dayTenth) ? moment().add(1, 'month').startOf('month') : moment()
+  let nextBeginDate = moment().add(1, 'month').startOf('month')
+  return moment().isAfter(dayTenth) ? nextBeginDate : moment()
 }
 
 export const formItemLayout = {
