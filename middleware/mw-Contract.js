@@ -5,19 +5,16 @@ const { pushId } = require('../utils/dbSupport')
 exports.create = async(req, res, next) => {
   try {
     let { room_id } = req.params
-    console.log(req.body)
     let crContract = await db.Contract.create({ ...req.body, room_id })
+    let fromTime = crContract.get('info.from', null, { getters: false })
 
     // Save contract id to room
     await pushId('Room', room_id, 'contract_id', crContract._id)
 
     // Initial empty bills
     for (let i = 0; i < crContract.duration; i++) {
-      let futureMonth = moment(crContract.time.from).add(i, 'M')
-      let crBill = await db.Bill.create({
-        deadline: moment(futureMonth).endOf('month'),
-        contract_id: crContract._id
-      })
+      let deadline = moment(fromTime).add(i, 'M').endOf('month')
+      let crBill = await db.Bill.create({ deadline, contract_id: crContract._id })
       crContract.bill_id.push(crBill._id)
     }
     crContract.save()

@@ -26,12 +26,12 @@ const contractSchema = new mongoose.Schema({
   active: { type: Boolean, default: true }
 }, {
   timestamps: true,
-  toJSON: { virtuals: true, getters: true },
+  toJSON: { getters: true, virtuals: true },
   id: false
 })
 
 contractSchema.virtual('info.to').get(function() {
-  let from = this.get('info.from', { getters: false })
+  let from = this.get('info.from', null, { getters: false })
   let to = moment(from).add(this.duration, 'month')
   return to.format('MMMM Do YYYY')
 })

@@ -8,7 +8,7 @@ import PropTypes from 'prop-types'
 
 const FormItem = Form.Item
 
-function ContractModal({ onPostCreate, roomId }) {
+function ContractModal({ onPostCreate, roomId, tgProps }) {
   const [contract, setContract] = useState({
     electric: 0,
     date: getInitDate(),
@@ -36,7 +36,7 @@ function ContractModal({ onPostCreate, roomId }) {
   }
 
   return (
-    <ContractAction onSubmit={hdSubmit}>
+    <ContractAction onSubmit={hdSubmit} tgProps={tgProps}>
       <>
         <FormItem
           {...formItemLayout}
@@ -86,6 +86,11 @@ function ContractModal({ onPostCreate, roomId }) {
 export default ContractModal
 
 ContractModal.propTypes = {
+  tgProps: PropTypes.object,
   onPostCreate: PropTypes.func,
   roomId: PropTypes.string.isRequired
+}
+
+ContractModal.defaultProps = {
+  tgProps: {}
 }

@@ -24,7 +24,7 @@ export default function Contract({ loading }) {
     setRoomId(room_id)
     loading(false)
   }, [loading, setContracts, setRoomId])
-  
+
   const hdUpdateContract = useCallback(contract => {
     setContracts(contract)
   }, [setContracts])
@@ -33,7 +33,11 @@ export default function Contract({ loading }) {
     <div className='gx-main-content'>
       <div className='gx-app-module'>
         <ContractSidebar loading={loading} onSelectRoom={selectContract}>
-          <ContractModal onAfterCreate={hdUpdateContract} roomId={roomId}/>
+          <ContractModal
+            onPostCreate={hdUpdateContract}
+            roomId={roomId}
+            tgProps={{ disabled: roomId === null }}
+          />
         </ContractSidebar>
 
         <div className='gx-module-box'>
