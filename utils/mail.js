@@ -20,7 +20,7 @@ async function send(to, subject, text) {
     }
   })
   let mailOptions = {
-    from: process.env.GMAIL_USER,
+    from: GMAIL_USER,
     to, subject, text
   }
   await transport.sendMail(mailOptions)

@@ -11,12 +11,14 @@ const FormItem = Form.Item
 function ContractModal({ onPostCreate, roomId, tgProps }) {
   const [contract, setContract] = useState({
     electric: 0,
-    date: getInitDate(),
-    month: 0
+    from: getInitDate(),
+    duration: 0
   })
 
   const hdSubmit = useCallback(async() => {
-    let createdContract = await apiContract.create({ room_id: roomId, data: contract })
+    const { electric, from, duration } = contract
+    let data = { info: { electric, from }, duration }
+    let createdContract = await apiContract.create({ room_id: roomId, data })
     onPostCreate(createdContract)
   }, [roomId, contract, onPostCreate])
 
@@ -25,8 +27,8 @@ function ContractModal({ onPostCreate, roomId, tgProps }) {
     setContract(prev => ({ ...prev, [name]: value }))
   }
 
-  function hdChangeDate(value) {
-    setContract({ ...contract, date: value })
+  function hdChangeDate(from) {
+    setContract({ ...contract, from })
   }
 
   function disabledDate(current) {
@@ -57,11 +59,10 @@ function ContractModal({ onPostCreate, roomId, tgProps }) {
           rules={[{ required: true, message: 'Please input start date!' }]}
         >
           <DatePicker
-            name='date'
             className='gx-btn-block'
             format='YYYY-MM-DD'
             disabledDate={disabledDate}
-            value={contract.date}
+            value={contract.from}
             onChange={hdChangeDate}
           />
         </FormItem>
@@ -72,10 +73,10 @@ function ContractModal({ onPostCreate, roomId, tgProps }) {
         >
           <Input
             type='number'
-            name='month'
+            name='duration'
             placeholder='Please enter a number'
             onChange={hdChange}
-            value={contract.month}
+            value={contract.duration}
           />
         </FormItem>
       </>
