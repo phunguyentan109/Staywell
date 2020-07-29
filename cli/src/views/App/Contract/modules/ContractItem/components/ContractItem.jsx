@@ -16,10 +16,11 @@ export default function ContractItem({ contract, onTodoSelect, onTodoChecked, on
       <div className='gx-module-list-icon'>
         <Checkbox color='primary'
           checked={true}
-          onClick={(event) => {
-            event.stopPropagation()
-            onTodoChecked(contract)
-          }}
+          // onClick={(event) => {
+          //   event.stopPropagation()
+          //   onTodoChecked(contract)
+          // }}
+          onClick={() => {}}
           value='SelectTodo'
           className='gx-icon-btn'
         />
@@ -42,18 +43,21 @@ export default function ContractItem({ contract, onTodoSelect, onTodoChecked, on
       >
         <div className='gx-module-todo-content'>
           <div className={`gx-subject ${contract.completed && 'gx-text-muted gx-text-strikethrough'}`}>
-            <span className='gx-sender-name'>From </span> {contract.startDate}
+            <span className='gx-sender-name'>From </span> {contract.info.from}
             <span className='gx-toolbar-separator'>&nbsp;</span>
-            <span className='gx-sender-name'>To </span> {contract.to}
-
-            <span className='gx-d-inline-block gx-text-truncate gx-send-subject'>Durations: 6</span>
+            <span className='gx-sender-name'>To </span> {contract.info.from}
+            <div>
+              <span className='gx-sender-name'>Durations:</span>&nbsp;{contract.duration} months
+            </div>
           </div>
-          <div className='gx-manage-margin'>
-            {labels.map((label, index) => {
-              return (contract.labels).includes(label.id) &&
-                <Badge key={index} count={label.title} style={{ backgroundColor: label.color }}/>
-            })}
-          </div>
+          {/*<div className='gx-manage-margin'>*/}
+          {/*  {*/}
+          {/*    labels.map((label, index) => {*/}
+          {/*    return (contract.labels).includes(label.id) &&*/}
+          {/*      <Badge key={index} count={label.title} style={{ backgroundColor: label.color }}/>*/}
+          {/*    })*/}
+          {/*  }*/}
+          {/*</div>*/}
         </div>
         <div className='gx-module-todo-right'>
           <Avatar
