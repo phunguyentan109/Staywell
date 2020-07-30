@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 import { DEFAULT_LABELS, DEFAULT_USERS } from '../../const'
 
-export default function ContractItem({ contract, onTodoSelect, onTodoChecked, onMarkAsStart }) {
+export default function ContractItem({ contract, onClick, onTodoSelect, onTodoChecked, onMarkAsStart }) {
   const [users, setUsers] = useState(DEFAULT_USERS)
   const [labels, setLabels] = useState(DEFAULT_LABELS)
 
@@ -14,42 +14,45 @@ export default function ContractItem({ contract, onTodoSelect, onTodoChecked, on
   return (
     <div className='gx-module-list-item'>
       <div className='gx-module-list-icon'>
-        <Checkbox color='primary'
-          checked={true}
+        <Checkbox
+          color='primary'
+          checked={false}
           // onClick={(event) => {
           //   event.stopPropagation()
           //   onTodoChecked(contract)
           // }}
           onClick={() => {}}
-          value='SelectTodo'
           className='gx-icon-btn'
         />
 
         {/*<div onClick={() => {*/}
-        {/*  todo.starred = !todo.starred*/}
-        {/*  onMarkAsStart(todo)*/}
+        {/*  // contract.starred = !todo.starred*/}
+        {/*  onMarkAsStart(contract)*/}
         {/*}}>*/}
-        {/*  {todo.starred ?*/}
-        {/*    <i className='gx-icon-btn icon icon-star'/> :*/}
-        {/*    <i className='gx-icon-btn icon icon-star-o'/>*/}
-        {/*  }*/}
-
+        {/*  <i className={`gx-icon-btn icon icon-star${contract.starred ? '' : '-o'}`}/>*/}
         {/*</div>*/}
+        <div className='gx-manage-margin'>
+          { contract.active && <Badge count='active' style={{ backgroundColor: '#4ea04e' }}/> }
+        </div>
       </div>
       <div className='gx-module-list-info'
         // onClick={() => {
         //   onTodoSelect(todo)
         // }}
       >
-        <div className='gx-module-todo-content'>
-          <div className={`gx-subject ${contract.completed && 'gx-text-muted gx-text-strikethrough'}`}>
-            <span className='gx-sender-name'>From </span> {contract.info.from}
+        <div className='gx-module-todo-content' onClick={onClick}>
+          <div className={`gx-subject ${contract.active ? '' : 'gx-text-muted gx-text-strikethrough'}`}>
+            <span className='gx-sender-name'>From:</span> {contract.info.from}
             <span className='gx-toolbar-separator'>&nbsp;</span>
-            <span className='gx-sender-name'>To </span> {contract.info.from}
-            <div>
-              <span className='gx-sender-name'>Durations:</span>&nbsp;{contract.duration} months
+            <span className='gx-sender-name'>To:</span> {contract.info.from}
+            {/*<span className='gx-toolbar-separator'>&nbsp;</span>*/}
+            <div className='gx-manage-margin'>
+              <span>-</span>&nbsp;{contract.duration} months
             </div>
           </div>
+          {/*<div className='gx-manage-margin'>*/}
+          {/*  { contract.active && <Badge count='active' style={{ backgroundColor: '#4ea04e' }}/> }*/}
+          {/*</div>*/}
           {/*<div className='gx-manage-margin'>*/}
           {/*  {*/}
           {/*    labels.map((label, index) => {*/}
@@ -61,7 +64,7 @@ export default function ContractItem({ contract, onTodoSelect, onTodoChecked, on
         </div>
         <div className='gx-module-todo-right'>
           <Avatar
-            alt={''}
+            alt='avatar'
             src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
             // src={user.thumb}
           />
@@ -88,12 +91,14 @@ export default function ContractItem({ contract, onTodoSelect, onTodoChecked, on
 
 ContractItem.propTypes = {
   contract: PropTypes.object,
+  onClick: PropTypes.func,
   onTodoChecked: PropTypes.func,
   onTodoSelect: PropTypes.func,
   onMarkAsStart: PropTypes.func
 }
 
 ContractItem.defaultProps = {
+  onClick: () => {},
   onTodoChecked: () => {},
   onTodoSelect: () => {},
   onMarkAsStart: () => {}

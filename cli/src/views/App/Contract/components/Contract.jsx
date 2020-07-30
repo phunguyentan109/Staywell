@@ -3,21 +3,24 @@ import PropTypes from 'prop-types'
 import { apiContract } from 'constants/api'
 // import { content } from 'googleapis/build/src/apis/content'
 // import { Checkbox, Drawer, Dropdown, message } from 'antd'
-// import CustomScrollbars from '../../../../util/CustomScrollbars'
 // import CreateContract from '../modules/CreateContract'
 // import IntlMessages from '../../../../util/IntlMessages'
 import ContractHeader from '../modules/ContractHeader'
-// import Auxiliary from '../../../../util/Auxiliary'
+import Auxiliary from 'util/Auxiliary'
 // import CircularProgress from '../../../../components/CircularProgress'
 import ContractSidebar from '../modules/ContractSidebar'
 import ContractModal from '../modules/ContractModal'
 import useInitState from 'hooks/useInitState'
 import CustomScrollbars from 'util/CustomScrollbars'
 import ContractItem from '../modules/ContractItem'
+import _ from 'lodash'
+import { Checkbox, Dropdown } from 'antd'
 
 export default function Contract({ loading }) {
   const [contracts, setContracts, clearContracts] = useInitState([])
   const [roomId, setRoomId, clearRoomId] = useInitState(null)
+  const [selected, setSelected, clearSelected] = useInitState([])
+  const [contract, setContract, clearContract] = useInitState(null)
 
   const selectContract = useCallback(async(room_id) => {
     loading(true)
@@ -30,6 +33,11 @@ export default function Contract({ loading }) {
   const hdUpdateContract = useCallback(contract => {
     setContracts(contract)
   }, [setContracts])
+
+  function hdViewContract(contract) {
+    setContract(contract)
+    // console.log(contract)
+  }
 
   return (
     <div className='gx-main-content'>
@@ -54,20 +62,43 @@ export default function Contract({ loading }) {
           </div>
           <div className='gx-module-box-content'>
             <div className='gx-module-list'>
-              <CustomScrollbars className='gx-module-content-scroll'>
+              <div className='gx-module-box-topbar gx-module-box-topbar-todo'>
                 {
-                  contracts.map((contract, i) =>
-                    <ContractItem
-                      key={contract._id}
-                      index={i}
-                      contract={contract}
-                      // onTodoSelect={onTodoSelect}
-                      // onMarkAsStart={onMarkAsStart}
-                      // onTodoChecked={onTodoChecked}
+                  contracts.length > 0 && <Auxiliary>
+                    <Checkbox className='gx-icon-btn' color='primary'
+                      // indeterminate={selectedToDos > 0 && selectedToDos < toDos.length}
+                      checked={false}
+                      // onChange={onAllTodoSelect.bind(this)}
                     />
-                  )
+                    {/*<Dropdown overlay={optionMenu()} placement='bottomRight' trigger={['click']}>*/}
+                    {/*  <div>*/}
+                    {/*    <span className='gx-px-2'> {optionName}</span>*/}
+                    {/*    <i className='icon icon-charvlet-down'/>*/}
+                    {/*  </div>*/}
+                    {/*</Dropdown>*/}
+                  </Auxiliary>
                 }
-              </CustomScrollbars>
+              </div>
+              { _.isEmpty(contract) || <span onClick={clearContract}>Back to list</span>}
+              {
+                _.isEmpty(contract) && <CustomScrollbars className='gx-module-content-scroll'>
+                  <div className='gx-module-list'>
+                    {
+                      contracts.map((c, i) =>
+                        <ContractItem
+                          key={c._id}
+                          index={i}
+                          contract={c}
+                          onClick={hdViewContract.bind(this, c)}
+                          // onTodoSelect={onTodoSelect}
+                          // onMarkAsStart={onMarkAsStart}
+                          // onTodoChecked={onTodoChecked}
+                        />
+                      )
+                    }
+                  </div>
+                </CustomScrollbars>
+              }
             </div>
             {/*{currentTodo === null ?*/}
             {/*<div className='gx-module-box-topbar gx-module-box-topbar-todo'>*/}

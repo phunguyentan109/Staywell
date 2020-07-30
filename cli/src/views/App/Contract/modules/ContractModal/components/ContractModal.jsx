@@ -89,7 +89,7 @@ export default ContractModal
 ContractModal.propTypes = {
   tgProps: PropTypes.object,
   onPostCreate: PropTypes.func,
-  roomId: PropTypes.string.isRequired
+  roomId: PropTypes.string
 }
 
 ContractModal.defaultProps = {
