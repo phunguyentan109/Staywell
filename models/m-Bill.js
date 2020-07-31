@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 
 const billSchema = new mongoose.Schema({
   electric: {
-    number: { type: Number, default: 0 },
+    number: Number,
     amount: Number,
     cost: Number
   },
@@ -15,10 +15,11 @@ const billSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Contract'
   },
-  payment: {
-    state: { type: Boolean, default: false },
-    at: Date
-  },
+  // payment: {
+  //   state: { type: Boolean, default: false },
+  //   at: Date
+  // },
+  paidDate: Date,
   deadline: { type: Date, required: true }
 }, { timestamps: true })
 

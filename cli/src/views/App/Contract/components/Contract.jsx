@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { apiContract } from 'constants/api'
+import { Button } from 'antd'
 // import { content } from 'googleapis/build/src/apis/content'
 // import { Checkbox, Drawer, Dropdown, message } from 'antd'
 // import CreateContract from '../modules/CreateContract'
@@ -10,16 +11,18 @@ import Auxiliary from 'util/Auxiliary'
 // import CircularProgress from '../../../../components/CircularProgress'
 import ContractSidebar from '../modules/ContractSidebar'
 import ContractModal from '../modules/ContractModal'
+import useList from 'hooks/useList'
 import useInitState from 'hooks/useInitState'
 import CustomScrollbars from 'util/CustomScrollbars'
 import ContractItem from '../modules/ContractItem'
+import BillItem from '../modules/BillItem'
 import _ from 'lodash'
 import { Checkbox, Dropdown } from 'antd'
 
 export default function Contract({ loading }) {
-  const [contracts, setContracts, clearContracts] = useInitState([])
-  const [roomId, setRoomId, clearRoomId] = useInitState(null)
-  const [selected, setSelected, clearSelected] = useInitState([])
+  const [contracts, setContracts, updateContracts] = useList([])
+  const [roomId, setRoomId] = useState(null)
+  // const [selected, setSelected, clearSelected] = useInitState([])
   const [contract, setContract, clearContract] = useInitState(null)
 
   const selectContract = useCallback(async(room_id) => {
@@ -31,12 +34,11 @@ export default function Contract({ loading }) {
   }, [loading, setContracts, setRoomId])
 
   const hdUpdateContract = useCallback(contract => {
-    setContracts(contract)
-  }, [setContracts])
+    updateContracts(contract)
+  }, [updateContracts])
 
   function hdViewContract(contract) {
     setContract(contract)
-    // console.log(contract)
   }
 
   return (
@@ -79,7 +81,7 @@ export default function Contract({ loading }) {
                   </Auxiliary>
                 }
               </div>
-              { _.isEmpty(contract) || <span onClick={clearContract}>Back to list</span>}
+              { _.isEmpty(contract) || <Button onClick={clearContract}>Back to list</Button> }
               {
                 _.isEmpty(contract) && <CustomScrollbars className='gx-module-content-scroll'>
                   <div className='gx-module-list'>
@@ -98,6 +100,11 @@ export default function Contract({ loading }) {
                     }
                   </div>
                 </CustomScrollbars>
+              }
+              {
+                _.isEmpty(contract) || _.map(contract.bill_id, bill => (
+                  <BillItem bill={bill}/>
+                ))
               }
             </div>
             {/*{currentTodo === null ?*/}
