@@ -1,6 +1,4 @@
 const mongoose = require('mongoose')
-// const {spliceId} = require("../utils/dbSupport");
-// const db = require("../models");
 
 const billSchema = new mongoose.Schema({
   electric: {
@@ -15,10 +13,6 @@ const billSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Contract'
   },
-  // payment: {
-  //   state: { type: Boolean, default: false },
-  //   at: Date
-  // },
   paidDate: Date,
   deadline: { type: Date, required: true }
 }, { timestamps: true })
