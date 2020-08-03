@@ -6,6 +6,10 @@ const apiList = [
     url: ({ room_id, contract_id }) => `/${room_id}/contracts${spec(contract_id)}`
   },
   {
+    name: 'getElectric',
+    url: ({ room_id, contract_id }) => `/${room_id}/contracts/${contract_id}/latest_electric`
+  },
+  {
     name: 'remove',
     method: 'delete',
     url: ({ room_id, contract_id }) => `/${room_id}/contracts/${contract_id}`

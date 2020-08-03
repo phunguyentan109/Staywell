@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import { Avatar, Badge, Checkbox } from 'antd'
 import PropTypes from 'prop-types'
 
-import { DEFAULT_LABELS, DEFAULT_USERS } from '../../const'
+// import { DEFAULT_LABELS, DEFAULT_USERS } from '../../const'
 
-export default function ContractItem({ contract, onClick, onTodoSelect, onTodoChecked, onMarkAsStart }) {
-  const [users, setUsers] = useState(DEFAULT_USERS)
-  const [labels, setLabels] = useState(DEFAULT_LABELS)
+export default function ContractItem({ contract, onClick, roomId, onTodoSelect, onTodoChecked, onMarkAsStart }) {
+  // const [users, setUsers] = useState(DEFAULT_USERS)
+  // const [labels, setLabels] = useState(DEFAULT_LABELS)
 
   // let user = null
   // if (todo.user > 0)  user = users[todo.user - 1]
@@ -92,9 +92,9 @@ export default function ContractItem({ contract, onClick, onTodoSelect, onTodoCh
 ContractItem.propTypes = {
   contract: PropTypes.object,
   onClick: PropTypes.func,
-  onTodoChecked: PropTypes.func,
-  onTodoSelect: PropTypes.func,
-  onMarkAsStart: PropTypes.func
+  // onTodoChecked: PropTypes.func,
+  // onTodoSelect: PropTypes.func,
+  // onMarkAsStart: PropTypes.func
 }
 
 ContractItem.defaultProps = {

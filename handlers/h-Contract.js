@@ -1,10 +1,40 @@
 const db = require('../models')
+const _ = require('lodash')
 
 exports.get = async(req, res, next) => {
   try {
     let { room_id } = req.params
     let contracts = await db.Contract.find({ room_id }).populate('bill_id').exec()
     return res.status(200).json(contracts)
+  } catch (e) {
+    return next(e)
+  }
+}
+
+exports.getLatestElectric = async(req, res, next) => {
+  try {
+    const { contract_id } = req.params
+
+    // Get contract's information
+    let { bill_id, info } = await db.Contract
+      .findById(contract_id)
+      .populate({
+        path: 'bill_id',
+        match: { electric: { $exists: true } }
+      })
+      .select('bill_id info.electric')
+      .lean()
+      .exec()
+
+    // Check whether use the initial electric number
+    if (!_.isEmpty(bill_id)) {
+      let electricNums = _.map(bill_id, b => b.electric.number)
+      let highestNumber = Math.max(...electricNums)
+      let foundBill = _.find(bill_id, { 'electric.number' : highestNumber })
+      return res.status(200).json(foundBill)
+    } else {
+      return res.status(200).json(info)
+    }
   } catch (e) {
     return next(e)
   }

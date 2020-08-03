@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import CustomScrollbars from 'util/CustomScrollbars'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
@@ -10,6 +10,11 @@ export default function ContractNavs({ children, rooms, onSelectRoom }) {
     setRoomId(roomId)
     onSelectRoom(roomId)
   }, [onSelectRoom])
+
+  useEffect(() => {
+    // Auto select the first room after accessing to the page
+    rooms.length > 0 && selectRoom(rooms[0]._id)
+  }, [rooms, selectRoom])
 
   return (
     <div className='gx-module-side'>

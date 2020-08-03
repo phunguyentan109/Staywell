@@ -17,7 +17,7 @@ import CustomScrollbars from 'util/CustomScrollbars'
 import ContractItem from '../modules/ContractItem'
 import BillItem from '../modules/BillItem'
 import _ from 'lodash'
-import { Checkbox, Dropdown } from 'antd'
+import { Checkbox } from 'antd'
 
 export default function Contract({ loading }) {
   const [contracts, setContracts, updateContracts] = useList([])
@@ -89,7 +89,8 @@ export default function Contract({ loading }) {
                       contracts.map((c, i) =>
                         <ContractItem
                           key={c._id}
-                          index={i}
+                          // index={i}
+                          roomId={roomId}
                           contract={c}
                           onClick={hdViewContract.bind(this, c)}
                           // onTodoSelect={onTodoSelect}
@@ -103,7 +104,14 @@ export default function Contract({ loading }) {
               }
               {
                 _.isEmpty(contract) || _.map(contract.bill_id, bill => (
-                  <BillItem bill={bill}/>
+                  <BillItem
+                    key={bill._id}
+                    bill={bill}
+                    apiParams={{
+                      contract_id: contract._id,
+                      room_id: roomId
+                    }}
+                  />
                 ))
               }
             </div>

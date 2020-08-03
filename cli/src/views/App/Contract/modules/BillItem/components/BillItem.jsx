@@ -3,25 +3,26 @@ import { Card, Button, Input, Form } from 'antd'
 import PropTypes from 'prop-types'
 import withToggleModal from 'hocs/withToggleModal'
 import { apiContract } from 'constants/api'
-
-const FormItem = Form.Item
+import { INPUT_OPTIONS } from '../modules/const'
 
 const BillModal = withToggleModal(
   () => <Button type='primary'>Generate Bill</Button>,
   { title: 'Bill Generation' }
 )
 
-export default function BillItem({ bill }) {
+function BillItem({ bill, apiParams, form }) {
   const [electric, setElectric] = useState(0)
+  const [lastElectric, setLastElectric] = useState(0)
 
-  const load = useCallback(() => {
-
-  }, [])
+  const load = useCallback(async() => {
+    let electricInfo = await apiContract.getElectric(apiParams)
+    setLastElectric(electricInfo.electric)
+  }, [apiParams])
 
   useEffect(() => {
     load()
   }, [load])
-  
+
   function hdSubmit() {
     console.log('submit')
   }
@@ -40,18 +41,23 @@ export default function BillItem({ bill }) {
       <div>Living: {bill.living || 'None'}</div>
       <BillModal onSubmit={hdSubmit}>
         <Form layout='horizontal'>
-          <FormItem
-            label='Type'
+          <p>Last used electric number: {lastElectric}</p>
+          <Form.Item
+            label='Electric Number'
             labelCol={{ xs: 24, sm: 6 }}
             wrapperCol={{ xs: 24, sm: 16 }}
           >
-            <Input
-              type='number'
-              placeholder='Enter the electric...'
-              value={electric}
-              onChange={hdChange}
-            />
-          </FormItem>
+            {
+              form.getFieldDecorator('electric', INPUT_OPTIONS.electric())(
+                <Input
+                  type='number'
+                  placeholder='Enter the electric...'
+                  value={electric}
+                  onChange={hdChange}
+                />
+              )
+            }
+          </Form.Item>
         </Form>
       </BillModal>
     </Card>
@@ -59,5 +65,9 @@ export default function BillItem({ bill }) {
 }
 
 BillItem.propTypes = {
-  bill: PropTypes.object
+  bill: PropTypes.object,
+  apiParams: PropTypes.object,
+  form: PropTypes.object
 }
+
+export default Form.create({ name: 'bill-form' })(BillItem)
