@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { Card, Button, Input, Form } from 'antd'
 import PropTypes from 'prop-types'
 import withToggleModal from 'hocs/withToggleModal'
-import { apiContract } from 'constants/api'
+import { apiContract, apiBill } from 'constants/api'
 import { INPUT_OPTIONS } from '../modules/const'
 
 const BillModal = withToggleModal(
@@ -10,7 +10,7 @@ const BillModal = withToggleModal(
   { title: 'Bill Generation' }
 )
 
-function BillItem({ bill, apiParams, form }) {
+function BillItem({ bill, apiParams, form, onAfterUpdate }) {
   const [electric, setElectric] = useState(0)
   const [lastElectric, setLastElectric] = useState(0)
 
@@ -23,8 +23,13 @@ function BillItem({ bill, apiParams, form }) {
     load()
   }, [load])
 
-  function hdSubmit() {
-    console.log('submit')
+  async function hdSubmit() {
+    let updateBill = await apiBill.update({
+      ...apiParams,
+      bill_id: bill._id,
+      data: { electric, lastElectric }
+    })
+    onAfterUpdate(updateBill)
   }
 
   function hdChange(e) {
@@ -66,6 +71,7 @@ function BillItem({ bill, apiParams, form }) {
 
 BillItem.propTypes = {
   bill: PropTypes.object,
+  onAfterUpdate: PropTypes.func,
   apiParams: PropTypes.object,
   form: PropTypes.object
 }

@@ -4,8 +4,9 @@ const moment = require('moment')
 exports.update  = async(req, res, next) => {
   try {
     const { bill_id, room_id } = req.params
+    const { electric, lastElectric } = req.body
     let bill = await db.Bill.findById(bill_id)
-    let bills = await db.Bill.find({ room_id })
+    // let bills = await db.Bill.find({ room_id })
 
     let { amount, status, reset } = req.body
     if (!reset) {
@@ -14,26 +15,26 @@ exports.update  = async(req, res, next) => {
       let { electric, water, extra, house, wifi } = room.price_id
 
       // update amount
-      if (amount) {
-        // get last month used electric amount
-        let doneBill = bills.filter(v => v.water !== 0)
-        let prevAmount = 0
-        if (doneBill.length > 0) {
-          let lastDate = moment.max(doneBill.map(b => moment(b.pay.time)))
-          let prevBill = bills.filter(b => moment(b.pay.time).isSame(lastDate))[0]
-          prevAmount = prevBill.electric.amount
-        }
-        if (amount <= prevAmount) {
-          return next({
-            status: 400,
-            message: 'The entered amount must be greater than the previous month\'s amount.'
-          })
-        }
-        bill.electric = {
-          amount: amount,
-          cost: (amount - prevAmount) * electric
-        }
+      // if (amount) {
+      // get last month used electric amount
+      // let doneBill = bills.filter(v => v.water !== 0)
+      // let prevAmount = 0
+      // if (doneBill.length > 0) {
+      //   let lastDate = moment.max(doneBill.map(b => moment(b.pay.time)))
+      //   let prevBill = bills.filter(b => moment(b.pay.time).isSame(lastDate))[0]
+      //   prevAmount = prevBill.electric.amount
+      // }
+      // if (amount <= prevAmount) {
+      //   return next({
+      //     status: 400,
+      //     message: 'The entered amount must be greater than the previous month\'s amount.'
+      //   })
+      // }
+      bill.electric = {
+        amount: amount,
+        cost: (amount - prevAmount) * electric
       }
+      // }
 
       // update payment status
       if (status !== undefined) bill.pay.status = status

@@ -111,6 +111,7 @@ export default function Contract({ loading }) {
                       contract_id: contract._id,
                       room_id: roomId
                     }}
+                    onAfterUpdate={hdUpdateContract}
                   />
                 ))
               }
