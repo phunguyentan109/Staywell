@@ -15,7 +15,7 @@ async function clearData() {
 }
 
 async function seed() {
-  await clearData()
+  isDevMode && await clearData()
 
   console.log('\n----- SEEDING NEW DATA -----')
   await seedRole()

@@ -1,54 +1,67 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { apiContract } from 'constants/api'
-import { Button } from 'antd'
-// import { content } from 'googleapis/build/src/apis/content'
-// import { Checkbox, Drawer, Dropdown, message } from 'antd'
-// import CreateContract from '../modules/CreateContract'
-// import IntlMessages from '../../../../util/IntlMessages'
-import ContractHeader from '../modules/ContractHeader'
+import { Button, Checkbox } from 'antd'
+import _ from 'lodash'
+import { apiContract, notify } from 'constants/api'
+// Components
 import Auxiliary from 'util/Auxiliary'
-// import CircularProgress from '../../../../components/CircularProgress'
+import CustomScrollbars from 'util/CustomScrollbars'
+// Modules
+import ContractHeader from '../modules/ContractHeader'
 import ContractSidebar from '../modules/ContractSidebar'
 import ContractModal from '../modules/ContractModal'
-import useList from 'hooks/useList'
-import useInitState from 'hooks/useInitState'
-import CustomScrollbars from 'util/CustomScrollbars'
 import ContractItem from '../modules/ContractItem'
 import BillItem from '../modules/BillItem'
-import _ from 'lodash'
-import { Checkbox } from 'antd'
+// Hooks
+import useList from 'hooks/useList'
+import useInitState from 'hooks/useInitState'
 
 export default function Contract({ loading }) {
   const [contracts, setContracts, updateContracts] = useList([])
-  const [roomId, setRoomId] = useState(null)
-  // const [selected, setSelected, clearSelected] = useInitState([])
-  const [contract, setContract, clearContract] = useInitState(null)
+  const [bills, setBills, updateBills] = useList([])
+  const [ids, setIds, clearIds] = useInitState({ room_id: null, contract_id: null })
+  const [lastElectricNumber, setLastElectricNumber] = useState(0)
 
-  const selectContract = useCallback(async(room_id) => {
+  const getLastElectric = useCallback(async() => {
+    if (ids.contract_id) {
+      let electricInfo = await apiContract.getElectric(ids)
+      setLastElectricNumber(electricInfo.electric)
+    }
+  }, [ids])
+
+  useEffect(() => { getLastElectric() }, [getLastElectric])
+
+  const selectRoom = useCallback(async(room_id) => {
     loading(true)
     let contracts = await apiContract.get({ room_id })
     setContracts(contracts)
-    setRoomId(room_id)
+    setIds(prev => ({ ...prev, room_id }))
     loading(false)
-  }, [loading, setContracts, setRoomId])
+  }, [loading, setContracts, setIds])
 
   const hdUpdateContract = useCallback(contract => {
     updateContracts(contract)
   }, [updateContracts])
 
-  function hdViewContract(contract) {
-    setContract(contract)
-  }
+  const hdUpdateBill = useCallback(bill => {
+    updateBills(bill)
+    setLastElectricNumber(bill.electric.number)
+    notify('success', 'Bill\'s information has been generated successfully.')
+  }, [updateBills])
+
+  const selectContract = useCallback(contract => {
+    setBills(contract.bill_id)
+    setIds(prev => ({ ...prev, contract_id: contract._id }))
+  }, [setBills, setIds])
 
   return (
     <div className='gx-main-content'>
       <div className='gx-app-module'>
-        <ContractSidebar loading={loading} onSelectRoom={selectContract}>
+        <ContractSidebar loading={loading} onSelectRoom={selectRoom}>
           <ContractModal
             onPostCreate={hdUpdateContract}
-            roomId={roomId}
-            tgProps={{ disabled: roomId === null }}
+            roomId={ids.roomId}
+            tgProps={{ disabled: !!ids.roomId }}
           />
         </ContractSidebar>
         <div className='gx-module-box'>
@@ -81,18 +94,21 @@ export default function Contract({ loading }) {
                   </Auxiliary>
                 }
               </div>
-              { _.isEmpty(contract) || <Button onClick={clearContract}>Back to list</Button> }
               {
-                _.isEmpty(contract) && <CustomScrollbars className='gx-module-content-scroll'>
+                !!ids.contract_id && <Button onClick={() => clearIds('contract_id')}>
+                  Back to list
+                </Button>
+              }
+              {
+                !!ids.contract_id || <CustomScrollbars className='gx-module-content-scroll'>
                   <div className='gx-module-list'>
                     {
-                      contracts.map((c, i) =>
+                      contracts.map(c =>
                         <ContractItem
                           key={c._id}
-                          // index={i}
-                          roomId={roomId}
+                          roomId={ids.room_id}
                           contract={c}
-                          onClick={hdViewContract.bind(this, c)}
+                          onClick={selectContract.bind(this, c)}
                           // onTodoSelect={onTodoSelect}
                           // onMarkAsStart={onMarkAsStart}
                           // onTodoChecked={onTodoChecked}
@@ -103,15 +119,13 @@ export default function Contract({ loading }) {
                 </CustomScrollbars>
               }
               {
-                _.isEmpty(contract) || _.map(contract.bill_id, bill => (
+                ids.contract_id && _.map(bills, bill => (
                   <BillItem
                     key={bill._id}
                     bill={bill}
-                    apiParams={{
-                      contract_id: contract._id,
-                      room_id: roomId
-                    }}
-                    onAfterUpdate={hdUpdateContract}
+                    apiParams={ids}
+                    onAfterUpdate={hdUpdateBill}
+                    lastNumber={lastElectricNumber}
                   />
                 ))
               }
