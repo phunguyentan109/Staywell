@@ -24,3 +24,13 @@ exports.generate = async(req, res, next) => {
     return next(e)
   }
 }
+
+exports.updatePayment = async(req, res, next) => {
+  try {
+    const { bill_id } = req.params
+    await db.Bill.findByIdAndUpdate(bill_id, { paidDate: Date.now() })
+    return next()
+  } catch (e) {
+    return next(e)
+  }
+}

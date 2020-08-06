@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React from 'react'
 import { Card, Button, Input, Form } from 'antd'
 import PropTypes from 'prop-types'
 import withToggleModal from 'hocs/withToggleModal'
@@ -11,7 +11,7 @@ const BillModal = withToggleModal(
   { title: 'Bill Generation' }
 )
 
-function BillItem({ bill, apiParams, form, onAfterUpdate, lastNumber }) {
+function BillItem({ bill, apiParams, form, onAfterUpdate, lastNumber, allowGenerate, allowPayment }) {
   async function hdSubmit() {
     let { number } = form.getFieldsValue()
     let updateBill = await apiBill.generate({
@@ -20,6 +20,11 @@ function BillItem({ bill, apiParams, form, onAfterUpdate, lastNumber }) {
       data: { number, lastNumber }
     })
     onAfterUpdate(updateBill)
+  }
+
+  async function hdCheckout() {
+    const paidBill = await apiBill.updatePayment({ ...apiParams, bill_id: bill._id })
+    if (paidBill) onAfterUpdate(paidBill)
   }
 
   function hdChange(e) {
@@ -34,22 +39,27 @@ function BillItem({ bill, apiParams, form, onAfterUpdate, lastNumber }) {
       <div>Water: {bill.water || 'None'}</div>
       <div>Wifi: {bill.wifi || 'None'}</div>
       <div>Living: {bill.living || 'None'}</div>
-      <BillModal onSubmit={hdSubmit}>
-        <Form layout='horizontal'>
-          <p>Last used electric number: {lastNumber}</p>
-          <Form.Item
-            label='Electric Number'
-            labelCol={{ xs: 24, sm: 6 }}
-            wrapperCol={{ xs: 24, sm: 16 }}
-          >
-            {
-              form.getFieldDecorator('number', INPUT_OPTIONS.electric())(
-                <Input type='number' placeholder='Enter the electric...' onChange={hdChange}/>
-              )
-            }
-          </Form.Item>
-        </Form>
-      </BillModal>
+      <div>Deadline: {bill.deadline}</div>
+      { bill.paidDate && <div>Paid at {bill.paidDate}</div> }
+      {
+        allowGenerate && <BillModal onSubmit={hdSubmit}>
+          <Form layout='horizontal'>
+            <p>Last used electric number: {lastNumber}</p>
+            <Form.Item
+              label='Electric Number'
+              labelCol={{ xs: 24, sm: 6 }}
+              wrapperCol={{ xs: 24, sm: 16 }}
+            >
+              {
+                form.getFieldDecorator('number', INPUT_OPTIONS.electric())(
+                  <Input type='number' placeholder='Enter the electric...' onChange={hdChange}/>
+                )
+              }
+            </Form.Item>
+          </Form>
+        </BillModal>
+      }
+      { allowPayment && <Button onClick={hdCheckout}>Checkout</Button> }
     </Card>
   )
 }
@@ -59,11 +69,15 @@ BillItem.propTypes = {
   onAfterUpdate: PropTypes.func,
   apiParams: PropTypes.object,
   form: PropTypes.object,
-  lastNumber: PropTypes.number
+  lastNumber: PropTypes.number,
+  allowGenerate: PropTypes.bool,
+  allowPayment: PropTypes.bool
 }
 
 BillItem.defaultProps = {
-  lastNumber: 0
+  lastNumber: 0,
+  allowGenerate: false,
+  allowPayment: false
 }
 
 export default Form.create({ name: 'bill-form' })(BillItem)

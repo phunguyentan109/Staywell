@@ -26,12 +26,12 @@ exports.getLatestElectric = async(req, res, next) => {
       .lean()
       .exec()
 
-    // Check whether use the initial electric number
     if (!_.isEmpty(bill_id)) {
+      // Get last electric number
       let electricNums = _.map(bill_id, b => b.electric.number)
       let highestNumber = Math.max(...electricNums)
-      let foundBill = _.find(bill_id, { 'electric.number' : highestNumber })
-      return res.status(200).json(foundBill)
+      let foundBill = _.find(bill_id, b => b.electric.number === highestNumber)
+      return res.status(200).json(foundBill.electric.number)
     } else {
       return res.status(200).json(info)
     }

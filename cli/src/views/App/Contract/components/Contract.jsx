@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { Button, Checkbox } from 'antd'
 import _ from 'lodash'
 import { apiContract, notify } from 'constants/api'
+import moment from 'moment'
 // Components
 import Auxiliary from 'util/Auxiliary'
 import CustomScrollbars from 'util/CustomScrollbars'
@@ -22,10 +23,17 @@ export default function Contract({ loading }) {
   const [ids, setIds, clearIds] = useInitState({ room_id: null, contract_id: null })
   const [lastElectricNumber, setLastElectricNumber] = useState(0)
 
+  const nextGenerateAllowId = useMemo(() => {
+    if (!!bills.length) {
+      let nextGenerateBill = _.find(bills, b => !b.electric)
+      return nextGenerateBill._id
+    }
+  }, [bills])
+
   const getLastElectric = useCallback(async() => {
     if (ids.contract_id) {
-      let electricInfo = await apiContract.getElectric(ids)
-      setLastElectricNumber(electricInfo.electric)
+      let electricNumber = await apiContract.getElectric(ids)
+      setLastElectricNumber(electricNumber)
     }
   }, [ids])
 
@@ -50,7 +58,8 @@ export default function Contract({ loading }) {
   }, [updateBills])
 
   const selectContract = useCallback(contract => {
-    setBills(contract.bill_id)
+    const orderedBill = contract.bill_id.sort((a, b) => moment(a).diff(moment(b)))
+    setBills(orderedBill)
     setIds(prev => ({ ...prev, contract_id: contract._id }))
   }, [setBills, setIds])
 
@@ -126,6 +135,8 @@ export default function Contract({ loading }) {
                     apiParams={ids}
                     onAfterUpdate={hdUpdateBill}
                     lastNumber={lastElectricNumber}
+                    allowGenerate={nextGenerateAllowId === bill._id}
+                    allowPayment={bill.electric && !bill.paidDate}
                   />
                 ))
               }
