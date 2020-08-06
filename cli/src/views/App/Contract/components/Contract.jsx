@@ -69,7 +69,7 @@ export default function Contract({ loading }) {
         <ContractSidebar loading={loading} onSelectRoom={selectRoom}>
           <ContractModal
             onPostCreate={hdUpdateContract}
-            roomId={ids.roomId}
+            roomId={ids.room_id}
             tgProps={{ disabled: !!ids.roomId }}
           />
         </ContractSidebar>

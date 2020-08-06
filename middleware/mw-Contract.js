@@ -17,7 +17,7 @@ exports.create = async(req, res, next) => {
       let crBill = await db.Bill.create({ deadline, contract_id: crContract._id })
       crContract.bill_id.push(crBill._id)
     }
-    crContract.save()
+    await crContract.save()
 
     res.locals.contract_id = crContract._id
     return next()

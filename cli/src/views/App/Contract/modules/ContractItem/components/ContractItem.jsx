@@ -1,16 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Avatar, Badge, Checkbox } from 'antd'
 import PropTypes from 'prop-types'
 
 // import { DEFAULT_LABELS, DEFAULT_USERS } from '../../const'
 
-export default function ContractItem({ contract, onClick, roomId, onTodoSelect, onTodoChecked, onMarkAsStart }) {
-  // const [users, setUsers] = useState(DEFAULT_USERS)
-  // const [labels, setLabels] = useState(DEFAULT_LABELS)
-
-  // let user = null
-  // if (todo.user > 0)  user = users[todo.user - 1]
-
+export default function ContractItem({ contract, onClick }) {
+  // roomId, onTodoSelect, onTodoChecked, onMarkAsStart
   return (
     <div className='gx-module-list-item'>
       <div className='gx-module-list-icon'>
@@ -99,7 +94,7 @@ ContractItem.propTypes = {
 
 ContractItem.defaultProps = {
   onClick: () => {},
-  onTodoChecked: () => {},
-  onTodoSelect: () => {},
-  onMarkAsStart: () => {}
+  // onTodoChecked: () => {},
+  // onTodoSelect: () => {},
+  // onMarkAsStart: () => {}
 }

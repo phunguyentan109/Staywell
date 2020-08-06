@@ -33,7 +33,7 @@ exports.getLatestElectric = async(req, res, next) => {
       let foundBill = _.find(bill_id, b => b.electric.number === highestNumber)
       return res.status(200).json(foundBill.electric.number)
     } else {
-      return res.status(200).json(info)
+      return res.status(200).json(info.electric)
     }
   } catch (e) {
     return next(e)

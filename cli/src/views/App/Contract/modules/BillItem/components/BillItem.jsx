@@ -19,12 +19,12 @@ function BillItem({ bill, apiParams, form, onAfterUpdate, lastNumber, allowGener
       bill_id: bill._id,
       data: { number, lastNumber }
     })
-    onAfterUpdate(updateBill)
+    updateBill && onAfterUpdate(updateBill)
   }
 
   async function hdCheckout() {
     const paidBill = await apiBill.updatePayment({ ...apiParams, bill_id: bill._id })
-    if (paidBill) onAfterUpdate(paidBill)
+    paidBill && onAfterUpdate(paidBill)
   }
 
   function hdChange(e) {
@@ -52,7 +52,7 @@ function BillItem({ bill, apiParams, form, onAfterUpdate, lastNumber, allowGener
             >
               {
                 form.getFieldDecorator('number', INPUT_OPTIONS.electric())(
-                  <Input type='number' placeholder='Enter the electric...' onChange={hdChange}/>
+                  <Input type='number' placeholder='Enter the electric number' onChange={hdChange}/>
                 )
               }
             </Form.Item>
