@@ -15,7 +15,7 @@ export default function BreadCrumb(WrappedComponent) {
 
       // use a regular expression to find string have over 10 number and remove that element
       namePath.forEach((e, i) => {
-        if(e.replace(/[^0-9]/g,'').length >= 10) {
+        if (e.replace(/[^0-9]/g,'').length >= 10) {
           namePath.splice(i, 1)
         }
       })
@@ -25,7 +25,7 @@ export default function BreadCrumb(WrappedComponent) {
 
       // connect final link in paths to the next namePath after that push new link was created to paths
       namePath.forEach((e, i) => {
-        if(i > 0) {
+        if (i > 0) {
           paths.push(paths[i-1] + '/' + namePath[i])
         }
       })

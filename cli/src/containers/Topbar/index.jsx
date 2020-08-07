@@ -43,12 +43,6 @@ class Topbar extends Component {
                     <Link to="/" className="gx-d-block gx-d-lg-none gx-pointer">
                         <img alt="" src={require("assets/images/w-logo.png")}/>
                     </Link>
-                    <SearchBox
-                        styleName="gx-d-none gx-d-lg-block gx-lt-icon-search-bar-lg"
-                        placeholder="Search in app..."
-                        onChange={this.updateSearchChatUser.bind(this)}
-                        value={this.state.searchText}
-                    />
                     <ul className="gx-header-notifications gx-ml-auto">
                         {
                             width >= TAB_SIZE ||
