@@ -44,10 +44,10 @@ export default function Contract({ loading }) {
     let contracts = await apiContract.get({ room_id })
     setContracts(contracts)
     // Reset feature with new room data
-    // setIds({ contract_id: null, room_id })
-    // resetBills()
+    setIds({ contract_id: null, room_id })
+    resetBills()
     loading(false)
-  }, [loading, setContracts])
+  }, [loading, resetBills, setContracts, setIds])
 
   const hdUpdateContract = useCallback(contract => {
     updateContracts(contract)

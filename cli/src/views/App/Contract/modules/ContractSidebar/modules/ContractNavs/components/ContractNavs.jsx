@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import _ from 'lodash'
 
 export default function ContractNavs({ children, rooms, onSelectRoom }) {
-  const [roomId, setRoomId] = useState({})
+  const [roomId, setRoomId] = useState(null)
 
   const selectRoom = useCallback(roomId => {
     setRoomId(roomId)
@@ -13,8 +13,9 @@ export default function ContractNavs({ children, rooms, onSelectRoom }) {
 
   useEffect(() => {
     // Auto select the first room after accessing to the page
-    rooms.length > 0 && selectRoom(rooms[0]._id)
-  }, [rooms, selectRoom])
+    const noSelectedRoom = rooms.length > 0 && !roomId
+    noSelectedRoom && selectRoom(rooms[0]._id)
+  }, [roomId, rooms, selectRoom])
 
   return (
     <div className='gx-module-side'>
