@@ -14,9 +14,9 @@ export default function useList(_list, compareKey = '_id') {
     return setList(prev => [...prev, element])
   }
 
-  function clearList () {
+  function resetList () {
     setList(_list)
   }
 
-  return [list, setList, updateList, clearList]
+  return [list, setList, updateList, resetList]
 }

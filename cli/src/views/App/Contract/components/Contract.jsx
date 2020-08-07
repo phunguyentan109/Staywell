@@ -19,7 +19,7 @@ import useInitState from 'hooks/useInitState'
 
 export default function Contract({ loading }) {
   const [contracts, setContracts, updateContracts] = useList([])
-  const [bills, setBills, updateBills] = useList([])
+  const [bills, setBills, updateBills, resetBills] = useList([])
   const [ids, setIds, clearIds] = useInitState({ room_id: null, contract_id: null })
   const [lastElectricNumber, setLastElectricNumber] = useState(0)
 
@@ -43,9 +43,11 @@ export default function Contract({ loading }) {
     loading(true)
     let contracts = await apiContract.get({ room_id })
     setContracts(contracts)
-    setIds(prev => ({ ...prev, room_id }))
+    // Reset feature with new room data
+    // setIds({ contract_id: null, room_id })
+    // resetBills()
     loading(false)
-  }, [loading, setContracts, setIds])
+  }, [loading, setContracts])
 
   const hdUpdateContract = useCallback(contract => {
     updateContracts(contract)
