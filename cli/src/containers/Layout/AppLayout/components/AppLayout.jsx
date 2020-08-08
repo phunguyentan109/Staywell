@@ -6,11 +6,11 @@ import { ConfigProvider } from 'antd'
 import { IntlProvider } from 'react-intl'
 
 import Sidebar from 'containers/Sidebar/index'
-import HorizontalDefault from 'containers/Topbar/HorizontalDefault/index'
-import HorizontalDark from 'containers/Topbar/HorizontalDark/index'
-import InsideHeader from 'containers/Topbar/InsideHeader/index'
-import AboveHeader from 'containers/Topbar/AboveHeader/index'
-import BelowHeader from 'containers/Topbar/BelowHeader/index'
+// import HorizontalDefault from 'containers/Topbar/HorizontalDefault/index'
+// import HorizontalDark from 'containers/Topbar/HorizontalDark/index'
+// import InsideHeader from 'containers/Topbar/InsideHeader/index'
+// import AboveHeader from 'containers/Topbar/AboveHeader/index'
+// import BelowHeader from 'containers/Topbar/BelowHeader/index'
 import BreadCrumb from '../modules/Breadcrumb'
 
 import Topbar from 'containers/Topbar/index'
@@ -32,7 +32,7 @@ import {
   LAYOUT_TYPE_FRAMED,
   LAYOUT_TYPE_FULL
 } from 'constants/ThemeSetting'
-import NoHeaderNotification from 'containers/Topbar/NoHeaderNotification/index'
+// import NoHeaderNotification from 'containers/Topbar/NoHeaderNotification/index'
 import {
   onLayoutTypeChange,
   onNavStyleChange,
@@ -60,32 +60,32 @@ export class AppLayout extends Component {
       }
     };
 
-    getNavStyles = (navStyle) => {
-      switch (navStyle) {
-        case NAV_STYLE_DEFAULT_HORIZONTAL :
-          return <HorizontalDefault/>
-        case NAV_STYLE_DARK_HORIZONTAL :
-          return <HorizontalDark/>
-        case NAV_STYLE_INSIDE_HEADER_HORIZONTAL :
-          return <InsideHeader/>
-        case NAV_STYLE_ABOVE_HEADER :
-          return <AboveHeader/>
-        case NAV_STYLE_BELOW_HEADER :
-          return <BelowHeader/>
-        case NAV_STYLE_FIXED :
-          return <Topbar/>
-        case NAV_STYLE_DRAWER :
-          return <Topbar/>
-        case NAV_STYLE_MINI_SIDEBAR :
-          return <Topbar/>
-        case NAV_STYLE_NO_HEADER_MINI_SIDEBAR :
-          return <NoHeaderNotification/>
-        case NAV_STYLE_NO_HEADER_EXPANDED_SIDEBAR :
-          return <NoHeaderNotification/>
-        default :
-          return null
-      }
-    };
+    // getNavStyles = (navStyle) => {
+    //   switch (navStyle) {
+    //     case NAV_STYLE_DEFAULT_HORIZONTAL :
+    //       return <HorizontalDefault/>
+    //     case NAV_STYLE_DARK_HORIZONTAL :
+    //       return <HorizontalDark/>
+    //     case NAV_STYLE_INSIDE_HEADER_HORIZONTAL :
+    //       return <InsideHeader/>
+    //     case NAV_STYLE_ABOVE_HEADER :
+    //       return <AboveHeader/>
+    //     case NAV_STYLE_BELOW_HEADER :
+    //       return <BelowHeader/>
+    //     case NAV_STYLE_FIXED :
+    //       return <Topbar/>
+    //     case NAV_STYLE_DRAWER :
+    //       return <Topbar/>
+    //     case NAV_STYLE_MINI_SIDEBAR :
+    //       return <Topbar/>
+    //     case NAV_STYLE_NO_HEADER_MINI_SIDEBAR :
+    //       return <NoHeaderNotification/>
+    //     case NAV_STYLE_NO_HEADER_EXPANDED_SIDEBAR :
+    //       return <NoHeaderNotification/>
+    //     default :
+    //       return null
+    //   }
+    // };
 
     getSidebar = (navStyle, width) => {
       if (width < TAB_SIZE) {
@@ -140,7 +140,7 @@ export class AppLayout extends Component {
     render() {
       const { match, width, navStyle, layoutType, locale } = this.props
       this.setLayoutType(layoutType)
-      this.setNavStyle(navStyle)
+      // this.setNavStyle(width)
       const currentAppLocale = AppLocale[locale.locale]
       return (
         <ConfigProvider locale={currentAppLocale.antd}>
@@ -151,7 +151,8 @@ export class AppLayout extends Component {
             <Layout className='gx-app-layout'>
               {this.getSidebar(navStyle, width)}
               <Layout>
-                {this.getNavStyles(navStyle)}
+                {/* {this.getNavStyles(navStyle)} */}
+                { width > 992 || <Topbar/> } 
                 <Content className={`gx-layout-content ${ this.getContainerClass(navStyle)} `}>
                   <div className='gx-main-content-wrapper'>
                     <BreadCrumb/>
