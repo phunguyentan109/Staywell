@@ -1,18 +1,19 @@
 import React, { Component } from 'react'
 import { Layout } from 'antd'
-
+import PropTypes from 'prop-types'
 import AppLocale from 'lngProvider'
 import { ConfigProvider } from 'antd'
 import { IntlProvider } from 'react-intl'
 
-import Sidebar from '../Sidebar/index'
-import HorizontalDefault from '../Topbar/HorizontalDefault/index'
-import HorizontalDark from '../Topbar/HorizontalDark/index'
-import InsideHeader from '../Topbar/InsideHeader/index'
-import AboveHeader from '../Topbar/AboveHeader/index'
-import BelowHeader from '../Topbar/BelowHeader/index'
+import Sidebar from 'containers/Sidebar/index'
+import HorizontalDefault from 'containers/Topbar/HorizontalDefault/index'
+import HorizontalDark from 'containers/Topbar/HorizontalDark/index'
+import InsideHeader from 'containers/Topbar/InsideHeader/index'
+import AboveHeader from 'containers/Topbar/AboveHeader/index'
+import BelowHeader from 'containers/Topbar/BelowHeader/index'
+import BreadCrumb from '../modules/Breadcrumb'
 
-import Topbar from '../Topbar/index'
+import Topbar from 'containers/Topbar/index'
 import AppRoutes from 'views/App/index'
 import { connect } from 'react-redux'
 import {
@@ -31,7 +32,7 @@ import {
   LAYOUT_TYPE_FRAMED,
   LAYOUT_TYPE_FULL
 } from 'constants/ThemeSetting'
-import NoHeaderNotification from '../Topbar/NoHeaderNotification/index'
+import NoHeaderNotification from 'containers/Topbar/NoHeaderNotification/index'
 import {
   onLayoutTypeChange,
   onNavStyleChange,
@@ -44,45 +45,45 @@ export class AppLayout extends Component {
 
     getContainerClass = (navStyle) => {
       switch (navStyle) {
-      case NAV_STYLE_DARK_HORIZONTAL:
-        return 'gx-container-wrap'
-      case NAV_STYLE_DEFAULT_HORIZONTAL:
-        return 'gx-container-wrap'
-      case NAV_STYLE_INSIDE_HEADER_HORIZONTAL:
-        return 'gx-container-wrap'
-      case NAV_STYLE_BELOW_HEADER:
-        return 'gx-container-wrap'
-      case NAV_STYLE_ABOVE_HEADER:
-        return 'gx-container-wrap'
-      default:
-        return ''
+        case NAV_STYLE_DARK_HORIZONTAL:
+          return 'gx-container-wrap'
+        case NAV_STYLE_DEFAULT_HORIZONTAL:
+          return 'gx-container-wrap'
+        case NAV_STYLE_INSIDE_HEADER_HORIZONTAL:
+          return 'gx-container-wrap'
+        case NAV_STYLE_BELOW_HEADER:
+          return 'gx-container-wrap'
+        case NAV_STYLE_ABOVE_HEADER:
+          return 'gx-container-wrap'
+        default:
+          return ''
       }
     };
 
     getNavStyles = (navStyle) => {
       switch (navStyle) {
-      case NAV_STYLE_DEFAULT_HORIZONTAL :
-        return <HorizontalDefault/>
-      case NAV_STYLE_DARK_HORIZONTAL :
-        return <HorizontalDark/>
-      case NAV_STYLE_INSIDE_HEADER_HORIZONTAL :
-        return <InsideHeader/>
-      case NAV_STYLE_ABOVE_HEADER :
-        return <AboveHeader/>
-      case NAV_STYLE_BELOW_HEADER :
-        return <BelowHeader/>
-      case NAV_STYLE_FIXED :
-        return <Topbar/>
-      case NAV_STYLE_DRAWER :
-        return <Topbar/>
-      case NAV_STYLE_MINI_SIDEBAR :
-        return <Topbar/>
-      case NAV_STYLE_NO_HEADER_MINI_SIDEBAR :
-        return <NoHeaderNotification/>
-      case NAV_STYLE_NO_HEADER_EXPANDED_SIDEBAR :
-        return <NoHeaderNotification/>
-      default :
-        return null
+        case NAV_STYLE_DEFAULT_HORIZONTAL :
+          return <HorizontalDefault/>
+        case NAV_STYLE_DARK_HORIZONTAL :
+          return <HorizontalDark/>
+        case NAV_STYLE_INSIDE_HEADER_HORIZONTAL :
+          return <InsideHeader/>
+        case NAV_STYLE_ABOVE_HEADER :
+          return <AboveHeader/>
+        case NAV_STYLE_BELOW_HEADER :
+          return <BelowHeader/>
+        case NAV_STYLE_FIXED :
+          return <Topbar/>
+        case NAV_STYLE_DRAWER :
+          return <Topbar/>
+        case NAV_STYLE_MINI_SIDEBAR :
+          return <Topbar/>
+        case NAV_STYLE_NO_HEADER_MINI_SIDEBAR :
+          return <NoHeaderNotification/>
+        case NAV_STYLE_NO_HEADER_EXPANDED_SIDEBAR :
+          return <NoHeaderNotification/>
+        default :
+          return null
       }
     };
 
@@ -91,18 +92,18 @@ export class AppLayout extends Component {
         return <Sidebar/>
       }
       switch (navStyle) {
-      case NAV_STYLE_FIXED :
-        return <Sidebar/>
-      case NAV_STYLE_DRAWER :
-        return <Sidebar/>
-      case NAV_STYLE_MINI_SIDEBAR :
-        return <Sidebar/>
-      case NAV_STYLE_NO_HEADER_MINI_SIDEBAR :
-        return <Sidebar/>
-      case NAV_STYLE_NO_HEADER_EXPANDED_SIDEBAR:
-        return <Sidebar/>
-      default :
-        return null
+        case NAV_STYLE_FIXED :
+          return <Sidebar/>
+        case NAV_STYLE_DRAWER :
+          return <Sidebar/>
+        case NAV_STYLE_MINI_SIDEBAR :
+          return <Sidebar/>
+        case NAV_STYLE_NO_HEADER_MINI_SIDEBAR :
+          return <Sidebar/>
+        case NAV_STYLE_NO_HEADER_EXPANDED_SIDEBAR:
+          return <Sidebar/>
+        default :
+          return null
       }
     };
 
@@ -152,7 +153,10 @@ export class AppLayout extends Component {
               <Layout>
                 {this.getNavStyles(navStyle)}
                 <Content className={`gx-layout-content ${ this.getContainerClass(navStyle)} `}>
-                  <AppRoutes match={match}/>
+                  <div className='gx-main-content-wrapper'>
+                    <BreadCrumb/>
+                    <AppRoutes match={match}/>  
+                  </div>
                   <Footer>
                     <div className='gx-layout-footer-content'>Copyright Company Name © 2019</div>
                   </Footer>
@@ -175,3 +179,11 @@ export default connect(mapStateToProps, {
   onNavStyleChange,
   onLayoutTypeChange
 })(AppLayout)
+
+AppLayout.propTypes = {
+  match: PropTypes.object,
+  width: PropTypes.number, 
+  navStyle: PropTypes.string, 
+  layoutType: PropTypes.string, 
+  locale: PropTypes.object
+}
