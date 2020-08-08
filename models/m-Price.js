@@ -28,7 +28,7 @@ const priceSchema = new mongoose.Schema({
     default: 0,
     required: true
   },
-  house: {
+  living: {
     type: Number,
     default: 0,
     required: true

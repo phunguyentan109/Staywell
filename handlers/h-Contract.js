@@ -4,7 +4,7 @@ const _ = require('lodash')
 exports.get = async(req, res, next) => {
   try {
     let { room_id } = req.params
-    let contracts = await db.Contract.find({ room_id }).populate('bill_id').exec()
+    let contracts = await db.Contract.find({ room_id })
     return res.status(200).json(contracts)
   } catch (e) {
     return next(e)

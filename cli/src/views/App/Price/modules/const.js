@@ -3,7 +3,7 @@ export const DEFAULT_PRICE = {
   electric: 0,
   wifi: 0,
   water: 0,
-  house: 0,
+  living: 0,
   extra: 0
 }
 
@@ -12,7 +12,7 @@ export const PRICE_INPUTS = [
   { label: 'Electric', name: 'electric' },
   { label: 'Wifi', name: 'wifi' },
   { label: 'Water', name: 'water' },
-  { label: 'House', name: 'house' },
+  { label: 'Living', name: 'living' },
   { label: 'Extra', name: 'extra' }
 ]
 
@@ -34,8 +34,8 @@ export const PRICE_COLS = [
     dataIndex: 'water'
   },
   {
-    title: 'House',
-    dataIndex: 'house'
+    title: 'Living',
+    dataIndex: 'living'
   },
   {
     title: 'Extra',

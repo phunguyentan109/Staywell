@@ -6,7 +6,7 @@ exports.generate = async(req, res, next) => {
     const { number, lastNumber } = req.body
     // get room's price
     let room = await db.Room.findById(room_id).populate('price_id').exec()
-    let { electric, water, extra, house, wifi } = room.price_id
+    let { electric, water, extra, living, wifi } = room.price_id
     // Generate bill
     const bill = {
       electric: {
@@ -16,7 +16,7 @@ exports.generate = async(req, res, next) => {
       },
       wifi,
       water: water * room.user_id.length,
-      house: house + (extra * (room.user_id.length - 1))
+      living: living + (extra * (room.user_id.length - 1))
     }
     await db.Bill.findByIdAndUpdate(bill_id, bill, { new: true })
     return next()

@@ -49,28 +49,27 @@ export default function Contract({ loading }) {
     loading(false)
   }, [loading, resetBills, setContracts, setIds])
 
-  const hdUpdateContract = useCallback(contract => {
-    updateContracts(contract)
-  }, [updateContracts])
-
   const hdUpdateBill = useCallback(bill => {
     updateBills(bill)
     setLastElectricNumber(bill.electric.number)
     notify('success', 'Bill\'s information has been generated successfully.')
   }, [updateBills])
 
-  const selectContract = useCallback(contract => {
+  const selectContract = useCallback(async(contract_id) => {
+    loading(true)
+    let contract = await apiContract.get({ room_id: ids.roomId, contract_id })
     const orderedBill = contract.bill_id.sort((a, b) => moment(a).diff(moment(b)))
     setBills(orderedBill)
     setIds(prev => ({ ...prev, contract_id: contract._id }))
-  }, [setBills, setIds])
+    loading(false)
+  }, [loading, ids.roomId, setBills, setIds])
 
   return (
     <div className='gx-main-content'>
       <div className='gx-app-module'>
         <ContractSidebar loading={loading} onSelectRoom={selectRoom}>
           <ContractModal
-            onPostCreate={hdUpdateContract}
+            onPostCreate={updateContracts}
             roomId={ids.room_id}
             tgProps={{ disabled: !!ids.roomId }}
           />
@@ -119,7 +118,7 @@ export default function Contract({ loading }) {
                           key={c._id}
                           roomId={ids.room_id}
                           contract={c}
-                          onClick={selectContract.bind(this, c)}
+                          onClick={selectContract.bind(this, c._id)}
                           // onTodoSelect={onTodoSelect}
                           // onMarkAsStart={onMarkAsStart}
                           // onTodoChecked={onTodoChecked}
