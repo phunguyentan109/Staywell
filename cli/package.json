@@ -64,7 +64,6 @@
   },
   "proxy": "http://localhost:8080",
   "scripts": {
-    "less": "lessc --js src/assets/wieldy/wieldy.less src/assets/wieldy.css",
     "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
     "watch-css": "yarn run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
     "start": "concurrently \"yarn watch-css\" \"react-app-rewired start\"",
@@ -76,41 +75,14 @@
     "extends": "react-app",
     "rules": {
       "key-spacing": "off",
-      "quotes": [
-        "error",
-        "single"
-      ],
-      "jsx-quotes": [
-        "error",
-        "prefer-single"
-      ],
-      "max-len": [
-        2,
-        120,
-        2
-      ],
-      "object-curly-spacing": [
-        2,
-        "always"
-      ],
+      "quotes": ["error", "single"],
+      "jsx-quotes": ["error", "prefer-single"],
+      "max-len": [2, 120, 2],
+      "object-curly-spacing": [2, "always"],
       "comma-dangle": "off",
-      "indent": [
-        "error",
-        2,
-        {
-          "SwitchCase": 1
-        }
-      ],
-      "semi": [
-        "error",
-        "never"
-      ],
-      "keyword-spacing": [
-        "error",
-        {
-          "after": true
-        }
-      ],
+      "indent": ["error", 2, { "SwitchCase": 1 }],
+      "semi": ["error", "never"],
+      "keyword-spacing": ["error", { "after": true }],
       "react/prop-types": 2
     }
   },
