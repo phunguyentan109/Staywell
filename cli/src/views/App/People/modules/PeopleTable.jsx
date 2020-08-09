@@ -5,7 +5,7 @@ import DeleteAction from 'components/DeleteAction'
 
 export default function PeopleTable({ title, dataSource, hdRemove }) {
   return (
-    <Card title={title}>
+    <Card className='gx-card' title={title}>
       <Table
         className='gx-table-responsive'
         dataSource={dataSource.map(p => p.user_id)}

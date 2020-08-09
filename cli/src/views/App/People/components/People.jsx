@@ -30,13 +30,13 @@ export default function People({ loading }) {
     <>
       {
         getActiveType(INACTIVE_PM).length > 0 && <PeopleTable
-          title='List of Inactive People'
+          title='List of Inassigned Renter'
           dataSource={getActiveType(INACTIVE_PM)}
           hdRemove={hdRemove}
         />
       }
       <PeopleTable
-        title='List of People'
+        title='List of Renter'
         dataSource={getActiveType(PEOPLE_PM)}
         hdRemove={hdRemove}
       />

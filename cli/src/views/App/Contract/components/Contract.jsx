@@ -65,122 +65,72 @@ export default function Contract({ loading }) {
   }, [loading, ids.roomId, setBills, setIds])
 
   return (
-    <div className='gx-main-content'>
-      <div className='gx-app-module'>
-        <ContractSidebar loading={loading} onSelectRoom={selectRoom}>
-          <ContractModal
-            onPostCreate={updateContracts}
-            roomId={ids.room_id}
-            tgProps={{ disabled: !!ids.roomId }}
-          />
-        </ContractSidebar>
-        <div className='gx-module-box'>
-          <div className='gx-module-box-header'>
-            <span className='gx-drawer-btn gx-d-flex gx-d-lg-none'>
-              <i
-                className='icon icon-menu gx-icon-btn'
-                aria-label='Menu'
-                onClick={() => {}}
-              />
-            </span>
-            <ContractHeader onChange={() => {}} value=''/>
-          </div>
-          <div className='gx-module-box-content'>
-            <div className='gx-module-list'>
-              <div className='gx-module-box-topbar gx-module-box-topbar-todo'>
-                {
-                  contracts.length > 0 && <Auxiliary>
-                    <Checkbox className='gx-icon-btn' color='primary'
-                      // indeterminate={selectedToDos > 0 && selectedToDos < toDos.length}
-                      checked={false}
-                      // onChange={onAllTodoSelect.bind(this)}
-                    />
-                    {/*<Dropdown overlay={optionMenu()} placement='bottomRight' trigger={['click']}>*/}
-                    {/*  <div>*/}
-                    {/*    <span className='gx-px-2'> {optionName}</span>*/}
-                    {/*    <i className='icon icon-charvlet-down'/>*/}
-                    {/*  </div>*/}
-                    {/*</Dropdown>*/}
-                  </Auxiliary>
-                }
-              </div>
-              {
-                !!ids.contract_id && <Button onClick={() => clearIds('contract_id')}>
-                  Back to list
-                </Button>
-              }
-              {
-                !!ids.contract_id || <CustomScrollbars className='gx-module-content-scroll'>
-                  <div className='gx-module-list'>
-                    {
-                      contracts.map(c =>
-                        <ContractItem
-                          key={c._id}
-                          roomId={ids.room_id}
-                          contract={c}
-                          onClick={selectContract.bind(this, c._id)}
-                          // onTodoSelect={onTodoSelect}
-                          // onMarkAsStart={onMarkAsStart}
-                          // onTodoChecked={onTodoChecked}
-                        />
-                      )
-                    }
-                  </div>
-                </CustomScrollbars>
-              }
-              {
-                ids.contract_id && _.map(bills, bill => (
-                  <BillItem
-                    key={bill._id}
-                    bill={bill}
-                    apiParams={ids}
-                    onAfterUpdate={hdUpdateBill}
-                    lastNumber={lastElectricNumber}
-                    allowGenerate={nextGenerateAllowId === bill._id}
-                    allowPayment={bill.electric && !bill.paidDate}
-                  />
-                ))
-              }
-            </div>
-            {/*{currentTodo === null ?*/}
-            {/*<div className='gx-module-box-topbar gx-module-box-topbar-todo'>*/}
-            {/*  {toDos.length > 0 ?*/}
-            {/*    <Auxiliary>*/}
-            {/*      <Checkbox className='gx-icon-btn' color='primary'*/}
-            {/*        indeterminate={selectedToDos > 0 && selectedToDos < toDos.length}*/}
-            {/*        checked={selectedToDos > 0}*/}
-            {/*        onChange={onAllTodoSelect.bind(this)}*/}
-            {/*        value='SelectMail'/>*/}
-            {/*      <Dropdown overlay={optionMenu()} placement='bottomRight' trigger={['click']}>*/}
-            {/*        <div>*/}
-            {/*          <span className='gx-px-2'> {optionName}</span>*/}
-            {/*          <i className='icon icon-charvlet-down'/>*/}
-            {/*        </div>*/}
-            {/*      </Dropdown>*/}
-            {/*    </Auxiliary> : null}*/}
-
-            {/*{( selectedToDos > 0) &&*/}
-            {/*  <div className='gx-flex-row gx-align-items-center'>*/}
-            {/*    <Dropdown overlay={labelMenu()} placement='bottomRight' trigger={['click']}>*/}
-            {/*      <i className='gx-icon-btn icon icon-tag'/>*/}
-            {/*    </Dropdown>*/}
-            {/*    <span onClick={onDeleteSelected.bind(this, selectedToDos)}>*/}
-            {/*      <i className='icon icon-trash gx-icon-btn'/>*/}
-            {/*    </span>*/}
-            {/*  </div>*/}
-            {/*}*/}
-            {/*</div>*/}
-            {/*  :*/}
-            {/*  <div className='gx-module-box-topbar'>*/}
-            {/*    <i className='icon icon-arrow-left gx-icon-btn' onClick={() => {*/}
-            {/*      setCurrentTodo(null)*/}
-            {/*    }}/>*/}
-            {/*  </div>*/}
-            {/*}*/}
-          </div>
-        </div>
-      </div>
-      {/*{showMessage && message.info(<span id='message-id'>{alertMessage}</span>, 3, handleRequestClose)}*/}
+    <div className='manage-contracts'>
+      <ContractSidebar loading={loading} onSelectRoom={selectRoom}>
+        <ContractModal
+          onPostCreate={updateContracts}
+          roomId={ids.room_id}
+          tgProps={{ disabled: !!ids.roomId }}
+        />
+      </ContractSidebar>
+      {/*<div className='gx-module-box'>*/}
+      {/*  <div className='gx-module-box-header'>*/}
+      {/*    <span className='gx-drawer-btn gx-d-flex gx-d-lg-none'>*/}
+      {/*      <i*/}
+      {/*        className='icon icon-menu gx-icon-btn'*/}
+      {/*        aria-label='Menu'*/}
+      {/*        onClick={() => {}}*/}
+      {/*      />*/}
+      {/*    </span>*/}
+      {/*    <ContractHeader onChange={() => {}} value=''/>*/}
+      {/*  </div>*/}
+      {/*  <div className='gx-module-box-content'>*/}
+      {/*    <div className='gx-module-list'>*/}
+      {/*      <div className='gx-module-box-topbar gx-module-box-topbar-todo'>*/}
+      {/*        {*/}
+      {/*          contracts.length > 0 && <Auxiliary>*/}
+      {/*            <Checkbox className='gx-icon-btn' color='primary' checked={false}/>*/}
+      {/*          </Auxiliary>*/}
+      {/*        }*/}
+      {/*      </div>*/}
+      {/*      {*/}
+      {/*        !!ids.contract_id && <Button onClick={() => clearIds('contract_id')}>*/}
+      {/*          Back to list*/}
+      {/*        </Button>*/}
+      {/*      }*/}
+      {/*      {*/}
+      {/*        !!ids.contract_id || <CustomScrollbars className='gx-module-content-scroll'>*/}
+      {/*          <div className='gx-module-list'>*/}
+      {/*            {*/}
+      {/*              contracts.map(c =>*/}
+      {/*                <ContractItem*/}
+      {/*                  key={c._id}*/}
+      {/*                  roomId={ids.room_id}*/}
+      {/*                  contract={c}*/}
+      {/*                  onClick={selectContract.bind(this, c._id)}*/}
+      {/*                />*/}
+      {/*              )*/}
+      {/*            }*/}
+      {/*          </div>*/}
+      {/*        </CustomScrollbars>*/}
+      {/*      }*/}
+      {/*      {*/}
+      {/*        ids.contract_id && _.map(bills, bill => (*/}
+      {/*          <BillItem*/}
+      {/*            key={bill._id}*/}
+      {/*            bill={bill}*/}
+      {/*            apiParams={ids}*/}
+      {/*            onAfterUpdate={hdUpdateBill}*/}
+      {/*            lastNumber={lastElectricNumber}*/}
+      {/*            allowGenerate={nextGenerateAllowId === bill._id}*/}
+      {/*            allowPayment={bill.electric && !bill.paidDate}*/}
+      {/*          />*/}
+      {/*        ))*/}
+      {/*      }*/}
+      {/*    </div>*/}
+      {/*  </div>*/}
+      {/*</div>*/}
+      {/*</div>*/}
     </div>
   )
 }
