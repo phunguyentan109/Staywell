@@ -1,8 +1,23 @@
-export const breadcrumbNames = {
-  '/app': 'Application',
-  '/app/people': 'Manage People',
-  '/app/price': 'Manage Price',
-  '/app/profile': 'Manage Profile',
-  '/app/rooms': 'Manage Room',
-  '/app/people/contract': 'Manage Contract',
+import { HomeOutlined } from '@ant-design/icons'
+
+export const breadNames = {
+  '/app': {
+    name: 'Dashboard',
+    icon: HomeOutlined,
+  },
+  '/app/people': {
+    name: 'Manage People',
+  },
+  '/app/price': {
+    name: 'Manage Price',
+  },
+  '/app/profile': {
+    name: 'Manage Profile',
+  },
+  '/app/rooms': {
+    name: 'Manage Room',
+  },
+  '/app/people/contract': {
+    name: 'Manage Contract',
+  },
 }
