@@ -3,11 +3,12 @@ const emoji = require('node-emoji')
 const { google } = require('googleapis')
 const OAuth2 = google.auth.OAuth2
 const { GMAIL_USER, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, GG_OAUTH_LINK } = process.env
+const { MailTemplate } = require('./mailTemplate')
 
 const oauth2Client = new OAuth2(CLIENT_ID, CLIENT_SECRET, GG_OAUTH_LINK)
 oauth2Client.setCredentials({ refresh_token: REFRESH_TOKEN })
 
-async function send(to, subject, text) {
+async function send(to, subject, text, html) {
   let transport = mailer.createTransport({
     service: 'Gmail',
     auth: {
@@ -21,7 +22,7 @@ async function send(to, subject, text) {
   })
   let mailOptions = {
     from: GMAIL_USER,
-    to, subject, text
+    to, subject, text, html
   }
   await transport.sendMail(mailOptions)
 }
@@ -63,18 +64,18 @@ This is the automatic email from the system, please do not reply.`
   return await send(to, subject, text)
 }
 
-async function forgotPassword(to, viewName, token, host) {
-  let subject = emoji.emojify(':building_construction: Are you forgot password ? - Staywell')
-  let text = `
-Good day ${viewName}, this mail comes from Staywell,
+// async function forgotPassword(to, viewName, token, host) {
+//   let subject = emoji.emojify(':building_construction: Are you forgot password ? - Staywell')
+//   let text = `
+// Good day ${viewName}, this mail comes from Staywell,
 
-This mail available in 1 hour. Please click the link below to reset your password:
-https://${host}/reset/${token}
+// This mail available in 1 hour. Please click the link below to reset your password:
+// https://${host}/reset/${token}
 
-And that's all, thank you for your time. Have a good day and see you later.
-This is the automatic email from the system, please do not reply.`
-  return await send(to, subject, text)
-}
+// And that's all, thank you for your time. Have a good day and see you later.
+// This is the automatic email from the system, please do not reply.`
+//   return await send(to, subject, text)
+// }
 
 async function changePassword(to, viewName) {
   let subject = emoji.emojify(':wrench: Your password has been changed - Staywell')
@@ -94,6 +95,14 @@ Good day ${viewName}, this mail comes from Staywell,
 
 ${content}.`
   return await send(to, subject, text)
+}
+
+async function forgotPassword(to, viewName, token, host) {
+  let subject = emoji.emojify(':building_construction: Are you forgot password ? - Staywell')
+  const forgotLink = `https://${host}/reset/${token}`
+  let html = `${MailTemplate(viewName, forgotLink)}`
+
+  return await send(to, subject, html)
 }
 
 module.exports = { send, activate, getRoom, leaveRoom, contactUser, changePassword, forgotPassword }
