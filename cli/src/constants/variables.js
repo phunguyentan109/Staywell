@@ -17,6 +17,7 @@ export const breadNames = {
   '/app/rooms': {
     name: 'Manage Room',
   },
-  '/app/people/contract': {
-    name: 'Manage Contract',
-  },
+  '/app/contracts': {
+    name: 'Manage Contract'
+  }
+}
