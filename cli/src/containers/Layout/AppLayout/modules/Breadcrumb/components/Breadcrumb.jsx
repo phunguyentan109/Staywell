@@ -33,11 +33,10 @@ export default function BreadcrumbBar() {
   }, [window.location.pathname])
 
   function hdPath(path) {
-    // check tail path
-    if (path === paths[paths.length - 1]) {
-      return ''
+    // check path tail 
+    if (path !== paths[paths.length - 1]) {
+      return 'gx-link'
     }
-    return true
   }
 
   return (
@@ -45,12 +44,12 @@ export default function BreadcrumbBar() {
       <Breadcrumb>
         {
           paths.length > 0 && paths.map((path, i) => (
-            <Breadcrumb.Item 
-              key={i} 
-              href={hdPath(path) && path} 
-            >
-              <span className={hdPath(path) && 'gx-link'}>
-                <Icon component={breadcrumbNames[path].icon} style={{ verticalAlign: 'middle', height: '19px' }} />
+            <Breadcrumb.Item key={i} href={path}>
+              <span className={hdPath(path)}>
+                {
+                  breadcrumbNames[path].icon
+                  && <Icon component={breadcrumbNames[path].icon} style={{ verticalAlign: 'middle', height: '19px' }} />
+                }
                 <span className='gx-ml-2'>{breadcrumbNames[path].name}</span>
               </span>
             </Breadcrumb.Item>
