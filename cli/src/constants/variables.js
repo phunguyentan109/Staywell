@@ -1,8 +1,26 @@
 export const breadcrumbNames = {
-  '/app': 'Application',
-  '/app/people': 'Manage People',
-  '/app/price': 'Manage Price',
-  '/app/profile': 'Manage Profile',
-  '/app/rooms': 'Manage Room',
-  '/app/people/contract': 'Manage Contract',
+  '/app': {
+    name: 'Dashboard',
+    icon: 'HomeOutlined'
+  },
+  '/app/people': {
+    name: 'Manage People',
+    icon: 'UserOutlined'
+  },
+  '/app/price': {
+    name: 'Manage Price',
+    icon:'DollarOutlined'
+  },
+  '/app/profile': {
+    name: 'Manage Profile',
+    icon: 'IdcardOutlined'
+  },
+  '/app/rooms': {
+    name: 'Manage Room',
+    icon: 'InsertRowRightOutlined'
+  },
+  '/app/people/contract': {
+    name: 'Manage Contract',
+    icon: 'FileProtectOutlined'
+  },
 }
