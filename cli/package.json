@@ -76,41 +76,14 @@
     "extends": "react-app",
     "rules": {
       "key-spacing": "off",
-      "quotes": [
-        "error",
-        "single"
-      ],
-      "jsx-quotes": [
-        "error",
-        "prefer-single"
-      ],
-      "max-len": [
-        2,
-        120,
-        2
-      ],
-      "object-curly-spacing": [
-        2,
-        "always"
-      ],
+      "quotes": ["error", "single"],
+      "jsx-quotes": ["error", "prefer-single"],
+      "max-len": [2, 120, 2],
+      "object-curly-spacing": [2, "always"],
       "comma-dangle": "off",
-      "indent": [
-        "error",
-        2,
-        {
-          "SwitchCase": 1
-        }
-      ],
-      "semi": [
-        "error",
-        "never"
-      ],
-      "keyword-spacing": [
-        "error",
-        {
-          "after": true
-        }
-      ],
+      "indent": ["error", 2, { "SwitchCase": 1 }],
+      "semi": ["error", "never"],
+      "keyword-spacing": ["error", { "after": true }],
       "react/prop-types": 2
     }
   },
