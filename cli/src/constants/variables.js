@@ -1,6 +1,6 @@
 import { HomeOutlined } from '@ant-design/icons'
 
-export const breadcrumbNames = {
+export const breadNames = {
   '/app': {
     name: 'Dashboard',
     icon: HomeOutlined,
