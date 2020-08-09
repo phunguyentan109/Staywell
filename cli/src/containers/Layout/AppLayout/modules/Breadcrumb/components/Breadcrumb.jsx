@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Card, Breadcrumb } from 'antd'
-import { 
-  HomeOutlined,
-  UserOutlined
-} from '@ant-design/icons'
-import { Link } from 'react-router-dom'
+import Icon from '@ant-design/icons'
 import { breadcrumbNames } from 'constants/variables'
 
 export default function BreadcrumbBar() {
@@ -42,9 +38,10 @@ export default function BreadcrumbBar() {
         {
           paths.length > 0 && paths.map((path, i) => (
             <Breadcrumb.Item key={i} href={path}>
-              {/* {breadcrumbNames[path].icon} */}
-              <HomeOutlined/>
-              <span>{breadcrumbNames[path].name}</span>
+              <span className='gx-link'>
+                <Icon component={breadcrumbNames[path].icon} style={{ verticalAlign: 'middle', height: '19px' }} />
+                <span className='gx-ml-2'>{breadcrumbNames[path].name}</span>
+              </span>
             </Breadcrumb.Item>
           ))
         }
