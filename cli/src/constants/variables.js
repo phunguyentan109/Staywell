@@ -10,7 +10,7 @@ import {
 export const breadcrumbNames = {
   '/app': {
     name: 'Dashboard',
-    icon: HomeOutlined
+    icon: HomeOutlined,
   },
   '/app/people': {
     name: 'Manage People',
