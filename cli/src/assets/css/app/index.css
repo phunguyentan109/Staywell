@@ -6,73 +6,32 @@
     width: 30px;
     border-radius: 5px; }
 
-.bill-record {
-  display: flex;
-  align-items: center;
-  padding: 15px; }
-  .bill-record > i {
-    padding-left: 5px;
-    padding-right: 5px; }
-  .bill-record > h3 {
-    margin-bottom: 0;
-    color: #545454; }
+.manage-contract .action-bar .ant-card-body {
+  padding-top: 10px;
+  padding-bottom: 10px; }
 
-.paid-bill-record {
-  padding: 0 24px;
-  box-sizing: border-box;
-  height: auto;
-  overflow: auto; }
-  .paid-bill-record > div {
+.manage-contract .contract-sidebar li .gx-link {
+  padding: 5px 15px; }
+
+.manage-contract .contract-item {
+  display: flex;
+  align-items: center; }
+  .manage-contract .contract-item .contract-info {
+    width: 100%;
+    margin-left: 15px;
     display: flex;
-    align-items: center; }
-    .paid-bill-record > div.header {
-      padding: 24px 0;
-      border-bottom: 2px solid rgba(255, 255, 255, 0.5);
-      margin-bottom: 44px; }
-      .paid-bill-record > div.header > i {
-        padding-left: 5px;
-        padding-right: 5px; }
-      .paid-bill-record > div.header > h3 {
-        margin-bottom: 0;
-        color: white; }
-    .paid-bill-record > div.body {
-      justify-content: center;
-      border-bottom: 2px solid rgba(255, 255, 255, 0.5);
-      padding-bottom: 46px; }
-      .paid-bill-record > div.body > div {
-        margin-left: 18px;
-        margin-right: 18px;
-        text-align: center; }
-        .paid-bill-record > div.body > div > h3 {
-          color: white;
-          font-family: "Ubuntu", sans-serif;
-          font-weight: normal;
-          margin-bottom: 20px;
-          font-size: 16px; }
-        .paid-bill-record > div.body > div > p {
-          margin-bottom: 0; }
-    .paid-bill-record > div.footer {
-      margin-top: 25px;
-      margin-bottom: 20px;
-      justify-content: space-between;
+    justify-content: space-between; }
+    .manage-contract .contract-item .contract-info p {
+      margin: 5px 0 0; }
+    .manage-contract .contract-item .contract-info .contract-progress {
+      margin-top: 5px;
+      display: flex;
       align-items: center; }
-      .paid-bill-record > div.footer > div {
-        display: flex;
-        flex-direction: column; }
-        .paid-bill-record > div.footer > div > span {
-          margin-bottom: 10px;
-          font-weight: 300;
-          font-size: 13px; }
-      .paid-bill-record > div.footer > h1 {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 0; }
-        .paid-bill-record > div.footer > h1 > span {
-          color: white; }
-          .paid-bill-record > div.footer > h1 > span:nth-of-type(1) {
-            font-size: 14px;
-            margin-right: 20px; }
+      .manage-contract .contract-item .contract-info .contract-progress > div {
+        width: 150px;
+        margin-right: 10px; }
+        .manage-contract .contract-item .contract-info .contract-progress > div .ant-progress {
+          margin: 0; }
 
 .user-cell {
   display: flex;

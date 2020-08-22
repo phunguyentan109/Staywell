@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Checkbox } from 'antd'
+import { Button, Checkbox, Card, Row, Col } from 'antd'
 import _ from 'lodash'
 import { apiContract, notify } from 'constants/api'
 import moment from 'moment'
@@ -65,15 +65,40 @@ export default function Contract({ loading }) {
   }, [loading, ids.roomId, setBills, setIds])
 
   return (
-    <div className='manage-contracts'>
-      <ContractSidebar loading={loading} onSelectRoom={selectRoom}>
-        <ContractModal
-          onPostCreate={updateContracts}
-          roomId={ids.room_id}
-          tgProps={{ disabled: !!ids.roomId }}
-        />
-      </ContractSidebar>
-      {/*<div className='gx-module-box'>*/}
+    <div className='manage-contract'>
+      <Row>
+        <Col span={5}>
+          <ContractSidebar loading={loading} onSelectRoom={selectRoom}>
+            <ContractModal
+              onPostCreate={updateContracts}
+              roomId={ids.room_id}
+              tgProps={{ disabled: !!ids.roomId }}
+            />
+          </ContractSidebar>
+        </Col>
+        <Col span={19}>
+          <Card className='gx-card action-bar'>
+            <Checkbox className='gx-icon-btn' color='primary' checked={false}/>
+          </Card>
+          <Row>
+            {
+              contracts.map(c =>
+                <ContractItem
+                  key={c._id}
+                  roomId={ids.room_id}
+                  contract={c}
+                  onClick={selectContract.bind(this, c._id)}
+                />
+              )
+            }
+          </Row>
+          {/*<div className='gx-module-list'>*/}
+
+          {/*</div>*/}
+        </Col>
+      </Row>
+
+      {/*<div className='gx-module-box'>*/	}
       {/*  <div className='gx-module-box-header'>*/}
       {/*    <span className='gx-drawer-btn gx-d-flex gx-d-lg-none'>*/}
       {/*      <i*/}
@@ -100,18 +125,7 @@ export default function Contract({ loading }) {
       {/*      }*/}
       {/*      {*/}
       {/*        !!ids.contract_id || <CustomScrollbars className='gx-module-content-scroll'>*/}
-      {/*          <div className='gx-module-list'>*/}
-      {/*            {*/}
-      {/*              contracts.map(c =>*/}
-      {/*                <ContractItem*/}
-      {/*                  key={c._id}*/}
-      {/*                  roomId={ids.room_id}*/}
-      {/*                  contract={c}*/}
-      {/*                  onClick={selectContract.bind(this, c._id)}*/}
-      {/*                />*/}
-      {/*              )*/}
-      {/*            }*/}
-      {/*          </div>*/}
+
       {/*        </CustomScrollbars>*/}
       {/*      }*/}
       {/*      {*/}
