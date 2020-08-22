@@ -37,26 +37,17 @@ exports.logIn = async(req, res, next) => {
 
     // compare password
     let match = await user.comparePassword(password)
-    if (match) {
-      // get role of user
-      let userRole = await db.UserRole.find({ user_id: _id }).populate('role_id').exec()
-      let role = userRole.length > 0 ? userRole.map(u => u.role_id) : false
+    if (!match) return next({ status: 400, message: 'Invalid email/password.' })
+    // get role of user
+    let userRole = await db.UserRole.find({ user_id: _id }).populate('role_id').exec()
+    let role = userRole.length > 0 ? userRole.map(u => u.role_id) : false
 
-      // gen token to store on client
-      let token = genToken(_id, role)
+    // gen token to store on client
+    let token = genToken(_id, role)
 
-      return res.status(200).json({ _id, username, avatar, email, phone, job, birthDate, role, active, token })
-    } else {
-      return next({
-        status: 400,
-        message: 'Invalid email/password.'
-      })
-    }
+    return res.status(200).json({ _id, username, avatar, email, phone, job, birthDate, role, active, token })
   } catch (err) {
-    return next({
-      status: 400,
-      message: 'Invalid email/password.'
-    })
+    return next({ status: 400, message: 'Invalid email/password.' })
   }
 }
 

@@ -65,8 +65,8 @@ export default function ContractSidebar({ children, loading, ...props }) {
           {/*  />*/}
           {/*</div>*/}
 
-          <div className='gx-algolia-category-item'>
-            <div className='gx-algolia-category-title'>Active Rooms</div>
+          {/* <div className='gx-algolia-category-item'> */}
+            {/* <div className='gx-algolia-category-title'>Active Rooms</div> */}
             <ContractNavs rooms={rooms} {...props}/>
             {/*{ children }*/}
 
@@ -86,7 +86,7 @@ export default function ContractSidebar({ children, loading, ...props }) {
             {/*<Panel header={<span>Rooms</span>}>*/}
             {/*  /!*<RatingMenu className='gx-algolia-refinementList' attribute='rating' max={5}/>*!/*/}
             {/*</Panel>*/}
-          </div>
+          {/* </div> */}
           {/*</div>*/}
           {/*</Sider>*/}
         </Card>
