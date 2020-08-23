@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { cloneDeep } from 'lodash'
 
-export default function useList(_list) {
+export default function useList(_list, compareKey = '_id') {
   const [list, setList] = useState(_list)
 
   function updateList(element) {
     let newList = cloneDeep(list)
-    let foundIdx = newList.findIndex(price => price._id === element._id)
+    let foundIdx = newList.findIndex(price => price[compareKey] === element[compareKey])
     if (foundIdx !== -1) {
       newList[foundIdx] = cloneDeep(element)
       return setList(newList)
@@ -14,5 +14,9 @@ export default function useList(_list) {
     return setList(prev => [...prev, element])
   }
 
-  return [list, setList, updateList]
+  function resetList () {
+    setList(_list)
+  }
+
+  return [list, setList, updateList, resetList]
 }

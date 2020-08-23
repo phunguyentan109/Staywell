@@ -9,6 +9,7 @@ const roomSchema = new mongoose.Schema({
   },
   price_id: {
     type: mongoose.Schema.Types.ObjectId,
+    required: true,
     ref: 'Price'
   },
   contract_id: [

@@ -1,14 +1,10 @@
-const express = require("express");
-const router = express.Router({mergeParams: true});
-const hdl = require("../handlers");
-// const mw = require("../middleware");
+const express = require('express')
+const router = express.Router({ mergeParams: true })
+const mw = require('../middleware')
+const hdl = require('../handlers')
 
-router.route("/")
-    .get(hdl.Bill.get)
-    .post(hdl.Bill.create);
+router.route('/:bill_id')
+  .post(mw.Bill.generate, hdl.Bill.getOne)
+  .put(mw.Bill.updatePayment, hdl.Bill.getOne)
 
-router.route("/:bill_id")
-    .get(hdl.Bill.getOne)
-    .put(hdl.Bill.update);
-
-module.exports = router;
+module.exports = router

@@ -1,4 +1,4 @@
-import * as apiContract from './models/contract'
+import apiContract from './models/contract'
 import apiUser from './models/user'
 import apiRoom from './models/room'
 import apiBill from './models/bill'

@@ -86,6 +86,11 @@ class SidebarContent extends Component {
                       </Link>
                     </PermissionRender>
                   </Menu.Item>
+                  <Menu.Item key='/app/contracts'>
+                    <Link to='/app/contracts'><i className='icon icon-feedback'/>
+                      <span>Manage Contracts</span>
+                    </Link>
+                  </Menu.Item>
                 </MenuItemGroup>
               </Menu>
             </CustomScrollbars>

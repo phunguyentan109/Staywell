@@ -43,23 +43,28 @@ class Topbar extends Component {
             <Link to='/' className='gx-d-block gx-d-lg-none gx-pointer'>
               <img alt='' src={require('assets/images/w-logo.png')}/>
             </Link>
+            <SearchBox
+              styleName='gx-d-none gx-d-lg-block gx-lt-icon-search-bar-lg'
+              placeholder='Search in app...'
+              onChange={this.updateSearchChatUser.bind(this)}
+              value={this.state.searchText}
+            />
             <ul className='gx-header-notifications gx-ml-auto'>
               {
-                width >= TAB_SIZE ||
-                            <Auxiliary>
-                              <li className='gx-notify'>
-                                <Popover
-                                  overlayClassName='gx-popover-horizantal'
-                                  placement='bottomRight'
-                                  content={<AppNotification/>}
-                                  trigger='click'
-                                >
-                                  <span className='gx-pointer gx-d-block'>
-                                    <i className='icon icon-notification'/>
-                                  </span>
-                                </Popover>
-                              </li>
-                            </Auxiliary>
+                width >= TAB_SIZE || <Auxiliary>
+                  <li className='gx-notify'>
+                    <Popover
+                      overlayClassName='gx-popover-horizantal'
+                      placement='bottomRight'
+                      content={<AppNotification/>}
+                      trigger='click'
+                    >
+                      <span className='gx-pointer gx-d-block'>
+                        <i className='icon icon-notification'/>
+                      </span>
+                    </Popover>
+                  </li>
+                </Auxiliary>
               }
               {
                 width >= TAB_SIZE || <Auxiliary>
