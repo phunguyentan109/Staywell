@@ -11,7 +11,7 @@ const AVATAR = [
 
 export default function ContractItem({ contract, onClick }) {
   return (
-    <Col span={12}>
+    <Col span={12} onClick={onClick}>
       <Card className='gx-card'>
         <div className='contract-item'>
           <i className='far fa-square action check-box'/>

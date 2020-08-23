@@ -51,32 +51,30 @@ export default function Price({ loading }) {
   }
 
   return (
-    <>
-      <Card title='List of available price'>
-        <CreateModal onSubmit={hdCreate} onClick={clearPrice}>
-          <FormModal onChange={hdChange} price={price}/>
-        </CreateModal>
-        <Table
-          className='gx-table-responsive'
-          dataSource={listPrice}
-          rowKey='_id'
-          columns={[
-            ...PRICE_COLS,
-            {
-              title: 'Action',
-              key: 'action',
-              render: (text, record) => <>
-                <DeleteAction onConfirm={hdRemove.bind(this, record._id)}/>
-                <Divider type='vertical'/>
-                <EditModal onClick={() => setPrice(record)} onSubmit={hdEdit}>
-                  <FormModal onChange={hdChange} price={price}/>
-                </EditModal>
-              </>
-            }
-          ]}
-        />
-      </Card>
-    </>
+    <Card className='gx-card' title='List of available price'>
+      <CreateModal onSubmit={hdCreate} onClick={clearPrice}>
+        <FormModal onChange={hdChange} price={price}/>
+      </CreateModal>
+      <Table
+        className='gx-table-responsive'
+        dataSource={listPrice}
+        rowKey='_id'
+        columns={[
+          ...PRICE_COLS,
+          {
+            title: 'Action',
+            key: 'action',
+            render: (text, record) => <>
+              <DeleteAction onConfirm={hdRemove.bind(this, record._id)}/>
+              <Divider type='vertical'/>
+              <EditModal onClick={() => setPrice(record)} onSubmit={hdEdit}>
+                <FormModal onChange={hdChange} price={price}/>
+              </EditModal>
+            </>
+          }
+        ]}
+      />
+    </Card>
   )
 }
 

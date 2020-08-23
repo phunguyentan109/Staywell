@@ -1,18 +1,14 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Checkbox, Card, Row, Col } from 'antd'
+import { Card, Row, Col } from 'antd'
 import _ from 'lodash'
-import { apiContract, notify } from 'constants/api'
 import moment from 'moment'
-// Components
-import Auxiliary from 'util/Auxiliary'
-import CustomScrollbars from 'util/CustomScrollbars'
+import { apiContract, notify } from 'constants/api'
 // Modules
-import ContractHeader from '../modules/ContractHeader'
 import ContractSidebar from '../modules/ContractSidebar'
 import ContractModal from '../modules/ContractModal'
 import ContractItem from '../modules/ContractItem'
-import BillItem from '../modules/BillItem'
+// import BillItem from '../modules/BillItem'
 // Hooks
 import useList from 'hooks/useList'
 import useInitState from 'hooks/useInitState'
@@ -89,14 +85,12 @@ export default function Contract({ loading }) {
           </Card>
           <Row>
             {
-              contracts.map(c =>
-                <ContractItem
-                  key={c._id}
-                  roomId={ids.room_id}
-                  contract={c}
-                  onClick={selectContract.bind(this, c._id)}
-                />
-              )
+              contracts.map(c => <ContractItem
+                key={c._id}
+                roomId={ids.room_id}
+                contract={c}
+                onClick={selectContract.bind(this, c._id)}
+              />)
             }
           </Row>
         </Col>
