@@ -38,7 +38,15 @@ export default function ContractSidebar({ children, loading, ...props }) {
   // )
 
   return (
-    <Card className='gx-card contract-sidebar' title='Available Contracts For:'>
+    // <Card className='gx-card contract-sidebar' title='Available Contracts For:'>
+    <Card className='gx-card contract-sidebar'>
+      <div className='gx-module-side-header'>
+        <div className='gx-module-logo'>
+          <i className='icon icon-wysiwyg gx-mr-3'/>
+          <span>Contract Options</span>
+        </div>
+      </div>
+      {children}
       <ContractNavs rooms={rooms} {...props}/>
     </Card>
   )

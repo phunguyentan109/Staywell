@@ -78,7 +78,14 @@ export default function Contract({ loading }) {
         </Col>
         <Col span={19}>
           <Card className='gx-card action-bar'>
-            <Checkbox className='gx-icon-btn' color='primary' checked={false}/>
+            <i className='far fa-square action check-box'/>
+            <span className='gx-toolbar-separator'>&nbsp;</span>
+            <div className='action reload'>
+              <i className='fas fa-sync-alt'/>&nbsp;Refresh
+            </div>
+            <div className='action remove'>
+              <i className='fas fa-trash'/>&nbsp;Remove
+            </div>
           </Card>
           <Row>
             {
@@ -92,9 +99,6 @@ export default function Contract({ loading }) {
               )
             }
           </Row>
-          {/*<div className='gx-module-list'>*/}
-
-          {/*</div>*/}
         </Col>
       </Row>
 
@@ -107,7 +111,7 @@ export default function Contract({ loading }) {
       {/*        onClick={() => {}}*/}
       {/*      />*/}
       {/*    </span>*/}
-      {/*    <ContractHeader onChange={() => {}} value=''/>*/}
+      {/*    <Contra ctHeader onChange={() => {}} value=''/>*/}
       {/*  </div>*/}
       {/*  <div className='gx-module-box-content'>*/}
       {/*    <div className='gx-module-list'>*/}

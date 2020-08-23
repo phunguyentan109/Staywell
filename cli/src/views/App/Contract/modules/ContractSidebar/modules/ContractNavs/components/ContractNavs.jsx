@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react'
-// import CustomScrollbars from 'util/CustomScrollbars'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
+const FILTERS = ['Pending', 'Processing', 'Complete']
 
-export default function ContractNavs({ children, rooms, onSelectRoom }) {
+export default function ContractNavs({ rooms, onSelectRoom }) {
   const [roomId, setRoomId] = useState(null)
 
   const selectRoom = useCallback(roomId => {
@@ -18,31 +18,33 @@ export default function ContractNavs({ children, rooms, onSelectRoom }) {
   }, [roomId, rooms, selectRoom])
 
   return (
-    // <div className='gx-module-side'>
-    //   <div className='gx-module-side-header'>
-    //     <div className='gx-module-logo'>
-    //       <i className='icon icon-wysiwyg gx-mr-3'/>
-    //       <span>Contract List</span>
-    //
-    //     </div>
-    //   </div>
-    //  
-    // </div>
-    // <div className='gx-module-side-content'>
-    //   <CustomScrollbars className='gx-module-side-scroll'>
-    //   { children }
     <ul className='gx-module-nav'>
-      {/*<li className='gx-module-nav-label'><span>Active Rooms</span></li>*/}
-      {
-        _.map(rooms, r => (
-          <li onClick={selectRoom.bind(this, r._id)} key={r._id}>
-            <span className={roomId === r._id ? 'gx-link active' : 'gx-link'}>
-              <i className='icon icon-schedule'/>
-              <span>{r.name}</span>
-            </span>
-          </li>
-        ))
-      }
+      <div className='section-wrapper'>
+        <div>Active Contracts</div>
+        {
+          _.map(rooms, r => (
+            <li onClick={selectRoom.bind(this, r._id)} key={r._id}>
+              <span className={roomId === r._id ? 'gx-link active' : 'gx-link'}>
+                <i className='icon icon-schedule'/>
+                <span>{r.name}</span>
+              </span>
+            </li>
+          ))
+        }
+      </div>
+      <div className='section-wrapper'>
+        <div>Status Filters</div>
+        {
+          _.map(FILTERS, (f, i) => (
+            <li onClick={() => {}} key={i}>
+              <span className='gx-link'>
+                <i className='icon icon-chart-pie'/>
+                <span>{f}</span>
+              </span>
+            </li>
+          ))
+        }
+      </div>
       {/*<li className='gx-module-nav-label'><span>Tags</span></li>*/}
       {/*<li onClick={() => {}}>*/}
       {/*  <span className={'gx-link active' || 'gx-link'}>*/}
@@ -51,13 +53,10 @@ export default function ContractNavs({ children, rooms, onSelectRoom }) {
       {/*  </span>*/}
       {/*</li>*/}
     </ul>
-    // </CustomScrollbars>
-    // </div>
   )
 }
 
 ContractNavs.propTypes = {
-  children: PropTypes.any,
   rooms: PropTypes.array,
   onSelectRoom: PropTypes.func
 }

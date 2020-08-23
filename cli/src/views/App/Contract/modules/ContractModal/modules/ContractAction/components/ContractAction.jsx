@@ -10,7 +10,7 @@ const ContractAction = withToggleModal(({ disabled }) => (
       className='gx-btn-block'
       disabled={disabled}
     >
-      <span>NEW CONTRACT</span>
+      <span className='icon icon-add-circle'/>NEW CONTRACT
     </Button>
   </div>
 ), { title: 'Open new contract' })

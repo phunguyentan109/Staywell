@@ -8,30 +8,94 @@
 
 .manage-contract .action-bar .ant-card-body {
   padding-top: 10px;
-  padding-bottom: 10px; }
+  padding-bottom: 10px;
+  display: flex;
+  align-items: center; }
+
+.manage-contract .contract-sidebar .gx-module-side-header {
+  background-color: #f4f4f4; }
+
+.manage-contract .contract-sidebar .section-wrapper {
+  margin-top: 30px; }
+  .manage-contract .contract-sidebar .section-wrapper > div {
+    margin-bottom: 12px; }
 
 .manage-contract .contract-sidebar li .gx-link {
   padding: 5px 15px; }
 
+.manage-contract .contract-sidebar .gx-module-add-task {
+  padding: 24px 0 0; }
+  .manage-contract .contract-sidebar .gx-module-add-task > button {
+    border-radius: 0 10px 0 10px;
+    text-align: left;
+    height: 45px;
+    display: flex;
+    align-items: center; }
+    .manage-contract .contract-sidebar .gx-module-add-task > button .icon {
+      margin-right: 10px;
+      font-size: 17px; }
+
+.manage-contract .action {
+  padding: 10px 12px;
+  color: #a8a8a8;
+  border-radius: 3px;
+  transition-duration: .2s;
+  cursor: pointer; }
+  .manage-contract .action:hover {
+    color: #767676;
+    background-color: #f0f0f0; }
+  .manage-contract .action.check-box {
+    font-size: 19px; }
+  .manage-contract .action.reload {
+    font-size: 17px;
+    color: gray; }
+  .manage-contract .action.remove {
+    font-size: 17px;
+    color: gray; }
+
 .manage-contract .contract-item {
   display: flex;
   align-items: center; }
+  .manage-contract .contract-item .gx-icon-btn {
+    min-width: 40px; }
   .manage-contract .contract-item .contract-info {
     width: 100%;
     margin-left: 15px;
     display: flex;
-    justify-content: space-between; }
+    justify-content: space-between;
+    align-items: center; }
     .manage-contract .contract-item .contract-info p {
-      margin: 5px 0 0; }
+      margin: 0;
+      color: gray; }
     .manage-contract .contract-item .contract-info .contract-progress {
-      margin-top: 5px;
+      margin-bottom: 10px;
       display: flex;
       align-items: center; }
-      .manage-contract .contract-item .contract-info .contract-progress > div {
-        width: 150px;
-        margin-right: 10px; }
-        .manage-contract .contract-item .contract-info .contract-progress > div .ant-progress {
+      .manage-contract .contract-item .contract-info .contract-progress .progress-icon {
+        line-height: 1;
+        font-size: 18px;
+        margin-right: 10px;
+        margin-top: 4px;
+        color: #aeaeae; }
+        .manage-contract .contract-item .contract-info .contract-progress .progress-icon .ant-badge {
+          margin-bottom: 0; }
+      .manage-contract .contract-item .contract-info .contract-progress .progress-b {
+        width: 200px;
+        margin-right: 15px; }
+        .manage-contract .contract-item .contract-info .contract-progress .progress-b .ant-progress {
           margin: 0; }
+    .manage-contract .contract-item .contract-info > div:nth-of-type(2) {
+      position: relative;
+      width: 70px;
+      height: 51px; }
+      .manage-contract .contract-item .contract-info > div:nth-of-type(2) > span {
+        right: 0;
+        top: 6px;
+        position: absolute;
+        border: 1px solid white;
+        box-shadow: 1px 1px 5px #0000006e;
+        width: 38px;
+        height: 38px; }
 
 .user-cell {
   display: flex;

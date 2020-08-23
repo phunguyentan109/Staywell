@@ -2,36 +2,128 @@
   .action-bar .ant-card-body {
     padding-top: 10px;
     padding-bottom: 10px;
+    display: flex;
+    align-items: center;
   }
 
-  .contract-sidebar li .gx-link {
-    padding: 5px 15px;
+  .contract-sidebar {
+    .gx-module-side-header {
+      background-color: #f4f4f4;
+    }
+
+    .section-wrapper {
+      margin-top: 30px;
+
+      > div {
+        margin-bottom: 12px;
+      }
+    }
+
+    li .gx-link {
+      padding: 5px 15px;
+    }
+
+    .gx-module-add-task {
+      padding: 24px 0 0;
+
+      > button {
+        border-radius: 0 10px 0 10px;
+        text-align: left;
+        height: 45px;
+        display: flex;
+        align-items: center;
+
+        .icon {
+          margin-right: 10px;
+          font-size: 17px;
+        }
+      }
+    }
+  }
+
+  .action {
+    padding: 10px 12px;
+    color: #a8a8a8;
+    border-radius: 3px;
+    transition-duration: .2s;
+    cursor: pointer;
+
+    &:hover {
+      color: #767676;
+      background-color: #f0f0f0;
+    }
+
+    &.check-box {
+      font-size: 19px;
+    }
+
+    &.reload {
+      font-size: 17px;
+      color: gray;
+    }
+
+    &.remove {
+      font-size: 17px;
+      color: gray;
+    }
   }
 
   .contract-item {
     display: flex;
     align-items: center;
 
+    .gx-icon-btn { min-width: 40px; }
+
     .contract-info {
       width: 100%;
       margin-left: 15px;
       display: flex;
       justify-content: space-between;
+      align-items: center;
 
       p {
-        margin: 5px 0 0;
+        margin: 0;
+        color: gray;
       }
 
       .contract-progress {
-        margin-top: 5px;
+        margin-bottom: 10px;
         display: flex;
         align-items: center;
 
-        > div {
-          width: 150px;
+        .progress-icon {
+          line-height: 1;
+          font-size: 18px;
           margin-right: 10px;
+          margin-top: 4px;
+          color: #aeaeae;
+
+          .ant-badge {
+            margin-bottom: 0;
+          }
+        }
+
+        .progress-b {
+          width: 200px;
+          margin-right: 15px;
 
           .ant-progress { margin: 0 }
+        }
+      }
+
+      > div:nth-of-type(2) {
+        position: relative;
+        width: 70px;
+        height: 51px;
+
+        > span {
+          right: 0;
+          top: 6px;
+          position: absolute;
+          border: 1px solid white;
+          box-shadow: 1px 1px 5px #0000006e;
+          width: 38px;
+          height: 38px;
         }
       }
     }
