@@ -55,7 +55,8 @@
 
 .manage-contract .contract-item {
   display: flex;
-  align-items: center; }
+  align-items: center;
+  cursor: pointer; }
   .manage-contract .contract-item .gx-icon-btn {
     min-width: 40px; }
   .manage-contract .contract-item .contract-info {
