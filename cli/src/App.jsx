@@ -7,10 +7,7 @@ import extractStorage from 'constants/clientStorage'
 import 'assets/vendors/style'
 import 'antd/dist/antd.css'
 import 'assets/wieldy.css'
-
-import 'assets/css/auth/index.css'
-import 'assets/css/app/index.css'
-import 'assets/css/components/index.css'
+import 'assets/css/index.css'
 
 import configureStore from 'appRedux'
 
