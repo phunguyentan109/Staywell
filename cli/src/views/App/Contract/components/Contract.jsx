@@ -18,7 +18,7 @@ export default function Contract({ loading }) {
   const [bills, setBills, updateBills, resetBills] = useList([])
   const [ids, setIds, clearIds] = useInitState({ room_id: null, contract_id: null })
   const [lastElectricNumber, setLastElectricNumber] = useState(0)
-
+  
   const nextGenerateAllowId = useMemo(() => {
     if (!!bills.length) {
       let nextGenerateBill = _.find(bills, b => !b.electric)
@@ -51,7 +51,7 @@ export default function Contract({ loading }) {
     notify('success', 'Bill\'s information has been generated successfully.')
   }, [updateBills])
 
-  const selectContract = useCallback(async(contract_id) => {
+  const selectContract = useCallback(contract_id => async() => {
     loading(true)
     let contract = await apiContract.get({ room_id: ids.roomId, contract_id })
     const orderedBill = contract.bill_id.sort((a, b) => moment(a).diff(moment(b)))
@@ -83,18 +83,25 @@ export default function Contract({ loading }) {
               <i className='fas fa-trash'/>&nbsp;Remove
             </div>
           </Card>
-          {
-            !!ids.contract_id && <span onClick={() => clearIds()}>Click here to back</span>
-          }
           <Row>
             {
               !!ids.contract_id || contracts.map(c => <ContractItem
                 key={c._id}
                 roomId={ids.room_id}
                 contract={c}
-                onClick={selectContract.bind(this, c._id)}
+                onClick={selectContract(c._id)}
               />)
             }
+            {/* { */}
+            {/* !!ids.contract_id && <Col span={24}> */}
+            <Col span={24}>
+              <Card className='gx-card back-bar'>
+                <i className='fas fa-arrow-left action back-contract' onClick={() => clearIds()} />
+                <span className='gx-toolbar-separator'>&nbsp;</span>
+                <span>Contract #123</span>
+              </Card>
+            </Col>
+            {/* } */}
             {
               !!ids.contract_id && _.map(bills, bill => (
                 <Col span={6}>
