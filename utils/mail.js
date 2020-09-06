@@ -2,8 +2,11 @@ const mailer = require('nodemailer')
 const emoji = require('node-emoji')
 const { google } = require('googleapis')
 const OAuth2 = google.auth.OAuth2
-const { GMAIL_USER, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, GG_OAUTH_LINK } = process.env
-const { MailTemplate } = require('./mailTemplate')
+const sgMail = require('@sendgrid/mail')
+const { GMAIL_USER, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, GG_OAUTH_LINK, SENDGRID_API_KEY } = process.env
+// const MailTemplate = require('./emailTemplate/mailTemplate.ejs')
+
+sgMail.setApiKey(SENDGRID_API_KEY)
 
 const oauth2Client = new OAuth2(CLIENT_ID, CLIENT_SECRET, GG_OAUTH_LINK)
 oauth2Client.setCredentials({ refresh_token: REFRESH_TOKEN })
@@ -25,6 +28,20 @@ async function send(to, subject, text, html) {
     to, subject, text, html
   }
   await transport.sendMail(mailOptions)
+}
+
+async function sgSend({ to, subject, text, html }) {
+  console.log('\n', to, '\n')
+  try {
+    let data = {
+      from: GMAIL_USER,
+      to, subject, text, html
+    }
+
+    await sgMail.send(data)
+  } catch (err) {
+    return err
+  }
 }
 
 async function activate(to, viewName, id, host) {
@@ -64,18 +81,18 @@ This is the automatic email from the system, please do not reply.`
   return await send(to, subject, text)
 }
 
-// async function forgotPassword(to, viewName, token, host) {
-//   let subject = emoji.emojify(':building_construction: Are you forgot password ? - Staywell')
-//   let text = `
-// Good day ${viewName}, this mail comes from Staywell,
+async function forgotPassword(to, viewName, token, host) {
+  let subject = emoji.emojify(':building_construction: Are you forgot password ? - Staywell')
+  let text = `
+Good day ${viewName}, this mail comes from Staywell,
 
-// This mail available in 1 hour. Please click the link below to reset your password:
-// https://${host}/reset/${token}
+This mail available in 1 hour. Please click the link below to reset your password:
+https://${host}/reset/${token}
 
-// And that's all, thank you for your time. Have a good day and see you later.
-// This is the automatic email from the system, please do not reply.`
-//   return await send(to, subject, text)
-// }
+And that's all, thank you for your time. Have a good day and see you later.
+This is the automatic email from the system, please do not reply.`
+  return await send(to, subject, text)
+}
 
 async function changePassword(to, viewName) {
   let subject = emoji.emojify(':wrench: Your password has been changed - Staywell')
@@ -97,12 +114,14 @@ ${content}.`
   return await send(to, subject, text)
 }
 
-async function forgotPassword(to, viewName, token, host) {
-  let subject = emoji.emojify(':building_construction: Are you forgot password ? - Staywell')
-  const forgotLink = `https://${host}/reset/${token}`
-  let html = `${MailTemplate(viewName, forgotLink)}`
+// async function forgotPassword(to, viewName, token, host) {
+//   let subject = emoji.emojify(':building_construction: Are you forgot password ? - Staywell')
+//   console.log('\n', '222222222222222222', '\n')
+//   // const forgotLink = `https://${host}/reset/${token}`
+//   // let html = `${MailTemplate(viewName, forgotLink)}`
+//   let text = 'easy to do anywhere, even with Node.js'
 
-  return await send(to, subject, html)
-}
+//   return await sgSend({ to, subject, text })
+// }
 
 module.exports = { send, activate, getRoom, leaveRoom, contactUser, changePassword, forgotPassword }
