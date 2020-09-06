@@ -1,9 +1,16 @@
 .manage-contract {
-  .action-bar .ant-card-body {
+  .action-bar .ant-card-body,
+  .back-bar .ant-card-body {
     padding-top: 10px;
     padding-bottom: 10px;
     display: flex;
     align-items: center;
+  }
+
+  .back-bar .ant-card-body {
+    background-color: #038fde;
+    color: #fff;
+    padding: 5px 15px;
   }
 
   .contract-sidebar {
@@ -57,6 +64,15 @@
       font-size: 19px;
     }
 
+    &.back-contract {
+      font-size: 19px;
+      color: white;
+
+      &:hover {
+        background-color: #ffffff29;
+      }
+    }
+
     &.reload {
       font-size: 17px;
       color: gray;
@@ -71,6 +87,7 @@
   .contract-item {
     display: flex;
     align-items: center;
+    cursor: pointer;
 
     .gx-icon-btn { min-width: 40px; }
 

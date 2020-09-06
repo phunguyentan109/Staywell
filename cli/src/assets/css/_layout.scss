@@ -1,0 +1,34 @@
+$spaces: ('xs': 5px, 'sm': 10px, 'md': 15px, 'lg': 20px);
+
+@mixin genSpace($type) {
+  @each $name, $space in $spaces {
+    .#{$type}l-#{$name} {
+      margin-left: $space;
+    }
+    .#{$type}r-#{$name} {
+      margin-right: $space;
+    }
+    .#{$type}x-#{$name} {
+      margin-left: $space;
+      margin-right: $space;
+    }
+    
+    .#{$type}t-#{$name} {
+      margin-top: $space;
+    }
+    .#{$type}b-#{$name} {
+      margin-bottom: $space;
+    }
+    .#{$type}y-#{$name} {
+      margin-top: $space;
+      margin-bottom: $space;
+    }
+
+    .#{$type}xy-#{$name} {
+      margin: $space;
+    }
+  }
+}
+
+@include genSpace('p');
+@include genSpace('m');

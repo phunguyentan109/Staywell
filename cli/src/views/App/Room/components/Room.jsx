@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { Row, Col, Card, Table, Divider } from 'antd'
+import { Card, Table, Divider } from 'antd'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
 
@@ -59,52 +59,46 @@ export default function Room ({ loading }) {
   }
 
   return (
-    <>
-      <Row>
-        <Col md={24}>
-          <Card title='List of available room'>
-            <CreateModal onClick={clearRoom} onSubmit={hdCreate}>
-              <RoomForm onCollect={hdCollect} room={room} listPrice={price}/>
-            </CreateModal>
-            <Table
-              className='gx-table-responsive'
-              dataSource={rooms}
-              rowKey='_id'
-              columns={[
-                { title: 'Room Name', dataIndex: 'name' },
-                {
-                  title: 'People',
-                  dataIndex: 'user_id',
-                  render: text => <span>{text.length} people</span>
-                },
-                {
-                  title: 'Price Type',
-                  dataIndex: 'price_id',
-                  render: col => <span>
-                    { col ? col.type : <i>No price applied</i> }
-                  </span>
-                },
-                {
-                  title: 'Action',
-                  key: 'action',
-                  render: (text, record) => (
-                    <>
-                      <DeleteAction onConfirm={hdRemove.bind(this, record._id)}/>
-                      <Divider type='vertical'/>
-                      <EditModal onSubmit={hdEdit} onClick={hdSelect.bind(this, record)}>
-                        <RoomForm onCollect={hdCollect} room={room} listPrice={price}/>
-                      </EditModal>
-                      <Divider type='vertical'/>
-                      <TableTransfer people={record.user_id} roomId={record._id} updateRooms={updateRooms} />
-                    </>
-                  )
-                }
-              ]}
-            />
-          </Card>
-        </Col>
-      </Row>
-    </>
+    <Card className='gx-card' title='List of available rooms'>
+      <CreateModal onClick={clearRoom} onSubmit={hdCreate}>
+        <RoomForm onCollect={hdCollect} room={room} listPrice={price}/>
+      </CreateModal>
+      <Table
+        className='gx-table-responsive'
+        dataSource={rooms}
+        rowKey='_id'
+        columns={[
+          { title: 'Room Name', dataIndex: 'name' },
+          {
+            title: 'People',
+            dataIndex: 'user_id',
+            render: text => <span>{text.length} people</span>
+          },
+          {
+            title: 'Price Type',
+            dataIndex: 'price_id',
+            render: col => <span>
+              { col ? col.type : <i>No price applied</i> }
+            </span>
+          },
+          {
+            title: 'Action',
+            key: 'action',
+            render: (text, record) => (
+              <>
+                <DeleteAction onConfirm={hdRemove.bind(this, record._id)}/>
+                <Divider type='vertical'/>
+                <EditModal onSubmit={hdEdit} onClick={hdSelect.bind(this, record)}>
+                  <RoomForm onCollect={hdCollect} room={room} listPrice={price}/>
+                </EditModal>
+                <Divider type='vertical'/>
+                <TableTransfer people={record.user_id} roomId={record._id} updateRooms={updateRooms}/>
+              </>
+            )
+          }
+        ]}
+      />
+    </Card>
   )
 }
 

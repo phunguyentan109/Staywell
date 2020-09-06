@@ -1,14 +1,10 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Checkbox, Card, Row, Col } from 'antd'
+import { Card, Row, Col } from 'antd'
 import _ from 'lodash'
-import { apiContract, notify } from 'constants/api'
 import moment from 'moment'
-// Components
-import Auxiliary from 'util/Auxiliary'
-import CustomScrollbars from 'util/CustomScrollbars'
+import { apiContract, notify } from 'constants/api'
 // Modules
-import ContractHeader from '../modules/ContractHeader'
 import ContractSidebar from '../modules/ContractSidebar'
 import ContractModal from '../modules/ContractModal'
 import ContractItem from '../modules/ContractItem'
@@ -87,68 +83,36 @@ export default function Contract({ loading }) {
               <i className='fas fa-trash'/>&nbsp;Remove
             </div>
           </Card>
+          {
+            !!ids.contract_id && <span onClick={() => clearIds()}>Click here to back</span>
+          }
           <Row>
             {
-              contracts.map(c =>
-                <ContractItem
-                  key={c._id}
-                  roomId={ids.room_id}
-                  contract={c}
-                  onClick={selectContract.bind(this, c._id)}
-                />
-              )
+              !!ids.contract_id || contracts.map(c => <ContractItem
+                key={c._id}
+                roomId={ids.room_id}
+                contract={c}
+                onClick={selectContract.bind(this, c._id)}
+              />)
+            }
+            {
+              !!ids.contract_id && _.map(bills, bill => (
+                <Col span={6}>
+                  <BillItem
+                    key={bill._id}
+                    bill={bill}
+                    apiParams={ids}
+                    onAfterUpdate={hdUpdateBill}
+                    lastNumber={lastElectricNumber}
+                    allowGenerate={nextGenerateAllowId === bill._id}
+                    allowPayment={bill.electric && !bill.paidDate}
+                  />
+                </Col>
+              ))
             }
           </Row>
         </Col>
       </Row>
-
-      {/*<div className='gx-module-box'>*/	}
-      {/*  <div className='gx-module-box-header'>*/}
-      {/*    <span className='gx-drawer-btn gx-d-flex gx-d-lg-none'>*/}
-      {/*      <i*/}
-      {/*        className='icon icon-menu gx-icon-btn'*/}
-      {/*        aria-label='Menu'*/}
-      {/*        onClick={() => {}}*/}
-      {/*      />*/}
-      {/*    </span>*/}
-      {/*    <Contra ctHeader onChange={() => {}} value=''/>*/}
-      {/*  </div>*/}
-      {/*  <div className='gx-module-box-content'>*/}
-      {/*    <div className='gx-module-list'>*/}
-      {/*      <div className='gx-module-box-topbar gx-module-box-topbar-todo'>*/}
-      {/*        {*/}
-      {/*          contracts.length > 0 && <Auxiliary>*/}
-      {/*            <Checkbox className='gx-icon-btn' color='primary' checked={false}/>*/}
-      {/*          </Auxiliary>*/}
-      {/*        }*/}
-      {/*      </div>*/}
-      {/*      {*/}
-      {/*        !!ids.contract_id && <Button onClick={() => clearIds('contract_id')}>*/}
-      {/*          Back to list*/}
-      {/*        </Button>*/}
-      {/*      }*/}
-      {/*      {*/}
-      {/*        !!ids.contract_id || <CustomScrollbars className='gx-module-content-scroll'>*/}
-
-      {/*        </CustomScrollbars>*/}
-      {/*      }*/}
-      {/*      {*/}
-      {/*        ids.contract_id && _.map(bills, bill => (*/}
-      {/*          <BillItem*/}
-      {/*            key={bill._id}*/}
-      {/*            bill={bill}*/}
-      {/*            apiParams={ids}*/}
-      {/*            onAfterUpdate={hdUpdateBill}*/}
-      {/*            lastNumber={lastElectricNumber}*/}
-      {/*            allowGenerate={nextGenerateAllowId === bill._id}*/}
-      {/*            allowPayment={bill.electric && !bill.paidDate}*/}
-      {/*          />*/}
-      {/*        ))*/}
-      {/*      }*/}
-      {/*    </div>*/}
-      {/*  </div>*/}
-      {/*</div>*/}
-      {/*</div>*/}
     </div>
   )
 }
