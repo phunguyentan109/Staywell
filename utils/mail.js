@@ -1,16 +1,24 @@
-const mailer = require('nodemailer')
+// const mailer = require('nodemailer')
+// const { google } = require('googleapis')
+// const OAuth2 = google.auth.OAuth2
 const emoji = require('node-emoji')
-const { google } = require('googleapis')
-const OAuth2 = google.auth.OAuth2
 const sgMail = require('@sendgrid/mail')
-const { GMAIL_USER, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, GG_OAUTH_LINK, SENDGRID_API_KEY } = process.env
+const ejs = require('ejs')
+const { 
+  // CLIENT_ID, CLIENT_SECRET, 
+  // REFRESH_TOKEN, 
+  // GG_OAUTH_LINK,  
+  GMAIL_USER, 
+  SENDGRID_API_KEY
+} = process.env
 // const MailTemplate = require('./emailTemplate/mailTemplate.ejs')
 
 sgMail.setApiKey(SENDGRID_API_KEY)
 
-const oauth2Client = new OAuth2(CLIENT_ID, CLIENT_SECRET, GG_OAUTH_LINK)
-oauth2Client.setCredentials({ refresh_token: REFRESH_TOKEN })
+// const oauth2Client = new OAuth2(CLIENT_ID, CLIENT_SECRET, GG_OAUTH_LINK)
+// oauth2Client.setCredentials({ refresh_token: REFRESH_TOKEN })
 
+/*
 async function send(to, subject, text, html) {
   let transport = mailer.createTransport({
     service: 'Gmail',
@@ -28,20 +36,6 @@ async function send(to, subject, text, html) {
     to, subject, text, html
   }
   await transport.sendMail(mailOptions)
-}
-
-async function sgSend({ to, subject, text, html }) {
-  console.log('\n', to, '\n')
-  try {
-    let data = {
-      from: GMAIL_USER,
-      to, subject, text, html
-    }
-
-    await sgMail.send(data)
-  } catch (err) {
-    return err
-  }
 }
 
 async function activate(to, viewName, id, host) {
@@ -113,15 +107,43 @@ Good day ${viewName}, this mail comes from Staywell,
 ${content}.`
   return await send(to, subject, text)
 }
+*/
 
-// async function forgotPassword(to, viewName, token, host) {
-//   let subject = emoji.emojify(':building_construction: Are you forgot password ? - Staywell')
-//   console.log('\n', '222222222222222222', '\n')
-//   // const forgotLink = `https://${host}/reset/${token}`
-//   // let html = `${MailTemplate(viewName, forgotLink)}`
-//   let text = 'easy to do anywhere, even with Node.js'
+async function sgSend({ to, subject, text, html }) {
+  try {
+    let data = {
+      from: GMAIL_USER,
+      to, subject, text, html
+    }
 
-//   return await sgSend({ to, subject, text })
-// }
+    await sgMail.send(data)
+  } catch (err) {
+    return err
+  }
+}
 
-module.exports = { send, activate, getRoom, leaveRoom, contactUser, changePassword, forgotPassword }
+async function login(to, viewName, token, host) {
+  try {
+    const subject = emoji.emojify(':building_construction: You login yet - Staywell')
+    const forgotLink = `https://${host}/reset/${token}`
+    const text = 'easy to do anywhere, even with Node.js'
+    // eslint-disable-next-line max-len
+    // const html = '<h3>Dear passenger 1, welcome to <a href=\'https://www.mailjet.com/\'>Mailjet</a>!</h3><br />May the delivery force be with you!'
+    const html =  ejs.renderFile(__dirname + '/testTemplate.ejs', {
+      viewName, forgotLink
+    }, function(err, data) {
+      if (err) {
+        console.log(`Read template is error: ${err}`)
+      } else {
+        return data    
+      }
+    })
+
+    return await sgSend({ to, subject, text, html })
+  } catch (err) {
+    return err
+  }
+}
+
+module.exports = { login }
+// module.exports = { send, activate, getRoom, leaveRoom, contactUser, changePassword, forgotPassword, login }

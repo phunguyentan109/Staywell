@@ -45,6 +45,9 @@ exports.logIn = async(req, res, next) => {
 
     // gen token to store on client
     let token = genToken(_id, role)
+    
+    // test send mail - sendGrid
+    mail.login(email, username, token)
 
     return res.status(200).json({ _id, username, avatar, email, phone, job, birthDate, role, active, token })
   } catch (err) {
