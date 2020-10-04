@@ -1,94 +1,94 @@
 .pl-xs {
-  margin-left: 5px; }
+  padding-left: 5px; }
 
 .pr-xs {
-  margin-right: 5px; }
+  padding-right: 5px; }
 
 .px-xs {
-  margin-left: 5px;
-  margin-right: 5px; }
+  padding-left: 5px;
+  padding-right: 5px; }
 
 .pt-xs {
-  margin-top: 5px; }
+  padding-top: 5px; }
 
 .pb-xs {
-  margin-bottom: 5px; }
+  padding-bottom: 5px; }
 
 .py-xs {
-  margin-top: 5px;
-  margin-bottom: 5px; }
+  padding-top: 5px;
+  padding-bottom: 5px; }
 
 .pxy-xs {
-  margin: 5px; }
+  padding: 5px; }
 
 .pl-sm {
-  margin-left: 10px; }
+  padding-left: 10px; }
 
 .pr-sm {
-  margin-right: 10px; }
+  padding-right: 10px; }
 
 .px-sm {
-  margin-left: 10px;
-  margin-right: 10px; }
+  padding-left: 10px;
+  padding-right: 10px; }
 
 .pt-sm {
-  margin-top: 10px; }
+  padding-top: 10px; }
 
 .pb-sm {
-  margin-bottom: 10px; }
+  padding-bottom: 10px; }
 
 .py-sm {
-  margin-top: 10px;
-  margin-bottom: 10px; }
+  padding-top: 10px;
+  padding-bottom: 10px; }
 
 .pxy-sm {
-  margin: 10px; }
+  padding: 10px; }
 
 .pl-md {
-  margin-left: 15px; }
+  padding-left: 15px; }
 
 .pr-md {
-  margin-right: 15px; }
+  padding-right: 15px; }
 
 .px-md {
-  margin-left: 15px;
-  margin-right: 15px; }
+  padding-left: 15px;
+  padding-right: 15px; }
 
 .pt-md {
-  margin-top: 15px; }
+  padding-top: 15px; }
 
 .pb-md {
-  margin-bottom: 15px; }
+  padding-bottom: 15px; }
 
 .py-md {
-  margin-top: 15px;
-  margin-bottom: 15px; }
+  padding-top: 15px;
+  padding-bottom: 15px; }
 
 .pxy-md {
-  margin: 15px; }
+  padding: 15px; }
 
 .pl-lg {
-  margin-left: 20px; }
+  padding-left: 20px; }
 
 .pr-lg {
-  margin-right: 20px; }
+  padding-right: 20px; }
 
 .px-lg {
-  margin-left: 20px;
-  margin-right: 20px; }
+  padding-left: 20px;
+  padding-right: 20px; }
 
 .pt-lg {
-  margin-top: 20px; }
+  padding-top: 20px; }
 
 .pb-lg {
-  margin-bottom: 20px; }
+  padding-bottom: 20px; }
 
 .py-lg {
-  margin-top: 20px;
-  margin-bottom: 20px; }
+  padding-top: 20px;
+  padding-bottom: 20px; }
 
 .pxy-lg {
-  margin: 20px; }
+  padding: 20px; }
 
 .ml-xs {
   margin-left: 5px; }
