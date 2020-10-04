@@ -10,13 +10,12 @@ import ContractModal from '../modules/ContractModal'
 import ContractItem from '../modules/ContractItem'
 import BillItem from '../modules/BillItem'
 // Hooks
-import useList from 'hooks/useList'
-import useInitState from 'hooks/useInitState'
+import { useList, useStore } from 'hooks'
 
 export default function Contract({ loading }) {
   const [contracts, setContracts, updateContracts] = useList([])
   const [bills, setBills, updateBills, resetBills] = useList([])
-  const [ids, setIds, clearIds] = useInitState({ room_id: null, contract_id: null })
+  const [ids, repIds, setIds, clearIds] = useStore({ room_id: null, contract_id: null })
   const [lastElectricNumber, setLastElectricNumber] = useState(0)
   
   const nextGenerateAllowId = useMemo(() => {
@@ -39,7 +38,6 @@ export default function Contract({ loading }) {
     loading(true)
     let contracts = await apiContract.get({ room_id })
     setContracts(contracts)
-    // Reset feature with new room data
     setIds({ contract_id: null, room_id })
     resetBills()
     loading(false)
@@ -56,9 +54,9 @@ export default function Contract({ loading }) {
     let contract = await apiContract.get({ room_id: ids.roomId, contract_id })
     const orderedBill = contract.bill_id.sort((a, b) => moment(a).diff(moment(b)))
     setBills(orderedBill)
-    setIds(prev => ({ ...prev, contract_id: contract._id }))
+    repIds({ contract_id: contract._id })
     loading(false)
-  }, [loading, ids.roomId, setBills, setIds])
+  }, [loading, ids.roomId, setBills, repIds])
 
   return (
     <div className='manage-contract'>
@@ -92,19 +90,18 @@ export default function Contract({ loading }) {
                 onClick={selectContract(c._id)}
               />)
             }
-            {/* { */}
-            {/* !!ids.contract_id && <Col span={24}> */}
-            <Col span={24}>
-              <Card className='gx-card back-bar'>
-                <i className='fas fa-arrow-left action back-contract' onClick={() => clearIds()} />
-                <span className='gx-toolbar-separator'>&nbsp;</span>
-                <span>Contract #123</span>
-              </Card>
-            </Col>
-            {/* } */}
+            {
+              !!ids.contract_id && <Col span={24}>
+                <Card className='gx-card back-bar'>
+                  <i className='fas fa-arrow-left action back-contract' onClick={() => clearIds()}/>
+                  <span className='gx-toolbar-separator'>&nbsp;</span>
+                  <span>Contract #{ids.contract_id.substring(ids.contract_id.length - 4, ids.contract_id.length)}</span>
+                </Card>
+              </Col>
+            }
             {
               !!ids.contract_id && _.map(bills, bill => (
-                <Col span={6}>
+                <Col span={8}>
                   <BillItem
                     key={bill._id}
                     bill={bill}
