@@ -1,31 +1,32 @@
 $spaces: ('xs': 5px, 'sm': 10px, 'md': 15px, 'lg': 20px);
+$typeList: ('p': 'padding', 'm': 'margin');
 
 @mixin genSpace($type) {
   @each $name, $space in $spaces {
     .#{$type}l-#{$name} {
-      margin-left: $space;
+      #{map-get($typeList, $type)}-left: $space;
     }
     .#{$type}r-#{$name} {
-      margin-right: $space;
+      #{map-get($typeList, $type)}-right: $space;
     }
     .#{$type}x-#{$name} {
-      margin-left: $space;
-      margin-right: $space;
+      #{map-get($typeList, $type)}-left: $space;
+      #{map-get($typeList, $type)}-right: $space;
     }
     
     .#{$type}t-#{$name} {
-      margin-top: $space;
+      #{map-get($typeList, $type)}-top: $space;
     }
     .#{$type}b-#{$name} {
-      margin-bottom: $space;
+      #{map-get($typeList, $type)}-bottom: $space;
     }
     .#{$type}y-#{$name} {
-      margin-top: $space;
-      margin-bottom: $space;
+      #{map-get($typeList, $type)}-top: $space;
+      #{map-get($typeList, $type)}-bottom: $space;
     }
 
     .#{$type}xy-#{$name} {
-      margin: $space;
+      #{map-get($typeList, $type)}: $space;
     }
   }
 }
