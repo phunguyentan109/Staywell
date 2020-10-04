@@ -1,15 +1,10 @@
 import React, { useCallback } from 'react'
-import { Card, Button, Input, Form } from 'antd'
+import { Card, Input, Form } from 'antd'
 import PropTypes from 'prop-types'
-import withToggleModal from 'hocs/withToggleModal'
 import { apiBill } from 'constants/api'
 import _ from 'lodash'
 import { INPUT_OPTIONS } from '../modules/const'
-
-const BillModal = withToggleModal(
-  () => <Button type='primary'>Generate Bill</Button>,
-  { title: 'Bill Generation' }
-)
+import GenerateBill from '../modules/GenerateBill'
 
 function BillItem({ bill, apiParams, form, onAfterUpdate, lastNumber, allowGenerate, allowPayment }) {
   async function hdSubmit() {
@@ -86,20 +81,13 @@ function BillItem({ bill, apiParams, form, onAfterUpdate, lastNumber, allowGener
       <div className='gx-user-wid-row'>
         <div className='d-flex align-items-center'>
           <div>
-            <div className='d-flex'>
-              <i className='icon icon-files'/>
+            <div className='d-flex mb-sm'>
+              <i className='icon icon-files mr-xs'/>
               <span>#{bill._id.substring(0, 4)}</span>
             </div>
             <div>Deadline on <b>{bill.deadline}</b></div>
           </div>
-          <div className='gx-dot-arrow'>
-            <div className='gx-bg-primary gx-hover-arrow'>
-              <i className='icon icon-long-arrow-right gx-text-white'/>
-            </div>
-            <div className='gx-dot'>
-              <i className='icon icon-ellipse-v gx-text-primary'/>
-            </div>
-          </div>
+          { allowGenerate && <GenerateBill /> }
         </div>
       </div>
     </Card>
