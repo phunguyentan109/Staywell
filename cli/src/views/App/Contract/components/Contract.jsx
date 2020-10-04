@@ -10,15 +10,14 @@ import ContractModal from '../modules/ContractModal'
 import ContractItem from '../modules/ContractItem'
 import BillItem from '../modules/BillItem'
 // Hooks
-import useList from 'hooks/useList'
-import useInitState from 'hooks/useInitState'
+import { useList, useStore } from 'hooks'
 
 export default function Contract({ loading }) {
   const [contracts, setContracts, updateContracts] = useList([])
   const [bills, setBills, updateBills, resetBills] = useList([])
-  const [ids, setIds, clearIds] = useInitState({ room_id: null, contract_id: null })
+  const [ids, repIds, setIds, clearIds] = useStore({ room_id: null, contract_id: null })
   const [lastElectricNumber, setLastElectricNumber] = useState(0)
-
+  
   const nextGenerateAllowId = useMemo(() => {
     if (!!bills.length) {
       let nextGenerateBill = _.find(bills, b => !b.electric)
@@ -39,7 +38,6 @@ export default function Contract({ loading }) {
     loading(true)
     let contracts = await apiContract.get({ room_id })
     setContracts(contracts)
-    // Reset feature with new room data
     setIds({ contract_id: null, room_id })
     resetBills()
     loading(false)
@@ -51,14 +49,14 @@ export default function Contract({ loading }) {
     notify('success', 'Bill\'s information has been generated successfully.')
   }, [updateBills])
 
-  const selectContract = useCallback(async(contract_id) => {
+  const selectContract = useCallback(contract_id => async() => {
     loading(true)
     let contract = await apiContract.get({ room_id: ids.roomId, contract_id })
     const orderedBill = contract.bill_id.sort((a, b) => moment(a).diff(moment(b)))
     setBills(orderedBill)
-    setIds(prev => ({ ...prev, contract_id: contract._id }))
+    repIds({ contract_id: contract._id })
     loading(false)
-  }, [loading, ids.roomId, setBills, setIds])
+  }, [loading, ids.roomId, setBills, repIds])
 
   return (
     <div className='manage-contract'>
@@ -83,21 +81,27 @@ export default function Contract({ loading }) {
               <i className='fas fa-trash'/>&nbsp;Remove
             </div>
           </Card>
-          {
-            !!ids.contract_id && <span onClick={() => clearIds()}>Click here to back</span>
-          }
           <Row>
             {
               !!ids.contract_id || contracts.map(c => <ContractItem
                 key={c._id}
                 roomId={ids.room_id}
                 contract={c}
-                onClick={selectContract.bind(this, c._id)}
+                onClick={selectContract(c._id)}
               />)
             }
             {
+              !!ids.contract_id && <Col span={24}>
+                <Card className='gx-card back-bar'>
+                  <i className='fas fa-arrow-left action back-contract' onClick={() => clearIds()}/>
+                  <span className='gx-toolbar-separator'>&nbsp;</span>
+                  <span>Contract #{ids.contract_id.substring(ids.contract_id.length - 4, ids.contract_id.length)}</span>
+                </Card>
+              </Col>
+            }
+            {
               !!ids.contract_id && _.map(bills, bill => (
-                <Col span={6}>
+                <Col span={8}>
                   <BillItem
                     key={bill._id}
                     bill={bill}
