@@ -12,7 +12,7 @@ import BillItem from '../modules/BillItem'
 // Hooks
 import { useList, useStore } from 'hooks'
 
-export default function Contract({ loading }) {
+export default function Contract({ lastElect }) {
   const [contracts, setContracts, updateContracts] = useList([])
   const [bills, setBills, updateBills, resetBills] = useList([])
   const [ids, repIds, setIds, clearIds] = useStore({ room_id: null, contract_id: null })
@@ -25,23 +25,21 @@ export default function Contract({ loading }) {
     }
   }, [bills])
 
-  const getLastElectric = useCallback(async() => {
-    if (ids.contract_id) {
-      let electricNumber = await apiContract.getElectric(ids)
-      setLastElectricNumber(electricNumber)
-    }
-  }, [ids])
+  // const getLastElectric = useCallback(async() => {
+  //   if (ids.contract_id) {
+  //     let electricNumber = await apiContract.getElectric(ids)
+  //     setLastElectricNumber(electricNumber)
+  //   }
+  // }, [ids])
 
-  useEffect(() => { getLastElectric() }, [getLastElectric])
+  // useEffect(() => { getLastElectric() }, [getLastElectric])
 
   const selectRoom = useCallback(async(room_id) => {
-    loading(true)
     let contracts = await apiContract.get({ room_id })
     setContracts(contracts)
     setIds({ contract_id: null, room_id })
     resetBills()
-    loading(false)
-  }, [loading, resetBills, setContracts, setIds])
+  }, [resetBills, setContracts, setIds])
 
   const hdUpdateBill = useCallback(bill => {
     updateBills(bill)
@@ -50,19 +48,17 @@ export default function Contract({ loading }) {
   }, [updateBills])
 
   const selectContract = useCallback(contract_id => async() => {
-    loading(true)
     let contract = await apiContract.get({ room_id: ids.roomId, contract_id })
     const orderedBill = contract.bill_id.sort((a, b) => moment(a).diff(moment(b)))
     setBills(orderedBill)
     repIds({ contract_id: contract._id })
-    loading(false)
-  }, [loading, ids.roomId, setBills, repIds])
+  }, [ids.roomId, setBills, repIds])
 
   return (
     <div className='manage-contract'>
       <Row>
         <Col span={5}>
-          <ContractSidebar loading={loading} onSelectRoom={selectRoom}>
+          <ContractSidebar onSelectRoom={selectRoom}>
             <ContractModal
               onPostCreate={updateContracts}
               roomId={ids.room_id}

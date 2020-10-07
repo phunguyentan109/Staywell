@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { apiBill } from 'constants/api'
 import _ from 'lodash'
 import { INPUT_OPTIONS } from '../modules/const'
-import GenerateBill from '../modules/GenerateBill'
+// import GenerateBill from '../modules/GenerateBill'
 
 function BillItem({ bill, apiParams, form, onAfterUpdate, lastNumber, allowGenerate, allowPayment }) {
   async function hdSubmit() {
@@ -87,7 +87,7 @@ function BillItem({ bill, apiParams, form, onAfterUpdate, lastNumber, allowGener
             </div>
             <div>Deadline on <b>{bill.deadline}</b></div>
           </div>
-          { allowGenerate && <GenerateBill /> }
+          {/*{ allowGenerate && <GenerateBill /> }*/}
         </div>
       </div>
     </Card>

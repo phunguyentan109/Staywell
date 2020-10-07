@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Switch, Redirect, withRouter } from 'react-router-dom'
+import { Switch, Redirect, withRouter, Route } from 'react-router-dom'
 import { PermissionRouter } from 'containers/Permissions'
 
 // Views
@@ -15,16 +15,8 @@ function AppRoutes(props) {
   const url = props.match.url
   return (
     <Switch>
-      <PermissionRouter
-        path={`${url}/contracts`}
-        component={Contract}
-        access={['OWNER_PM']}
-      />
-      <PermissionRouter
-        path={`${url}/rooms`}
-        component={Room}
-        access={['OWNER_PM']}
-      />
+      <Route path={`${url}/contracts`} component={Contract} />
+      <Route path={`${url}/rooms`} component={Room} />
       <PermissionRouter
         path={`${url}/people`}
         component={People}
