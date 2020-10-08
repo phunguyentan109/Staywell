@@ -19,7 +19,7 @@ export {
 
 const prefix = '/api/'
 
-export async function api(url, method = 'get', data) {
+export async function call(url, method = 'get', data) {
   try {
     let rs = await axios[method](`${prefix}${url}`, data)
     if (rs.status !== 200) notify('error', 'Oops! Something went wrong...')
@@ -32,7 +32,7 @@ export async function api(url, method = 'get', data) {
 
 ///// API LIST DEFINITION //////////////////////////////////////////////////////
 /* Contract */
-export const contract = {
+export const contractApi = {
   get: roomId => [`rooms/${roomId}/contracts`],
   getOne: (roomId, contractId) => [`rooms/${roomId}/contracts/${contractId}`],
   getElectric: (roomId, contractId) => [`rooms/${roomId}/contracts/${contractId}/latest_electric`],
@@ -41,7 +41,7 @@ export const contract = {
 }
 
 /* Room */
-export const room = {
+export const roomApi = {
   get: () => ['rooms'],
   create: () => ['rooms', 'post'],
   getOne: roomId => [`rooms/${roomId}`],
@@ -51,7 +51,7 @@ export const room = {
 }
 
 /* User */
-export const user = {
+export const userApi = {
   get: () => ['user'],
   getOne: userId => [`user/${userId}`],
   available: () => ['user/available'],
@@ -65,7 +65,7 @@ export const user = {
 }
 
 /* Price */
-export const price = {
+export const priceApi = {
   get: () => ['price'],
   create: () => ['price', 'post'],
   getOne: priceId => [`price/${priceId}`],
@@ -74,7 +74,7 @@ export const price = {
 }
 
 /* Bill */
-export const bill = {
+export const billApi = {
   generate: (contractId, billId) => [`contracts/${contractId}/bills/${billId}`, 'post'],
   updatePayment: (contractId, billId) => [`contracts/${contractId}/bills/${billId}`, 'put']
 }
