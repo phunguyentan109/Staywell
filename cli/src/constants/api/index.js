@@ -72,3 +72,9 @@ export const price = {
   remove: priceId => [`price/${priceId}`, 'delete'],
   update: priceId => [`price/${priceId}`, 'post']
 }
+
+/* Bill */
+export const bill = {
+  generate: (contractId, billId) => [`contracts/${contractId}/bills/${billId}`, 'post'],
+  updatePayment: (contractId, billId) => [`contracts/${contractId}/bills/${billId}`, 'put']
+}
