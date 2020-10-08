@@ -34,7 +34,8 @@ export function setTokenHeader(token) {
 
 export async function apiCall({ method, url, data }, throwErr) {
   try {
-    return (await axios[method || 'get'](url, data)).data
+    let rs = await axios[method || 'get'](url, data)
+    return rs.data
   } catch (err) {
     if (throwErr) return err.response.data
     notify('error')
@@ -42,14 +43,14 @@ export async function apiCall({ method, url, data }, throwErr) {
   }
 }
 
-export async function apiFdCall(method, url, data) {
-  try {
-    return (await axios({
-      method, url, data,
-      headers: { 'content-type': 'multipart/form-data' }
-    })).data
-  } catch (err) {
-    notify('error')
-    console.error(err)
-  }
-}
+// export async function apiFdCall(method, url, data) {
+//   try {
+//     return (await axios({
+//       method, url, data,
+//       headers: { 'content-type': 'multipart/form-data' }
+//     })).data
+//   } catch (err) {
+//     notify('error')
+//     console.error(err)
+//   }
+// }
