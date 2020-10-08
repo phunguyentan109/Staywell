@@ -33,13 +33,42 @@ export async function api(url, method = 'get', data) {
 ///// API LIST DEFINITION //////////////////////////////////////////////////////
 /* Contract */
 export const contract = {
-  get: roomId => `/${roomId}/contracts`,
-  getOne: (roomId, contractId) => `/${roomId}/contracts/${contractId}`,
-  getElectric: (roomId, contractId) => `/${roomId}/contracts/${contractId}/latest_electric`,
-  remove: (roomId, contractId) => `/${roomId}/contracts/${contractId}`,
-  create: roomId => `/${roomId}/contracts`
+  get: roomId => [`rooms/${roomId}/contracts`],
+  getOne: (roomId, contractId) => [`rooms/${roomId}/contracts/${contractId}`],
+  getElectric: (roomId, contractId) => [`rooms/${roomId}/contracts/${contractId}/latest_electric`],
+  remove: (roomId, contractId) => [`rooms/${roomId}/contracts/${contractId}`, 'delete'],
+  create: roomId => [`rooms/${roomId}/contracts`, 'post']
 }
 
 /* Room */
+export const room = {
+  get: () => ['rooms'],
+  create: () => ['rooms', 'post'],
+  getOne: roomId => [`rooms/${roomId}`],
+  remove: roomId => [`rooms/${roomId}`, 'delete'],
+  update: roomId => [`rooms/${roomId}`, 'put'],
+  assign: roomId => [`rooms/${roomId}/assign`, 'put']
+}
+
 /* User */
+export const user = {
+  get: () => ['user'],
+  getOne: userId => [`user/${userId}`],
+  available: () => ['user/available'],
+  auth: type => [`user/${type}`, 'post'],
+  forgot: () => ['user/forgot', 'post'],
+  remove: userId => [`user/${userId}`, 'delete'],
+  update: userId => [`user/${userId}`, 'put'],
+  activate: userId => [`user/${userId}/activate`, 'put'],
+  reset: token => [`user/${token}/reset`, 'put'],
+  password: userId => [`user/${userId}/password`, 'put']
+}
+
 /* Price */
+export const price = {
+  get: () => ['price'],
+  create: () => ['price', 'post'],
+  getOne: priceId => [`price/${priceId}`],
+  remove: priceId => [`price/${priceId}`, 'delete'],
+  update: priceId => [`price/${priceId}`, 'post']
+}
