@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Switch, Redirect, withRouter } from 'react-router-dom'
+import { Switch, Redirect, withRouter, Route } from 'react-router-dom'
 import { PermissionRouter } from 'containers/Permissions'
 
 // Views
@@ -25,11 +25,7 @@ function AppRoutes(props) {
         component={Room}
         access={['OWNER_PM']}
       />
-      <PermissionRouter
-        path={`${url}/people`}
-        component={People}
-        access={['OWNER_PM']}
-      />
+      <Route path={`${url}/people`} component={People}/>
       <PermissionRouter
         path={`${url}/price`}
         component={Price}
