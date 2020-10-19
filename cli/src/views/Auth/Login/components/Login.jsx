@@ -1,26 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import AuthInput from 'components/Auth/AuthInput'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
-export default function Login({ message, sendAuthData, addMessage }) {
-  const [account, setAccount] = useState({
-    email: '',
-    password: ''
-  })
-
-  useEffect(() => { return () => addMessage() }, [addMessage])
-
-  function hdSubmit(e) {
-    e.preventDefault()
-    sendAuthData('login', account)
-  }
-
-  function hdChange(e) {
-    const { value, name } = e.target
-    setAccount(prev => ({ ...prev, [name]: value }))
-  }
-
+export default function Login({ message, hdSubmit, hdChange, account }) {
   return (
     <div className='content'>
       <h1>Welcome to Staywell,</h1>
@@ -56,12 +39,7 @@ export default function Login({ message, sendAuthData, addMessage }) {
 
 Login.propTypes = {
   message: PropTypes.string,
-  negative: PropTypes.bool,
-  sendAuthData: PropTypes.func,
-  addMessage: PropTypes.func
-}
-
-Login.defaultProps = {
-  message: '',
-  negative: false
+  hdSubmit: PropTypes.func,
+  hdChange: PropTypes.func,
+  account: PropTypes.object,
 }
