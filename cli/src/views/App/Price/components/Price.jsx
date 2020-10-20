@@ -6,36 +6,39 @@ import DeleteAction from 'components/DeleteAction'
 import { PRICE_COLS } from '../modules/const'
 import { FormModal } from '../modules/ModalAction'
 import { createCreateModal, createEditModal } from 'components/Modal'
+import Loading from 'components/Loading'
 
 const CreateModal = createCreateModal('Add new price', 'Enter price\'s information')
 const EditModal = createEditModal('Edit', 'Edit price\'s information')
 
-function Price({ hdCreate, clearPrice, hdChange, price, setPrice, listPrice, hdRemove, hdEdit }) {
+function Price({ hdCreate, clearPrice, hdChange, price, setPrice, listPrice, hdRemove, hdEdit, loadRef }) {
   return (
-    <Card className='gx-card' title='List of available price'>
-      <CreateModal onSubmit={hdCreate} onClick={clearPrice}>
-        <FormModal onChange={hdChange} price={price}/>
-      </CreateModal>
-      <Table
-        className='gx-table-responsive'
-        dataSource={listPrice}
-        rowKey='_id'
-        columns={[
-          ...PRICE_COLS,
-          {
-            title: 'Action',
-            key: 'action',
-            render: (text, record) => <>
-              <DeleteAction onConfirm={hdRemove.bind(this, record._id)}/>
-              <Divider type='vertical'/>
-              <EditModal onClick={() => setPrice(record)} onSubmit={hdEdit}>
-                <FormModal onChange={hdChange} price={price}/>
-              </EditModal>
-            </>
-          }
-        ]}
-      />
-    </Card>
+    <Loading ref={loadRef}>
+      <Card className='gx-card' title='List of available price'>
+        <CreateModal onSubmit={hdCreate} onClick={clearPrice}>
+          <FormModal onChange={hdChange} price={price}/>
+        </CreateModal>
+        <Table
+          className='gx-table-responsive'
+          dataSource={listPrice}
+          rowKey='_id'
+          columns={[
+            ...PRICE_COLS,
+            {
+              title: 'Action',
+              key: 'action',
+              render: (text, record) => <>
+                <DeleteAction onConfirm={hdRemove.bind(this, record._id)}/>
+                <Divider type='vertical'/>
+                <EditModal onClick={() => setPrice(record)} onSubmit={hdEdit}>
+                  <FormModal onChange={hdChange} price={price}/>
+                </EditModal>
+              </>
+            }
+          ]}
+        />
+      </Card>
+    </Loading>
   )
 }
 
@@ -49,5 +52,6 @@ Price.propTypes = {
   setPrice: PropTypes.func, 
   listPrice: PropTypes.array, 
   hdRemove: PropTypes.func, 
-  hdEdit: PropTypes.func
+  hdEdit: PropTypes.func,
+  loadRef: PropTypes.object, 
 }

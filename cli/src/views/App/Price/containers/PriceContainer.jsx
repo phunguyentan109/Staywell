@@ -1,5 +1,4 @@
-import React, { useEffect, useCallback } from 'react'
-import PropTypes from 'prop-types'
+import React, { useRef, useEffect, useCallback } from 'react'
 
 import useList from 'hooks/useList'
 import useInitState from 'hooks/useInitState'
@@ -7,16 +6,17 @@ import Price from '../components/Price'
 import { DEFAULT_PRICE } from '../modules/const'
 import { notify, priceApi, call } from 'constants/api'
 
-function PriceContainer({ loading }) {
+function PriceContainer() {
   const [listPrice, setListPrice, updateListPrice] = useList([])
   const [price, setPrice, clearPrice] = useInitState(DEFAULT_PRICE)
+  const loadRef = useRef()
 
   const load = useCallback(async() => {
-    // let priceData = await apiPrice.get()
     let priceData = await call(...priceApi.get())
+    loadRef.current.toggle()
     priceData.status === 200 && setListPrice(priceData.data)
-    loading(false)
-  }, [setListPrice, loading])
+    loadRef.current.toggle()
+  }, [setListPrice])
 
   useEffect(() => { load() }, [load])
 
@@ -26,26 +26,28 @@ function PriceContainer({ loading }) {
   }, [setPrice])
 
   const hdEdit = useCallback(async () => {
-    // let data = await apiPrice.update({ price_id: price._id, data: price })
     let data = await call(...priceApi.update(price._id), price)
+    loadRef.current.toggle()
     updateListPrice(data)
+    loadRef.current.toggle()
     notify('success')
   }, [price, updateListPrice])
 
   const hdCreate = useCallback(async () => {
-    // let data = await apiPrice.create({ data: price })
     let data = await call(...priceApi.create(), price)
+    loadRef.current.toggle()
     updateListPrice(data)
+    loadRef.current.toggle()
   }, [price, updateListPrice])
 
   const hdRemove = useCallback(async (price_id) => {
-    loading(true)
+    loadRef.current.toggle()
     await call(...priceApi.remove(price_id))
     let updatePriceList = listPrice.filter(v => v._id !== price_id)
     setListPrice(updatePriceList)
     notify('success', 'Price data is removed successfully')
-    loading(false)
-  }, [listPrice, loading, setListPrice])
+    loadRef.current.toggle()
+  }, [listPrice, setListPrice])
 
   return (
     <Price
@@ -57,12 +59,9 @@ function PriceContainer({ loading }) {
       hdCreate={hdCreate}
       hdRemove={hdRemove}
       clearPrice={clearPrice}
+      loadRef={loadRef}
     />
   )
 }
 
 export default PriceContainer
-
-PriceContainer.propTypes = {
-  loading: PropTypes.func,
-}

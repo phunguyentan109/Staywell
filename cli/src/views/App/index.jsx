@@ -30,6 +30,7 @@ function AppRoutes(props) {
         path={`${url}/price`}
         component={Price}
         access={['OWNER_PM']}
+        useCommon={false}
       />
       <PermissionRouter
         path={`${url}/profile`}
