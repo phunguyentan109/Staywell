@@ -13,7 +13,6 @@ import _ from 'lodash'
 
 function* hdAuthData({ value }) {
   const type = _.get(value, 'params', '')
-  // let auth = yield call(apiUser.auth, value, true)
   let auth = yield call(customCall, ...userApi.auth(value.type), value.data)
   auth = auth.data
 

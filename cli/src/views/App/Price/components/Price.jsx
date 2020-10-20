@@ -1,55 +1,16 @@
-import React, { useEffect, useCallback } from 'react'
+import React, { memo } from 'react'
 import { Card, Table, Divider } from 'antd'
 import PropTypes from 'prop-types'
 
-import { apiPrice, notify } from 'constants/api'
 import DeleteAction from 'components/DeleteAction'
-import { DEFAULT_PRICE, PRICE_COLS } from '../modules/const'
-import useList from 'hooks/useList'
+import { PRICE_COLS } from '../modules/const'
 import { FormModal } from '../modules/ModalAction'
-import useInitState from 'hooks/useInitState'
 import { createCreateModal, createEditModal } from 'components/Modal'
 
 const CreateModal = createCreateModal('Add new price', 'Enter price\'s information')
 const EditModal = createEditModal('Edit', 'Edit price\'s information')
 
-export default function Price({ loading }) {
-  const [listPrice, setListPrice, updateListPrice] = useList([])
-  const [price, setPrice, clearPrice] = useInitState(DEFAULT_PRICE)
-
-  const load = useCallback(async() => {
-    let priceData = await apiPrice.get()
-    setListPrice(priceData)
-    loading(false)
-  }, [setListPrice, loading])
-
-  useEffect(() => { load() }, [load])
-
-  function hdChange(e) {
-    let { value, name } = e.target
-    setPrice(prev => ({ ...prev, [name]: value }))
-  }
-
-  async function hdEdit() {
-    let data = await apiPrice.update({ price_id: price._id, data: price })
-    updateListPrice(data)
-    notify('success')
-  }
-
-  async function hdCreate() {
-    let data = await apiPrice.create({ data: price })
-    updateListPrice(data)
-  }
-
-  async function hdRemove(price_id) {
-    loading(true)
-    await apiPrice.remove({ price_id })
-    let updatePriceList = listPrice.filter(v => v._id !== price_id)
-    setListPrice(updatePriceList)
-    notify('success', 'Price data is removed successfully')
-    loading(false)
-  }
-
+function Price({ hdCreate, clearPrice, hdChange, price, setPrice, listPrice, hdRemove, hdEdit }) {
   return (
     <Card className='gx-card' title='List of available price'>
       <CreateModal onSubmit={hdCreate} onClick={clearPrice}>
@@ -78,13 +39,15 @@ export default function Price({ loading }) {
   )
 }
 
-Price.propTypes = {
-  notify: PropTypes.func,
-  loading: PropTypes.func,
-  visible: PropTypes.bool,
-  toggle: PropTypes.func
-}
+export default memo(Price)
 
-Price.defaultProps = {
-  visible: false
+Price.propTypes = {
+  hdCreate: PropTypes.func, 
+  clearPrice: PropTypes.func, 
+  hdChange: PropTypes.func, 
+  price: PropTypes.object, 
+  setPrice: PropTypes.func, 
+  listPrice: PropTypes.array, 
+  hdRemove: PropTypes.func, 
+  hdEdit: PropTypes.func
 }

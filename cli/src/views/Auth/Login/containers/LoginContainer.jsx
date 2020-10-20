@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, memo } from 'react'
 import Login from '../components/Login'
 import { connect } from 'react-redux'
 import { sendAuthData } from 'appRedux/actions/user'
@@ -38,7 +38,7 @@ function mapState({ message }) {
   }
 }
 
-export default connect(mapState, { sendAuthData, addMessage })(LoginContainer)
+export default connect(mapState, { sendAuthData, addMessage })(memo(LoginContainer))
 
 LoginContainer.propTypes = {
   negative: PropTypes.bool,

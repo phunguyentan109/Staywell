@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { memo } from 'react'
 import AuthInput from 'components/Auth/AuthInput'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
-export default function Login({ message, hdSubmit, hdChange, account }) {
+function Login({ message, hdSubmit, hdChange, account }) {
   return (
     <div className='content'>
       <h1>Welcome to Staywell,</h1>
@@ -36,6 +36,8 @@ export default function Login({ message, hdSubmit, hdChange, account }) {
     </div>
   )
 }
+
+export default memo(Login)
 
 Login.propTypes = {
   message: PropTypes.string,

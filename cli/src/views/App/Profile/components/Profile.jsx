@@ -1,66 +1,19 @@
-import React, { useEffect, useCallback, useRef } from 'react'
+import React, { memo } from 'react'
 import { Col, Row, Card, Form, Input, Button, DatePicker } from 'antd'
 import PropTypes from 'prop-types'
 import moment from 'moment'
-import _ from 'lodash'
 
 import About from 'components/profile/About'
 import Contact from 'components/profile/Contact'
 import ProfileHeader from 'components/profile/ProfileHeader'
 import { PermissionRender } from 'containers/Permissions'
 import Auxiliary from 'util/Auxiliary'
-import { apiUser, notify } from 'constants/api'
-import { DEFAULT_PROFILE, PROFILE_INPUT, PASSWORD_INPUT } from '../modules/const'
-import useInitState from 'hooks/useInitState'
+import { PROFILE_INPUT, PASSWORD_INPUT } from '../modules/const'
 import Loading from 'components/Loading'
 
 const FormItem = Form.Item
 
-export default function Profile({ user, sendReloadUser }) {
-  const [profile, setProfile, clearProfile] = useInitState(DEFAULT_PROFILE)
-  const loadRef = useRef()
-
-  const load = useCallback(() => {
-    loadRef.current.toggle()
-    setProfile(user)
-    loadRef.current.toggle()
-   
-  }, [setProfile, user])
-
-  useEffect(() => { load() }, [load])
-
-  async function changePassword() {
-    loadRef.current.toggle()
-    let { change, confirm, current } = profile
-    if (current && change && change === confirm) {
-      await apiUser.password({ user_id: user._id, data: { password: change } })
-      clearProfile('current', 'change', 'confirm')
-      notify('success', 'Your password has been updated.')
-    } else {
-      notify('error', 'Please entered valid information.')
-    }
-    loadRef.current.toggle()
-  }
-
-  function hdChange(e) {
-    const { name, value } = e.target
-    setProfile(prev => ({ ...prev, [name]: value }))
-  }
-
-  async function hdUpdateProfile() {
-    loadRef.current.toggle()
-    if (profile.email) {
-      let keys = ['email', 'job', 'phone', 'birthDay']
-      await apiUser.update({ user_id: user._id, data: _.pick(profile, keys) })
-      sendReloadUser(user._id)
-      clearProfile(...keys)
-      notify('success', 'Your profile has been updated successfully.')
-    } else {
-      notify('error', 'Please entered valid information.')
-    }
-    loadRef.current.toggle()
-  }
-
+function Profile({ user, profile, hdChange, hdUpdateProfile, changePassword, loadRef }) {
   return (
     <Loading ref={loadRef}>
       <Auxiliary>
@@ -99,8 +52,8 @@ export default function Profile({ user, sendReloadUser }) {
                   >
                     <DatePicker
                       className='gx-mb-3 gx-w-100'
-                      onChange={birthDay => setProfile(prev => ({ ...prev, birthDay }))}
-                      value={moment(profile.birthDay)}
+                      onChange={hdChange}
+                      value={moment(profile.birthDate)}
                     />
                   </FormItem>
                   <Button type='primary' onClick={hdUpdateProfile}>Save changes</Button>
@@ -141,13 +94,27 @@ export default function Profile({ user, sendReloadUser }) {
   )
 }
 
+export default memo(Profile)
+
 Profile.propTypes = {
   user: PropTypes.object,
-  role: PropTypes.object,
-  loading: PropTypes.func,
-  sendReloadUser: PropTypes.func
+  profile: PropTypes.object, 
+  hdChange: PropTypes.func, 
+  hdUpdateProfile: PropTypes.func, 
+  changePassword: PropTypes.func, 
+  loadRef: PropTypes.object
 }
 
 Profile.defaultProps = {
-  user: { _id: '' }
+  user: { 
+    _id: '',
+    username: '',
+    avatar: {
+      link: ''
+    },
+    job: '',
+    birthDate: '',
+    phone:'',
+    email: ''
+  }
 }
