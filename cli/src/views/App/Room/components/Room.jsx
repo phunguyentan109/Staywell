@@ -16,28 +16,28 @@ import useInitState from 'hooks/useInitState'
 const CreateModal = createCreateModal('Add new room', 'Enter room\'s information')
 const EditModal = createEditModal('Edit', 'Edit room\'s information')
 
-export default function Room ({ loading }) {
-  const [rooms, setRooms, updateRooms] = useList([])
+export default function Room ({ rooms, price }) {
+  // const [rooms, setRooms, updateRooms] = useList([])
   const [room, setRoom, clearRoom] = useInitState(DEFAULT_ROOM)
-  const [price, setPrice] = useState([])
+  // const [price, setPrice] = useState([])
 
-  const load = useCallback(async() => {
-    let roomData = await apiRoom.get()
-    let priceData = await apiPrice.get()
-    setPrice(priceData)
-    setRooms(roomData)
-    loading(false)
-  }, [loading, setRooms])
+  // const load = useCallback(async() => {
+  //   let roomData = await apiRoom.get()
+  //   let priceData = await apiPrice.get()
+  //   setPrice(priceData)
+  //   setRooms(roomData)
+  //   loading(false)
+  // }, [loading, setRooms])
 
-  useEffect(() => { load() }, [load])
-
-  async function hdRemove(room_id) {
-    loading(true)
-    await apiRoom.remove({ room_id })
-    setRooms(_.filter(rooms, r => r._id !== room_id))
-    notify('success', 'The room information is removed successfully!')
-    loading(false)
-  }
+  // useEffect(() => { load() }, [load])
+  //
+  // async function hdRemove(room_id) {
+  //   loading(true)
+  //   await apiRoom.remove({ room_id })
+  //   setRooms(_.filter(rooms, r => r._id !== room_id))
+  //   notify('success', 'The room information is removed successfully!')
+  //   loading(false)
+  // }
 
   function hdSelect(room) {
     let price_id = _.get(room, 'price_id._id', '')
@@ -46,17 +46,17 @@ export default function Room ({ loading }) {
 
   const hdCollect = collect => setRoom(prev => ({ ...prev, ...collect }))
 
-  async function hdCreate() {
-    let rs = await apiRoom.create({ data: room })
-    updateRooms(rs)
-    notify('success', 'Room\'s list is updated successfully')
-  }
-
-  async function hdEdit() {
-    let rs = await apiRoom.update({ room_id: room._id, data: room })
-    updateRooms(rs)
-    notify('success', 'Room\'s list is updated successfully')
-  }
+  // async function hdCreate() {
+  //   let rs = await apiRoom.create({ data: room })
+  //   updateRooms(rs)
+  //   notify('success', 'Process\'s completed. Room\'s list is updated successfully')
+  // }
+  //
+  // async function hdEdit() {
+  //   let rs = await apiRoom.update({ room_id: room._id, data: room })
+  //   updateRooms(rs)
+  //   notify('success', 'Room\'s list is updated successfully')
+  // }
 
   return (
     <Card className='gx-card' title='List of available rooms'>
@@ -103,6 +103,8 @@ export default function Room ({ loading }) {
 }
 
 Room.propTypes = {
+  rooms: PropTypes.array,
+  price: PropTypes.array,
   loading: PropTypes.func,
   visible: PropTypes.object,
   setVisible: PropTypes.func,
