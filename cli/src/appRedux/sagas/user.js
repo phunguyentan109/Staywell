@@ -5,7 +5,7 @@ import {
   SEND_RELOAD_USER,
   ACTIVATED_USER
 } from 'constants/ActionTypes'
-import { apiUser, userApi, call as customCall } from 'constants/api'
+import { apiUser, userApi, call as apiCall } from 'constants/api'
 import { setTokenHeader } from 'constants/api/call'
 import { addUser } from 'appRedux/actions/user'
 import { addMessage } from 'appRedux/actions/message'
@@ -13,13 +13,12 @@ import _ from 'lodash'
 
 function* hdAuthData({ value }) {
   const type = _.get(value, 'params', '')
-  let auth = yield call(customCall, ...userApi.auth(value.type), value.data)
-  auth = auth.data
+  let auth = yield call(apiCall, ...userApi.auth(value.type), value.data)
+  const { data: { token, errorMsg, ...user } } = auth
 
   // If error, then finish here
-  if (auth.errorMsg) return yield put(addMessage(auth.errorMsg), value)
+  if (errorMsg) return yield put(addMessage(errorMsg), value)
     
-  const { token, ...user } = auth
   setTokenHeader(token)
   localStorage.setItem('swtoken', token)
   sessionStorage.setItem('auth', JSON.stringify(user))

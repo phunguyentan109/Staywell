@@ -10,7 +10,11 @@ function PeopleContainer(props) {
 
   const getPeople = useCallback(async() => {
     let rs = await call(...userApi.get())
-    rs.status === 200 && setPeople(rs.data)
+    if (rs.status === 200) {
+      setPeople(rs.data)
+    } else {
+      notify('error', 'Something wrong. Can\'t get people data.')
+    }
   }, [])
 
   const load = useCallback(async() => {
@@ -26,6 +30,8 @@ function PeopleContainer(props) {
     if (rs.status === 200) {
       setPeople(prev => prev.filter(p => p.user_id._id !== peopleId))
       notify('success', 'People data is removed successfully.')
+    } else {
+      notify('error', 'Something wrong. Can\'t remove people.')
     }
   }, [])
 
