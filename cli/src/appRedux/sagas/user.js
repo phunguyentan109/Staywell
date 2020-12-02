@@ -14,12 +14,11 @@ import _ from 'lodash'
 function* hdAuthData({ value }) {
   const type = _.get(value, 'params', '')
   let auth = yield call(customCall, ...userApi.auth(value.type), value.data)
-  auth = auth.data
+  const { data: { token, errorMsg, ...user } } = auth
 
   // If error, then finish here
-  if (auth.errorMsg) return yield put(addMessage(auth.errorMsg), value)
+  if (errorMsg) return yield put(addMessage(errorMsg), value)
     
-  const { token, ...user } = auth
   setTokenHeader(token)
   localStorage.setItem('swtoken', token)
   sessionStorage.setItem('auth', JSON.stringify(user))

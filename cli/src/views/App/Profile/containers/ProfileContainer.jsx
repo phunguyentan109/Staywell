@@ -27,9 +27,13 @@ function ProfileContainer({ user, sendReloadUser }) {
     loadRef.current.toggle()
     let { change, confirm, current } = profile
     if (current && change && change === confirm) {
-      await call(...userApi.password(user._id), { current, change })
-      clearProfile('current', 'change', 'confirm')
-      notify('success', 'Your password has been updated.')
+      const data = await call(...userApi.password(user._id), { current, change })
+      if (data.status === 200) {
+        clearProfile('current', 'change', 'confirm')
+        notify('success', 'Your password has been updated.')
+      } else {
+        notify('error', 'Something wrong. Can\'t update your password.')
+      }
     } else {
       notify('error', 'Please entered valid information.')
     }
@@ -49,10 +53,14 @@ function ProfileContainer({ user, sendReloadUser }) {
     loadRef.current.toggle()
     if (profile.email) {
       let keys = ['email', 'job', 'phone', 'birthDate']
-      await call(...userApi.update(user._id), _.pick(profile, keys))
-      sendReloadUser(user._id)
-      clearProfile(...keys)
-      notify('success', 'Your profile has been updated successfully.')
+      const data = await call(...userApi.update(user._id), _.pick(profile, keys))
+      if (data.status === 200) {
+        sendReloadUser(user._id)
+        clearProfile(...keys)
+        notify('success', 'Your profile has been updated successfully.')
+      } else {
+        notify('error', 'Something wrong. Can\'t update your profile.')
+      }
     } else {
       notify('error', 'Please entered valid information.')
     }
