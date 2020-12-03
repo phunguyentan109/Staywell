@@ -10,8 +10,8 @@ function RoomFormContainer({ api, updateRooms }) {
   async function hdSubmit(room) {
     try {
       loadRef.current.toggle()
-      let createdRoom = await call(...api, room)
-      updateRooms(createdRoom)
+      let submitRoom = await call(...api, room)
+      updateRooms(submitRoom)
     } catch (e) {
       console.error(e)
       notify('error')
