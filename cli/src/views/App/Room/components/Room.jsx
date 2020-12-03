@@ -4,10 +4,10 @@ import PropTypes from 'prop-types'
 import _ from 'lodash'
 
 import DeleteAction from 'components/DeleteAction'
-// import { apiPrice, apiRoom, notify } from 'constants/api'
+import { roomApi } from 'constants/api'
 import { DEFAULT_ROOM } from '../modules/const'
 import TableTransfer from '../modules/TableTransfer'
-import { createEditModal, createCreateModal } from 'components/Modal'
+import { createEditModal } from 'components/Modal'
 import RoomForm from '../modules/RoomForm'
 
 // import useList from 'hooks/useList'
@@ -60,11 +60,13 @@ export default function Room ({ rooms, updateRooms }) {
 
   return (
     <Card className='gx-card' title='List of available rooms'>
-      {/*<CreateModal onClick={clearRoom} onSubmit={hdCreate}>*/}
-      <RoomForm room={room} title={'Enter room\'s information'}>
+      <RoomForm
+        room={room}
+        title={'Enter room\'s information'}
+        api={roomApi.create()}
+      >
         <Button type='primary'>Add new room</Button>
       </RoomForm>
-      {/*</CreateModal>*/}
       <Table
         className='gx-table-responsive'
         dataSource={rooms}

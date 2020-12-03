@@ -1,24 +1,34 @@
-import React from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { Form, Input, Modal, Select } from 'antd'
 import PropTypes from 'prop-types'
-import { useToggle } from 'hooks'
+import { useStore, useToggle } from 'hooks'
 
 const FormItem = Form.Item
 const Option = Select.Option
 
-export default function RoomForm({ room, price, hdSubmit, title, children }) {
+export default function RoomForm({ value, price, hdSubmit, title, children, getPrice }) {
+  const [room, repRoom] = useStore({ name: '', price_id: '' })
   const [pair, togglePair] = useToggle({ modal: false, process: false })
 
-  function hdChange(e) {
+  useEffect(() => {
+    value && repRoom(value)
+  }, [repRoom, value])
+
+  const hdChange = useCallback(e => {
     const { name, value } = e.target
-    // onCollect({ [name]: value })
-  }
+    repRoom({ [name]: value })
+  }, [repRoom])
+
+  const toggleModal = useCallback(async() => {
+    if (!pair.modal) await getPrice()
+    togglePair(['modal'])
+  }, [getPrice, pair.modal, togglePair])
 
   const hdSelectPrice = price_id => console.log({ price_id })
 
   return (
     <>
-      <span onClick={() => togglePair(['modal'])}>{children}</span>
+      <span onClick={toggleModal}>{children}</span>
       <Modal
         title={title}
         visible={pair.modal}
@@ -67,10 +77,11 @@ export default function RoomForm({ room, price, hdSubmit, title, children }) {
 RoomForm.propTypes = {
   show: PropTypes.bool,
   children: PropTypes.any,
-  onShow: PropTypes.func,
+  getPrice: PropTypes.func,
   title: PropTypes.string,
   onCollect: PropTypes.func,
   hdSubmit: PropTypes.func,
   price: PropTypes.array,
-  room: PropTypes.object
+  loadRef: PropTypes.object,
+  value: PropTypes.object
 }
