@@ -1,35 +1,41 @@
-import React, { useRef } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import RoomForm from '../component/RoomForm'
 import Loading from 'components/Loading'
 import PropTypes from 'prop-types'
-import { notify, call } from 'constants/api'
+import { notify, call, priceApi } from 'constants/api'
 
-function RoomFormContainer({ api, updateRooms }) {
+function RoomFormContainer({ api, updateRooms, ...props }) {
   const loadRef = useRef({})
+  const [price, setPrice] = useState([])
 
-  async function hdSubmit(room) {
-    try {
-      loadRef.current.toggle()
-      let submitRoom = await call(...api, room)
-      updateRooms(submitRoom)
-    } catch (e) {
-      console.error(e)
-      notify('error')
-    } finally {
-      loadRef.current.toggle()
-    }
+  const hdSubmit = useCallback(async(room) => {
+    loadRef.current.toggle()
+    let submitRoom = await call(...api, room)
+    updateRooms(submitRoom)
     notify('success', 'Process\'s completed. Room\'s list is updated successfully')
-  }
+    loadRef.current.toggle()
+  }, [api, updateRooms])
+
+  const getPrice = useCallback(async() => {
+    loadRef.current.toggle()
+    let priceData = await call(...priceApi.get())
+    setPrice(priceData)
+    loadRef.current.toggle()
+  }, [])
 
   // async function hdEdit() {
   //   let rs = await apiRoom.update({ room_id: room._id, data: room })
   //   updateRooms(rs)
   //   notify('success', 'Room\'s list is updated successfully')
   // }
-
   return (
     <Loading ref={loadRef}>
-      <RoomForm hdSubmit={hdSubmit} />
+      <RoomForm
+        {...props}
+        hdSubmit={hdSubmit}
+        price={price}
+        getPrice={getPrice}
+      />
     </Loading>
   )
 }
@@ -39,4 +45,4 @@ RoomFormContainer.propTypes = {
   updateRooms: PropTypes.func
 }
 
-export default RoomForm
+export default RoomFormContainer

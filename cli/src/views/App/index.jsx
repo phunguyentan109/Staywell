@@ -20,11 +20,12 @@ function AppRoutes(props) {
         component={Contract}
         access={['OWNER_PM']}
       />
-      <PermissionRouter
-        path={`${url}/rooms`}
-        component={Room}
-        access={['OWNER_PM']}
-      />
+      {/*<PermissionRouter*/}
+      {/*  path={`${url}/rooms`}*/}
+      {/*  component={Room}*/}
+      {/*  access={['OWNER_PM']}*/}
+      {/*/>*/}
+      <Route path={`${url}/rooms`} component={Room}/>
       <Route path={`${url}/people`} component={People}/>
       <PermissionRouter
         path={`${url}/price`}
