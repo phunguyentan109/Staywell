@@ -1,27 +1,26 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import RoomForm from '../component/RoomForm'
 import PropTypes from 'prop-types'
 import { call, priceApi } from 'constants/api'
-import { notify, tgLoading } from 'constants/func'
+import { notify, onLoading, offLoading } from 'constants/func'
 
 function RoomFormContainer({ api, updateRooms, ...props }) {
-  const loadRef = useRef({})
   const [price, setPrice] = useState([])
 
   const hdSubmit = useCallback(async(room) => {
-    loadRef.current.toggle()
+    onLoading()
     let submitRoom = await call(...api, room)
     updateRooms(submitRoom)
     notify('success', 'Process\'s completed. Room\'s list is updated successfully')
-    loadRef.current.toggle()
+    offLoading()
   }, [api, updateRooms])
 
   const getPrice = useCallback(async() => {
-    tgLoading()
+    onLoading()
     let rs = await call(...priceApi.get())
     if (rs.status !== 200) return notify('error')
     setPrice(rs.data)
-    tgLoading()
+    offLoading()
   }, [])
 
   return (

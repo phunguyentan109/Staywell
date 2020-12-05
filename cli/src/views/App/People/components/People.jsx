@@ -1,7 +1,7 @@
-import React, { useEffect, useCallback, useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
-import { apiUser, notify } from 'constants/api'
+// import { apiUser, notify } from 'constants/api'
 import { PEOPLE_PM, INACTIVE_PM } from 'containers/Permissions/modules/const'
 import PeopleTable from '../modules/PeopleTable'
 

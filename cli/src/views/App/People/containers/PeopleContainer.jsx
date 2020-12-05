@@ -1,29 +1,23 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import People from '../components/People'
-import Loading from 'components/Loading'
 import { userApi, call } from 'constants/api'
-import { notify } from 'constants/func'
+import { notify, offLoading, onLoading } from 'constants/func'
 
 function PeopleContainer(props) {
-  const loadRef = useRef({})
   const [people, setPeople] = useState([])
 
   const getPeople = useCallback(async() => {
+    onLoading()
     let rs = await call(...userApi.get())
     if (rs.status === 200) {
       setPeople(rs.data)
     } else {
       notify('error', 'Something wrong. Can\'t get people data.')
     }
+    offLoading()
   }, [])
 
-  const load = useCallback(async() => {
-    loadRef.current.toggle()
-    await getPeople()
-    loadRef.current.toggle()
-  }, [getPeople])
-
-  useEffect(() => { load() }, [load])
+  useEffect(() => { getPeople() }, [getPeople])
 
   const hdRemove = useCallback(async(peopleId) => {
     let rs = await userApi.remove(peopleId)
@@ -36,13 +30,11 @@ function PeopleContainer(props) {
   }, [])
 
   return (
-    <Loading ref={loadRef}>
-      <People
-        {...props}
-        people={people}
-        hdRemove={hdRemove}
-      />
-    </Loading>
+    <People
+      {...props}
+      people={people}
+      hdRemove={hdRemove}
+    />
   )
 }
 

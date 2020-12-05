@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from 'react'
 import Room from '../components/Room'
 import { useList } from 'hooks'
 import { roomApi, call } from 'constants/api'
-import { notify, tgLoading } from 'constants/func'
+import { notify, onLoading, offLoading } from 'constants/func'
 
 function RoomContainer() {
   const [rooms, setRooms, updateRooms] = useList([])
@@ -14,8 +14,9 @@ function RoomContainer() {
   }, [setRooms])
 
   const load = useCallback(async() => {
+    onLoading()
     await getRooms()
-    tgLoading()
+    offLoading()
   }, [getRooms])
 
   useEffect(() => { load() }, [load])
