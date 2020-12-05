@@ -1,43 +1,37 @@
-import React, { useRef, useEffect, useCallback, memo } from 'react'
+import React, { useEffect, useCallback, memo } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
 
-import { notify, userApi, call } from 'constants/api'
+import { userApi, call } from 'constants/api'
 import Profile from '../components/Profile'
 import { sendReloadUser } from 'appRedux/actions/user'
 import useInitState from 'hooks/useInitState'
 import { DEFAULT_PROFILE } from '../modules/const'
-
+import { notify, offLoading, onLoading } from 'constants/func'
 
 function ProfileContainer({ user, sendReloadUser }) {
   const [profile, setProfile, clearProfile] = useInitState(DEFAULT_PROFILE)
-  const loadRef = useRef()
 
   const load = useCallback(() => {
-    loadRef.current.toggle()
+    onLoading()
     setProfile(user)
-    loadRef.current.toggle()
-   
+    offLoading()
   }, [setProfile, user])
 
   useEffect(() => { load() }, [load])
 
   const changePassword = useCallback(async () => {
-    loadRef.current.toggle()
+    onLoading()
     let { change, confirm, current } = profile
     if (current && change && change === confirm) {
-      const data = await call(...userApi.password(user._id), { current, change })
-      if (data.status === 200) {
-        clearProfile('current', 'change', 'confirm')
-        notify('success', 'Your password has been updated.')
-      } else {
-        notify('error', 'Something wrong. Can\'t update your password.')
-      }
+      await call(...userApi.password(user._id), { current, change })
+      clearProfile('current', 'change', 'confirm')
+      notify('success', 'Your password has been updated.')
     } else {
       notify('error', 'Please entered valid information.')
     }
-    loadRef.current.toggle()
+    offLoading()
   }, [clearProfile, profile, user._id])
 
   const hdChange = useCallback((e) => {
@@ -50,21 +44,17 @@ function ProfileContainer({ user, sendReloadUser }) {
   }, [setProfile])
 
   const hdUpdateProfile = useCallback(async () => {
-    loadRef.current.toggle()
+    onLoading()
     if (profile.email) {
       let keys = ['email', 'job', 'phone', 'birthDate']
-      const data = await call(...userApi.update(user._id), _.pick(profile, keys))
-      if (data.status === 200) {
-        sendReloadUser(user._id)
-        clearProfile(...keys)
-        notify('success', 'Your profile has been updated successfully.')
-      } else {
-        notify('error', 'Something wrong. Can\'t update your profile.')
-      }
+      await call(...userApi.update(user._id), _.pick(profile, keys))
+      sendReloadUser(user._id)
+      clearProfile(...keys)
+      notify('success', 'Your profile has been updated successfully.')
     } else {
       notify('error', 'Please entered valid information.')
     }
-    loadRef.current.toggle()
+    offLoading()
   }, [clearProfile, profile, sendReloadUser, user._id])
 
   return (
@@ -75,7 +65,6 @@ function ProfileContainer({ user, sendReloadUser }) {
       hdChange={hdChange}
       hdUpdateProfile={hdUpdateProfile}
       changePassword={changePassword}
-      loadRef={loadRef}
     />
   )
 }

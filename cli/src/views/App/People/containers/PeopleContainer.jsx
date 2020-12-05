@@ -20,6 +20,7 @@ function PeopleContainer(props) {
   useEffect(() => { getPeople() }, [getPeople])
 
   const hdRemove = useCallback(async(peopleId) => {
+    onLoading()
     let rs = await userApi.remove(peopleId)
     if (rs.status === 200) {
       setPeople(prev => prev.filter(p => p.user_id._id !== peopleId))
@@ -27,6 +28,7 @@ function PeopleContainer(props) {
     } else {
       notify('error', 'Something wrong. Can\'t remove people.')
     }
+    offLoading()
   }, [])
 
   return (

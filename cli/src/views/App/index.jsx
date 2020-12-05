@@ -24,18 +24,8 @@ function AppRoutes(props) {
         />
         <Route path={`${url}/rooms`} component={Room}/>
         <Route path={`${url}/people`} component={People}/>
-        <PermissionRouter
-          path={`${url}/price`}
-          component={Price}
-          access={['OWNER_PM']}
-          useCommon={false}
-        />
-        <PermissionRouter
-          path={`${url}/profile`}
-          component={Profile}
-          access={['OWNER_PM', 'PEOPLE_PM']}
-          useCommon={false}
-        />
+        <Route path={`${url}/price`} component={Price}/>
+        <Route path={`${url}/profile`} component={Profile}/>
         <Route path={url} component={Dashboard}/>
         <Redirect from={props.location.pathname} to={url}/>
       </Switch>
