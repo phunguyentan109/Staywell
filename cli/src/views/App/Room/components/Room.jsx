@@ -2,7 +2,7 @@ import React from 'react'
 import { Card, Table, Divider, Button } from 'antd'
 import PropTypes from 'prop-types'
 import DeleteAction from 'components/DeleteAction'
-// import TableTransfer from '../modules/TableTransfer'
+import TableTransfer from '../modules/TableTransfer'
 import RoomForm from '../modules/RoomForm'
 
 import { roomApi, call } from 'constants/api'
@@ -61,7 +61,9 @@ export default function Room ({ rooms, updateRooms }) {
                   <span className='gx-link'>Edit</span>
                 </RoomForm>
                 <Divider type='vertical'/>
-                {/*<TableTransfer people={record.user_id} roomId={record._id} updateRooms={updateRooms}/>*/}
+                <TableTransfer room={record} updateRooms={updateRooms}>
+                  <span className='gx-link'>Assign</span>
+                </TableTransfer>
               </>
             )
           }

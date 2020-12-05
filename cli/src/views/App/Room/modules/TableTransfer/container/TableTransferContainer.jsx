@@ -1,20 +1,36 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useState } from 'react'
 import TableTransfer from '../components/TableTransfer'
-import { PropTypes } from 'victory'
+import PropTypes from 'prop-types'
+import { offLoading, onLoading } from 'constants/func'
+import { roomApi, call, userApi } from 'constants/api'
 
-function TableTransferContainer ({ people, ...props }) {
-  useEffect(() => {
-    load()
-    setCheckedIn(people.map(u => u._id))
-  }, [load, people])
+function TableTransferContainer (props) {
+  const { room } = props
+  const [avails, setAvails] = useState([])
+
+  const getAvailable = useCallback(async() => {
+    onLoading()
+    let rs = await call(...userApi.available())
+    if (rs.status === 200) setAvails(rs.data)
+    offLoading()
+  }, [])
+
+  const hdAssign = useCallback(async(data) => {
+    return await call(...roomApi.assign(room._id), data)
+  }, [room._id])
 
   return (
-    <TableTransfer {...props} />
+    <TableTransfer
+      {...props}
+      getAvailable={getAvailable}
+      avails={avails}
+      hdAssign={hdAssign}
+    />
   )
 }
 
 TableTransferContainer.propTypes = {
-  people: PropTypes.array
+  room: PropTypes.object
 }
 
 export default TableTransferContainer
