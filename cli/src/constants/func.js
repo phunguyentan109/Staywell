@@ -3,7 +3,7 @@ import _ from 'lodash'
 
 const CASES = {
   error: { msg: 'Process is not completed. Please try again!' },
-  success: { msg: 'Everything\'s done' }
+  success: { msg: 'Process\'s completed successfully.' }
 }
 
 export function notify(type, description) {

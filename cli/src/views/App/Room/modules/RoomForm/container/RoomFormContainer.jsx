@@ -9,17 +9,19 @@ function RoomFormContainer({ api, updateRooms, ...props }) {
 
   const hdSubmit = useCallback(async(room) => {
     onLoading()
-    let submitRoom = await call(...api, room)
-    updateRooms(submitRoom)
-    notify('success', 'Process\'s completed. Room\'s list is updated successfully')
+    let rs = await call(...api, room)
+    if (rs.status === 200) {
+      updateRooms(rs.data)
+      notify('success')
+    }
     offLoading()
+    return rs
   }, [api, updateRooms])
 
   const getPrice = useCallback(async() => {
     onLoading()
     let rs = await call(...priceApi.get())
-    if (rs.status !== 200) return notify('error')
-    setPrice(rs.data)
+    if (rs.status === 200) setPrice(rs.data)
     offLoading()
   }, [])
 

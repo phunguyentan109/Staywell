@@ -1,69 +1,29 @@
 import React from 'react'
 import { Card, Table, Divider, Button } from 'antd'
 import PropTypes from 'prop-types'
-import _ from 'lodash'
-
 import DeleteAction from 'components/DeleteAction'
-import { roomApi } from 'constants/api'
-import { DEFAULT_ROOM } from '../modules/const'
 import TableTransfer from '../modules/TableTransfer'
-import { createEditModal } from 'components/Modal'
 import RoomForm from '../modules/RoomForm'
 
-// import useList from 'hooks/useList'
-import useInitState from 'hooks/useInitState'
-
-// const CreateModal = createCreateModal('Add new room', 'Enter room\'s information')
-const EditModal = createEditModal('Edit', 'Edit room\'s information')
+import { roomApi, call } from 'constants/api'
+import { offLoading, onLoading, notify } from 'constants/func'
 
 export default function Room ({ rooms, updateRooms }) {
-  // const [rooms, setRooms, updateRooms] = useList([])
-  const [room, setRoom, clearRoom] = useInitState(DEFAULT_ROOM)
-  // const [price, setPrice] = useState([])
 
-  // const load = useCallback(async() => {
-  //   let roomData = await apiRoom.get()
-  //   let priceData = await apiPrice.get()
-  //   setPrice(priceData)
-  //   setRooms(roomData)
-  //   loading(false)
-  // }, [loading, setRooms])
-
-  // useEffect(() => { load() }, [load])
-  //
-  async function hdRemove(room_id) {
-    // loading(true)
-    // await apiRoom.remove({ room_id })
-    // setRooms(_.filter(rooms, r => r._id !== room_id))
-    // notify('success', 'The room information is removed successfully!')
-    // loading(false)
-  }
-
-  function hdSelect(room) {
-    let price_id = _.get(room, 'price_id._id', '')
-    setRoom({ ..._.cloneDeep(room), price_id })
-  }
-
-  const hdCollect = collect => setRoom(prev => ({ ...prev, ...collect }))
-
-  // async function hdCreate() {
-  //   let rs = await apiRoom.create({ data: room })
-  //   updateRooms(rs)
-  //   notify('success', 'Process\'s completed. Room\'s list is updated successfully')
-  // }
-  //
-  async function hdEdit() {
-    // let rs = await apiRoom.update({ room_id: room._id, data: room })
-    // updateRooms(rs)
-    // notify('success', 'Room\'s list is updated successfully')
+  async function hdRemove(room) {
+    onLoading()
+    await call(...roomApi.remove(room._id))
+    updateRooms(room, true)
+    notify('success', 'The room information is removed successfully!')
+    offLoading()
   }
 
   return (
     <Card className='gx-card' title='List of available rooms'>
       <RoomForm
-        room={room}
         title={'Enter room\'s information'}
         api={roomApi.create()}
+        updateRooms={updateRooms}
       >
         <Button type='primary'>Add new room</Button>
       </RoomForm>
@@ -90,12 +50,17 @@ export default function Room ({ rooms, updateRooms }) {
             key: 'action',
             render: (text, record) => (
               <>
-                <DeleteAction onConfirm={hdRemove.bind(this, record._id)}/>
+                <DeleteAction onConfirm={() => hdRemove(record)}/>
                 <Divider type='vertical'/>
-                {/*<EditModal onSubmit={hdEdit} onClick={hdSelect.bind(this, record)}>*/}
-                {/*  <RoomForm onCollect={hdCollect} room={room} listPrice={price}/>*/}
-                {/*</EditModal>*/}
-                {/*<Divider type='vertical'/>*/}
+                <RoomForm
+                  value={record}
+                  title={'Edit room\'s information'}
+                  api={roomApi.update(record._id)}
+                  updateRooms={updateRooms}
+                >
+                  <span className='gx-link'>Edit</span>
+                </RoomForm>
+                <Divider type='vertical'/>
                 <TableTransfer people={record.user_id} roomId={record._id} updateRooms={updateRooms}/>
               </>
             )
@@ -109,7 +74,6 @@ export default function Room ({ rooms, updateRooms }) {
 Room.propTypes = {
   rooms: PropTypes.array,
   price: PropTypes.array,
-  // loading: PropTypes.func,
   updateRooms: PropTypes.func,
   visible: PropTypes.object,
   setVisible: PropTypes.func,

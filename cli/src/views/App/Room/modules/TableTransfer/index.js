@@ -1,2 +1,2 @@
-import TableTransfer from './components/TableTransfer'
+import TableTransfer from './container/TableTransferContainer'
 export default TableTransfer

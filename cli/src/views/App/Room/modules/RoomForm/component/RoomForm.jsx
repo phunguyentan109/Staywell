@@ -1,17 +1,21 @@
 import React, { useCallback, useEffect } from 'react'
 import { Form, Input, Modal, Select } from 'antd'
 import PropTypes from 'prop-types'
+import _ from 'lodash'
 import { useStore, useToggle } from 'hooks'
 
 const FormItem = Form.Item
 const Option = Select.Option
 
 export default function RoomForm({ value, price, hdSubmit, title, children, getPrice }) {
-  const [room, repRoom] = useStore({ name: '', price_id: '' })
+  const [room, repRoom] = useStore({ name: '' })
   const [pair, togglePair] = useToggle({ modal: false, process: false })
 
   useEffect(() => {
-    value && repRoom(value)
+    value && repRoom({
+      name: value.name,
+      price_id: _.get(value, 'price_id._id')
+    })
   }, [repRoom, value])
 
   const hdChange = useCallback(e => {
@@ -24,7 +28,12 @@ export default function RoomForm({ value, price, hdSubmit, title, children, getP
     togglePair(['modal'])
   }, [getPrice, pair.modal, togglePair])
 
-  const hdSelectPrice = price_id => console.log({ price_id })
+  const hdOk = useCallback(async() => {
+    togglePair(['process'])
+    let rs = await hdSubmit(room)
+    rs.status === 200 && togglePair(['modal'])
+    togglePair(['process'])
+  }, [hdSubmit, room, togglePair])
 
   return (
     <>
@@ -33,7 +42,7 @@ export default function RoomForm({ value, price, hdSubmit, title, children, getP
         title={title}
         visible={pair.modal}
         onCancel={() => togglePair(['modal'])}
-        onOk={hdSubmit}
+        onOk={hdOk}
         confirmLoading={pair.process}
       >
         <Form layout='horizontal'>
@@ -58,7 +67,7 @@ export default function RoomForm({ value, price, hdSubmit, title, children, getP
               mode='single'
               style={{ width: '100%' }}
               placeholder='Pick a price'
-              onChange={hdSelectPrice}
+              onChange={price_id => repRoom({ price_id })}
               value={room.price_id}
             >
               {

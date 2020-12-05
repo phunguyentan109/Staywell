@@ -5,7 +5,7 @@ import { roomApi, call } from 'constants/api'
 import { notify, onLoading, offLoading } from 'constants/func'
 
 function RoomContainer() {
-  const [rooms, setRooms, updateRooms] = useList([])
+  const [rooms, setRooms, updateRooms] = useList([], true)
 
   const getRooms = useCallback(async() => {
     let rs = await call(...roomApi.get())
