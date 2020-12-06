@@ -35,12 +35,10 @@ function ProfileContainer({ user, sendReloadUser }) {
   }, [clearProfile, profile, user._id])
 
   const hdChange = useCallback((e) => {
-    if (e._isAMomentObject) {
-      setProfile(prev => ({ ...prev, birthDate: e }))
-    } else {
-      const { name, value } = e.target
-      setProfile(prev => ({ ...prev, [name]: value }))
-    }
+    const { name, value } = e.target
+    e._isAMomentObject
+      ? setProfile(prev => ({ ...prev, birthDate: e }))
+      : setProfile(prev => ({ ...prev, [name]: value }))
   }, [setProfile])
 
   const hdUpdateProfile = useCallback(async () => {
