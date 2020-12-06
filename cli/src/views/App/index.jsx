@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Switch, Redirect, withRouter, Route } from 'react-router-dom'
-import { PermissionRouter } from 'containers/Permissions'
 import Loading from 'components/Loading'
 
 // Views
@@ -17,11 +16,7 @@ function AppRoutes(props) {
   return (
     <Loading>
       <Switch>
-        <PermissionRouter
-          path={`${url}/contracts`}
-          component={Contract}
-          access={['OWNER_PM']}
-        />
+        <Route path={`${url}/contracts`} component={Contract}/>
         <Route path={`${url}/rooms`} component={Room}/>
         <Route path={`${url}/people`} component={People}/>
         <Route path={`${url}/price`} component={Price}/>

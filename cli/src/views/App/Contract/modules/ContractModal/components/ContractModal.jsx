@@ -1,14 +1,16 @@
 import React, { useState, useCallback } from 'react'
-import { Form, Input, DatePicker } from 'antd'
+import { Form, Input, DatePicker, Button, Modal } from 'antd'
 import moment from 'moment'
-import ContractAction from '../modules/ContractAction'
+// import ContractAction from '../modules/ContractAction'
 import { apiContract } from 'constants/api'
 import { getInitDate, formItemLayout } from '../modules/const'
 import PropTypes from 'prop-types'
+import { useToggle } from 'hooks'
 
 const FormItem = Form.Item
 
-function ContractModal({ onPostCreate, roomId, tgProps }) {
+function ContractModal({ onPostCreate, roomId }) {
+  const [pairs, togglePairs] = useToggle({ modal: false, process: false })
   const [contract, setContract] = useState({
     electric: 0,
     from: getInitDate(),
@@ -38,8 +40,19 @@ function ContractModal({ onPostCreate, roomId, tgProps }) {
   }
 
   return (
-    <ContractAction onSubmit={hdSubmit} tgProps={tgProps}>
-      <>
+    <>
+      <div className='gx-module-add-task'>
+        <Button variant='raised' type='primary' className='gx-btn-block'>
+          <span className='icon icon-add-circle'/>NEW CONTRACT
+        </Button>
+      </div>
+      <Modal
+        title='Open new contract'
+        visible={pairs.modal}
+        onCancel={() => togglePairs(['modal'])}
+        onOk={hdSubmit}
+        confirmLoading={pairs.process}
+      >
         <FormItem
           {...formItemLayout}
           label='Initial electric number'
@@ -79,8 +92,8 @@ function ContractModal({ onPostCreate, roomId, tgProps }) {
             value={contract.duration}
           />
         </FormItem>
-      </>
-    </ContractAction>
+      </Modal>
+    </>
   )
 }
 
