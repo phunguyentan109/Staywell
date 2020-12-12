@@ -4,10 +4,11 @@ import { Card, Row, Col } from 'antd'
 import _ from 'lodash'
 
 // Modules
-import ContractSidebar from '../modules/ContractSidebar'
-import ContractModal from '../modules/ContractModal'
+import ContractForm from '../modules/ContractForm'
 import ContractItem from '../modules/ContractItem'
 import BillItem from '../modules/BillItem'
+import ContractRooms from '../modules/ContractRooms'
+import { FILTERS } from '../modules/const'
 
 export default function Contract({ contracts, bills, selectContract, selectRoom, lastElectric, hdUpdateBill, ids, clearIds }) {
   const nextGenerateAllowId = useMemo(() => {
@@ -21,13 +22,35 @@ export default function Contract({ contracts, bills, selectContract, selectRoom,
     <div className='manage-contract'>
       <Row>
         <Col span={5}>
-          <ContractSidebar onSelectRoom={selectRoom}>
-            <ContractModal
+          <Card className='gx-card contract-sidebar'>
+            <div className='gx-module-side-header'>
+              <div className='gx-module-logo'>
+                <i className='icon icon-wysiwyg gx-mr-3'/>
+                <span>Contract Options</span>
+              </div>
+            </div>
+            <ContractForm
               onPostCreate={selectContract}
               roomId={ids.room_id}
               tgProps={{ disabled: !!ids.roomId }}
             />
-          </ContractSidebar>
+            <ul className='gx-module-nav'>
+              <ContractRooms onSelectRoom={selectRoom} />
+              <div className='section-wrapper'>
+                <div>Status Filters</div>
+                {
+                  _.map(FILTERS, (f, i) => (
+                    <li onClick={() => {}} key={i}>
+                      <span className='gx-link'>
+                        <i className='icon icon-chart-pie'/>
+                        <span>{f}</span>
+                      </span>
+                    </li>
+                  ))
+                }
+              </div>
+            </ul>
+          </Card>
         </Col>
         <Col span={19}>
           <Card className='gx-card action-bar'>

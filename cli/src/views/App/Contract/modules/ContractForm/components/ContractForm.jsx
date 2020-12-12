@@ -1,17 +1,16 @@
-import React, { useState, useCallback } from 'react'
+import React, { useCallback } from 'react'
 import { Form, Input, DatePicker, Button, Modal } from 'antd'
 import moment from 'moment'
-// import ContractAction from '../modules/ContractAction'
-import { apiContract } from 'constants/api'
+import { contractApi, call } from 'constants/api'
 import { getInitDate, formItemLayout } from '../modules/const'
 import PropTypes from 'prop-types'
-import { useToggle } from 'hooks'
+import { useToggle, useStore } from 'hooks'
 
 const FormItem = Form.Item
 
-function ContractModal({ onPostCreate, roomId }) {
+function ContractForm({ onPostCreate, roomId }) {
   const [pairs, togglePairs] = useToggle({ modal: false, process: false })
-  const [contract, setContract] = useState({
+  const [contract, repContract] = useStore({
     electric: 0,
     from: getInitDate(),
     duration: 0
@@ -20,29 +19,32 @@ function ContractModal({ onPostCreate, roomId }) {
   const hdSubmit = useCallback(async() => {
     const { electric, from, duration } = contract
     let data = { info: { electric, from }, duration }
-    let createdContract = await apiContract.create({ room_id: roomId, data })
+    let createdContract = await call(...contractApi.create(roomId), data)
     onPostCreate(createdContract)
   }, [roomId, contract, onPostCreate])
 
-  function hdChange(e) {
+  const hdChange = useCallback(e => {
     const { name, value } = e.target
-    setContract(prev => ({ ...prev, [name]: value }))
-  }
+    repContract({ [name]: value })
+  }, [repContract])
 
-  function hdChangeDate(from) {
-    setContract({ ...contract, from })
-  }
+  const hdChangeDate = useCallback(from => repContract({ from }), [repContract])
 
-  function disabledDate(current) {
+  const disabledDate = useCallback(current => {
     let startMonth = moment().startOf('month')
     let dayTenth = moment(current).startOf('month').add(10, 'day')
     return current < startMonth || current > dayTenth
-  }
+  }, [])
 
   return (
     <>
       <div className='gx-module-add-task'>
-        <Button variant='raised' type='primary' className='gx-btn-block'>
+        <Button
+          variant='raised'
+          type='primary'
+          className='gx-btn-block'
+          onClick={() => togglePairs(['modal'])}
+        >
           <span className='icon icon-add-circle'/>NEW CONTRACT
         </Button>
       </div>
@@ -97,14 +99,14 @@ function ContractModal({ onPostCreate, roomId }) {
   )
 }
 
-export default ContractModal
+export default ContractForm
 
-ContractModal.propTypes = {
+ContractForm.propTypes = {
   tgProps: PropTypes.object,
   onPostCreate: PropTypes.func,
   roomId: PropTypes.string
 }
 
-ContractModal.defaultProps = {
+ContractForm.defaultProps = {
   tgProps: {}
 }
