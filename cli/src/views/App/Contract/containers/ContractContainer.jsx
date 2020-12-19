@@ -9,12 +9,12 @@ import moment from 'moment'
 function ContractContainer() {
   const [contracts, setContracts, updateContracts] = useList([])
   const [lastElectricNumber, setLastElectricNumber] = useState(0)
-  const [bills, setBills, updateBills, resetBills] = useList([], true)
-  const [ids, repIds, setIds, clearIds] = useStore({ room_id: null, contract_id: null })
+  const [bills, setBills, updateBills] = useList([], true)
+  const [ids, repIds, setIds] = useStore({ room_id: null, contract_id: null })
 
   const getLastElectric = useCallback(async() => {
     if (ids.contract_id) {
-      let rs = await call(...contractApi.getElectric(ids))
+      let rs = await call(...contractApi.getElectric(ids.room_id, ids.contract_id))
       if (rs.status === 200) setLastElectricNumber(rs.data)
     }
   }, [ids])
@@ -27,10 +27,10 @@ function ContractContainer() {
     if (rs.status === 200) {
       setContracts(rs.data)
       setIds({ contract_id: null, room_id })
-      resetBills()
+      setBills([])
     }
     offLoading()
-  }, [resetBills, setContracts, setIds])
+  }, [setBills, setContracts, setIds])
 
   const hdUpdateBill = useCallback(bill => {
     updateBills(bill)
@@ -52,7 +52,7 @@ function ContractContainer() {
     contracts={contracts}
     bills={bills}
     ids={ids}
-    clearIds={clearIds}
+    repIds={repIds}
     lastElectric={lastElectricNumber}
     selectRoom={selectRoom}
     hdUpdateBill={hdUpdateBill}

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
 
@@ -9,6 +9,10 @@ function ContractRooms({ rooms, onSelectRoom }) {
     setRoomId(roomId)
     onSelectRoom(roomId)
   }, [onSelectRoom])
+
+  useEffect(() => {
+    if (rooms.length > 0) hdSelect(rooms[0]._id)
+  }, [hdSelect, roomId, rooms])
 
   return (
     <div className='section-wrapper'>

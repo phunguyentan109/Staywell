@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import _ from 'lodash'
 
-export default function useList (_list = [], isObjectItem = false, identKey = '_id') {
+export default function useList (_list, isObjectItem = false, identKey = '_id') {
   const [list, setList] = useState(_list)
 
   const updateList = useCallback((item, forRemoveMode = false) => {
@@ -22,9 +22,5 @@ export default function useList (_list = [], isObjectItem = false, identKey = '_
     }
   }, [identKey, list])
 
-  const resetList = useCallback(() => {
-    setList(_list)
-  }, [_list])
-
-  return isObjectItem ? [list, setList, updateList, resetList] : [list, setList, resetList]
+  return isObjectItem ? [list, setList, updateList] : [list, setList]
 }

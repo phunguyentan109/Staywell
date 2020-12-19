@@ -10,7 +10,7 @@ import BillItem from '../modules/BillItem'
 import ContractRooms from '../modules/ContractRooms'
 import { FILTERS } from '../modules/const'
 
-export default function Contract({ contracts, bills, selectContract, selectRoom, lastElectric, hdUpdateBill, ids, clearIds }) {
+export default function Contract({ contracts, bills, selectContract, selectRoom, lastElectric, hdUpdateBill, ids, repIds }) {
   const nextGenerateAllowId = useMemo(() => {
     if (!!bills.length) {
       let nextGenerateBill = _.find(bills, b => !b.electric)
@@ -77,9 +77,14 @@ export default function Contract({ contracts, bills, selectContract, selectRoom,
                 <>
                   <Col span={24}>
                     <Card className='gx-card back-bar'>
-                      <i className='fas fa-arrow-left action back-contract' onClick={() => clearIds()}/>
+                      <i
+                        className='fas fa-arrow-left action back-contract'
+                        onClick={() => repIds({ contract_id: null })}
+                      />
                       <span className='gx-toolbar-separator'>&nbsp;</span>
-                      <span>Contract #{ids.contract_id.substring(ids.contract_id.length - 4, ids.contract_id.length)}</span>
+                      <span>
+                        Contract #{ids.contract_id.substring(ids.contract_id.length - 4, ids.contract_id.length)}
+                      </span>
                     </Card>
                   </Col>
                   {
@@ -109,6 +114,7 @@ export default function Contract({ contracts, bills, selectContract, selectRoom,
 Contract.propTypes = {
   bills: PropTypes.array,
   contracts: PropTypes.array,
+  repIds: PropTypes.func,
   selectRoom: PropTypes.func,
   lastElectric: PropTypes.number,
   ids: PropTypes.object,
