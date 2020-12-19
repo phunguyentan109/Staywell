@@ -4,7 +4,7 @@ export const DEFAULT_PROFILE = {
   email: '',
   job: '',
   phone:'',
-  birthDay: moment(),
+  birthDate: moment(),
   current: '',
   change: '',
   confirm: ''

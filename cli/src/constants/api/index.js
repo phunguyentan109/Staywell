@@ -70,7 +70,7 @@ export const priceApi = {
   create: () => ['price', 'post'],
   getOne: priceId => [`price/${priceId}`],
   remove: priceId => [`price/${priceId}`, 'delete'],
-  update: priceId => [`price/${priceId}`, 'post']
+  update: priceId => [`price/${priceId}`, 'put']
 }
 
 /* Bill */

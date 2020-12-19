@@ -1,56 +1,72 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
+import _ from 'lodash'
 
 import TransferConfig from './TransferConfig'
 import { TABLE_COLS } from '../../const'
-import { apiUser, apiRoom, notify } from 'constants/api'
-import { AssignModal } from '../../ModalAction'
+import { Modal } from 'antd'
+import { useToggle } from 'hooks'
+import { notify } from 'constants/func'
 
-export default function TableTransfer({ people, roomId, updateRooms }) {
-  const [available, setAvailable] = useState([])
+export default function TableTransfer({ room, avails, getAvailable, children, hdAssign, updateRooms }) {
   const [checkedIn, setCheckedIn] = useState([])
-
-  const load = useCallback(async() => {
-    let availablePeople = await apiUser.available()
-    setAvailable(availablePeople)
-  }, [])
+  const [pair, togglePair] = useToggle({ modal: false, process: false })
 
   useEffect(() => {
-    load()
-    setCheckedIn(people.map(u => u._id))
-  }, [load, people])
+    setCheckedIn(_.map(room.user_id, u => u._id))
+  }, [room.user_id])
 
-  async function hdAssign() {
-    let room = await apiRoom.assign({ room_id: roomId, data: { user_id: checkedIn } })
-    updateRooms(room)
-    notify('success', 'Room\'s list is updated successfully')
-  }
+  const toggleModal = useCallback(async() => {
+    if (!pair.modal) await getAvailable()
+    togglePair(['modal'])
+  }, [getAvailable, pair.modal, togglePair])
+
+  const hdOk = useCallback(async() => {
+    togglePair(['process'])
+    let rs = await hdAssign({ user_id: checkedIn })
+    if (rs.status === 200) {
+      updateRooms(rs.data)
+      notify('success')
+      togglePair(['modal'])
+    }
+    togglePair(['process'])
+  }, [checkedIn, hdAssign, togglePair, updateRooms])
 
   const hdFilter = (value, item) => item.username.includes(value) || item.email.includes(value)
 
   return (
-    <AssignModal onSubmit={hdAssign} width={1200}>
-      <TransferConfig
-        showSearch
-        dataSource={[...available, ...people]}
-        targetKeys={checkedIn}
-        onChange={ts => setCheckedIn(ts)}
-        filterOption={hdFilter}
-        leftTableColumns={TABLE_COLS}
-        rightTableColumns={TABLE_COLS}
-        rowKey={rec => rec._id}
-      />
-    </AssignModal>
+    <>
+      <span onClick={toggleModal}>{children}</span>
+      <Modal
+        width={1200}
+        title={'Room\'s people assignment'}
+        visible={pair.modal}
+        onCancel={() => togglePair(['modal'])}
+        onOk={hdOk}
+        confirmLoading={pair.process}
+      >
+        <TransferConfig
+          showSearch
+          dataSource={[...avails, ...room.user_id]}
+          targetKeys={checkedIn}
+          onChange={ts => setCheckedIn(ts)}
+          filterOption={hdFilter}
+          leftTableColumns={TABLE_COLS}
+          rightTableColumns={TABLE_COLS}
+          rowKey={rec => rec._id}
+        />
+      </Modal>
+    </>
   )
 }
 
 TableTransfer.propTypes = {
-  roomId: PropTypes.string,
-  notify: PropTypes.func,
-  visible: PropTypes.bool,
-  toggleModal: PropTypes.func,
+  getAvailable: PropTypes.func,
+  avails: PropTypes.array,
+  hdAssign: PropTypes.func,
+  children: PropTypes.any,
   updateRooms: PropTypes.func,
-  people: PropTypes.array
+  room: PropTypes.object
 }
 
 TableTransfer.defaultProps = {

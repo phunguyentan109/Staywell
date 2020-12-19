@@ -1,2 +1,2 @@
-import RoomForm from './components/RoomForm'
+import RoomForm from './container/RoomFormContainer'
 export default RoomForm
