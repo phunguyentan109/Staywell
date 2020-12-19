@@ -1,5 +1,4 @@
 import React, { useEffect, useCallback } from 'react'
-
 import useList from 'hooks/useList'
 import Price from '../components/Price'
 import { priceApi, call } from 'constants/api'

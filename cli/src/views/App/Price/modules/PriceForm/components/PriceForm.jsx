@@ -8,7 +8,7 @@ import { PRICE_INPUTS, DEFAULT_PRICE } from '../../const'
 const FormItem = Form.Item
 
 export default function PriceForm({ hdSubmit, children, title, value }) {
-  const [price, repPrice] = useStore(DEFAULT_PRICE)
+  const [price, repPrice] = useStore(_.cloneDeep(DEFAULT_PRICE))
   const [pair, togglePair] = useToggle({ modal: false, process: false })
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export default function PriceForm({ hdSubmit, children, title, value }) {
       repPrice({ type, electric, wifi, water, living, extra })
     }
   }, [repPrice, value])
-	
+
   const hdChange = useCallback(e => {
     const { name, value } = e.target
     repPrice({ [name]: value })
@@ -25,8 +25,8 @@ export default function PriceForm({ hdSubmit, children, title, value }) {
 
   const toggleModal = useCallback(() => {
     togglePair(['modal'])
-  }, [pair.modal, togglePair])
-	
+  }, [togglePair])
+
   const hdOk = useCallback(async() => {
     togglePair(['process'])
     let rs = await hdSubmit(price)

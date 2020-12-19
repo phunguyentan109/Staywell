@@ -18,10 +18,7 @@ export default function PriceFormContainer({ api, updateListPrice, ...props }) {
   }, [api, updateListPrice])
 
   return (
-    <PriceForm
-      {...props}
-      hdSubmit={hdSubmit}
-    />
+    <PriceForm {...props} hdSubmit={hdSubmit} />
   )
 }
 
