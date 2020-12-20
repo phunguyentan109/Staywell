@@ -1,15 +1,15 @@
 import React from 'react'
 import bg from 'assets/img/loginBg.jpg'
 
-import AuthNavbar from 'containers/Bar/Navbar'
-import AuthRoutes from 'views/Auth'
+import PublicNavbar from 'containers/Bar/Navbar'
+import PublicRoutes from 'views/Public'
 
-function AuthLayout() {
+function PublicLayout() {
   return (
     <div className='auth-bg' style={{ backgroundImage: `url(${bg})` }}>
       <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-        <AuthNavbar/>
-        <AuthRoutes/>
+        <PublicNavbar/>
+        <PublicRoutes/>
         <div className='auth-credit'>
           <p>©2019, designed and coded by Phu Nguyen</p>
           <p>
@@ -22,4 +22,4 @@ function AuthLayout() {
   )
 }
 
-export default AuthLayout
+export default PublicLayout

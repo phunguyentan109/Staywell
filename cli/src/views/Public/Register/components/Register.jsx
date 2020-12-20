@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import AuthInput from 'components/Auth/AuthInput'
+// import AuthInput from 'components/Auth/AuthInput'
 import PropTypes from 'prop-types'
 
 import { DEFAULT_ACCOUNT } from '../modules/const'
@@ -48,29 +48,29 @@ export default function Register({ message, negative, sendAuthData, addMessage }
         </div>
       }
       <form className='auth-form' onSubmit={hdSubmit}>
-        <AuthInput
-          placeholder='Email'
-          name='email'
-          icon='far fa-envelope'
-          value={account.email}
-          onChange={hdChange}
-        />
-        <AuthInput
-          type='password'
-          placeholder='Password'
-          name='password'
-          icon='fas fa-key'
-          value={account.password}
-          onChange={hdChange}
-        />
-        <AuthInput
-          type='password'
-          placeholder='Confirm Password'
-          name='cpassword'
-          icon='fas fa-key'
-          value={account.cpassword}
-          onChange={hdChange}
-        />
+        {/*<AuthInput*/}
+        {/*  placeholder='Email'*/}
+        {/*  name='email'*/}
+        {/*  icon='far fa-envelope'*/}
+        {/*  value={account.email}*/}
+        {/*  onChange={hdChange}*/}
+        {/*/>*/}
+        {/*<AuthInput*/}
+        {/*  type='password'*/}
+        {/*  placeholder='Password'*/}
+        {/*  name='password'*/}
+        {/*  icon='fas fa-key'*/}
+        {/*  value={account.password}*/}
+        {/*  onChange={hdChange}*/}
+        {/*/>*/}
+        {/*<AuthInput*/}
+        {/*  type='password'*/}
+        {/*  placeholder='Confirm Password'*/}
+        {/*  name='cpassword'*/}
+        {/*  icon='fas fa-key'*/}
+        {/*  value={account.cpassword}*/}
+        {/*  onChange={hdChange}*/}
+        {/*/>*/}
         <button className='signup' disabled={loading}>
           {
             loading
