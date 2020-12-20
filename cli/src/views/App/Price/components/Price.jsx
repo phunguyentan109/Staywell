@@ -1,21 +1,22 @@
 import React, { memo } from 'react'
-import { Card, Table, Divider } from 'antd'
+import { Card, Table, Divider, Button } from 'antd'
 import PropTypes from 'prop-types'
 
+import { priceApi } from 'constants/api'
 import DeleteAction from 'components/DeleteAction'
 import { PRICE_COLS } from '../modules/const'
-import { FormModal } from '../modules/ModalAction'
-import { createCreateModal, createEditModal } from 'components/Modal'
+import PriceForm from '../modules/PriceForm'
 
-const CreateModal = createCreateModal('Add new price', 'Enter price\'s information')
-const EditModal = createEditModal('Edit', 'Edit price\'s information')
-
-function Price({ hdCreate, clearPrice, hdChange, price, setPrice, listPrice, hdRemove, hdEdit }) {
+function Price({ listPrice, hdRemove, updateListPrice }) {
   return (
     <Card className='gx-card' title='List of available price'>
-      <CreateModal onSubmit={hdCreate} onClick={clearPrice}>
-        <FormModal onChange={hdChange} price={price}/>
-      </CreateModal>
+      <PriceForm
+        title={'Create price\'s information'}
+        api={priceApi.create()}
+        updateListPrice={updateListPrice}
+      >
+        <Button type='primary'>Add new price</Button>
+      </PriceForm>
       <Table
         className='gx-table-responsive'
         dataSource={listPrice}
@@ -25,12 +26,17 @@ function Price({ hdCreate, clearPrice, hdChange, price, setPrice, listPrice, hdR
           {
             title: 'Action',
             key: 'action',
-            render: (text, record) => <>
+            render: (_, record) => <>
               <DeleteAction onConfirm={hdRemove.bind(this, record._id)}/>
               <Divider type='vertical'/>
-              <EditModal onClick={() => setPrice(record)} onSubmit={hdEdit}>
-                <FormModal onChange={hdChange} price={price}/>
-              </EditModal>
+              <PriceForm
+                value={record}
+                title={'Edit price\'s information'}
+                api={priceApi.update(record._id)}
+                updateListPrice={updateListPrice}
+              >
+                <span className='gx-link'>Edit</span>
+              </PriceForm>
             </>
           }
         ]}
@@ -42,12 +48,7 @@ function Price({ hdCreate, clearPrice, hdChange, price, setPrice, listPrice, hdR
 export default memo(Price)
 
 Price.propTypes = {
-  hdCreate: PropTypes.func, 
-  clearPrice: PropTypes.func, 
-  hdChange: PropTypes.func, 
-  price: PropTypes.object, 
-  setPrice: PropTypes.func, 
-  listPrice: PropTypes.array, 
-  hdRemove: PropTypes.func, 
-  hdEdit: PropTypes.func,
+  listPrice: PropTypes.array,
+  updateListPrice: PropTypes.func,
+  hdRemove: PropTypes.func
 }
