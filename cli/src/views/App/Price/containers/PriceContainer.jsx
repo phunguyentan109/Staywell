@@ -30,7 +30,6 @@ function PriceContainer() {
       listPrice={listPrice}
       updateListPrice={updateListPrice}
       hdRemove={hdRemove}
-      priceApi={priceApi}
     />
   )
 }

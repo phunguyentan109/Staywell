@@ -25,7 +25,8 @@ export default function PriceForm({ hdSubmit, children, title, value }) {
 
   const toggleModal = useCallback(() => {
     togglePair(['modal'])
-  }, [togglePair])
+    repPrice(_.cloneDeep(DEFAULT_PRICE))
+  }, [repPrice, togglePair])
 
   const hdOk = useCallback(async() => {
     togglePair(['process'])

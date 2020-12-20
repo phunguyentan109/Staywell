@@ -2,11 +2,12 @@ import React, { memo } from 'react'
 import { Card, Table, Divider, Button } from 'antd'
 import PropTypes from 'prop-types'
 
+import { priceApi } from 'constants/api'
 import DeleteAction from 'components/DeleteAction'
 import { PRICE_COLS } from '../modules/const'
 import PriceForm from '../modules/PriceForm'
 
-function Price({ listPrice, hdRemove, updateListPrice, priceApi }) {
+function Price({ listPrice, hdRemove, updateListPrice }) {
   return (
     <Card className='gx-card' title='List of available price'>
       <PriceForm
@@ -47,8 +48,7 @@ function Price({ listPrice, hdRemove, updateListPrice, priceApi }) {
 export default memo(Price)
 
 Price.propTypes = {
-  listPrice: PropTypes.array, 
-  updateListPrice: PropTypes.func, 
-  hdRemove: PropTypes.func, 
-  priceApi: PropTypes.object,
+  listPrice: PropTypes.array,
+  updateListPrice: PropTypes.func,
+  hdRemove: PropTypes.func
 }
