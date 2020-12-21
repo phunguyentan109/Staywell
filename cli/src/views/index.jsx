@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 import { Switch, Route } from 'react-router-dom'
 
 import { PermissionRouter } from 'containers/Permissions'
-import AppLayout from 'containers/Layout/AppLayout'
-import AuthLayout from 'containers/Layout/AuthLayout'
+import AppLayout from 'layout/AppLayout'
+import PublicLayout from 'layout/PublicLayout'
 import Accessing from './Accessing'
 
 function RootRoutes({ user }) {
@@ -23,14 +23,14 @@ function RootRoutes({ user }) {
           path='/app'
           redirect='/'
           component={AppLayout}
-          access={['OWNER_PM', 'PEOPLE_PM']}
+          access={['OWNER_PM']}
           useCommon={false}
         />
         <PermissionRouter
           path='/'
           redirect='/app'
-          component={AuthLayout}
-          access={['GUEST_PM', 'INACTIVE_PM']}
+          component={PublicLayout}
+          access={['GUEST_PM']}
           useCommon={false}
         />
       </Switch>

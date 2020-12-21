@@ -3,10 +3,10 @@ const ROLES = require('./data')
 
 async function createRole(){
   try {
-    for(let role of ROLES){
+    for (let role of ROLES){
       await db.Role.create(role)
     }
-  } catch(err) {
+  } catch (err) {
     console.log(err)
   }
 }

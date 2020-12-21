@@ -7,10 +7,7 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  password: {
-    type: String,
-    required: true
-  },
+  password: String,
   email: {
     type: String,
     required: true,
@@ -40,11 +37,11 @@ const userSchema = mongoose.Schema({
 userSchema.pre('save', async function(next){
   try {
     //only hash the password if it is modified or new
-    if(!this.isModified('password')) return next()
+    if (!this.isModified('password')) return next()
 
     this.password = await bcrypt.hash(this.password, 10)
     return next()
-  } catch(err) {
+  } catch (err) {
     return next(err)
   }
 })
@@ -53,16 +50,16 @@ userSchema.pre('remove', async function(next){
   try {
     await db.UserRole.deleteMany({ user_id: this._id })
     return next()
-  } catch(err) {
+  } catch (err) {
     return next(err)
   }
 })
 
 userSchema.methods.comparePassword = async function(candidatePassword, next){
   try {
-    let isMatch = await bcrypt.compare(candidatePassword, this.password)
-    return isMatch
-  } catch(err) {
+    if (!this.password) return false
+    return await bcrypt.compare(candidatePassword, this.password)
+  } catch (err) {
     return next(err)
   }
 }

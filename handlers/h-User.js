@@ -38,6 +38,7 @@ exports.logIn = async(req, res, next) => {
     // compare password
     let match = await user.comparePassword(password)
     if (!match) return next({ status: 400, message: 'Invalid email/password.' })
+
     // get role of user
     let userRole = await db.UserRole.find({ user_id: _id }).populate('role_id').exec()
     let role = userRole.length > 0 ? userRole.map(u => u.role_id) : false

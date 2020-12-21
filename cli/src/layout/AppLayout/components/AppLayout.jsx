@@ -5,7 +5,7 @@ import AppLocale from 'lngProvider'
 import { ConfigProvider } from 'antd'
 import { IntlProvider } from 'react-intl'
 
-import Sidebar from 'containers/Sidebar/index'
+import Sidebar from 'containers/Sidebar'
 // import HorizontalDefault from 'containers/Topbar/HorizontalDefault/index'
 // import HorizontalDark from 'containers/Topbar/HorizontalDark/index'
 // import InsideHeader from 'containers/Topbar/InsideHeader/index'
@@ -13,8 +13,8 @@ import Sidebar from 'containers/Sidebar/index'
 // import BelowHeader from 'containers/Topbar/BelowHeader/index'
 import BreadCrumb from '../modules/Breadcrumb'
 
-import Topbar from 'containers/Topbar/index'
-import AppRoutes from 'views/App/index'
+import Topbar from 'containers/Topbar'
+import AppRoutes from 'views/App'
 import { connect } from 'react-redux'
 import {
   NAV_STYLE_ABOVE_HEADER,
@@ -152,11 +152,11 @@ export class AppLayout extends Component {
               {this.getSidebar(navStyle, width)}
               <Layout>
                 {/* {this.getNavStyles(navStyle)} */}
-                { width > 992 || <Topbar/> } 
+                { width > 992 || <Topbar/> }
                 <Content className={`gx-layout-content ${ this.getContainerClass(navStyle)} `}>
                   <div className='gx-main-content-wrapper'>
                     <BreadCrumb/>
-                    <AppRoutes match={match}/>  
+                    <AppRoutes match={match}/>
                   </div>
                   <Footer>
                     <div className='gx-layout-footer-content'>Copyright Company Name © 2019</div>
@@ -183,8 +183,8 @@ export default connect(mapStateToProps, {
 
 AppLayout.propTypes = {
   match: PropTypes.object,
-  width: PropTypes.number, 
-  navStyle: PropTypes.string, 
-  layoutType: PropTypes.string, 
+  width: PropTypes.number,
+  navStyle: PropTypes.string,
+  layoutType: PropTypes.string,
   locale: PropTypes.object
 }

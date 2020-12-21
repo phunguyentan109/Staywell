@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { clear, isDevMode } = require('./utils')
+const { clear, isDevMode, isResetMode } = require('./utils')
 
 const seedPrice = require('./Price')
 const seedUser = require('./User')
@@ -19,7 +19,7 @@ async function clearData() {
 }
 
 async function seed() {
-  isDevMode && await clearData()
+  (isDevMode || isResetMode) && await clearData()
 
   console.log('\n----- SEEDING NEW DATA -----')
   await seedRole()
