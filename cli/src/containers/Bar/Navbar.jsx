@@ -1,9 +1,9 @@
-import React, { useEffect, useCallback, useState } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { clearAuthData } from 'appRedux/actions/user'
-import { PropTypes } from 'victory'
+import PropTypes from 'prop-types'
 
 function PublicNavbar({ location }) {
   // const [isRegister, setRegister] = useState(false)

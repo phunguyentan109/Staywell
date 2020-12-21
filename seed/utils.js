@@ -10,5 +10,6 @@ async function clear(model, target) {
 }
 
 const isDevMode = process.env.ENV_MODE === 'develop'
+const isResetMode = process.env.ENV_MODE = 'reset'
 
-module.exports = { clear, isDevMode }
+module.exports = { clear, isDevMode, isResetMode }

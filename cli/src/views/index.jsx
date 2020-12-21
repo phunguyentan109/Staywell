@@ -23,14 +23,14 @@ function RootRoutes({ user }) {
           path='/app'
           redirect='/'
           component={AppLayout}
-          access={['OWNER_PM', 'PEOPLE_PM']}
+          access={['OWNER_PM']}
           useCommon={false}
         />
         <PermissionRouter
           path='/'
           redirect='/app'
           component={PublicLayout}
-          access={['GUEST_PM', 'INACTIVE_PM']}
+          access={['GUEST_PM']}
           useCommon={false}
         />
       </Switch>
