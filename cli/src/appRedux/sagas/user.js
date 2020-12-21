@@ -14,15 +14,17 @@ import _ from 'lodash'
 function* hdAuthData({ value }) {
   const type = _.get(value, 'params', '')
   let auth = yield call(apiCall, ...userApi.auth(value.type), value.data)
-  const { data: { token, errorMsg, ...user } } = auth
-
   // If error, then finish here
-  if (errorMsg) return yield put(addMessage(errorMsg), value)
-    
-  setTokenHeader(token)
-  localStorage.setItem('swtoken', token)
-  sessionStorage.setItem('auth', JSON.stringify(user))
-  yield put(addUser(user))
+
+  if (_.get(auth, 'status') === 500) {
+    return yield put(addMessage(_.get(auth, 'error.errorMsg')))
+  } else {
+    const { data: { token, ...user } } = auth
+    setTokenHeader(token)
+    localStorage.setItem('swtoken', token)
+    sessionStorage.setItem('auth', JSON.stringify(user))
+    yield put(addUser(user))
+  }
 
   // inform user to check mail after success registration
   if (type === '/signup') {
