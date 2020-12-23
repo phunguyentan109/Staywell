@@ -12,7 +12,7 @@ export const DEFAULT_PROFILE = {
 
 export const PROFILE_INPUT = [
   {
-    access: ['PEOPLE_PM'],
+    access: ['OWNER_PM'],
     label: 'Your email',
     type: 'email',
     placeholder: 'Enter your email here...',
