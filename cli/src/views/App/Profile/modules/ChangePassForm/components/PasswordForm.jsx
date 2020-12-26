@@ -2,18 +2,15 @@ import React, { useCallback } from 'react'
 import { Form, Input, Button } from 'antd'
 import PropTypes from 'prop-types'
 
-import useInitState from 'hooks/useInitState'
-import { DEFAULT_PROFILE, PASSWORD_INPUT } from '../../const'
+import { PASSWORD_INPUT } from '../../const'
 
 const FormItem = Form.Item
 
-export default function ProfileForm({ changePassword }) {
-  const [profile, setProfile, clearProfile] = useInitState(DEFAULT_PROFILE)
-	
+export default function PasswordForm({ password, repPassword, changePassword }) {	
   const hdChange = useCallback((e) => {
     const { name, value } = e.target
-    setProfile(prev => ({ ...prev, [name]: value }))
-  }, [setProfile])
+    repPassword({ [name]: value })
+  }, [repPassword])
 	
   return (
     <>
@@ -29,20 +26,22 @@ export default function ProfileForm({ changePassword }) {
               type='password'
               placeholder={cur.placeholder}
               name={cur.name}
-              value={profile[cur.name]}
+              value={password[cur.name]}
               onChange={hdChange}
             />
           </FormItem>
           )
         }
         <FormItem wrapperCol={{ xs: 24, sm: { span: 14, offset: 6 } }}>
-          <Button type='primary' onClick={() => changePassword({ profile, clearProfile })}>Save changes</Button>
+          <Button type='primary' onClick={() => changePassword({ password })}>Save changes</Button>
         </FormItem>
       </Form>
     </>
   )
 }
 
-ProfileForm.propTypes = {
+PasswordForm.propTypes = {
+  password: PropTypes.object,
+  repPassword: PropTypes.func,
   changePassword: PropTypes.func,
 }

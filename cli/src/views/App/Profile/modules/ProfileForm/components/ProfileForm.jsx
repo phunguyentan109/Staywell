@@ -1,35 +1,23 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import { Form, Input, Button, DatePicker } from 'antd'
 import moment from 'moment'
 import _ from 'lodash'
 import PropTypes from 'prop-types'
 
 import { PermissionRender } from 'containers/Permissions'
-import { offLoading, onLoading } from 'constants/func'
-import useInitState from 'hooks/useInitState'
-import { DEFAULT_PROFILE, PROFILE_INPUT } from '../../const'
+import { PROFILE_INPUT } from '../../const'
 
 const FormItem = Form.Item
 
-export default function ProfileForm({ hdUpdateProfile, user }) {
-  const [profile, setProfile, clearProfile] = useInitState(DEFAULT_PROFILE)
-
-  const load = useCallback(() => {
-    onLoading()
-    setProfile(user)
-    offLoading()
-  }, [setProfile, user])
-
-  useEffect(() => { load() }, [load])
-	
+export default function ProfileForm({ hdUpdateProfile, profile, repProfile, setProfile }) {
   const hdChange = useCallback((e) => {
     if (_.get(e, '_isAMomentObject')) {
       setProfile(prev => ({ ...prev, birthDate: e }))
     } else {
       const { name, value } = e.target
-      setProfile(prev => ({ ...prev, [name]: value }))
+      repProfile({ [name]: value })
     }
-  }, [setProfile])
+  }, [repProfile, setProfile])
 	
   return (
     <>
@@ -66,13 +54,15 @@ export default function ProfileForm({ hdUpdateProfile, user }) {
             value={moment(profile.birthDate)}
           />
         </FormItem>
-        <Button type='primary' onClick={() => hdUpdateProfile({ profile, clearProfile })}>Save changes</Button>
+        <Button type='primary' onClick={() => hdUpdateProfile({ profile })}>Save changes</Button>
       </Form>
     </>
   )
 }
 
 ProfileForm.propTypes = {
-  user: PropTypes.object,
+  profile: PropTypes.object,
+  repProfile: PropTypes.func,
+  setProfile: PropTypes.func,
   hdUpdateProfile: PropTypes.func,
 }

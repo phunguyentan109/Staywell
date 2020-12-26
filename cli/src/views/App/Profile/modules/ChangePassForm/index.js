@@ -1,2 +1,2 @@
-import ChangePasswordForm from './containers/ChangePassFormContainer'
-export default ChangePasswordForm
+import PasswordForm from './containers/PasswordFormContainer'
+export default PasswordForm

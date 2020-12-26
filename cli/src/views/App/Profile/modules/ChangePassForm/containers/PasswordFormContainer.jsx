@@ -1,31 +1,38 @@
 import React, { useCallback, memo } from 'react'
 import { connect } from 'react-redux'
+import _ from 'lodash'
 import PropTypes from 'prop-types'
 
+import { useStore } from 'hooks'
 import { userApi, call } from 'constants/api'
 import { notify, offLoading, onLoading } from 'constants/func'
-import ChangePasswordForm from '../components/ChangePassForm'
+import PasswordForm from '../components/PasswordForm'
+import { DEFAULT_PROFILE } from '../../const'
 
-function ChangePasswordFormContainer({ user }) {
-  const changePassword = useCallback(async ({ profile, clearProfile }) => {
+function PasswordFormContainer({ user }) {
+  const [password, repPassword] = useStore(_.cloneDeep(DEFAULT_PROFILE))
+
+  const changePassword = useCallback(async ({ password }) => {
     onLoading()
-    let { change, confirm, current } = profile
+    let { change, confirm, current } = password
     if (current && change && change === confirm) {
       const rs = await call(...userApi.password(user._id), { current, change })
-      clearProfile('current', 'change', 'confirm')
       if (rs.status === 200) {
+        repPassword({ change: '', confirm: '', current: '' })
         notify('success', 'Your password has been updated.')
       }
     } else {
       notify('error', 'Please entered valid information.')
     }
     offLoading()
-  }, [user._id])
+  }, [repPassword, user._id])
 
   return (
-    <>
-      <ChangePasswordForm changePassword={changePassword} />
-    </>
+    <PasswordForm 
+      password={password}
+      repPassword={repPassword}
+      changePassword={changePassword} 
+    />
   )
 }
 
@@ -33,13 +40,13 @@ function mapState({ user }) {
   return { user: user.data }
 }
 
-export default connect(mapState)(memo(ChangePasswordFormContainer))
+export default connect(mapState)(memo(PasswordFormContainer))
 
-ChangePasswordFormContainer.propTypes = {
+PasswordFormContainer.propTypes = {
   user: PropTypes.object,
 }
 
-ChangePasswordFormContainer.defaultProps = {
+PasswordFormContainer.defaultProps = {
   user: { 
     _id: '',
     username: '',
