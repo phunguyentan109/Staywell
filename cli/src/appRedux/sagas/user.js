@@ -16,15 +16,14 @@ function* hdAuthData({ value }) {
   let auth = yield call(apiCall, ...userApi.auth(value.type), value.data)
   // If error, then finish here
 
-  if (_.get(auth, 'status') === 200) {
-    const { data: { token, ...user } } = auth
-    setTokenHeader(token)
-    localStorage.setItem('swtoken', token)
-    sessionStorage.setItem('auth', JSON.stringify(user))
-    yield put(addUser(user))
-  } else {
+  if (_.get(auth, 'status') !== 200) {
     return yield put(addMessage(_.get(auth, 'error.errorMsg')))
   }
+  const { data: { token, ...user } } = auth
+  setTokenHeader(token)
+  localStorage.setItem('swtoken', token)
+  sessionStorage.setItem('auth', JSON.stringify(user))
+  yield put(addUser(user))
 
   // inform user to check mail after success registration
   if (type === '/signup') {
