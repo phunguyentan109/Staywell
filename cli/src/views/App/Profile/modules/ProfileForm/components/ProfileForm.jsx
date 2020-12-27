@@ -4,7 +4,6 @@ import moment from 'moment'
 import _ from 'lodash'
 import PropTypes from 'prop-types'
 
-import { PermissionRender } from 'containers/Permissions'
 import { PROFILE_INPUT } from '../../const'
 
 const FormItem = Form.Item
@@ -20,43 +19,36 @@ export default function ProfileForm({ hdUpdateProfile, profile, repProfile, setP
   }, [repProfile, setProfile])
 	
   return (
-    <>
-      <Form layout='horizontal'>
-        {
-          PROFILE_INPUT.map((inp, idx) => <PermissionRender
-            access={inp.access}
-            key={idx}
-          >
-            <FormItem
-              label={inp.label}
-              labelCol={{ xs: 24, sm: 6 }}
-              wrapperCol={{ xs: 24, sm: 16 }}
-            >
-              <Input
-                type={inp.type || 'text'}
-                placeholder={inp.placeholder}
-                name={inp.name}
-                value={profile[inp.name]}
-                onChange={hdChange}
-              />
-            </FormItem>
-          </PermissionRender>
-          )
-        }
-        <FormItem
-          label='Your birthday'
+    <Form layout='horizontal'>
+      {
+        PROFILE_INPUT.map((inp, idx) => <FormItem
+          label={inp.label}
           labelCol={{ xs: 24, sm: 6 }}
           wrapperCol={{ xs: 24, sm: 16 }}
         >
-          <DatePicker
-            className='gx-mb-3 gx-w-100'
+          <Input
+            type={inp.type || 'text'}
+            placeholder={inp.placeholder}
+            name={inp.name}
+            value={profile[inp.name]}
             onChange={hdChange}
-            value={moment(profile.birthDate)}
           />
         </FormItem>
-        <Button type='primary' onClick={() => hdUpdateProfile({ profile })}>Save changes</Button>
-      </Form>
-    </>
+        )
+      }
+      <FormItem
+        label='Your birthday'
+        labelCol={{ xs: 24, sm: 6 }}
+        wrapperCol={{ xs: 24, sm: 16 }}
+      >
+        <DatePicker
+          className='gx-mb-3 gx-w-100'
+          onChange={hdChange}
+          value={moment(profile.birthDate)}
+        />
+      </FormItem>
+      <Button type='primary' onClick={() => hdUpdateProfile({ profile })}>Save changes</Button>
+    </Form>
   )
 }
 
