@@ -3,6 +3,7 @@ import { Col, Row, Tabs } from 'antd'
 import Widget from 'components/Widget'
 import AboutItem from './AboutItem'
 import moment from 'moment'
+import PropTypes from 'prop-types'
 
 const TabPane = Tabs.TabPane
 
@@ -33,6 +34,9 @@ const About = ({ job, birthDate }) => (
   </Widget>
 )
 
-
-
 export default About
+
+About.propTypes = {
+  job: PropTypes.string,
+  birthDate: PropTypes.string
+}

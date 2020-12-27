@@ -1,6 +1,7 @@
 import React from 'react'
 import { Avatar } from 'antd'
 import { PermissionRender } from 'containers/Permissions'
+import PropTypes from 'prop-types'
 
 export default function ProfileHeader({ username, avatar }) {
   return (
@@ -64,4 +65,9 @@ export default function ProfileHeader({ username, avatar }) {
       </div>
     </div>
   )
+}
+
+ProfileHeader.propTypes = {
+  username: PropTypes.string,
+  avatar: PropTypes.node
 }
