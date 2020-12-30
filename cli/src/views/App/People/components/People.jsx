@@ -1,27 +1,28 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
-
-// import { apiUser, notify } from 'constants/api'
-import { PEOPLE_PM, INACTIVE_PM } from 'containers/Permissions/modules/const'
+import _ from 'lodash'
 import PeopleTable from '../modules/PeopleTable'
 
 export default function People({ people, hdRemove }) {
-  function getActiveType(type) {
-    return people.filter(p => p.role_id.code === type)
-  }
+  const list = useMemo(() => {
+    return _.reduce(people, (a, n) => {
+      a[n.isVerified ? 'active' : 'inActive'].push(n)
+      return a
+    }, { active: [], inActive:[] })
+  }, [people])
 
   return (
     <>
       {
-        getActiveType(INACTIVE_PM).length > 0 && <PeopleTable
-          title='List of Inassigned Renter'
-          dataSource={getActiveType(INACTIVE_PM)}
+        _.size(list.inActive) > 0 && <PeopleTable
+          title='List of Not-Verified Renter'
+          dataSource={list.inActive}
           hdRemove={hdRemove}
         />
       }
       <PeopleTable
         title='List of Renter'
-        dataSource={getActiveType(PEOPLE_PM)}
+        dataSource={list.active}
         hdRemove={hdRemove}
       />
     </>

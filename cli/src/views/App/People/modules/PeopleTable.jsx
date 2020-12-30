@@ -8,7 +8,7 @@ export default function PeopleTable({ title, dataSource, hdRemove }) {
     <Card className='gx-card' title={title}>
       <Table
         className='gx-table-responsive'
-        dataSource={dataSource.map(p => p.user_id)}
+        dataSource={dataSource}
         rowKey='_id'
         columns={[
           {

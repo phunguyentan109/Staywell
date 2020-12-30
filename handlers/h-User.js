@@ -103,22 +103,8 @@ exports.activate = async(req, res, next) => {
 
 exports.get = async(req, res, next) => {
   try {
-    let ownerRole = await db.Role.findOne({ code: '000' })
-    let users = await db.UserRole.find()
-      .populate('role_id')
-      .populate({
-        path: 'user_id',
-        populate: {
-          path: 'room_id'
-        }
-      })
-      .populate({
-        path: 'user_id',
-        populate: {
-          path: 'contract_id'
-        }
-      }).lean().exec()
-    return res.status(200).json(users.filter(ur => !ownerRole._id.equals(ur.role_id._id)))
+    let people = await db.User.find({ password: { $exists: false } }).lean().exec()
+    return res.status(200).json(people)
   } catch (err) {
     return next(err)
   }
