@@ -5,6 +5,7 @@ import { contractApi, call } from 'constants/api'
 import { getInitDate, formItemLayout } from '../modules/const'
 import PropTypes from 'prop-types'
 import { useToggle, useStore } from 'hooks'
+import _ from 'lodash'
 
 const FormItem = Form.Item
 
@@ -19,8 +20,8 @@ function ContractForm({ onPostCreate, roomId }) {
   const hdSubmit = useCallback(async() => {
     const { electric, from, duration } = contract
     let data = { info: { electric, from }, duration }
-    let createdContract = await call(...contractApi.create(roomId), data)
-    onPostCreate(createdContract)
+    let rs = await call(...contractApi.create(roomId), data)
+    rs.status === 200 && onPostCreate(_.get(rs, 'data._id'))
   }, [roomId, contract, onPostCreate])
 
   const hdChange = useCallback(e => {

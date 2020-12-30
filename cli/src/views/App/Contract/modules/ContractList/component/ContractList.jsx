@@ -1,11 +1,18 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { Card, Col, Row } from 'antd'
 import ContractItem from '../../ContractItem'
 import _ from 'lodash'
 import BillItem from '../../BillItem'
 
-function ContractList(props) {
+function ContractList({ contracts, contractId, hdSelectContract, bills, roomId }) {
+  const nextGenerateAllowId = useMemo(() => {
+    if (!!bills.length) {
+      let nextGenerateBill = _.find(bills, b => !b.electric)
+      return nextGenerateBill._id
+    }
+  }, [bills])
+
   return (
     <>
       <Card className='gx-card action-bar'>
@@ -20,26 +27,26 @@ function ContractList(props) {
       </Card>
       <Row>
         {
-          !!ids.contract_id || contracts.map(c => <ContractItem
+          !!contractId || contracts.map(c => <ContractItem
             key={c._id}
-            roomId={ids.room_id}
+            roomId={roomId}
             contract={c}
-            onClick={selectContract(c._id)}
+            onClick={hdSelectContract(c._id)}
           />)
         }
         {
-          !!ids.contract_id && (
+          !!contractId && (
             <>
               <Col span={24}>
                 <Card className='gx-card back-bar'>
                   <i
                     className='fas fa-arrow-left action back-contract'
-                    onClick={() => repIds({ contract_id: null })}
+                    onClick={() => hdSelectContract(null)}
                   />
                   <span className='gx-toolbar-separator'>&nbsp;</span>
                   <span>
-                        Contract #{ids.contract_id.substring(ids.contract_id.length - 4, ids.contract_id.length)}
-                      </span>
+                    Contract #{contractId.substring(contractId.length - 4, contractId.length)}
+                  </span>
                 </Card>
               </Col>
               {
@@ -47,9 +54,9 @@ function ContractList(props) {
                   <Col span={8} key={bill._id}>
                     <BillItem
                       bill={bill}
-                      apiParams={ids}
-                      onAfterUpdate={hdUpdateBill}
-                      lastNumber={lastElectric}
+                      // apiParams={ids}
+                      // onAfterUpdate={hdUpdateBill}
+                      // lastNumber={lastElectric}
                       allowGenerate={nextGenerateAllowId === bill._id}
                       allowPayment={bill.electric && !bill.paidDate}
                     />
@@ -65,7 +72,11 @@ function ContractList(props) {
 }
 
 ContractList.propTypes = {
-
+  contractId: PropTypes.string,
+  roomId: PropTypes.string,
+  hdSelectContract: PropTypes.func,
+  contracts: PropTypes.array,
+  bills: PropTypes.array,
 }
 
 export default ContractList

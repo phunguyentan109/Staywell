@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Card, Row, Col } from 'antd'
 import _ from 'lodash'
@@ -6,18 +6,11 @@ import _ from 'lodash'
 // Modules
 import ContractForm from '../modules/ContractForm'
 import ContractList from '../modules/ContractList'
-// import ContractItem from '../modules/ContractItem'
-// import BillItem from '../modules/BillItem'
 import ContractRooms from '../modules/ContractRooms'
 import { FILTERS } from '../modules/const'
 
-export default function Contract({ contracts, bills, selectContract, selectRoom, lastElectric, hdUpdateBill, ids, repIds }) {
-  const nextGenerateAllowId = useMemo(() => {
-    if (!!bills.length) {
-      let nextGenerateBill = _.find(bills, b => !b.electric)
-      return nextGenerateBill._id
-    }
-  }, [bills])
+export default function Contract() {
+  const [roomId, setRoomId] = useState(null)
 
   return (
     <div className='manage-contract'>
@@ -31,12 +24,12 @@ export default function Contract({ contracts, bills, selectContract, selectRoom,
               </div>
             </div>
             <ContractForm
-              onPostCreate={selectContract}
-              roomId={ids.room_id}
-              tgProps={{ disabled: !!ids.roomId }}
+              onPostCreate={setRoomId}
+              roomId={roomId}
+              tgProps={{ disabled: !!roomId }}
             />
             <ul className='gx-module-nav'>
-              <ContractRooms onSelectRoom={selectRoom} />
+              <ContractRooms onSelectRoom={setRoomId} />
               <div className='section-wrapper'>
                 <div>Status Filters</div>
                 {
@@ -54,59 +47,7 @@ export default function Contract({ contracts, bills, selectContract, selectRoom,
           </Card>
         </Col>
         <Col span={19}>
-          <ContractList />
-          {/*<Card className='gx-card action-bar'>*/}
-          {/*  <i className='far fa-square action check-box'/>*/}
-          {/*  <span className='gx-toolbar-separator'>&nbsp;</span>*/}
-          {/*  <div className='action reload'>*/}
-          {/*    <i className='fas fa-sync-alt'/>&nbsp;Refresh*/}
-          {/*  </div>*/}
-          {/*  <div className='action remove'>*/}
-          {/*    <i className='fas fa-trash'/>&nbsp;Remove*/}
-          {/*  </div>*/}
-          {/*</Card>*/}
-          {/*<Row>*/}
-          {/*  {*/}
-          {/*    !!ids.contract_id || contracts.map(c => <ContractItem*/}
-          {/*      key={c._id}*/}
-          {/*      roomId={ids.room_id}*/}
-          {/*      contract={c}*/}
-          {/*      onClick={selectContract(c._id)}*/}
-          {/*    />)*/}
-          {/*  }*/}
-          {/*  {*/}
-          {/*    !!ids.contract_id && (*/}
-          {/*      <>*/}
-          {/*        <Col span={24}>*/}
-          {/*          <Card className='gx-card back-bar'>*/}
-          {/*            <i*/}
-          {/*              className='fas fa-arrow-left action back-contract'*/}
-          {/*              onClick={() => repIds({ contract_id: null })}*/}
-          {/*            />*/}
-          {/*            <span className='gx-toolbar-separator'>&nbsp;</span>*/}
-          {/*            <span>*/}
-          {/*              Contract #{ids.contract_id.substring(ids.contract_id.length - 4, ids.contract_id.length)}*/}
-          {/*            </span>*/}
-          {/*          </Card>*/}
-          {/*        </Col>*/}
-          {/*        {*/}
-          {/*          _.map(bills, bill => (*/}
-          {/*            <Col span={8} key={bill._id}>*/}
-          {/*              <BillItem*/}
-          {/*                bill={bill}*/}
-          {/*                apiParams={ids}*/}
-          {/*                onAfterUpdate={hdUpdateBill}*/}
-          {/*                lastNumber={lastElectric}*/}
-          {/*                allowGenerate={nextGenerateAllowId === bill._id}*/}
-          {/*                allowPayment={bill.electric && !bill.paidDate}*/}
-          {/*              />*/}
-          {/*            </Col>*/}
-          {/*          ))*/}
-          {/*        }*/}
-          {/*      </>*/}
-          {/*    )*/}
-          {/*  }*/}
-          {/*</Row>*/}
+          <ContractList roomId={roomId} />
         </Col>
       </Row>
     </div>
@@ -115,12 +56,6 @@ export default function Contract({ contracts, bills, selectContract, selectRoom,
 
 Contract.propTypes = {
   bills: PropTypes.array,
-  contracts: PropTypes.array,
-  repIds: PropTypes.func,
   selectRoom: PropTypes.func,
-  lastElectric: PropTypes.number,
-  ids: PropTypes.object,
   selectContract: PropTypes.func,
-  clearIds: PropTypes.func,
-  hdUpdateBill: PropTypes.func,
 }
