@@ -20,14 +20,13 @@ const userSchema = mongoose.Schema({
       default: 'https://images.unsplash.com/photo-1563729574084-950da51d3822?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=100&ixlib=rb-1.2.1&q=80&w=100'
     }
   },
+  isVerified: Boolean,
   phone: String,
   job: String,
   birthDate: {
     type: Date,
     default: Date.now
   },
-  resetPwToken: String,
-  resetPwExpires: Date,
   room_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Room'

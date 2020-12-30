@@ -58,8 +58,7 @@ export const userApi = {
   auth: type => [`user/${type}`, 'post'],
   forgot: () => ['user/forgot', 'post'],
   remove: userId => [`user/${userId}`, 'delete'],
-  update: userId => [`user/${userId}`, 'put'],
-  activate: userId => [`user/${userId}/activate`, 'put'],
+  update: userId => [`user/${userId}`, 'put'],  activate: userId => [`user/${userId}/activate`, 'put'],
   reset: token => [`user/${token}/reset`, 'put'],
   password: userId => [`user/${userId}/password`, 'put']
 }

@@ -7,7 +7,8 @@ const OWNER = {
 const PEOPLE = [
   {
     email: 'magazine.group@gmail.com',
-    username: 'magazine.group'
+    username: 'magazine.group',
+    isVerified: true
   },
   {
     email: 'nothinglike1@gmail.com',
@@ -15,7 +16,8 @@ const PEOPLE = [
   },
   {
     email: 'great121@gmail.com',
-    username: 'great121'
+    username: 'great121',
+    isVerified: true
   },
   {
     email: 'becauseopu13@gmail.com',
@@ -23,7 +25,8 @@ const PEOPLE = [
   },
   {
     email: 'newbb213@gmail.com',
-    username: 'newbb213'
+    username: 'newbb213',
+    isVerified: true
   }
 ]
 

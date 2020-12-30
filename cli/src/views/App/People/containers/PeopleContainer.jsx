@@ -9,9 +9,7 @@ function PeopleContainer(props) {
   const getPeople = useCallback(async() => {
     onLoading()
     let rs = await call(...userApi.get())
-    rs.status === 200 
-      ? setPeople(rs.data) 
-      : notify('error', 'Something wrong. Can\'t get people data.')
+    rs.status === 200 && setPeople(rs.data)
     offLoading()
   }, [])
 
