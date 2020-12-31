@@ -4,7 +4,7 @@ const mw = require('../middleware')
 const router = express.Router({ mergeParams: true })
 
 router.route('/').get(hdl.User.get)
-router.route('/available').get(mw.User.getByRole, hdl.User.getAvailable)
+router.route('/available').get(hdl.User.getAvailable)
 
 router.route('/signup').post(mw.User.generateAvatar, hdl.User.signUp)
 router.route('/login').post(hdl.User.logIn)

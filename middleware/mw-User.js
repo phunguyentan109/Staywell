@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken')
 const rs = require('request')
-const db = require('../models')
 
 exports.generateAvatar = (req, res, next) => {
   const url = 'https://source.unsplash.com/random'
@@ -10,21 +9,6 @@ exports.generateAvatar = (req, res, next) => {
     }
     return next()
   })
-}
-
-exports.getByRole = async(req, res, next) => {
-  try {
-    let all = await db.UserRole.find().populate('role_id').lean().exec()
-    let peopleData = all.filter(u => u.role_id.code === '001')
-    let ownerData = all.filter(u => u.role_id.code === '000')[0]
-    res.locals = {
-      peopleIds: peopleData.map(p => p.user_id),
-      ownerId: ownerData.user_id
-    }
-    return next()
-  } catch (e) {
-    return next(e)
-  }
 }
 
 exports.isLogin = async(req, res, next) => {
