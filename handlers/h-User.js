@@ -223,11 +223,10 @@ exports.contact = async(req, res, next) => {
 
 exports.getAvailable = async(req, res, next) => {
   try {
-    const { peopleIds } = res.locals
     let foundPeople = await db.User.find({
-      _id: { $in: peopleIds },
-      room_id: undefined
-    }).populate('user_id').lean().exec()
+      password: { $exists: false },
+      room_id: { $exists: false }
+    }).lean().exec()
 
     return res.status(200).json(foundPeople)
   } catch (e) {

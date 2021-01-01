@@ -11,7 +11,7 @@ function ContractRooms({ rooms, onSelectRoom }) {
   }, [onSelectRoom])
 
   useEffect(() => {
-    if (rooms.length > 0) hdSelect(rooms[0]._id)
+    if (rooms.length > 0 && !roomId) hdSelect(rooms[0]._id)
   }, [hdSelect, roomId, rooms])
 
   return (
