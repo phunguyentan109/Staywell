@@ -21,18 +21,12 @@ function PeopleContainer(props) {
     if (rs.status === 200) {
       setPeople(prev => prev.filter(p => p.user_id._id !== peopleId))
       notify('success', 'People data is removed successfully.')
-    } else {
-      notify('error', 'Something wrong. Can\'t remove people.')
     }
     offLoading()
   }, [])
 
   return (
-    <People
-      {...props}
-      people={people}
-      hdRemove={hdRemove}
-    />
+    <People {...props} people={people} hdRemove={hdRemove} />
   )
 }
 

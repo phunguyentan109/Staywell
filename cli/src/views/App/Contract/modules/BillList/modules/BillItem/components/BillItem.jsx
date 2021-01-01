@@ -4,16 +4,14 @@ import PropTypes from 'prop-types'
 import _ from 'lodash'
 import { INPUT_OPTIONS } from '../modules/const'
 import { useToggle } from 'hooks'
-import { billApi, call } from 'constants/api'
 
-function BillItem({ bill, apiParams, form, onAfterUpdate, hdCheckout, lastNumber, allowGenerate, allowPayment }) {
+function BillItem({ bill, hdOpenBill, form, lastNumber, allowGenerate, hdCheckout }) {
   const [pairs, togglePairs] = useToggle({ modal: false })
 
   const hdSubmit = useCallback(async() => {
     let { number } = form.getFieldsValue()
-    let updateBill = await call(...billApi.generate(apiParams.contract_id, bill._id,), { number, lastNumber })
-    updateBill && onAfterUpdate(updateBill)
-  }, [apiParams, bill._id, form, lastNumber, onAfterUpdate])
+    hdOpenBill(number, bill._id)
+  }, [bill._id, form, hdOpenBill])
 
   const hdChange = useCallback(e => {
     const { value } = e.target
@@ -39,7 +37,7 @@ function BillItem({ bill, apiParams, form, onAfterUpdate, hdCheckout, lastNumber
       { bill.paidDate && <div>Paid at {bill.paidDate}</div> }
       {
         allowGenerate && <>
-          <Button type='primary'>Generate Bill</Button>
+          <Button type='primary' onClick={() => togglePairs()}>Generate Bill</Button>
           <Modal
             title='Open new contract'
             visible={pairs.modal}
@@ -64,20 +62,18 @@ function BillItem({ bill, apiParams, form, onAfterUpdate, hdCheckout, lastNumber
           </Modal>
         </>
       }
-      { allowPayment && <Button onClick={hdCheckout}>Checkout</Button> }
+      { bill.electric && !bill.paidDate && <Button onClick={hdCheckout}>Checkout</Button> }
     </Card>
   )
 }
 
 BillItem.propTypes = {
   bill: PropTypes.object,
-  onAfterUpdate: PropTypes.func,
+  hdOpenBill: PropTypes.func,
   hdCheckout: PropTypes.func,
-  apiParams: PropTypes.object,
   form: PropTypes.object,
   lastNumber: PropTypes.number,
   allowGenerate: PropTypes.bool,
-  allowPayment: PropTypes.bool
 }
 
 BillItem.defaultProps = {
