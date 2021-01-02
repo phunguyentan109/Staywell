@@ -456,11 +456,11 @@
             <tr>
               <td class="email-body" width="570" cellpadding="0" cellspacing="0" style="word-break: break-word; margin: 0; padding: 0; font-family: Nunito Sans, Helvetica, Arial, sans-serif; font-size: 16px; width: 100%; -premailer-width: 100%; -premailer-cellpadding: 0; -premailer-cellspacing: 0;">
                 <table class="email-body_inner" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation" style="width: 570px; -premailer-width: 570px; -premailer-cellpadding: 0; -premailer-cellspacing: 0; margin: 0 auto; padding: 0;">
-                  {/* <!-- Body content --> */}
+                  <!-- Body content --> 
                   <tr>
                     <td class="content-cell" style="word-break: break-word; font-family: Nunito Sans, Helvetica, Arial, sans-serif; font-size: 16px; padding: 35px;">
                       <div class="f-fallback">
-                        <h1 style="margin-top: 0; color: #333333; font-size: 22px; font-weight: bold; text-align: left;" align="left">Hi <%={viewName%>},</h1>
+                        <h1 style="margin-top: 0; color: #333333; font-size: 22px; font-weight: bold; text-align: left;" align="left">Hi <%= viewName %>,</h1>
                         <p style="font-size: 16px; line-height: 1.625; color: #333; margin: .4em 0 1.1875em;">You recently requested to reset your password for your StayWell account. Use the button below to reset it. 
                           <strong>This password reset is only valid for the next 24 hours.</strong>
                         </p>
@@ -472,7 +472,7 @@
                               <table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
                                 <tr>
                                   <td align="center" style="word-break: break-word; font-family: Nunito Sans, Helvetica, Arial, sans-serif; font-size: 16px;">
-                                    <a href=<%=forgotLink%> class="f-fallback button button--green" target="_blank" style="color: #FFF; border-color: #22bc66; border-style: solid; border-width: 10px 18px; background-color: #22BC66; display: inline-block; text-decoration: none; border-radius: 3px; box-shadow: 0 2px 3px rgba(0, 0, 0, 0.16); -webkit-text-size-adjust: none; box-sizing: border-box;">Reset your password</a>
+                                    <a href=<%= forgotLink %> class="f-fallback button button--green" target="_blank" style="color: #FFF; border-color: #22bc66; border-style: solid; border-width: 10px 18px; background-color: #22BC66; display: inline-block; text-decoration: none; border-radius: 3px; box-shadow: 0 2px 3px rgba(0, 0, 0, 0.16); -webkit-text-size-adjust: none; box-sizing: border-box;">Reset your password</a>
                                   </td>
                                 </tr>
                               </table>
@@ -480,7 +480,7 @@
                           </tr>
                         </table>
                         <p style="font-size: 16px; line-height: 1.625; color: #333; margin: .4em 0 1.1875em;">If you did not request a password reset, please ignore this email or 
-                          <a href="<%=support_url%>" style="color: #3869D4;">contact support</a> if you have questions.
+                          <a href="<%= support_url %>" style="color: #3869D4;">contact support</a> if you have questions.
                         </p>
                         <p style="font-size: 16px; line-height: 1.625; color: #333; margin: .4em 0 1.1875em;">Thanks,
                           
@@ -491,7 +491,7 @@
                           <tr>
                             <td style="word-break: break-word; font-family: Nunito Sans, Helvetica, Arial, sans-serif; font-size: 16px;">
                               <p class="f-fallback sub" style="font-size: 13px; line-height: 1.625; color: #333; margin: .4em 0 1.1875em;">If you’re having trouble with the button above, copy and paste the URL below into your web browser.</p>
-                              <p class="f-fallback sub" style="font-size: 13px; line-height: 1.625; color: #333; margin: .4em 0 1.1875em;"><%=forgotLink%></p>
+                              <p class="f-fallback sub" style="font-size: 13px; line-height: 1.625; color: #333; margin: .4em 0 1.1875em;"><%= forgotLink %></p>
                             </td>
                           </tr>
                         </table>

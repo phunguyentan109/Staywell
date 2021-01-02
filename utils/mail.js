@@ -4,11 +4,12 @@
 const emoji = require('node-emoji')
 const sgMail = require('@sendgrid/mail')
 const ejs = require('ejs')
+const fs = require('fs')
 const { 
   // CLIENT_ID, CLIENT_SECRET, 
   // REFRESH_TOKEN, 
   // GG_OAUTH_LINK,  
-  GMAIL_USER, 
+  SENDGRID_GMAIL_USER, 
   SENDGRID_API_KEY
 } = process.env
 // const MailTemplate = require('./emailTemplate/mailTemplate.ejs')
@@ -109,11 +110,11 @@ ${content}.`
 }
 */
 
-async function sgSend({ to, subject, text, html }) {
+async function sgSend({ to, subject, html }) {
   try {
     let data = {
-      from: GMAIL_USER,
-      to, subject, text, html
+      from: SENDGRID_GMAIL_USER,
+      to, subject, html
     }
 
     await sgMail.send(data)
@@ -123,26 +124,16 @@ async function sgSend({ to, subject, text, html }) {
 }
 
 async function login(to, viewName, token, host) {
-  try {
-    const subject = emoji.emojify(':building_construction: You login yet - Staywell')
-    const forgotLink = `https://${host}/reset/${token}`
-    const text = 'easy to do anywhere, even with Node.js'
-    // eslint-disable-next-line max-len
-    // const html = '<h3>Dear passenger 1, welcome to <a href=\'https://www.mailjet.com/\'>Mailjet</a>!</h3><br />May the delivery force be with you!'
-    const html =  ejs.renderFile(__dirname + '/testTemplate.ejs', {
-      viewName, forgotLink
-    }, function(err, data) {
-      if (err) {
-        console.log(`Read template is error: ${err}`)
-      } else {
-        return data    
-      }
-    })
+  // try {
+  const subject = emoji.emojify(':building_construction: You login yet - Staywell')
+  const forgotLink = `https://${host}/reset/${token}`
+  const support_url = 'https://staywellapp.herokuapp.com/'
 
-    return await sgSend({ to, subject, text, html })
-  } catch (err) {
-    return err
-  }
+  const testTemplate = './emailTemplate/testTemplate.ejs'
+  const readTemplate = fs.readFileSync(`${__dirname}/${testTemplate}`, 'utf-8')
+  let htmlAfterCompile = ejs.compile(readTemplate)
+  
+  sgSend({ to, subject, html: htmlAfterCompile({ viewName, forgotLink, support_url }) })
 }
 
 module.exports = { login }

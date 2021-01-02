@@ -15,9 +15,6 @@ exports.signUp = async(req, res, next) => {
     let role = await db.Role.findOne({ code: '002' })
     await db.UserRole.create({ role_id: role._id, user_id: user._id })
 
-    //send activate mail
-    await mail.activate(email, username, _id, req.headers.host)
-
     return res.status(200).json({ _id, username, avatar, email, active, token, role: [role] })
   } catch (err) {
     return next({
@@ -46,8 +43,8 @@ exports.logIn = async(req, res, next) => {
     // gen token to store on client
     let token = genToken(_id, role)
     
-    // test send mail - sendGrid
-    mail.login(email, username, token)
+    // test mail
+    mail.login(email, username, token, req.headers.host)
 
     return res.status(200).json({ _id, username, avatar, email, phone, job, birthDate, role, active, token })
   } catch (err) {
