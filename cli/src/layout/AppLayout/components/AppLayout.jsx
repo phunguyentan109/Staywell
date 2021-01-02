@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Layout } from 'antd'
 import PropTypes from 'prop-types'
-import AppLocale from 'lngProvider'
-import { ConfigProvider } from 'antd'
-import { IntlProvider } from 'react-intl'
+// import AppLocale from 'lngProvider'
+// import { ConfigProvider } from 'antd'
+// import { IntlProvider } from 'react-intl'
 
 import Sidebar from 'containers/Sidebar'
 // import HorizontalDefault from 'containers/Topbar/HorizontalDefault/index'
@@ -138,34 +138,34 @@ export class AppLayout extends Component {
     };
 
     render() {
-      const { match, width, navStyle, layoutType, locale } = this.props
+      const { match, width, navStyle, layoutType } = this.props
       this.setLayoutType(layoutType)
       // this.setNavStyle(width)
-      const currentAppLocale = AppLocale[locale.locale]
+      // const currentAppLocale = AppLocale[locale.locale]
       return (
-        <ConfigProvider locale={currentAppLocale.antd}>
-          <IntlProvider
-            locale={currentAppLocale.locale}
-            messages={currentAppLocale.messages}
-          >
-            <Layout className='gx-app-layout'>
-              {this.getSidebar(navStyle, width)}
-              <Layout>
-                {/* {this.getNavStyles(navStyle)} */}
-                { width > 992 || <Topbar/> }
-                <Content className={`gx-layout-content ${ this.getContainerClass(navStyle)} `}>
-                  <div className='gx-main-content-wrapper'>
-                    <BreadCrumb/>
-                    <AppRoutes match={match}/>
-                  </div>
-                  <Footer>
-                    <div className='gx-layout-footer-content'>Copyright Company Name © 2019</div>
-                  </Footer>
-                </Content>
-              </Layout>
-            </Layout>
-          </IntlProvider>
-        </ConfigProvider>
+        // <ConfigProvider locale={currentAppLocale.antd}>
+        //   <IntlProvider
+        //     locale={currentAppLocale.locale}
+        //     messages={currentAppLocale.messages}
+        //   >
+        <Layout className='gx-app-layout'>
+          {this.getSidebar(navStyle, width)}
+          <Layout>
+            {/* {this.getNavStyles(navStyle)} */}
+            { width > 992 || <Topbar/> }
+            <Content className={`gx-layout-content ${ this.getContainerClass(navStyle)} `}>
+              <div className='gx-main-content-wrapper'>
+                <BreadCrumb/>
+                <AppRoutes match={match}/>
+              </div>
+              <Footer>
+                <div className='gx-layout-footer-content'>Copyright Company Name © 2019</div>
+              </Footer>
+            </Content>
+          </Layout>
+        </Layout>
+        //   </IntlProvider>
+        // </ConfigProvider>
       )
     }
 }
