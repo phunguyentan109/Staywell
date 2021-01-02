@@ -54,7 +54,8 @@
     "slick-carousel": "^1.8.1",
     "url-search-params": "^1.1.0",
     "victory": "^34.0.0",
-    "react-app-rewired": "^2.1.5"
+    "react-app-rewired": "^2.1.5",
+    "customize-cra": "^0.9.1"
   },
   "proxy": "http://localhost:8080",
   "scripts": {
@@ -123,7 +124,6 @@
     "add": "^2.0.6",
     "babel-plugin-import": "^1.13.0",
     "concurrently": "^4.1.2",
-    "customize-cra": "^0.9.1",
     "node-sass-chokidar": "^1.4.0",
     "wait-on": "^3.3.0",
     "yarn": "^1.17.3"
