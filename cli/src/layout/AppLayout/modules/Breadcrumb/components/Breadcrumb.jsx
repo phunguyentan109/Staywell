@@ -3,13 +3,14 @@ import { withRouter } from 'react-router-dom'
 import { Card, Breadcrumb } from 'antd'
 import Icon from '@ant-design/icons'
 import { breadNames } from 'constants/variables'
-import { get, split } from 'lodash'
+import get from 'lodash/get'
+import split from 'lodash/split'
 
-function BreadcrumbBar(location) {
+function BreadcrumbBar(props) {
   const [paths, setPaths] = useState([])
 
   useEffect(() => {
-    let namePath = split(get(location, 'location.pathname'), '/')
+    let namePath = split(get(props, 'location.pathname'), '/')
     namePath.shift() // remove empty element at the beginnings
 
     // if the element have over 10 number then remove it
@@ -23,7 +24,7 @@ function BreadcrumbBar(location) {
     let paths = [`/${namePath[0]}`]
     namePath.forEach((_, i) => i > 0 && paths.push(`${paths[i-1]}/${namePath[i]}`))
     setPaths(paths)
-  }, [location])
+  }, [props])
 
   const styling = path => path !== paths[paths.length - 1] ? 'gx-link' : ''
 
