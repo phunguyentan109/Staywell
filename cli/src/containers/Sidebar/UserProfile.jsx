@@ -1,12 +1,18 @@
 import React from 'react'
 import { Avatar, Popover } from 'antd'
+import PropTypes from 'prop-types'
+import { clearAuthData } from 'appRedux/actions/user'
+import { useDispatch } from 'react-redux'
 
-function UserProfile({ username, avatar, logout }) {
+const UserProfile = ({ username, avatar }) => {
+  const dispatch = useDispatch()
+
   const userMenuOptions = (
     <ul className='gx-user-popover'>
-      <li><a href='/app/profile'>My Account</a></li>
+      <li>My Account</li>
       <li>Connections</li>
-      <li onClick={logout}>Logout</li>
+      <li onClick={() => dispatch(clearAuthData())}>Logout
+      </li>
     </ul>
   )
 
@@ -18,6 +24,12 @@ function UserProfile({ username, avatar, logout }) {
       </Popover>
     </div>
   )
+}
+
+UserProfile.propTypes = {
+  logout: PropTypes.func,
+  username: PropTypes.string,
+  avatar: PropTypes.string
 }
 
 export default UserProfile

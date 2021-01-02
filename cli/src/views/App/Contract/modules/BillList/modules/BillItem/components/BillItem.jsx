@@ -5,18 +5,18 @@ import _ from 'lodash'
 import { INPUT_OPTIONS } from '../modules/const'
 import { useToggle } from 'hooks'
 
-function BillItem({ bill, hdOpenBill, form, lastNumber, allowGenerate, hdCheckout }) {
+function BillItem({ bill, hdOpenBill, lastNumber, allowGenerate, hdCheckout }) {
   const [pairs, togglePairs] = useToggle({ modal: false })
 
   const hdSubmit = useCallback(async() => {
-    let { number } = form.getFieldsValue()
-    hdOpenBill(number, bill._id)
-  }, [bill._id, form, hdOpenBill])
+    //'../modules/const' let { number } = form.getFieldsValue()
+    // hdOpenBill(number, bill._id)
+  }, [])
 
   const hdChange = useCallback(e => {
     const { value } = e.target
-    form.setFieldsValue({ number: value })
-  }, [form])
+    // form.setFieldsValue({ number: value })
+  }, [])
 
   return (
     <Card className='gx-card'>
@@ -52,11 +52,12 @@ function BillItem({ bill, hdOpenBill, form, lastNumber, allowGenerate, hdCheckou
                 labelCol={{ xs: 24, sm: 6 }}
                 wrapperCol={{ xs: 24, sm: 16 }}
               >
-                {
-                  form.getFieldDecorator('number', INPUT_OPTIONS.electric())(
-                    <Input type='number' placeholder='Enter the electric number' onChange={hdChange}/>
-                  )
-                }
+                {/*{*/}
+                {/*  form.getFieldDecorator('number', INPUT_OPTIONS.electric())(*/}
+                {/*    <Input type='number' placeholder='Enter the electric number' onChange={hdChange}/>*/}
+                {/*  )*/}
+                {/*}*/}
+                <Input type='number' placeholder='Enter the electric number' onChange={hdChange}/>
               </Form.Item>
             </Form>
           </Modal>
@@ -82,4 +83,4 @@ BillItem.defaultProps = {
   allowPayment: false
 }
 
-export default Form.create({ name: 'bill-form' })(BillItem)
+export default BillItem

@@ -13,7 +13,7 @@ export default function PeopleTable({ title, dataSource, hdRemove }) {
         columns={[
           {
             title: 'Avatar',
-            dataIndex: 'avatar.link',
+            dataIndex: ['avatar', 'link'],
             render: (text, rec) => (
               <span className='user-cell'>
                 <img src={text} alt=''/>
