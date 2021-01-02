@@ -53,7 +53,8 @@
     "rheostat": "^4.1.0",
     "slick-carousel": "^1.8.1",
     "url-search-params": "^1.1.0",
-    "victory": "^34.0.0"
+    "victory": "^34.0.0",
+    "react-app-rewired": "^2.1.5"
   },
   "proxy": "http://localhost:8080",
   "scripts": {
@@ -124,7 +125,6 @@
     "concurrently": "^4.1.2",
     "customize-cra": "^0.9.1",
     "node-sass-chokidar": "^1.4.0",
-    "react-app-rewired": "^2.1.5",
     "wait-on": "^3.3.0",
     "yarn": "^1.17.3"
   }
