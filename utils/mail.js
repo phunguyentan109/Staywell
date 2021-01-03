@@ -78,16 +78,6 @@ ${content}.`
 }
 */
 
-// async function sgSend({ to, subject, html }) {
-//   try {
-//     let data = { from: GMAIL_USER, to, subject, html }
-//
-//     await sgMail.send(data)
-//   } catch (err) {
-//     return err
-//   }
-// }
-
 async function send(info, templateName, data) {
   try {
     const templatePath = `${__dirname}/mailTemplate/${templateName}.ejs`
