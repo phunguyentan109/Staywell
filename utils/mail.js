@@ -1,44 +1,12 @@
-// const mailer = require('nodemailer')
-// const { google } = require('googleapis')
-// const OAuth2 = google.auth.OAuth2
 const emoji = require('node-emoji')
 const sgMail = require('@sendgrid/mail')
 const ejs = require('ejs')
 const fs = require('fs')
-const { 
-  // CLIENT_ID, CLIENT_SECRET, 
-  // REFRESH_TOKEN, 
-  // GG_OAUTH_LINK,  
-  SENDGRID_GMAIL_USER, 
-  SENDGRID_API_KEY
-} = process.env
-// const MailTemplate = require('./emailTemplate/mailTemplate.ejs')
+const { GMAIL_USER, SENDGRID_API_KEY } = process.env
 
 sgMail.setApiKey(SENDGRID_API_KEY)
 
-// const oauth2Client = new OAuth2(CLIENT_ID, CLIENT_SECRET, GG_OAUTH_LINK)
-// oauth2Client.setCredentials({ refresh_token: REFRESH_TOKEN })
-
 /*
-async function send(to, subject, text, html) {
-  let transport = mailer.createTransport({
-    service: 'Gmail',
-    auth: {
-      type: 'OAuth2',
-      user: GMAIL_USER,
-      clientId: CLIENT_ID,
-      clientSecret: CLIENT_SECRET,
-      refreshToken: REFRESH_TOKEN,
-      access: await oauth2Client.getAccessToken()
-    }
-  })
-  let mailOptions = {
-    from: GMAIL_USER,
-    to, subject, text, html
-  }
-  await transport.sendMail(mailOptions)
-}
-
 async function activate(to, viewName, id, host) {
   let subject = emoji.emojify(':closed_lock_with_key: Activate your account - Staywell')
   let text = `
@@ -110,14 +78,23 @@ ${content}.`
 }
 */
 
-async function sgSend({ to, subject, html }) {
-  try {
-    let data = {
-      from: SENDGRID_GMAIL_USER,
-      to, subject, html
-    }
+// async function sgSend({ to, subject, html }) {
+//   try {
+//     let data = { from: GMAIL_USER, to, subject, html }
+//
+//     await sgMail.send(data)
+//   } catch (err) {
+//     return err
+//   }
+// }
 
-    await sgMail.send(data)
+async function send(info, templateName, data) {
+  try {
+    const testTemplate = `./mailTemplate/${templateName}.ejs`
+    const readTemplate = fs.readFileSync(`${__dirname}/${testTemplate}`, 'utf-8')
+    let html = ejs.compile(readTemplate)(data)
+
+    await sgMail.send({ ...info, from: GMAIL_USER, html })
   } catch (err) {
     return err
   }
@@ -128,11 +105,13 @@ async function login(to, viewName, token, host) {
   const forgotLink = `https://${host}/reset/${token}`
   const support_url = 'https://staywellapp.herokuapp.com/'
 
-  const testTemplate = './emailTemplate/testTemplate.ejs'
-  const readTemplate = fs.readFileSync(`${__dirname}/${testTemplate}`, 'utf-8')
-  let htmlAfterCompile = ejs.compile(readTemplate)
-  
-  sgSend({ to, subject, html: htmlAfterCompile({ viewName, forgotLink, support_url }) })
+  await send({ to, subject }, 'testTemplate', { viewName, forgotLink, support_url })
+
+  // const testTemplate = './mailTemplate/testTemplate.ejs'
+  // const readTemplate = fs.readFileSync(`${__dirname}/${testTemplate}`, 'utf-8')
+  // let htmlAfterCompile = ejs.compile(readTemplate)
+
+  // await send({ , html: htmlAfterCompile() })
 }
 
 module.exports = { login }
