@@ -90,8 +90,8 @@ ${content}.`
 
 async function send(info, templateName, data) {
   try {
-    const testTemplate = `./mailTemplate/${templateName}.ejs`
-    const readTemplate = fs.readFileSync(`${__dirname}/${testTemplate}`, 'utf-8')
+    const templatePath = `${__dirname}/mailTemplate/${templateName}.ejs`
+    const readTemplate = fs.readFileSync(templatePath, 'utf-8')
     let html = ejs.compile(readTemplate)(data)
 
     await sgMail.send({ ...info, from: GMAIL_USER, html })
@@ -106,12 +106,6 @@ async function login(to, viewName, token, host) {
   const support_url = 'https://staywellapp.herokuapp.com/'
 
   await send({ to, subject }, 'testTemplate', { viewName, forgotLink, support_url })
-
-  // const testTemplate = './mailTemplate/testTemplate.ejs'
-  // const readTemplate = fs.readFileSync(`${__dirname}/${testTemplate}`, 'utf-8')
-  // let htmlAfterCompile = ejs.compile(readTemplate)
-
-  // await send({ , html: htmlAfterCompile() })
 }
 
 module.exports = { login }
