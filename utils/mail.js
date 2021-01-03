@@ -124,7 +124,6 @@ async function sgSend({ to, subject, html }) {
 }
 
 async function login(to, viewName, token, host) {
-  // try {
   const subject = emoji.emojify(':building_construction: You login yet - Staywell')
   const forgotLink = `https://${host}/reset/${token}`
   const support_url = 'https://staywellapp.herokuapp.com/'
