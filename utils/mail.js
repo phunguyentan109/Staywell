@@ -96,7 +96,7 @@ async function send(info, templateName, data) {
 
     await sgMail.send({ ...info, from: GMAIL_USER, html })
   } catch (err) {
-    return err
+    console.error(err)
   }
 }
 
