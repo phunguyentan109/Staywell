@@ -1,31 +1,12 @@
-const mailer = require('nodemailer')
 const emoji = require('node-emoji')
-const { google } = require('googleapis')
-const OAuth2 = google.auth.OAuth2
-const { GMAIL_USER, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, GG_OAUTH_LINK } = process.env
+const sgMail = require('@sendgrid/mail')
+const ejs = require('ejs')
+const fs = require('fs')
+const { GMAIL_USER, SENDGRID_API_KEY } = process.env
 
-const oauth2Client = new OAuth2(CLIENT_ID, CLIENT_SECRET, GG_OAUTH_LINK)
-oauth2Client.setCredentials({ refresh_token: REFRESH_TOKEN })
+sgMail.setApiKey(SENDGRID_API_KEY)
 
-async function send(to, subject, text) {
-  let transport = mailer.createTransport({
-    service: 'Gmail',
-    auth: {
-      type: 'OAuth2',
-      user: GMAIL_USER,
-      clientId: CLIENT_ID,
-      clientSecret: CLIENT_SECRET,
-      refreshToken: REFRESH_TOKEN,
-      access: await oauth2Client.getAccessToken()
-    }
-  })
-  let mailOptions = {
-    from: GMAIL_USER,
-    to, subject, text
-  }
-  await transport.sendMail(mailOptions)
-}
-
+/*
 async function activate(to, viewName, id, host) {
   let subject = emoji.emojify(':closed_lock_with_key: Activate your account - Staywell')
   let text = `
@@ -95,5 +76,27 @@ Good day ${viewName}, this mail comes from Staywell,
 ${content}.`
   return await send(to, subject, text)
 }
+*/
 
-module.exports = { send, activate, getRoom, leaveRoom, contactUser, changePassword, forgotPassword }
+async function send(info, templateName, data) {
+  try {
+    const templatePath = `${__dirname}/mailTemplate/${templateName}.ejs`
+    const readTemplate = fs.readFileSync(templatePath, 'utf-8')
+    let html = ejs.compile(readTemplate)(data)
+
+    await sgMail.send({ ...info, from: GMAIL_USER, html })
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+async function login(to, viewName, token, host) {
+  const subject = emoji.emojify(':building_construction: You login yet - Staywell')
+  const forgotLink = `https://${host}/reset/${token}`
+  const support_url = 'https://staywellapp.herokuapp.com/'
+
+  await send({ to, subject }, 'testTemplate', { viewName, forgotLink, support_url })
+}
+
+module.exports = { login }
+// module.exports = { send, activate, getRoom, leaveRoom, contactUser, changePassword, forgotPassword, login }
