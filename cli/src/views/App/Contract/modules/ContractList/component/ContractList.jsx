@@ -38,9 +38,7 @@ function ContractList({ contracts, roomId }) {
                     onClick={() => setContractId(null)}
                   />
                   <span className='gx-toolbar-separator'>&nbsp;</span>
-                  <span>
-                    Contract #{contractId.substring(contractId.length - 4, contractId.length)}
-                  </span>
+                  <span>Back to Contract's List</span>
                 </Card>
               </Col>
               <BillList contractId={contractId} roomId={roomId}/>

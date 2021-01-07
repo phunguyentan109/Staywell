@@ -3,13 +3,10 @@ import apiUser from './models/user'
 import apiRoom from './models/room'
 import apiBill from './models/bill'
 import apiPrice from './models/price'
-// import { notify } from './call'
 import { notify } from '../func'
 import axios from 'axios'
-// import { spec } from './call'
 
 export {
-  notify,
   apiContract,
   apiUser,
   apiRoom,
@@ -54,6 +51,8 @@ export const roomApi = {
 export const userApi = {
   get: () => ['user'],
   getOne: userId => [`user/${userId}`],
+  openRegistration: () => ['user/registration'],
+  closeRegistration: token => [`user/registration/${token}`],
   available: () => ['user/available'],
   auth: type => [`user/${type}`, 'post'],
   forgot: () => ['user/forgot', 'post'],

@@ -39,12 +39,13 @@ exports.isPermit = async(req, res, next) => {
   try {
     const token = req.headers.authorization.split(' ')[1]
     const payload = await jwt.verify(token, process.env.SECRET)
+
     let { role } = payload
     let isPermit = role.map(r => r.code).indexOf('000') !== -1
-    return isPermit ? next() : next({
-      status: 405,
-      message: 'Action is not permitted!'
-    })
+    if (!isPermit) return next({ status: 405, message: 'Action is not permitted!' })
+
+    res.locals.loginUserId = payload._id
+    return next()
   } catch (err) {
     return next(err)
   }

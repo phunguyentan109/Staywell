@@ -1,7 +1,8 @@
 const db = require('../models')
+const { unsetByIds } = require('../utils/dbSupport')
 const { pushId, spliceId, assignByIds } = require('../utils/dbSupport')
 const { difference, forEach, cloneDeep } = require('lodash')
-const { leaveRoom, getRoom } = require('../utils/mail')
+// const { leaveRoom, getRoom } = require('../utils/mail')
 
 exports.create = async(req, res, next) => {
   try {
@@ -53,14 +54,14 @@ exports.assign = async(req, res, next) => {
     let newUserIds = difference(inputUserIds, foundRoom.user_id)
 
     // remove room id from old user data
-    await assignByIds('User', oldUserIds, { room_id: undefined })
-    let oldUsers = await db.User.find({ _id: { $in: oldUserIds } }).lean().exec()
-    forEach(oldUsers, ({ email, username }) => leaveRoom(email, username, foundRoom.name))
+    await unsetByIds('User', oldUserIds, { room_id: null })
+    // let oldUsers = await db.User.find({ _id: { $in: oldUserIds } }).lean().exec()
+    // forEach(oldUsers, ({ email, username }) => leaveRoom(email, username, foundRoom.name))
 
     // assign room id for new people
     await assignByIds('User', newUserIds, { room_id: foundRoom._id })
-    let newUsers = await db.User.find({ _id: { $in: newUserIds } }).lean().exec()
-    forEach(newUsers, ({ email, username }) => getRoom(email, username, foundRoom.name))
+    // let newUsers = await db.User.find({ _id: { $in: newUserIds } }).lean().exec()
+    // forEach(newUsers, ({ email, username }) => getRoom(email, username, foundRoom.name))
 
     return next()
   } catch (e) {

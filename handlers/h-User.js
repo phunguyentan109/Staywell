@@ -1,6 +1,8 @@
 const db = require('../models')
 const { genToken } = require('../utils/token')
 const mail = require('../utils/mail')
+const moment = require('moment')
+const jwt = require('jsonwebtoken')
 
 // exports.signUp = async(req, res, next) => {
 //   try {
@@ -30,7 +32,7 @@ exports.logIn = async(req, res, next) => {
     email = email.includes('@') ? email :`${email}@gmail.com`
 
     let user = await db.User.findOne({ email })
-    let { _id, username, avatar } = user
+    let { _id, username, avatar, anonymous } = user
 
     // compare password
     let match = await user.comparePassword(password)
@@ -40,67 +42,90 @@ exports.logIn = async(req, res, next) => {
     let userRole = await db.UserRole.find({ user_id: _id }).populate('role_id').exec()
     let role = userRole.length > 0 ? userRole.map(u => u.role_id) : false
 
-    // gen token to store on client
-    let token = genToken(_id, role)
+    // get anonymous data
+    let anonymousData = { tokens: [] }
+    if (anonymous && anonymous.tokens) {
+      anonymousData.tokens = await Promise.all(anonymous.tokens.map(async (v) => {
+        let data = await jwt.verify(v, process.env.SECRET)
+        return { ...data, token: v }
+      }))
+    }
 
-    return res.status(200).json({ _id, username, avatar, email, role, token })
+    // gen token to store on client
+    let token = genToken({ _id, role })
+
+    return res.status(200).json({ _id, username, avatar, email, role, anonymous: anonymousData, token })
   } catch (err) {
     return next({ status: 400, message: 'Invalid email/password.' })
+  }
+}
+
+exports.openRegistration = async(req, res, next) => {
+  try {
+    let registrationToken = jwt.sign({ openAt: moment(), isClose: false }, process.env.SECRET)
+    let foundUser = await db.User.findById(res.locals.loginUserId)
+    if (foundUser && foundUser.anonymous) {
+      if (!foundUser.anonymous.tokens) foundUser.anonymous = { tokens: [] }
+      let { tokens } = foundUser.anonymous
+      tokens.push(registrationToken)
+      foundUser.anonymous = { tokens }
+      await foundUser.save()
+    }
+    return res.status(200).json({ success: true })
+  } catch (e) {
+    return next(e)
+  }
+}
+
+exports.closeRegistration = async(req, res, next) => {
+  try {
+    let foundUser = await db.User.findById(res.locals.loginUserId)
+    if (foundUser && foundUser.anonymous) {
+      let { tokens } = foundUser.anonymous
+      tokens = tokens.filter(t => t !== req.params.token)
+      foundUser.anonymous = { tokens }
+      foundUser.save()
+    }
+    return res.status(200).json({ success: true })
+  } catch (e) {
+    return next(e)
   }
 }
 
 exports.getOne = async(req, res, next) => {
   try {
     let user = await db.User.findById(req.params.user_id)
-    let { _id, username, email, active, avatar, phone, job, birthDate } = user
+    let { _id, username, email, avatar, anonymous } = user
 
     // get role
     let userRole = await db.UserRole.find({ user_id: _id }).populate('role_id').lean().exec()
     let role = userRole.length > 0 ? userRole.map(u => u.role_id) : false
 
+    // get anonymous data
+    let anonymousData = {}
+    if (anonymous && anonymous.tokens) {
+      anonymousData.tokens = await Promise.all(anonymous.tokens.map(async (v) => {
+        let data = await jwt.verify(v, process.env.SECRET)
+        return { ...data, token: v }
+      }))
+    }
+
     // gen token to store on client
-    let token = genToken(_id, role)
+    let token = genToken({ _id, role, anonymous: anonymousData })
 
     // return email and phone for updating profile
-    return res.status(200).json({ _id, username, email, avatar, role, active, phone, job, birthDate, token })
+    return res.status(200).json({ _id, username, avatar, email, role, anonymous: anonymousData, token })
   } catch (err) {
     return next(err)
   }
 }
 
-// exports.activate = async(req, res, next) => {
-//   try {
-//     const { user_id } = req.params
-//
-//     // check if the user id is not fake
-//     let user = await db.User.findById(user_id).lean().exec()
-//     if (!user) {
-//       return next({
-//         status: 404,
-//         message: 'The account information is not available.'
-//       })
-//     }
-//
-//     // check if user already has the PEOPLE permission
-//     let peopleRole = await db.Role.findOne({ code: '001' }).lean().exec()
-//     let foundUserRole = await db.UserRole.findOne({ user_id, role_id: peopleRole._id }).lean().exec()
-//
-//     // if the user still has UNACTIVE, replace with PEOPLE
-//     let unactiveRole = await db.Role.findOne({ code: '002' }).lean().exec()
-//     if (user && !foundUserRole) {
-//       let userRole = await db.UserRole.findOne({ user_id: user._id, role_id: unactiveRole._id })
-//       userRole.role_id = peopleRole._id
-//       await userRole.save()
-//     }
-//     return res.status(200).json({ success: true })
-//   } catch (err) {
-//     return next(err)
-//   }
-// }
-
 exports.get = async(req, res, next) => {
   try {
-    let people = await db.User.find({ password: { $exists: false } }).lean().exec()
+    let people = await db.User
+      .find({ password: { $exists: false } })
+      .populate('room_id')
+      .lean().exec()
     return res.status(200).json(people)
   } catch (err) {
     return next(err)
@@ -221,6 +246,7 @@ exports.contact = async(req, res, next) => {
 exports.getAvailable = async(req, res, next) => {
   try {
     let foundPeople = await db.User.find({
+      isVerified: true,
       password: { $exists: false },
       room_id: { $exists: false }
     }).lean().exec()

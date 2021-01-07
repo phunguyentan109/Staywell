@@ -30,6 +30,11 @@ const userSchema = mongoose.Schema({
   room_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Room'
+  },
+  anonymous: {
+    type: String,
+    set: v => JSON.stringify(v),
+    get: v => v ? JSON.parse(v) : {}
   }
 }, { timestamps: true })
 

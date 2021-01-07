@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 
-function genToken(_id, role = false) {
-  return jwt.sign({ _id, role }, process.env.SECRET)
+function genToken(data) {
+  return jwt.sign(data, process.env.SECRET)
 }
 
 async function getRoleFromToken(header) {
