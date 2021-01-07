@@ -79,23 +79,19 @@ ${content}.`
 */
 
 async function send(info, templateName, data) {
-  try {
-    const templatePath = `${__dirname}/mailTemplate/${templateName}.ejs`
-    const readTemplate = fs.readFileSync(templatePath, 'utf-8')
-    let html = ejs.compile(readTemplate)(data)
+  const templatePath = `${__dirname}/mailTemplate/${templateName}.ejs`
+  const readTemplate = fs.readFileSync(templatePath, 'utf-8')
+  let html = ejs.compile(readTemplate)(data)
 
-    await sgMail.send({ ...info, from: GMAIL_USER, html })
-  } catch (err) {
-    console.error(err)
-  }
+  await sgMail.send({ ...info, from: GMAIL_USER, html })
 }
 
-async function login(to, viewName, token, host) {
-  const subject = emoji.emojify(':building_construction: You login yet - Staywell')
-  const forgotLink = `https://${host}/reset/${token}`
-  const support_url = 'https://staywellapp.herokuapp.com/'
+async function login(to, viewName) {
+  const subject = emoji.emojify(':building_construction: Email Confirmation - Staywell')
+  // const forgotLink = `https://${host}/reset/${token}`
+  // const support_url = 'https://staywellapp.herokuapp.com/'
 
-  await send({ to, subject }, 'testTemplate', { viewName, forgotLink, support_url })
+  await send({ to, subject }, 'confirmEmail', { viewName })
 }
 
 module.exports = { login }

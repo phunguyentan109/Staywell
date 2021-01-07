@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const rs = require('request')
+const db = require('../models')
 
 exports.generateAvatar = (req, res, next) => {
   const url = 'https://source.unsplash.com/random'
@@ -39,13 +40,50 @@ exports.isPermit = async(req, res, next) => {
   try {
     const token = req.headers.authorization.split(' ')[1]
     const payload = await jwt.verify(token, process.env.SECRET)
+
     let { role } = payload
     let isPermit = role.map(r => r.code).indexOf('000') !== -1
-    return isPermit ? next() : next({
-      status: 405,
-      message: 'Action is not permitted!'
-    })
+    if (!isPermit) return next({ status: 405, message: 'Action is not permitted!' })
+
+    res.locals.loginUserId = payload._id
+    return next()
   } catch (err) {
     return next(err)
+  }
+}
+
+exports.isValidRegisterToken = async(req, res, next) => {
+  try {
+    await jwt.verify(req.params.token, process.env.SECRET)
+
+    let foundUser = await db.User.findOne({ email: process.env.GMAIL_USER }).exec()
+    const { anonymous } = foundUser
+    if (anonymous && anonymous.tokens) {
+      res.locals.isValidToken = !anonymous.usedTokens.some(t => t === req.params.token)
+    }
+
+    return next()
+  } catch (err) {
+    res.locals.isValidToken = false
+    return next()
+  }
+}
+
+exports.disableToken = async(req, res, next) => {
+  try {
+    if (!res.locals.registerToken.allow) return next()
+    let foundUser = await db.User.findOne({ email: process.env.GMAIL_USER }).exec()
+
+    // Remove token from user anonymous data
+    if (foundUser && foundUser.anonymous) {
+      let { tokens } = foundUser.anonymous
+      tokens = tokens.filter(t => t !== req.params.token)
+      foundUser.anonymous = { tokens }
+      await foundUser.save()
+    }
+    res.locals.registerToken = { allow: false, expiredAt: 'Invalid token' }
+    return next()
+  } catch (e) {
+    return next(e)
   }
 }

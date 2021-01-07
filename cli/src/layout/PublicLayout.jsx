@@ -7,7 +7,7 @@ import PublicRoutes from 'views/Public'
 function PublicLayout() {
   return (
     <div className='auth-bg' style={{ backgroundImage: `url(${bg})` }}>
-      <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+      <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
         <PublicNavbar/>
         <PublicRoutes/>
         <div className='auth-credit'>

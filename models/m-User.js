@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const db = require('./index')
+const jwt = require('jsonwebtoken')
 
 const userSchema = mongoose.Schema({
   username: {
@@ -30,8 +31,26 @@ const userSchema = mongoose.Schema({
   room_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Room'
+  },
+  anonymous: {
+    type: String,
+    set: v => JSON.stringify(v),
   }
 }, { timestamps: true })
+
+userSchema.methods.setAnonymous = async(data) => {
+  let { tokens, usedTokens } = await refreshTokens(data)
+  return {
+    tokens: tokens.map(t => t.token),
+    usedTokens: usedTokens.map(t => t.token)
+  }
+}
+
+userSchema.methods.getAnonymous = async function(){
+  if (!this.anonymous) return { tokens: [], usedTokens: [] }
+  let anonymousData = JSON.parse(this.anonymous)
+  return await refreshTokens(anonymousData)
+}
 
 userSchema.pre('save', async function(next){
   try {
@@ -64,3 +83,24 @@ userSchema.methods.comparePassword = async function(candidatePassword, next){
 }
 
 module.exports = mongoose.model('User', userSchema)
+
+
+// ========================================================================================
+// SUPPORT FUNCTIONS
+// ========================================================================================
+function filterVerifiedTokens(tokens) {
+  return Promise.allSettled(tokens.map(async (v) => {
+    let data = await jwt.verify(v, process.env.SECRET)
+    if (data) return { token: v, ...data }
+  }))
+}
+
+async function refreshTokens(data) {
+  // Verify tokens and get valid tokens with its payload
+  let filterTokens = await filterVerifiedTokens(data.tokens)
+  let filterUsedTokens = await filterVerifiedTokens(data.usedTokens)
+  return {
+    tokens: filterTokens.filter(v => v.status === 'fulfilled').map(t => t.value),
+    usedTokens: filterUsedTokens.filter(v => v.status === 'fulfilled').map(t => t.value)
+  }
+}

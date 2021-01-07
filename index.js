@@ -6,6 +6,7 @@ const cors = require('cors')
 const hdl = require('./handlers')
 const path = require('path')
 const { PORT } = process.env
+const { login } = require('./utils/mail')
 
 app.use(express.static(path.join(__dirname, 'cli/build')))
 
@@ -19,6 +20,11 @@ app.use('/api/rooms', require('./routes/r-Room'))
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname + '/cli/build/index.html'))
+})
+
+app.post('/api/mail', async(req, res) => {
+  await login('kyleharris815490@gmail.com', 'PhuNguyen')
+  return res.status(200).json({ success: true })
 })
 
 app.use(hdl.Error.invalidRoute)

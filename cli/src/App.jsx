@@ -7,6 +7,7 @@ import extractStorage from 'constants/clientStorage'
 import 'assets/vendors/style'
 import 'antd/dist/antd.css'
 import 'assets/style.css'
+import 'assets/css/_animate.scss'
 import 'assets/css/index.css'
 
 import configureStore from 'appRedux'

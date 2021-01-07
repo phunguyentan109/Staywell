@@ -6,6 +6,7 @@ import { PermissionRouter } from 'containers/Permissions'
 import AppLayout from 'layout/AppLayout'
 import PublicLayout from 'layout/PublicLayout'
 import Accessing from './Accessing'
+import Register from './Public/Register'
 
 function RootRoutes({ user }) {
   let isRememberAuth = localStorage.swtoken && Object.keys(user).length === 0
@@ -19,6 +20,7 @@ function RootRoutes({ user }) {
   } else {
     return (
       <Switch>
+        <Route path='/register/:token' component={Register}/>
         <PermissionRouter
           path='/app'
           redirect='/'
