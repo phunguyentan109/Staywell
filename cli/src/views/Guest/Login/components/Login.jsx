@@ -1,6 +1,7 @@
 import React, { memo, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useStore } from 'hooks'
+import '../_styles.scss'
 
 function Login({ message, addMessage, sendAuthData }) {
   const [account, repAccount] = useStore({ email: '', password: '' })
@@ -18,7 +19,7 @@ function Login({ message, addMessage, sendAuthData }) {
   },[account, sendAuthData])
 
   return (
-    <div className='content'>
+    <div className='login-content'>
       <h1>Welcome to Staywell,</h1>
       <h1>What a nice day,</h1>
       <h4>Please enter your account to continue.</h4>

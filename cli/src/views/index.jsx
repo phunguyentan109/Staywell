@@ -1,11 +1,15 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Switch, Route } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 
 import { PermissionRouter } from 'containers/Permissions'
 import AppLayout from 'layout/AppLayout'
-import PublicLayout from 'layout/PublicLayout'
+import GuestPages from 'views/Guest'
 import Accessing from './Accessing'
+import Register from './Public/Register'
+import Confirm from './Public/Confirm'
+
+import { routes } from '../constants/variables'
 
 function RootRoutes({ user }) {
   let isRememberAuth = localStorage.swtoken && Object.keys(user).length === 0
@@ -13,12 +17,16 @@ function RootRoutes({ user }) {
   if (isRememberAuth) {
     return (
       <Switch>
+        <Route path={routes.completeRegistration()} component={Confirm}/>
+        <Route path={routes.registration()} component={Register}/>
         <Route path='/' component={Accessing}/>
       </Switch>
     )
   } else {
     return (
       <Switch>
+        <Route path={routes.completeRegistration()} component={Confirm}/>
+        <Route path={routes.registration()} component={Register}/>
         <PermissionRouter
           path='/app'
           redirect='/'
@@ -29,7 +37,7 @@ function RootRoutes({ user }) {
         <PermissionRouter
           path='/'
           redirect='/app'
-          component={PublicLayout}
+          component={GuestPages}
           access={['GUEST_PM']}
           useCommon={false}
         />

@@ -2,7 +2,7 @@ import {
   SEND_AUTH_DATA,
   SEND_SOCIAL_AUTH_DATA,
   CLEAR_AUTH_DATA,
-  ACTIVATED_USER,
+  // ACTIVATED_USER,
   SEND_RELOAD_USER,
   ADD_USER
 } from 'constants/ActionTypes'
@@ -27,10 +27,6 @@ export function clearAuthData() {
 
 export function addUser(value = {}) {
   return { type: ADD_USER, value }
-}
-
-export function activateUser() {
-  return { type: ACTIVATED_USER }
 }
 
 export function sendReloadUser(user_id) {

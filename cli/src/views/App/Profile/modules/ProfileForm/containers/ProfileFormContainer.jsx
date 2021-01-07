@@ -25,7 +25,7 @@ function ProfileFormContainer({ user, sendReloadUser }) {
     onLoading()
     if (profile.email) {
       let keys = ['email', 'job', 'phone', 'birthDate']
-      const rs =await call(...userApi.update(user._id), _.pick(profile, keys))
+      const rs = await call(...userApi.update(user._id), _.pick(profile, keys))
       if (rs.status === 200) {
         sendReloadUser(user._id)
         notify('success', 'Your profile has been updated successfully.')
@@ -37,11 +37,11 @@ function ProfileFormContainer({ user, sendReloadUser }) {
   }, [ sendReloadUser, user._id])
 
   return (
-    <ProfileForm 
-      profile={profile} 
+    <ProfileForm
+      profile={profile}
       repProfile={repProfile}
       setProfile={setProfile}
-      hdUpdateProfile={hdUpdateProfile} 
+      hdUpdateProfile={hdUpdateProfile}
     />
   )
 }
@@ -58,7 +58,7 @@ ProfileFormContainer.propTypes = {
 }
 
 ProfileFormContainer.defaultProps = {
-  user: { 
+  user: {
     _id: '',
     username: '',
     avatar: {

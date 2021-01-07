@@ -1,13 +1,22 @@
+import React, { useCallback } from 'react'
 import Register from '../components/Register'
-import { connect } from 'react-redux'
-import { sendAuthData } from 'appRedux/actions/user'
-import { addMessage } from 'appRedux/actions/message'
+import PropTypes from 'prop-types'
+import { notify } from 'constants/func'
+import { call, userApi } from 'constants/api'
 
-function mapState({ message }) {
-  return {
-    message: message.text,
-    negative: message.isNegative
-  }
+function RegisterContainer({ match }) {
+  const { params } = match
+
+  const hdRegister = useCallback(async(form) => {
+    let rs = await call(...userApi.submitRegistration(params.token), form)
+    rs && notify('success', 'Information has been saved successfully!')
+  }, [params.token])
+
+  return <Register hdRegister={hdRegister} />
 }
 
-export default connect(mapState, { sendAuthData, addMessage })(Register)
+RegisterContainer.propTypes = {
+  match: PropTypes.object
+}
+
+export default RegisterContainer

@@ -25,11 +25,7 @@ function ContractListContainer(props) {
   useEffect(() => { getContracts() }, [getContracts])
 
   return (
-    <ContractList
-      {...props}
-      contracts={contracts}
-      contractId={contractId}
-    />
+    <ContractList {...props} contracts={contracts} contractId={contractId}/>
   )
 }
 

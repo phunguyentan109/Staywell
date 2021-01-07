@@ -1,15 +1,15 @@
 import React from 'react'
 import bg from 'assets/img/loginBg.jpg'
-
+import PropTypes from 'prop-types'
 import PublicNavbar from 'containers/Bar/Navbar'
-import PublicRoutes from 'views/Public'
+import '../_styles.scss'
 
-function PublicLayout() {
+function PublicLayout({ children }) {
   return (
     <div className='auth-bg' style={{ backgroundImage: `url(${bg})` }}>
-      <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+      <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
         <PublicNavbar/>
-        <PublicRoutes/>
+        {children}
         <div className='auth-credit'>
           <p>©2019, designed and coded by Phu Nguyen</p>
           <p>
@@ -20,6 +20,10 @@ function PublicLayout() {
       </div>
     </div>
   )
+}
+
+PublicLayout.propTypes = {
+  children: PropTypes.any
 }
 
 export default PublicLayout

@@ -1,5 +1,5 @@
 export const DEFAULT_ACCOUNT = {
-    email: '',
-    password: '',
-    cpassword: ''
+  username: '',
+  email: '',
+  gender: 'man'
 }

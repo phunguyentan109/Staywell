@@ -17,6 +17,9 @@ app.use('/api/user', require('./routes/r-User'))
 app.use('/api/price', require('./routes/r-Price'))
 app.use('/api/rooms', require('./routes/r-Room'))
 
+// For navigate app pages
+app.get('/registration/complete/:user_id', hdl.User.complete)
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname + '/cli/build/index.html'))
 })

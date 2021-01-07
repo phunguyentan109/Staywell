@@ -1,0 +1,249 @@
+@import "src/assets/css/mixin";
+@import "src/assets/css/animate";
+
+@include appear('fromTop', 0, 0, -100px, 0);
+@include appear('fromLeft', -100px, 0, 0, 0);
+@include appear('fromBottom', 0, 0, 100px, 0);
+
+@mixin authBtn($hov-color){
+  font-size: 16px;
+
+  &:hover{
+    background-color: $hov-color;
+    cursor: pointer;
+  }
+}
+
+%iconInput{
+  padding: 7px 15px 7px 20px;
+  background-color: #ffffff1a;
+  line-height: 2;
+  transition-duration: 0.5s;
+  font-size: 14px;
+}
+
+.register-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: $f-ubuntu;
+
+  > h1 {
+    text-align: center;
+    color: #bababa;
+    font-size: 40px;
+    margin: 0 0 8px;
+
+    @include appear-animation(fromTop, 1.2s, .3s);
+
+    &:nth-of-type(2) { display: none }
+  }
+
+  > h4 {
+    margin: 20px 0 0;
+    color: #bbbbbb;
+    font-size: 15px;
+
+    @include appear-animation(fromTop, 1.2s);
+  }
+
+  > .notify {
+    padding: 10px 35px;
+    margin: 10px 20px -42px 20px;
+    border-radius: 2px;
+    background-color: #f31a1a3d;
+    color: #bababa;
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  > .great-notify {
+    padding: 10px 35px;
+    margin: 10px 20px -42px 20px;
+    border-radius: 2px;
+    background-color: #1df31a3d;
+    color: #bababa;
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  form {
+    margin-top: 60px;
+
+    > .auth-input {
+      margin-bottom: 15px;
+
+      &:hover i,
+      &:hover input, {
+        background-color: #ffffff2e;
+      }
+
+      i {
+        @extend %iconInput;
+        color: #edededa8;
+        padding-left: 15px;
+        border-top-left-radius: 20px;
+        border-bottom-left-radius: 20px;
+        transition-duration: 0.5s;
+      }
+
+      input {
+        @extend %iconInput;
+        padding-left: 0;
+        padding-right: 0;
+        border: none;
+        outline: none;
+        width: 290px;
+        color: #ffffffa8;
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+        font-family: $f-ubuntu;
+        margin-bottom: 0;
+
+        &::placeholder{
+          color: #edededa8;
+          font-size: 14px;
+        }
+
+        @include mobile {
+          width: 270px;
+        }
+      }
+
+      &:nth-of-type(1) {
+        @include appear-animation(fromLeft, 1.2s, .6s);
+      }
+
+      &:nth-of-type(2) {
+        @include appear-animation(fromLeft, 1.2s, .9s);
+      }
+    }
+
+    .auth-select {
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+
+      span {
+        color: white;
+        width: 40px;
+        text-align: center;
+      }
+
+      button {
+        height: 42px;
+        flex-grow: 1;
+        color: white;
+        border: none;
+        outline: none;
+        background-color: #ffffff1a;
+        border-radius: 20px;
+        transition-duration: .2s;
+        max-width: 100px;
+
+        &.select {
+          border: 2px solid #a0a0a0;
+          font-weight: bold;
+          max-width: 300px;
+        }
+
+        &:hover {
+          background-color: #ffffff2e;
+        }
+      }
+
+      @include appear-animation(fromLeft, 1.2s, 1.2s);
+    }
+
+    .signup {
+      outline: none;
+      border: none;
+      color: white;
+      border-radius: 20px;
+      width: 100%;
+      padding: 4px 0;
+      line-height: 2;
+      margin-top: 40px;
+      transition-duration: 0.3s;
+      font-family: $f-ubuntu;
+      background-color: #287f7f;
+      @include authBtn(#319696);
+
+      @include mobile {
+        margin-top: 30px;
+        padding: 5px 0;
+        font-size: 15px;
+      }
+
+      @include appear-animation(fromBottom, 1.2s, 1.5s);
+    }
+  }
+
+  @include mobile {
+    > h1 {
+      font-size: 30px;
+
+      &:nth-of-type(1) { display: none }
+      &:nth-of-type(2) { display: initial }
+    }
+
+    > a { display: none; }
+
+    > h4 {
+      font-size: 14px;
+    }
+  }
+}
+
+//.auth-form {
+//  .auth-input {
+//    margin-bottom: 15px;
+//
+//    > i {
+//      @extend %iconInput;
+//      color: #edededa8;
+//      padding-left: 15px;
+//      border-top-left-radius: 20px;
+//      border-bottom-left-radius: 20px;
+//      transition-duration: 0.5s;
+//
+//      &.focus {
+//        background-color: #ffffff30;
+//      }
+//    }
+//
+//    > input {
+//      @extend %iconInput;
+//      padding-left: 0;
+//      padding-right: 0;
+//      border: none;
+//      outline: none;
+//      width: 290px;
+//      color: #ffffffa8;
+//      border-top-right-radius: 20px;
+//      border-bottom-right-radius: 20px;
+//      font-family: $f-ubuntu;
+//      margin-bottom: 0;
+//
+//      &::placeholder{
+//        color: #edededa8;
+//        font-size: 14px;
+//      }
+//
+//      &.focus {
+//        background-color: #ffffff30;
+//      }
+//
+//      @include mobile {
+//        width: 270px;
+//      }
+//    }
+//  }
+//
+//
+//}
+
+
+
+
