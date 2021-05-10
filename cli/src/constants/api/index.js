@@ -51,15 +51,19 @@ export const roomApi = {
 export const userApi = {
   get: () => ['user'],
   getOne: userId => [`user/${userId}`],
-  openRegistration: () => ['user/registration'],
-  closeRegistration: token => [`user/registration/${token}`],
   available: () => ['user/available'],
   auth: type => [`user/${type}`, 'post'],
   forgot: () => ['user/forgot', 'post'],
   remove: userId => [`user/${userId}`, 'delete'],
   update: userId => [`user/${userId}`, 'put'],  activate: userId => [`user/${userId}/activate`, 'put'],
   reset: token => [`user/${token}/reset`, 'put'],
-  password: userId => [`user/${userId}/password`, 'put']
+  password: userId => [`user/${userId}/password`, 'put'],
+
+  // registration
+  openRegistration: () => ['user/registration', 'post'],
+  allowRegistration: token => [`user/registration/${token}`],
+  submitRegistration: token => [`user/registration/${token}`, 'post'],
+  closeRegistration: token => [`user/registration/${token}`, 'delete'],
 }
 
 /* Price */

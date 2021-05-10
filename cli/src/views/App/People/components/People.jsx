@@ -168,9 +168,9 @@ export default function People({ people, hdRemove, tokens, removeToken, hdOpenRe
                             </Menu.Item>
                             <Menu.Divider/>
                             <Menu.Item>
-                              <a target='_blank' rel='noopener noreferrer' href='http://www.taobao.com/'>
-                                <span className='gx-text-danger'>Disable</span>
-                              </a>
+                              <DeleteAction onConfirm={() => removeToken(r.token)}>
+                                <span className='gx-text-danger'>Remove</span>
+                              </DeleteAction>
                             </Menu.Item>
                           </Menu>
                         )}

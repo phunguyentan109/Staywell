@@ -29,15 +29,15 @@ function PeopleContainer(props) {
     offLoading()
   }, [])
 
-  const removeToken = useCallback(async(peopleId) => {
+  const removeToken = useCallback(async(token) => {
     onLoading()
-    let rs = await userApi.remove(peopleId)
+    let rs = await call(...userApi.closeRegistration(token))
     if (rs.status === 200) {
-      setPeople(prev => prev.filter(p => p.user_id._id !== peopleId))
-      notify('success', 'People data is removed successfully.')
+      dispatch(sendReloadUser(reduxData._id))
+      notify('success', 'Token is removed successfully.')
     }
     offLoading()
-  }, [])
+  }, [dispatch, reduxData._id])
 
   const hdOpenRegistration = useCallback(async() => {
     onLoading()

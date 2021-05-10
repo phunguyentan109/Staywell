@@ -6,13 +6,14 @@ import { DEFAULT_ACCOUNT } from '../modules/const'
 import bg from 'assets/img/loginBg.jpg'
 import PublicNavbar from 'containers/Bar/Navbar'
 
-export default function Register({ message, negative, sendAuthData, addMessage }) {
+export default function Register() {
   const [account, setAccount] = useState(DEFAULT_ACCOUNT)
+  const [end, setEnd] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
-    return () => addMessage()
-  },[addMessage])
+  // useEffect(() => {
+  //   return () => addMessage()
+  // },[])
 
   function hdSubmit(e) {
     setLoading(true)
@@ -21,15 +22,16 @@ export default function Register({ message, negative, sendAuthData, addMessage }
       let isValidPassword = account.password === account.cpassword
       let isNotEmpty = account.email.length > 0 && account.password.length > 0
       if (isNotEmpty && isValidPassword) {
-        sendAuthData('signup', account)
         setAccount(DEFAULT_ACCOUNT)
-        addMessage('An email has been sent, please check and follow to activate your account', false)
+        setEnd(true)
+        // addMessage('An email has been sent, please check and follow to activate your account', false)
       } else {
-        addMessage('The entered information is not valid. Please try again')
+        // addMessage('The entered information is not valid. Please try again')
         setLoading(false)
       }
     } catch (err) {
-      addMessage(err)
+      console.log(err)
+      // addMessage(err)
     }
     setLoading(false)
   }
@@ -46,11 +48,11 @@ export default function Register({ message, negative, sendAuthData, addMessage }
         <div className='content'>
           <h1>Sign up</h1>
           <h4>Please fill in below to complete registration.</h4>
-          {
-            message.length > 0 && <div className={`${negative ? 'notify' : 'great-notify'}`}>
-              <span>{message}</span>
-            </div>
-          }
+          {/*{*/}
+          {/*  message.length > 0 && <div className={`${negative ? 'notify' : 'great-notify'}`}>*/}
+          {/*    <span>{message}</span>*/}
+          {/*  </div>*/}
+          {/*}*/}
           <form className='auth-form' onSubmit={hdSubmit}>
             <div className='auth-input'>
               <i className='far fa-envelope'/>
