@@ -4,27 +4,20 @@ const mail = require('../utils/mail')
 const moment = require('moment')
 const jwt = require('jsonwebtoken')
 
-// exports.signUp = async(req, res, next) => {
-//   try {
-//     let username = req.body.email.split('@')[0]
-//     let user = await db.User.create({ username, ...req.body })
-//     let { _id, email, active, avatar } = user
-//
-//     // gen token for storing on client
-//     let token = genToken(_id)
-//
-//     // Push the role UNACTIVE for user
-//     let role = await db.Role.findOne({ code: '002' })
-//     await db.UserRole.create({ role_id: role._id, user_id: user._id })
-//
-//     return res.status(200).json({ _id, username, avatar, email, active, token, role: [role] })
-//   } catch (err) {
-//     return next({
-//       status: 400,
-//       message: err.code === 11000 ? 'Sorry, that email/password is taken or invalid' : err.message
-//     })
-//   }
-// }
+exports.signUp = async(req, res, next) => {
+  try {
+    let username = req.body.email.split('@')[0]
+    let user = await db.User.create({ username, ...req.body })
+    let { email } = user
+
+    return res.status(200).json({ email, username })
+  } catch (err) {
+    return next({
+      status: 400,
+      message: err.code === 11000 ? 'Sorry, that email/password is taken or invalid' : err.message
+    })
+  }
+}
 
 exports.logIn = async(req, res, next) => {
   try {
@@ -87,6 +80,14 @@ exports.closeRegistration = async(req, res, next) => {
       foundUser.save()
     }
     return res.status(200).json({ success: true })
+  } catch (e) {
+    return next(e)
+  }
+}
+
+exports.checkToken = async(req, res, next) => {
+  try {
+    return res.status(200).json({ ...res.locals.registerToken })
   } catch (e) {
     return next(e)
   }

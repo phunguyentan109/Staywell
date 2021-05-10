@@ -9,8 +9,12 @@ router.route('/available').get(hdl.User.getAvailable)
 router.route('/login').post(hdl.User.logIn)
 router.route('/forgot').post(hdl.User.forgot)
 
-router.route('/registration').get(mw.User.isLogin, mw.User.isPermit, hdl.User.openRegistration)
-router.route('/registration/:token').delete(mw.User.isLogin, mw.User.isPermit, hdl.User.closeRegistration)
+router.route('/registration').post(mw.User.isLogin, mw.User.isPermit, hdl.User.openRegistration)
+
+router.route('/registration/:token')
+  .get(mw.User.ableToRegister, hdl.User.checkToken)
+  .post(mw.User.ableToRegister, hdl.User.signUp)
+  .delete(mw.User.isLogin, mw.User.isPermit, hdl.User.closeRegistration)
 
 router.route('/:user_id')
   .get(mw.User.isLogin, hdl.User.getOne)

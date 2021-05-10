@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const rs = require('request')
+const moment = require('moment')
 
 exports.generateAvatar = (req, res, next) => {
   const url = 'https://source.unsplash.com/random'
@@ -45,6 +46,25 @@ exports.isPermit = async(req, res, next) => {
     if (!isPermit) return next({ status: 405, message: 'Action is not permitted!' })
 
     res.locals.loginUserId = payload._id
+    return next()
+  } catch (err) {
+    return next(err)
+  }
+}
+
+exports.ableToRegister = async(req, res, next) => {
+  try {
+    const payload = await jwt.verify(req.params.token, process.env.SECRET)
+    if (payload) {
+      const isExpiredTime = moment().isAfter(moment(payload.openAt).add(1, 'day'))
+
+      res.locals.registerToken = {
+        allow: !payload.isClose && !isExpiredTime,
+        expiredAt: moment().to(moment(payload.openAt).add(1, 'day'))
+      }
+    } else {
+      res.locals.registerToken = { allow: false, expiredAt: 'Invalid token' }
+    }
     return next()
   } catch (err) {
     return next(err)
