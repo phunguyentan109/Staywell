@@ -1,22 +1,4 @@
-@mixin appear($name, $x1, $x2, $y1, $y2) {
-  @include k-frame($name) {
-    from {
-      transform: translate($x1, $y1);
-      opacity: 0;
-    }
-    to {
-      transform: translate($x2, $y2);
-      opacity: 1;
-    }
-  }
-}
-
-@mixin appear-animation($name, $duration, $delay: 0s) {
-  animation-name: $name;
-  animation-duration: $duration;
-  animation-delay: $delay;
-  animation-fill-mode: backwards;
-}
+@import "src/assets/css/_animate";
 
 @include appear('fromTop', 0, 0, -100px, 0);
 @include appear('fromLeft', -100px, 0, 0, 0);

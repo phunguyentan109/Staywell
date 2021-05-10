@@ -182,6 +182,25 @@
 .mxy-lg {
   margin: 20px; }
 
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3); }
+  40% {
+    opacity: .8;
+    transform: scale(1); }
+  80% {
+    opacity: 1;
+    transform: scale(0.8); }
+  100% {
+    opacity: 1;
+    transform: scale(1); } }
+
+.bounceIn {
+  animation-name: bounceIn;
+  animation-duration: .75s;
+  animation-timing-function: ease-out; }
+
 @keyframes fromTop {
   from {
     transform: translate(0, -100px);
@@ -616,18 +635,6 @@
         box-shadow: 1px 1px 5px #0000006e;
         width: 38px;
         height: 38px; }
-
-.user-cell {
-  display: flex;
-  align-items: center; }
-  .user-cell img {
-    width: 50px;
-    height: 50px;
-    border-radius: 55%;
-    margin-right: 20px; }
-  .user-cell p {
-    margin-bottom: 5px;
-    font-size: 15px; }
 
 .accessing {
   width: 100%;

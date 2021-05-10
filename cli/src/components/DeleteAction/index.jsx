@@ -1,40 +1,40 @@
-import React, { useState } from 'react'
-import SweetAlert from 'react-bootstrap-sweetalert'
+import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
+import { Modal } from 'antd'
 
-export default function DeleteAction({ onConfirm, message, ...props }) {
-  const [modal, toggleModal] = useState(false)
-  const toggle = () => toggleModal(prev => !prev)
+export default function DeleteAction({ onConfirm, message, onCancel, children, title }) {
+  const hdConfirm = useCallback(() => {
+    Modal.confirm({
+      title,
+      content: message,
+      onOk() {
+        onConfirm()
+      },
+      onCancel() {
+        onCancel()
+      },
+    })
+  }, [message, onCancel, onConfirm, title])
 
-  function hdConfirm() {
-    onConfirm()
-    toggle()
-  }
-
-  return (
-    <span className='delete-action'>
-      <span className='gx-link' onClick={toggle}>Delete</span>
-      {
-        modal && <SweetAlert onConfirm={hdConfirm} onCancel={toggle} {...props}>
-          <span>{message}</span>
-        </SweetAlert>
-      }
-    </span>
-  )
+  return <span className='gx-link' onClick={hdConfirm}>{children}</span>
 }
 
 DeleteAction.propTypes = {
   onConfirm: PropTypes.func.isRequired,
+  onCancel: PropTypes.func,
   warning: PropTypes.bool,
   showCancel: PropTypes.bool,
   confirmBtnText: PropTypes.string,
   cancelBtnBsStyle: PropTypes.string,
   title: PropTypes.string,
+  children: PropTypes.any,
   message: PropTypes.string
 }
 
 DeleteAction.defaultProps = {
   warning: true,
+  onCancel: () => {},
+  children: 'Delete',
   showCancel: true,
   confirmBtnText: 'Yes, delete it!',
   cancelBtnBsStyle: 'default',

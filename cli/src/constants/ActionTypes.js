@@ -4,9 +4,9 @@ export const WINDOW_WIDTH = 'WINDOW-WIDTH'
 export const SWITCH_LANGUAGE = 'SWITCH-LANGUAGE'
 
 //Contact Module const
-export const FETCH_START = 'fetch_start'
-export const FETCH_SUCCESS = 'fetch_success'
-export const FETCH_ERROR = 'fetch_error'
+// export const FETCH_START = 'fetch_start'
+// export const FETCH_SUCCESS = 'fetch_success'
+// export const FETCH_ERROR = 'fetch_error'
 export const SHOW_MESSAGE = 'SHOW_MESSAGE'
 export const HIDE_MESSAGE = 'HIDE_MESSAGE'
 export const ON_SHOW_LOADER = 'ON_SHOW_LOADER'
@@ -30,22 +30,22 @@ export const SIGNOUT_USER_SUCCESS = 'SIGNOUT_USER_SUCCESS'
 export const INIT_URL = 'INIT_URL'
 
 //Sticky
-export const GET_STICKY = 'GET_STICKY'
-export const NOTES_UPDATE='NOTES_UPDATE'
-export const FETCH_ALL_NOTES_SUCCESS='FETCH_ALL_NOTES_SUCCESS'
-export const UPDATE_ALL_NOTES_SUCCESS='UPDATE_ALL_NOTES_SUCCESS'
+// export const GET_STICKY = 'GET_STICKY'
+// export const NOTES_UPDATE='NOTES_UPDATE'
+// export const FETCH_ALL_NOTES_SUCCESS='FETCH_ALL_NOTES_SUCCESS'
+// export const UPDATE_ALL_NOTES_SUCCESS='UPDATE_ALL_NOTES_SUCCESS'
 
 //Contact
-export const GET_All_CONTACT_SUCCESS = 'GET_All_CONTACT_SUCCESS'
-export const ON_ADD_CONTACT_SUCCESS = 'ON_ADD_CONTACT_SUCCESS'
-export const UPDATE_CONTACT_SUCCESS='UPDATE_CONTACT_SUCCESS'
-export const DELETE_CONTACT_SUCCESS='DELETE_CONTACT_SUCCESS'
+// export const GET_All_CONTACT_SUCCESS = 'GET_All_CONTACT_SUCCESS'
+// export const ON_ADD_CONTACT_SUCCESS = 'ON_ADD_CONTACT_SUCCESS'
+// export const UPDATE_CONTACT_SUCCESS='UPDATE_CONTACT_SUCCESS'
+// export const DELETE_CONTACT_SUCCESS='DELETE_CONTACT_SUCCESS'
 
 // User
 export const SEND_AUTH_DATA = 'SEND_AUTH_DATA'
 export const SEND_SOCIAL_AUTH_DATA = 'SEND_SOCIAL_AUTH_DATA'
 export const CLEAR_AUTH_DATA = 'CLEAR_AUTH_DATA'
-export const ACTIVATED_USER = 'ACTIVATED_USER'
+// export const ACTIVATED_USER = 'ACTIVATED_USER'
 export const ADD_USER = 'ADD_USER'
 export const SEND_RELOAD_USER = 'SEND_RELOAD_USER'
 

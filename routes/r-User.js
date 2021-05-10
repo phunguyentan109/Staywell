@@ -6,9 +6,15 @@ const router = express.Router({ mergeParams: true })
 router.route('/').get(hdl.User.get)
 router.route('/available').get(hdl.User.getAvailable)
 
-// router.route('/signup').post(mw.User.generateAvatar, hdl.User.signUp)
 router.route('/login').post(hdl.User.logIn)
 router.route('/forgot').post(hdl.User.forgot)
+
+router.route('/registration').post(mw.User.isLogin, mw.User.isPermit, hdl.User.openRegistration)
+
+router.route('/registration/:token')
+  .get(mw.User.ableToRegister, hdl.User.checkToken)
+  .post(mw.User.ableToRegister, hdl.User.signUp)
+  .delete(mw.User.isLogin, mw.User.isPermit, hdl.User.closeRegistration)
 
 router.route('/:user_id')
   .get(mw.User.isLogin, hdl.User.getOne)
@@ -17,7 +23,6 @@ router.route('/:user_id')
 
 router.route('/:token/reset').put(hdl.User.resetPassword)
 
-// router.route('/:user_id/activate').put(hdl.User.activate)
 router.route('/:user_id/password').put(hdl.User.updatePassword)
 router.route('/:user_id/contact').post(hdl.User.contact)
 
