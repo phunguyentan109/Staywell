@@ -1,8 +1,9 @@
+const moment = require('moment')
 const db = require('../models')
 
 exports.get = async(req, res, next) => {
   try {
-    let prices = await db.Price.find().select('-room_id')
+    let prices = await db.Price.find({ deleteAt: { $exists: false } }).select('-room_id')
     return res.status(200).json(prices)
   } catch (err){
     return next(err)
@@ -30,8 +31,18 @@ exports.create = async(req, res, next) => {
 exports.remove = async(req, res, next) => {
   try {
     let foundPrice = await db.Price.findById({ _id: req.params.price_id })
-    if (foundPrice) foundPrice.remove()
-    return res.status(200).json(foundPrice)
+    if (foundPrice) {
+      if (req.body.softDelete) {
+        await foundPrice.updateOne({ deleteAt: moment() })
+      } else {
+        await foundPrice.remove()
+      }
+      return res.status(200).json(foundPrice)
+    }
+    return next({
+      status: 400,
+      message: 'Price is not exist'
+    })
   } catch (err) {
     return next(err)
   }

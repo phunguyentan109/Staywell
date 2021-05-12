@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const moment = require('moment')
 const { assignId } = require('../utils/dbSupport')
 
 const priceSchema = new mongoose.Schema({
@@ -36,6 +37,10 @@ const priceSchema = new mongoose.Schema({
   extra: {
     type: Number,
     default: 0
+  },
+  deleteAt: {
+    type: Date,
+    get: v => moment(v).format('MMMM Do YYYY')
   }
 }, { timestamps: true })
 

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const moment = require('moment')
 const { spliceId } = require('../utils/dbSupport')
 
 const roomSchema = new mongoose.Schema({
@@ -23,7 +24,11 @@ const roomSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'
     }
-  ]
+  ],
+  deleteAt: {
+    type: Date,
+    get: v => moment(v).format('MMMM Do YYYY')
+  }
 })
 
 roomSchema.pre('remove', async function(next) {
