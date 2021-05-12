@@ -9,6 +9,15 @@ exports.get = async(req, res, next) => {
   }
 }
 
+exports.getDeleted = async(req, res, next) => {
+  try {
+    let prices = await db.Price.find({ deleteAt: { $exists: true } }).select('-room_id')
+    return res.status(200).json(prices)
+  } catch (err){
+    return next(err)
+  }
+}
+
 exports.getOne = async(req, res, next) => {
   try {
     let price = await db.Price.findById({ _id: req.params.price_id })
@@ -32,6 +41,17 @@ exports.remove = async(req, res, next) => {
     let foundPrice = await db.Price.findById({ _id: req.params.price_id })
     if (foundPrice) foundPrice.remove()
     return res.status(200).json(foundPrice)
+  } catch (err) {
+    return next(err)
+  }
+}
+
+exports.restore = async(req, res, next) => {
+  try {
+    let restorePrice = await db.Price.findByIdAndUpdate(req.params.price_id, {
+      $unset: { deleteAt: 1 }
+    }, { new: true })
+    return res.status(200).json(restorePrice)
   } catch (err) {
     return next(err)
   }

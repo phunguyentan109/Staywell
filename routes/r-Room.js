@@ -7,6 +7,11 @@ router.route('/')
   .get(hdl.Room.get)
   .post(mw.User.isPermit, mw.Room.create, hdl.Room.getOne)
 
+router.route('/old')
+  .get(hdl.Room.getDeleted)
+
+router.route('/old/:room_id').post(hdl.Room.restore)
+
 router.route('/:room_id')
   .get(mw.User.isPermit, hdl.Room.getOne)
   .delete(mw.User.isPermit, hdl.Room.remove)
