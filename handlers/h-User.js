@@ -11,8 +11,8 @@ exports.signUp = async(req, res, next) => {
     let user = await db.User.create({ username, ...req.body })
     let { email } = user
 
-    //Send mail for the user
-
+    // Mail user to confirm email
+    await mail.confirmMail(email, { viewName: username, host: req.header.host, userId: user._id })
 
     return res.status(200).json({ email, username })
   } catch (err) {
@@ -24,7 +24,7 @@ exports.signUp = async(req, res, next) => {
 }
 
 exports.logIn = async(req, res, next) => {
-  try {x
+  try {
     let { email, password } = req.body
     email = email.includes('@') ? email :`${email}@gmail.com`
 

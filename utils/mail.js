@@ -86,13 +86,9 @@ async function send(info, templateName, data) {
   await sgMail.send({ ...info, from: GMAIL_USER, html })
 }
 
-async function login(to, viewName) {
+exports.confirmMail = async(to, { viewName, host, userId }) => {
   const subject = emoji.emojify(':building_construction: Email Confirmation - Staywell')
-  // const forgotLink = `https://${host}/reset/${token}`
-  // const support_url = 'https://staywellapp.herokuapp.com/'
+  const confirmUrl = `${process.env.DEVHOST || host}/register/${userId}`
 
-  await send({ to, subject }, 'confirmEmail', { viewName })
+  await send({ to, subject }, 'confirmEmail', { viewName, confirmUrl })
 }
-
-module.exports = { login }
-// module.exports = { send, activate, getRoom, leaveRoom, contactUser, changePassword, forgotPassword, login }
