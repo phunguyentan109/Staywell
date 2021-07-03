@@ -49,34 +49,43 @@ export default function Register() {
           {/*}*/}
           <form className='auth-form' onSubmit={hdSubmit}>
             <div className='auth-input'>
+              <i className='far fa-user'/>
+              <input
+                placeholder='What should we call you?'
+                name='username'
+                value={account.username}
+                onChange={hdChange}
+              />
+            </div>
+            <div className='auth-input'>
               <i className='far fa-envelope'/>
               <input
-                placeholder='Email'
+                placeholder='An email to keep connected'
                 name='email'
                 value={account.email}
                 onChange={hdChange}
               />
             </div>
-            <div className='auth-input'>
-              <i className='fas fa-key'/>
-              <input
-                type='password'
-                placeholder='Password'
-                name='password'
-                value={account.password}
-                onChange={hdChange}
-              />
-            </div>
-            <div className='auth-input'>
-              <i className='fas fa-key'/>
-              <input
-                type='password'
-                placeholder='Confirm Password'
-                name='cpassword'
-                value={account.cpassword}
-                onChange={hdChange}
-              />
-            </div>
+            {/*<div className='auth-input'>*/}
+            {/*  <i className='fas fa-key'/>*/}
+            {/*  <input*/}
+            {/*    type='password'*/}
+            {/*    placeholder='Password'*/}
+            {/*    name='password'*/}
+            {/*    value={account.password}*/}
+            {/*    onChange={hdChange}*/}
+            {/*  />*/}
+            {/*</div>*/}
+            {/*<div className='auth-input'>*/}
+            {/*  <i className='fas fa-key'/>*/}
+            {/*  <input*/}
+            {/*    type='password'*/}
+            {/*    placeholder='Confirm Password'*/}
+            {/*    name='cpassword'*/}
+            {/*    value={account.cpassword}*/}
+            {/*    onChange={hdChange}*/}
+            {/*  />*/}
+            {/*</div>*/}
             <button className='signup' disabled={loading}>
               {
                 loading
