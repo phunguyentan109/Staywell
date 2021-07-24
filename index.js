@@ -27,3 +27,5 @@ app.use(hdl.Error.invalidRoute)
 app.use(hdl.Error.wrapErr)
 
 app.listen(PORT, () => console.log(`[ SERVER IS STARTED ON PORT ${PORT} ]`))
+
+module.exports = app
