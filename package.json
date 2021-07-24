@@ -11,6 +11,8 @@
     "start": "node index.js",
     "dev": "concurrently \"nodemon index.js\" \"cd cli && yarn start\"",
     "seed": "node seed",
+    "test": "mocha tests/**/*.test.js --timeout 10000",
+    "test-watch": "nodemon --exec yarn test",
     "heroku-postbuild": "yarn seed && cd cli && yarn && yarn run build"
   },
   "keywords": [],
@@ -36,13 +38,16 @@
     "request": "^2.88.0"
   },
   "devDependencies": {
+    "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
+    "concurrently": "^4.1.2",
     "eslint": "^6.8.0",
     "eslint-plugin-flowtype": "^4.6.0",
     "eslint-plugin-import": "^2.20.1",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.18.3",
     "eslint-plugin-react-hooks": "^2.5.0",
-    "concurrently": "^4.1.2",
+    "mocha": "^9.0.2",
     "nodemon": "^2.0.2"
   }
 }
