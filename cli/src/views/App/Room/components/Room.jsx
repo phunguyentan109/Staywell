@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import DeleteAction from 'components/DeleteAction'
 import TableTransfer from '../modules/TableTransfer'
 import RoomForm from '../modules/RoomForm'
-
 import { roomApi, call } from 'constants/api'
 import { offLoading, onLoading, notify } from 'constants/func'
 

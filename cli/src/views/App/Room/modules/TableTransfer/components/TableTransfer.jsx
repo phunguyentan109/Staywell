@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
-
+import '../_style.scss'
 import TransferConfig from './TransferConfig'
 import { TABLE_COLS } from '../../const'
 import { Modal } from 'antd'
