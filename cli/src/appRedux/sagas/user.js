@@ -3,7 +3,7 @@ import {
   SEND_AUTH_DATA,
   CLEAR_AUTH_DATA,
   SEND_RELOAD_USER,
-  ACTIVATED_USER
+  // ACTIVATED_USER
 } from 'constants/ActionTypes'
 import { apiUser, userApi, call as apiCall } from 'constants/api'
 import { setTokenHeader } from 'constants/api/call'
@@ -39,11 +39,11 @@ function* hdClearAuthData() {
   yield put(addUser())
 }
 
-function* hdAfterActivate() {
-  sessionStorage.clear()
-  localStorage.clear()
-  yield put(addUser())
-}
+// function* hdAfterActivate() {
+//   sessionStorage.clear()
+//   localStorage.clear()
+//   yield put(addUser())
+// }
 
 function* hdReloadUser({ value }) {
   let data = yield call(apiUser.get, value)
@@ -57,7 +57,7 @@ function* hdReloadUser({ value }) {
 
 export default [
   takeLatest(SEND_AUTH_DATA, hdAuthData),
-  takeLatest(ACTIVATED_USER, hdAfterActivate),
+  // takeLatest(ACTIVATED_USER, hdAfterActivate),
   takeLatest(SEND_RELOAD_USER, hdReloadUser),
   takeLatest(CLEAR_AUTH_DATA, hdClearAuthData)
 ]

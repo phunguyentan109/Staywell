@@ -3,13 +3,10 @@ import apiUser from './models/user'
 import apiRoom from './models/room'
 import apiBill from './models/bill'
 import apiPrice from './models/price'
-// import { notify } from './call'
 import { notify } from '../func'
 import axios from 'axios'
-// import { spec } from './call'
 
 export {
-  notify,
   apiContract,
   apiUser,
   apiRoom,
@@ -26,7 +23,6 @@ export async function call(url, method = 'get', data) {
     return rs
   } catch (err) {
     notify('error', 'Oops! Something went wrong...')
-    return { status: 500, error: err.response.data }
   }
 }
 
@@ -60,7 +56,13 @@ export const userApi = {
   remove: userId => [`user/${userId}`, 'delete'],
   update: userId => [`user/${userId}`, 'put'],  activate: userId => [`user/${userId}/activate`, 'put'],
   reset: token => [`user/${token}/reset`, 'put'],
-  password: userId => [`user/${userId}/password`, 'put']
+  password: userId => [`user/${userId}/password`, 'put'],
+
+  // registration
+  openRegistration: () => ['user/registration', 'post'],
+  allowRegistration: token => [`user/registration/${token}`],
+  submitRegistration: token => [`user/registration/${token}`, 'post'],
+  closeRegistration: token => [`user/registration/${token}`, 'delete'],
 }
 
 /* Price */

@@ -21,3 +21,8 @@ export const breadNames = {
     name: 'Manage Contract'
   }
 }
+
+export const routes = {
+  registration: (token = ':token') => `/registration/${token}`,
+  completeRegistration: (userId = ':userId') => `/registration/complete/${userId}`
+}

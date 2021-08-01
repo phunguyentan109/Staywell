@@ -1,28 +1,25 @@
 const db = require('../models')
 const { genToken } = require('../utils/token')
 const mail = require('../utils/mail')
+const moment = require('moment')
+const jwt = require('jsonwebtoken')
 
-// exports.signUp = async(req, res, next) => {
-//   try {
-//     let username = req.body.email.split('@')[0]
-//     let user = await db.User.create({ username, ...req.body })
-//     let { _id, email, active, avatar } = user
-//
-//     // gen token for storing on client
-//     let token = genToken(_id)
-//
-//     // Push the role UNACTIVE for user
-//     let role = await db.Role.findOne({ code: '002' })
-//     await db.UserRole.create({ role_id: role._id, user_id: user._id })
-//
-//     return res.status(200).json({ _id, username, avatar, email, active, token, role: [role] })
-//   } catch (err) {
-//     return next({
-//       status: 400,
-//       message: err.code === 11000 ? 'Sorry, that email/password is taken or invalid' : err.message
-//     })
-//   }
-// }
+exports.signUp = async(req, res, next) => {
+  try {
+    let user = await db.User.create(req.body)
+    let { email, username } = user
+
+    // Mail user to confirm email
+    await mail.confirmMail(req.header.host, { to: email, viewName: username, userId: user._id })
+
+    return res.status(200).json({ email, username })
+  } catch (err) {
+    return next({
+      status: 400,
+      message: err.code === 11000 ? 'Sorry, that email/password is taken or invalid' : err.message
+    })
+  }
+}
 
 exports.logIn = async(req, res, next) => {
   try {
@@ -30,7 +27,7 @@ exports.logIn = async(req, res, next) => {
     email = email.includes('@') ? email :`${email}@gmail.com`
 
     let user = await db.User.findOne({ email })
-    let { _id, username, avatar } = user
+    let { _id, username, avatar, anonymous } = user
 
     // compare password
     let match = await user.comparePassword(password)
@@ -40,67 +37,79 @@ exports.logIn = async(req, res, next) => {
     let userRole = await db.UserRole.find({ user_id: _id }).populate('role_id').exec()
     let role = userRole.length > 0 ? userRole.map(u => u.role_id) : false
 
-    // gen token to store on client
-    let token = genToken(_id, role)
+    // get anonymous data
+    let anonymousData = { tokens: [] }
+    if (anonymous) {
+      anonymousData.tokens = (await user.getAnonymous()).tokens
+    }
 
-    return res.status(200).json({ _id, username, avatar, email, role, token })
+    // gen token to store on client
+    let token = genToken({ _id, role })
+
+    return res.status(200).json({ _id, username, avatar, email, role, anonymous: anonymousData, token })
   } catch (err) {
     return next({ status: 400, message: 'Invalid email/password.' })
+  }
+}
+
+exports.complete = async(req, res, next) => {
+  try {
+    let { user_id } = req.params
+    console.log('go to here')
+    let foundUser = await db.User.findById(user_id)
+    if (!foundUser) return res.redirect('/')
+    foundUser.isVerified = true
+    await foundUser.save()
+    res.locals.loadHtml = true
+    return next()
+  } catch (e) {
+    return res.redirect('/')
+  }
+}
+
+exports.openRegistration = async(req, res, next) => {
+  try {
+    let registrationToken = jwt.sign({ openAt: moment() }, process.env.SECRET, { expiresIn: '24h' })
+    let foundUser = await db.User.findById(res.locals.loginUserId)
+    if (foundUser) await foundUser.setAnonymousToken(registrationToken)
+    return res.status(200).json({ success: true })
+  } catch (e) {
+    console.error('handler => user.openRegistration')
+    return next(e)
   }
 }
 
 exports.getOne = async(req, res, next) => {
   try {
     let user = await db.User.findById(req.params.user_id)
-    let { _id, username, email, active, avatar, phone, job, birthDate } = user
+    let { _id, username, email, avatar, anonymous } = user
 
     // get role
     let userRole = await db.UserRole.find({ user_id: _id }).populate('role_id').lean().exec()
     let role = userRole.length > 0 ? userRole.map(u => u.role_id) : false
 
+    // get anonymous data
+    let anonymousData = { tokens: [] }
+    if (anonymous) {
+      anonymousData.tokens = (await user.getAnonymous()).tokens
+    }
+
     // gen token to store on client
-    let token = genToken(_id, role)
+    let token = genToken({ _id, role, anonymous: anonymousData })
 
     // return email and phone for updating profile
-    return res.status(200).json({ _id, username, email, avatar, role, active, phone, job, birthDate, token })
+    return res.status(200).json({ _id, username, avatar, email, role, anonymous: anonymousData, token })
   } catch (err) {
     return next(err)
   }
 }
 
-// exports.activate = async(req, res, next) => {
-//   try {
-//     const { user_id } = req.params
-//
-//     // check if the user id is not fake
-//     let user = await db.User.findById(user_id).lean().exec()
-//     if (!user) {
-//       return next({
-//         status: 404,
-//         message: 'The account information is not available.'
-//       })
-//     }
-//
-//     // check if user already has the PEOPLE permission
-//     let peopleRole = await db.Role.findOne({ code: '001' }).lean().exec()
-//     let foundUserRole = await db.UserRole.findOne({ user_id, role_id: peopleRole._id }).lean().exec()
-//
-//     // if the user still has UNACTIVE, replace with PEOPLE
-//     let unactiveRole = await db.Role.findOne({ code: '002' }).lean().exec()
-//     if (user && !foundUserRole) {
-//       let userRole = await db.UserRole.findOne({ user_id: user._id, role_id: unactiveRole._id })
-//       userRole.role_id = peopleRole._id
-//       await userRole.save()
-//     }
-//     return res.status(200).json({ success: true })
-//   } catch (err) {
-//     return next(err)
-//   }
-// }
-
 exports.get = async(req, res, next) => {
   try {
-    let people = await db.User.find({ password: { $exists: false } }).lean().exec()
+    let people = await db.User
+      .find({ password: { $exists: false } })
+      .populate('room_id')
+      .lean().exec()
     return res.status(200).json(people)
   } catch (err) {
     return next(err)
@@ -221,6 +230,7 @@ exports.contact = async(req, res, next) => {
 exports.getAvailable = async(req, res, next) => {
   try {
     let foundPeople = await db.User.find({
+      isVerified: true,
       password: { $exists: false },
       room_id: { $exists: false }
     }).lean().exec()

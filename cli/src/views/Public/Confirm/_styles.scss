@@ -1,0 +1,29 @@
+@import "src/assets/css/mixin";
+
+.confirm-content {
+  font-family: $f-montserrat;
+  padding: 50px 20px;
+  background-color: #00000059;
+  color: white;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  > i {
+    font-size: 80px;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    color: white;
+    font-size: 22px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  p {
+    color: #d2d2d2;
+  }
+}

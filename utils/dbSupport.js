@@ -48,6 +48,17 @@ exports.assignId = async(findSchema, findId, assignCol, assignId) => {
   }
 }
 
+exports.unsetByIds = async(schema, ids, assignObj) => {
+  try {
+    for (let id of ids) {
+      await db[schema].findByIdAndUpdate(id, { $unset: assignObj })
+    }
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+
+
 exports.assignByIds = async(schema, ids, assignObj) => {
   try {
     for (let id of ids) {
@@ -61,7 +72,18 @@ exports.assignByIds = async(schema, ids, assignObj) => {
 /*
     Casade delete a list of record by using a list of ID
 */
-exports.casDeleteMany = async(schema, listId) => {
+exports.deleteByIds = async(schema, listId) => {
+  try {
+    for (let id of listId){
+      let foundDoc = await db[schema].findById(id)
+      if (foundDoc) await foundDoc.remove()
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+exports.casDelete = async(schema, listId) => {
   try {
     for (let id of listId){
       let foundDoc = await db[schema].findById(id)

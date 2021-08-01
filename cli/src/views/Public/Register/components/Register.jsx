@@ -1,34 +1,23 @@
-import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-// import AuthInput from 'components/Auth/AuthInput'
+import React, { useMemo, useState } from 'react'
+import _ from 'lodash'
 import PropTypes from 'prop-types'
-
+import '../_styles.scss'
 import { DEFAULT_ACCOUNT } from '../modules/const'
+import PublicLayout from 'layout/PublicLayout'
 
-export default function Register({ message, negative, sendAuthData, addMessage }) {
-  const [account, setAccount] = useState(DEFAULT_ACCOUNT)
+export default function Register({ hdRegister }) {
+  const [account, setAccount] = useState(_.cloneDeep(DEFAULT_ACCOUNT))
   const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
-    return () => addMessage()
-  },[addMessage])
-
-  function hdSubmit(e) {
+  async function hdSubmit(e) {
     setLoading(true)
     try {
       e.preventDefault()
-      let isValidPassword = account.password === account.cpassword
-      let isNotEmpty = account.email.length > 0 && account.password.length > 0
-      if(isNotEmpty && isValidPassword) {
-        sendAuthData('signup', account)
-        setAccount(DEFAULT_ACCOUNT)
-        addMessage('An email has been sent, please check and follow to activate your account', false)
-      } else {
-        addMessage('The entered information is not valid. Please try again')
-        setLoading(false)
-      }
+      setAccount(DEFAULT_ACCOUNT)
+      await hdRegister(account)
     } catch (err) {
-      addMessage(err)
+      console.log(err)
+      // addMessage(err)
     }
     setLoading(false)
   }
@@ -38,60 +27,71 @@ export default function Register({ message, negative, sendAuthData, addMessage }
     setAccount(prev => ({ ...prev, [name]: value }))
   }
 
+  const isMan = useMemo(() => account.gender === 'man', [account.gender])
+
   return (
-    <div className='content'>
-      <h1>Sign up</h1>
-      <h4>Please fill in below to complete registration.</h4>
-      {
-        message.length > 0 && <div className={`${negative ? 'notify' : 'great-notify'}`}>
-          <span>{message}</span>
-        </div>
-      }
-      <form className='auth-form' onSubmit={hdSubmit}>
-        {/*<AuthInput*/}
-        {/*  placeholder='Email'*/}
-        {/*  name='email'*/}
-        {/*  icon='far fa-envelope'*/}
-        {/*  value={account.email}*/}
-        {/*  onChange={hdChange}*/}
-        {/*/>*/}
-        {/*<AuthInput*/}
-        {/*  type='password'*/}
-        {/*  placeholder='Password'*/}
-        {/*  name='password'*/}
-        {/*  icon='fas fa-key'*/}
-        {/*  value={account.password}*/}
-        {/*  onChange={hdChange}*/}
-        {/*/>*/}
-        {/*<AuthInput*/}
-        {/*  type='password'*/}
-        {/*  placeholder='Confirm Password'*/}
-        {/*  name='cpassword'*/}
-        {/*  icon='fas fa-key'*/}
-        {/*  value={account.cpassword}*/}
-        {/*  onChange={hdChange}*/}
-        {/*/>*/}
-        <button className='signup' disabled={loading}>
-          {
-            loading
-              ? <i className='fas fa-circle-notch fa-spin'/>
-              : 'Create account'
-          }
-        </button>
-      </form>
-      <Link to='/forgot'>Forgot your password?</Link>
-    </div>
+    <PublicLayout>
+      <div className='register-content'>
+        <h1>Sign up</h1>
+        <h4>Please fill in below to complete registration</h4>
+        <form className='auth-form' onSubmit={hdSubmit}>
+          <div className='auth-input'>
+            <i className='far fa-user'/>
+            <input
+              placeholder='What should we call you?'
+              name='username'
+              value={account.username}
+              onChange={hdChange}
+            />
+          </div>
+          <div className='auth-input'>
+            <i className='far fa-envelope'/>
+            <input
+              placeholder= 'Email to keep informed'
+              name='email'
+              onChange={hdChange}
+              value={account.email}
+            />
+          </div>
+          <div className='auth-select'>
+            <button
+              type='button'
+              className={isMan ? 'select' : ''}
+              onClick={() => setAccount(prev => ({ ...prev, gender: 'man' }))}
+            >
+              {isMan && <i className='fas fa-male mr-xs'/>} Man
+            </button>
+            <span>OR</span>
+            <button
+              type='button'
+              className={!isMan ? 'select' : ''}
+              onClick={() => setAccount(prev => ({ ...prev, gender: 'woman' }))}
+            >
+              {isMan || <i className='fas fa-female mr-xs'/>} Woman
+            </button>
+          </div>
+          <button type='submit' className='signup' disabled={loading}>
+            {
+              loading
+                ? <i className='fas fa-circle-notch fa-spin'/>
+                : 'Confirm'
+            }
+          </button>
+        </form>
+      </div>
+    </PublicLayout>
   )
 }
 
-Register.propsTypes = {
+Register.propTypes = {
   message: PropTypes.string,
-  negative: PropTypes.bool,
+  allow: PropTypes.bool,
   addMessage: PropTypes.func,
-  sendAuthData: PropTypes.func
+  sendAuthData: PropTypes.func,
+  hdRegister: PropTypes.func
 }
 
 Register.defaultProps = {
   message: '',
-  negative: false
+  allow: false
 }
