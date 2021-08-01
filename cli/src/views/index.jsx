@@ -5,7 +5,7 @@ import { Route, Switch } from 'react-router-dom'
 import { PermissionRouter } from 'containers/Permissions'
 import AppLayout from 'layout/AppLayout'
 import GuestPages from 'views/Guest'
-import Accessing from './Accessing'
+import Accessing from './Public/Accessing'
 import Register from './Public/Register'
 import Confirm from './Public/Confirm'
 
@@ -32,14 +32,12 @@ function RootRoutes({ user }) {
           redirect='/'
           component={AppLayout}
           access={['OWNER_PM']}
-          useCommon={false}
         />
         <PermissionRouter
           path='/'
           redirect='/app'
           component={GuestPages}
           access={['GUEST_PM']}
-          useCommon={false}
         />
       </Switch>
     )

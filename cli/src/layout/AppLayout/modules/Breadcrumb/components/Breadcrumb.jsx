@@ -3,8 +3,7 @@ import { withRouter } from 'react-router-dom'
 import { Card, Breadcrumb } from 'antd'
 import Icon from '@ant-design/icons'
 import { breadNames } from 'constants/variables'
-import get from 'lodash/get'
-import split from 'lodash/split'
+import { get, split } from 'lodash'
 
 function BreadcrumbBar(props) {
   const [paths, setPaths] = useState([])
