@@ -1,4 +1,5 @@
 const db = require('../models')
+const { hdLog } = require('../utils/logger')
 
 exports.getOne = async(req, res, next) => {
   try {
@@ -6,6 +7,7 @@ exports.getOne = async(req, res, next) => {
     let foundBill = await db.Bill.findById(bill_id)
     return res.status(200).json(foundBill).lean().exec()
   } catch (err) {
+    hdLog('bill.getOne', err.message)
     return next(err)
   }
 }

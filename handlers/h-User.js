@@ -3,6 +3,7 @@ const { genToken } = require('../utils/token')
 const mail = require('../utils/mail')
 const moment = require('moment')
 const jwt = require('jsonwebtoken')
+const { hdLog } = require('../utils/logger')
 
 exports.signUp = async(req, res, next) => {
   try {
@@ -14,6 +15,7 @@ exports.signUp = async(req, res, next) => {
 
     return res.status(200).json({ email, username })
   } catch (err) {
+    hdLog('user.signUp', err.message)
     return next({
       status: 400,
       message: err.code === 11000 ? 'Sorry, that email/password is taken or invalid' : err.message
@@ -48,6 +50,7 @@ exports.logIn = async(req, res, next) => {
 
     return res.status(200).json({ _id, username, avatar, email, role, anonymous: anonymousData, token })
   } catch (err) {
+    hdLog('user.logIn', err.message)
     return next({ status: 400, message: 'Invalid email/password.' })
   }
 }
@@ -55,14 +58,14 @@ exports.logIn = async(req, res, next) => {
 exports.complete = async(req, res, next) => {
   try {
     let { user_id } = req.params
-    console.log('go to here')
     let foundUser = await db.User.findById(user_id)
     if (!foundUser) return res.redirect('/')
     foundUser.isVerified = true
     await foundUser.save()
     res.locals.loadHtml = true
     return next()
-  } catch (e) {
+  } catch (err) {
+    hdLog('user.complete', err.message)
     return res.redirect('/')
   }
 }
@@ -73,9 +76,9 @@ exports.openRegistration = async(req, res, next) => {
     let foundUser = await db.User.findById(res.locals.loginUserId)
     if (foundUser) await foundUser.setAnonymousToken(registrationToken)
     return res.status(200).json({ success: true })
-  } catch (e) {
-    console.error('handler => user.openRegistration')
-    return next(e)
+  } catch (err) {
+    hdLog('user.openRegistration', err.message)
+    return next(err)
   }
 }
 
@@ -100,6 +103,7 @@ exports.getOne = async(req, res, next) => {
     // return email and phone for updating profile
     return res.status(200).json({ _id, username, avatar, email, role, anonymous: anonymousData, token })
   } catch (err) {
+    hdLog('user.getOne', err.message)
     return next(err)
   }
 }
@@ -112,6 +116,7 @@ exports.get = async(req, res, next) => {
       .lean().exec()
     return res.status(200).json(people)
   } catch (err) {
+    hdLog('user.get', err.message)
     return next(err)
   }
 }
@@ -122,6 +127,7 @@ exports.remove = async(req, res, next) => {
     if (user) user.remove()
     return res.status(200).json(user)
   } catch (err) {
+    hdLog('user.remove', err.message)
     return next(err)
   }
 }
@@ -148,6 +154,7 @@ exports.updatePassword = async(req, res, next) => {
       })
     }
   } catch (err) {
+    hdLog('user.updatePassword', err.message)
     return next({
       status: 400,
       message: err.code === 11000 ? 'Sorry, the password is invalid' : err.message
@@ -176,6 +183,7 @@ exports.forgot = async(req, res, next) => {
       })
     }
   } catch (err) {
+    hdLog('user.forgot', err.message)
     return next(err)
   }
 }
@@ -204,6 +212,7 @@ exports.resetPassword = async(req, res, next) => {
     mail.changePassword(foundUser.email, foundUser.username)
     return res.status(200).json(token)
   } catch (err) {
+    hdLog('user.resetPassword', err.message)
     return next(err)
   }
 }
@@ -223,6 +232,7 @@ exports.contact = async(req, res, next) => {
 
     return res.status(200).json(listUser)
   } catch (err) {
+    hdLog('user.contact', err.message)
     return next(err)
   }
 }
@@ -236,8 +246,9 @@ exports.getAvailable = async(req, res, next) => {
     }).lean().exec()
 
     return res.status(200).json(foundPeople)
-  } catch (e) {
-    return next(e)
+  } catch (err) {
+    hdLog('user.getAvailable', err.message)
+    return next(err)
   }
 }
 
@@ -246,6 +257,7 @@ exports.update = async(req, res, next) => {
     let updateUser = await db.User.findByIdAndUpdate(req.params.user_id, req.body, { new: true })
     return res.status(200).json(updateUser)
   } catch (err) {
+    hdLog('user.update', err.message)
     return next(err)
   }
 }
