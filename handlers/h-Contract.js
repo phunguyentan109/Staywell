@@ -1,5 +1,6 @@
 const db = require('../models')
 const _ = require('lodash')
+const { hdLog } = require('../utils/logger')
 
 exports.get = async(req, res, next) => {
   try {
@@ -16,8 +17,9 @@ exports.get = async(req, res, next) => {
       })
       .exec()
     return res.status(200).json(contracts)
-  } catch (e) {
-    return next(e)
+  } catch (err) {
+    hdLog('price.get', err.message)
+    return next(err)
   }
 }
 
@@ -45,8 +47,9 @@ exports.getLatestElectric = async(req, res, next) => {
     } else {
       return res.status(200).json(info.electric)
     }
-  } catch (e) {
-    return next(e)
+  } catch (err) {
+    hdLog('price.getLatestElectric', err.message)
+    return next(err)
   }
 }
 
@@ -55,8 +58,9 @@ exports.getOne = async(req, res, next) => {
     const contract_id = res.locals.contract_id || req.params.contract_id
     let foundContract = await db.Contract.findById(contract_id).populate('bill_id').exec()
     return res.status(200).json(foundContract)
-  } catch (e) {
-    return next(e)
+  } catch (err) {
+    hdLog('price.getOne', err.message)
+    return next(err)
   }
 }
 
@@ -66,6 +70,7 @@ exports.remove = async(req, res, next) => {
     contract && await contract.remove()
     return res.status(200).json(contract)
   } catch (err) {
+    hdLog('price.remove', err.message)
     return next(err)
   }
 }

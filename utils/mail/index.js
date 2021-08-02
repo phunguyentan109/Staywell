@@ -7,7 +7,7 @@ const { GMAIL_USER, SENDGRID_API_KEY } = process.env
 sgMail.setApiKey(SENDGRID_API_KEY)
 
 async function send(info, templateName, data) {
-  const templatePath = `${__dirname}/mailTemplate/${templateName}.ejs`
+  const templatePath = `${__dirname}/templates/${templateName}.ejs`
   const readTemplate = fs.readFileSync(templatePath, 'utf-8')
   let html = ejs.compile(readTemplate)(data)
 

@@ -1,4 +1,5 @@
 const db = require('../models')
+const { mwLog } = require('../utils/logger')
 
 exports.generate = async(req, res, next) => {
   try {
@@ -21,6 +22,7 @@ exports.generate = async(req, res, next) => {
     await db.Bill.findByIdAndUpdate(bill_id, bill, { new: true })
     return next()
   } catch (e) {
+    mwLog('bill.generate')
     return next(e)
   }
 }
@@ -31,6 +33,7 @@ exports.updatePayment = async(req, res, next) => {
     await db.Bill.findByIdAndUpdate(bill_id, { paidDate: Date.now() })
     return next()
   } catch (e) {
+    mwLog('bill.updatePayment')
     return next(e)
   }
 }

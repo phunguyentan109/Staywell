@@ -25,13 +25,13 @@ router.route('/:token/reset').put(hdl.User.resetPassword)
 router.route('/:user_id/password').put(hdl.User.updatePassword)
 router.route('/:user_id/contact').post(hdl.User.contact)
 
-// HANDLE UNFINISHED DONE REQUESTS
-router.use((req, res) => res.status(200).json({ status: 'success' }))
-
 // LINKED ROUTES
+router.use('/:user_id/contracts', require('./r-Contract'))
 router.use('/:user_id/rooms', mw.User.isLogin, require('./r-Room'))
 router.use('/:user_id/price', mw.User.isLogin, require('./r-Price'))
 router.use('/:user_id/people', mw.User.isLogin, require('./r-People'))
-router.use('/:user_id/contracts', require('./r-Contract'))
+
+// HANDLE UNFINISHED DONE REQUESTS
+router.use((req, res) => res.status(200).json({ status: 'success' }))
 
 module.exports = router

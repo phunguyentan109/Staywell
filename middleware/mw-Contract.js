@@ -1,6 +1,7 @@
 const moment = require('moment')
 const db = require('../models')
 const { pushId } = require('../utils/dbSupport')
+const { mwLog } = require('../utils/logger')
 
 exports.create = async(req, res, next) => {
   try {
@@ -22,6 +23,7 @@ exports.create = async(req, res, next) => {
     res.locals.contract_id = crContract._id
     return next()
   } catch (e) {
+    mwLog('contract.create')
     return next(e)
   }
 }

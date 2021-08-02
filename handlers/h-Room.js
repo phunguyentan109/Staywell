@@ -1,5 +1,6 @@
 const moment = require('moment')
 const db = require('../models')
+const hdLog = require('../utils/logger')
 
 exports.get = async(req, res, next) => {
   try {
@@ -10,6 +11,7 @@ exports.get = async(req, res, next) => {
 
     return res.status(200).json(list)
   } catch (err) {
+    hdLog('room.get', err.message)
     return next(err)
   }
 }
@@ -23,6 +25,7 @@ exports.getDeleted = async(req, res, next) => {
 
     return res.status(200).json(list)
   } catch (err){
+    hdLog('room.getDeleted', err.message)
     return next(err)
   }
 }
@@ -37,6 +40,7 @@ exports.getOne = async(req, res, next) => {
 
     return res.status(200).json(one)
   } catch (err) {
+    hdLog('room.getOne', err.message)
     return next(err)
   }
 }
@@ -48,6 +52,7 @@ exports.restore = async(req, res, next) => {
     }, { new: true })
     return res.status(200).json(restoreRoom)
   } catch (err) {
+    hdLog('room.restore', err.message)
     return next(err)
   }
 }
@@ -68,6 +73,7 @@ exports.remove = async(req, res, next) => {
       message: 'Room is not exist'
     })
   } catch (err) {
+    hdLog('room.remove', err.message)
     return next(err)
   }
 }
