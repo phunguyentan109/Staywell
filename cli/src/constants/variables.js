@@ -19,6 +19,9 @@ export const breadNames = {
   },
   '/app/contracts': {
     name: 'Manage Contract'
+  },
+  '/app/data': {
+    name: 'Manage Data'
   }
 }
 

@@ -10,6 +10,7 @@ import Price from './Price'
 import Profile from './Profile'
 import Room from './Room'
 import Contract from './Contract'
+import Data from './Data'
 
 function AppRoutes(props) {
   const url = props.match.url
@@ -21,6 +22,7 @@ function AppRoutes(props) {
         <Route path={`${url}/people`} component={People}/>
         <Route path={`${url}/price`} component={Price}/>
         <Route path={`${url}/profile`} component={Profile}/>
+        <Route path={`${url}/data`} component={Data}/>
         <Route path={url} component={Dashboard}/>
         <Redirect from={props.location.pathname} to={url}/>
       </Switch>

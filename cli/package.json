@@ -54,7 +54,8 @@
     "rheostat": "^4.1.0",
     "slick-carousel": "^1.8.1",
     "url-search-params": "^1.1.0",
-    "victory": "^34.0.0"
+    "victory": "^34.0.0",
+    "xlsx": "^0.17.1"
   },
   "proxy": "http://localhost:8080",
   "scripts": {

@@ -87,10 +87,20 @@ const SidebarContent = ({ location }) => {
                   </Link>
                 </PermissionRender>
               </Menu.Item>
+              {/* Manage Contracts */}
               <Menu.Item key='/app/contracts'>
                 <Link to='/app/contracts'><i className='icon icon-feedback'/>
                   <span>Manage Contracts</span>
                 </Link>
+              </Menu.Item>
+              {/* Manage Import */}
+              <Menu.Item key='/app/data'>
+                <PermissionRender access={['OWNER_PM']}>
+                  <Link to='/app/data'>
+                    <i className='icon icon-drag-and-drop'/>
+                    <span>Manage Data</span>
+                  </Link>
+                </PermissionRender>
               </Menu.Item>
             </MenuItemGroup>
           </Menu>
