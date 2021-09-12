@@ -1,11 +1,26 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import XLSX from 'xlsx'
+import _ from 'lodash'
+import moment from 'moment'
 import { message } from 'antd'
 import Data from '../components/Data'
-import { BILL_ELEMENTS } from '../const'
+import { BILL_ELEMENTS, DEFAULT_PRICE } from '../const'
+import { offLoading } from 'constants/func'
+import { useStore } from 'hooks'
 
 function DataContainer() {
   const [rowData, setRowData] = useState([])
+  const [price, repPrice] = useStore(_.cloneDeep(DEFAULT_PRICE))
+
+  useEffect(() => {
+    offLoading()
+  }, [])
+
+  const clearImportData = useCallback(() => {
+    // onLoading()
+    setRowData([])
+    // offLoading()
+  }, [])
 
   const getTail = useCallback((file) => {
     const parts = file.name.split('.')
@@ -13,6 +28,19 @@ function DataContainer() {
     const EXTENSIONS = ['xlsx', 'xls', 'csv']
     
     return EXTENSIONS.includes(extension) // return boolean
+  }, [])
+
+  const formatBillDate = useCallback((billDate) => {
+    const selectBillDate = billDate.contract.split('-')[0]
+    const endOfMonth = moment(selectBillDate, 'DD/MM/YY').endOf('month')
+
+    const updateBills = billDate.bills.map((bill, index) => {
+      const billDate = moment(endOfMonth).add(index, 'month').format('DD/MM/YYYY')
+      Object.assign(bill, { billDate })
+      return bill
+    })
+    Object.assign(billDate, { bills: updateBills })
+    return billDate
   }, [])
 
   const onChange = useCallback(async (e) => {
@@ -57,21 +85,22 @@ function DataContainer() {
 
       const filterBills = fileData.slice(3).reduce((acc, curr) => {
         const sliceCurr = curr.slice(1)
-        const month = curr[0]
+        const billDate = curr[0]
 
         for (const key in acc) {
-          const currentRoom = acc[key]
+          let currentRoom = acc[key]
+          currentRoom= formatBillDate(currentRoom)
 
           const sliceBill = sliceCurr.slice(key*5, key*5+5)
           const billNotIsEmpty = sliceBill.some(element => element)
           if (billNotIsEmpty) {
-            sliceBill.unshift(month)
+            sliceBill.unshift(billDate)
   
             const assignKeyOfBill = Object.fromEntries(
               BILL_ELEMENTS.map((val, index) => [val, sliceBill[index]])
             )
 
-            Object.assign(assignKeyOfBill, { _key: month })
+            Object.assign(assignKeyOfBill, { _key: billDate })
             currentRoom.bills.push(assignKeyOfBill)
             acc[key] = currentRoom
           }
@@ -86,6 +115,8 @@ function DataContainer() {
     <Data
       onChange={onChange}
       rowData={rowData}
+      clearImportData={clearImportData}
+      price={price}
     />
   )
 }

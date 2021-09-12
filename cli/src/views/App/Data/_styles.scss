@@ -1,0 +1,13 @@
+.drag-drop-card {
+  .gx-card {
+    .ant-card-body {
+      height: 400px !important;
+    }
+  }
+}
+
+.btn-import-action {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1%;
+}

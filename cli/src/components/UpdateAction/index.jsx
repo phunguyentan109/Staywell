@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { Modal, Button, Row, Col } from 'antd'
 
-export default function UpdateAction({ onConfirm, message, onCancel, children, title }) {
+export default function UpdateAction({ onConfirm, message, onCancel, children, title, buttonType }) {
   const hdConfirm = useCallback(() => {
     Modal.confirm({
       title,
@@ -18,7 +18,7 @@ export default function UpdateAction({ onConfirm, message, onCancel, children, t
 
   return <Row>
     <Col span={24} className='gx-text-right'>
-      <Button type='primary' onClick={hdConfirm}>{children}</Button>
+      <Button type={ buttonType } onClick={hdConfirm}>{children}</Button>
     </Col>
   </Row>
 }
@@ -32,7 +32,8 @@ UpdateAction.propTypes = {
   cancelBtnBsStyle: PropTypes.string,
   title: PropTypes.string,
   children: PropTypes.any,
-  message: PropTypes.string
+  message: PropTypes.string,
+  buttonType: PropTypes.string
 }
 
 UpdateAction.defaultProps = {
