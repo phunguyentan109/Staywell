@@ -1,0 +1,17 @@
+.contract-check-box {
+  padding: 10px 12px;
+  color: #a8a8a8;
+  border-radius: 4px;
+  transition-duration: .2s;
+  cursor: pointer;
+  font-size: 19px;
+
+  &:hover {
+    color: rgba(152, 152, 152, 0.65);
+    background-color: #f0f0f0;
+  }
+
+  &.check {
+    color: #358dd8;
+  }
+}

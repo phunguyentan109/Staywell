@@ -34,11 +34,7 @@ const priceSchema = new mongoose.Schema({
     default: 0,
     required: true
   },
-  extra: {
-    type: Number,
-    default: 0
-  },
-  deleteAt: {
+  deletedAt: {
     type: Date,
     get: v => moment(v).format('MMMM Do YYYY')
   }

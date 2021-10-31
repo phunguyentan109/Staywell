@@ -1,9 +1,10 @@
+import React from 'react'
 import { HomeOutlined } from '@ant-design/icons'
 
 export const breadNames = {
   '/app': {
     name: 'Dashboard',
-    icon: HomeOutlined
+    icon: <HomeOutlined />
   },
   '/app/people': {
     name: 'Manage People'

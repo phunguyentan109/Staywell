@@ -1,0 +1,70 @@
+.bill-contract-item {
+  margin-bottom: 0 !important;
+  border: 2px solid #1995ff4a !important;
+
+  .btn-back-wrapper {
+    margin-right: 30px;
+
+    > span {
+      padding: 10px 12px;
+      background-color: #f0f0f0;
+      color: #358dd8;
+      border-radius: 4px;
+      transition-duration: .2s;
+      cursor: pointer;
+      font-size: 19px;
+    }
+  }
+
+  .first-line {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+
+    .contract-id div,
+    .contract-id span {
+      color: #2f2f2f;
+    }
+
+    .price-badge {
+      background-color: #358DD8FF;
+    }
+  }
+
+  .progress-b {
+    width: 500px;
+    margin: 0 15px;
+
+    .ant-progress { margin: 0 }
+  }
+
+  .progress-icon {
+    line-height: 1;
+    font-size: 18px;
+    margin-top: 4px;
+    color: #aeaeae;
+
+    .ant-badge {
+      margin-bottom: 0;
+    }
+  }
+
+  .avatars {
+    position: relative;
+    width: 70px;
+    height: 51px;
+
+    > span {
+      right: 0;
+      top: 6px;
+      position: absolute;
+      border: 1px solid white;
+      box-shadow: 1px 1px 5px #0000006e;
+      width: 35px;
+      height: 35px;
+    }
+  }
+}
+
+
+

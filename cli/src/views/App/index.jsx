@@ -10,12 +10,14 @@ import Price from './Price'
 import Profile from './Profile'
 import Room from './Room'
 import Contract from './Contract'
+import Bill from './Bill'
 
 function AppRoutes(props) {
   const url = props.match.url
   return (
     <Loading>
       <Switch>
+        <Route path={`${url}/contracts/:contractId`} component={Bill}/>
         <Route path={`${url}/contracts`} component={Contract}/>
         <Route path={`${url}/rooms`} component={Room}/>
         <Route path={`${url}/people`} component={People}/>

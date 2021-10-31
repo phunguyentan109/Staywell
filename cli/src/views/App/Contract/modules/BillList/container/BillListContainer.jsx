@@ -50,8 +50,8 @@ function BillListContainer(props) {
     }
   }, [contractId, updateBills])
 
-  useEffect(() => { getBills() }, [getBills])
-  useEffect(() => { getLastElectric() }, [getLastElectric])
+  // useEffect(() => { getBills() }, [getBills])
+  // useEffect(() => { getLastElectric() }, [getLastElectric])
 
   return (
     <BillList

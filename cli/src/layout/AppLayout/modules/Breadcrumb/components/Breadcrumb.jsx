@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
 import { Card, Breadcrumb } from 'antd'
-import Icon from '@ant-design/icons'
 import { breadNames } from 'constants/variables'
 import { get, split } from 'lodash'
 
@@ -34,13 +33,8 @@ function BreadcrumbBar(props) {
           paths.length > 0 && paths.map((path, i) => (
             <Breadcrumb.Item key={i} href={path}>
               <span className={styling(path)}>
-                {
-                  breadNames[path].icon && <Icon
-                    component={breadNames[path].icon}
-                    style={{ verticalAlign: 'middle', height: '19px' }}
-                  />
-                }
-                <span className='gx-ml-2'>{breadNames[path].name}</span>
+                {breadNames[path]?.icon || null}
+                <span className='gx-ml-2'>{breadNames[path]?.name || 'No name'}</span>
               </span>
             </Breadcrumb.Item>
           ))

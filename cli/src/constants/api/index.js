@@ -19,7 +19,7 @@ const prefix = '/api/'
 export async function call(url, method = 'get', data) {
   try {
     let rs = await axios[method](`${prefix}${url}`, data)
-    if (rs.status !== 200) notify('error', 'Oops! Something went wrong...')
+    if (rs.status !== 200) throw 'Oops! Something went wrong...'
     return rs
   } catch (err) {
     notify('error', 'Oops! Something went wrong...')
@@ -29,7 +29,7 @@ export async function call(url, method = 'get', data) {
 ///// API LIST DEFINITION //////////////////////////////////////////////////////
 /* Contract */
 export const contractApi = {
-  get: roomId => [`rooms/${roomId}/contracts`],
+  get: roomId => ['/contracts/list', 'post'],
   getOne: (roomId, contractId) => [`rooms/${roomId}/contracts/${contractId}`],
   getElectric: (roomId, contractId) => [`rooms/${roomId}/contracts/${contractId}/latest_electric`],
   remove: (roomId, contractId) => [`rooms/${roomId}/contracts/${contractId}`, 'delete'],

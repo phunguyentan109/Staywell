@@ -13,7 +13,7 @@ $typeList: ('p': 'padding', 'm': 'margin');
       #{map-get($typeList, $type)}-left: $space;
       #{map-get($typeList, $type)}-right: $space;
     }
-    
+
     .#{$type}t-#{$name} {
       #{map-get($typeList, $type)}-top: $space;
     }
@@ -33,3 +33,10 @@ $typeList: ('p': 'padding', 'm': 'margin');
 
 @include genSpace('p');
 @include genSpace('m');
+
+.ant-pagination-prev > button,
+.ant-pagination-next > button {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}

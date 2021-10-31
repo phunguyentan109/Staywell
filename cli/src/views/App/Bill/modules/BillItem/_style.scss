@@ -1,0 +1,29 @@
+.bill-item {
+  &.processing {
+    border: 2px solid #1995ff8c !important;
+  }
+
+  .left-section {
+    display: flex;
+    align-items: center;
+  }
+
+  .total-payment {
+    background-color: #358DD8FF;
+    margin: 0 !important;
+    font-size: 14px;
+  }
+
+  .detail-wrapper {
+    //position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    &.hide {
+      height: 120px;
+    }
+  }
+}
+
+

@@ -5,7 +5,6 @@ const billSchema = new mongoose.Schema({
   electric: {
     number: Number,
     amount: Number,
-    cost: Number
   },
   living: Number,
   water: Number,
@@ -14,8 +13,14 @@ const billSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Contract'
   },
+  appliedPrice: {
+    type: String,
+    set: v => JSON.stringify(v),
+    get: v => v ? JSON.parse(v) : '',
+  },
   paidDate: { type: Date, get: formatDate },
-  deadline: { type: Date, required: true, get: formatDate }
+  deadline: { type: Date, required: true, get: formatDate },
+  comment: String
 }, {
   timestamps: true,
   toJSON: { getters: true }

@@ -1,5 +1,4 @@
 .manage-contract {
-  .action-bar .ant-card-body,
   .back-bar .ant-card-body {
     padding-top: 10px;
     padding-bottom: 10px;
@@ -48,101 +47,41 @@
     }
   }
 
-  .action {
-    padding: 10px 12px;
-    color: #a8a8a8;
-    border-radius: 3px;
-    transition-duration: .2s;
-    cursor: pointer;
+  .action-bar .ant-card-body {
+    padding: 15px 24px !important;
 
-    &:hover {
-      color: #767676;
-      background-color: #f0f0f0;
-    }
-
-    &.check-box {
-      font-size: 19px;
-    }
-
-    &.back-contract {
-      font-size: 19px;
-      color: white;
-
-      &:hover {
-        background-color: #ffffff29;
-      }
-    }
-
-    &.reload {
-      font-size: 17px;
-      color: gray;
-    }
-
-    &.remove {
-      font-size: 17px;
-      color: gray;
-    }
-  }
-
-  .contract-item {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-
-    .gx-icon-btn { min-width: 40px; }
-
-    .contract-info {
-      width: 100%;
-      margin-left: 15px;
+    .left-section {
       display: flex;
-      justify-content: space-between;
       align-items: center;
 
-      p {
-        margin: 0;
+      .empty-select {
         color: gray;
       }
 
-      .contract-progress {
-        margin-bottom: 10px;
-        display: flex;
-        align-items: center;
+      .remove-action {
+        padding: 10px 12px;
+        background-color: #f2f2f2;
+        color: gray;
+        border-radius: 4px;
+        transition-duration: .2s;
+        cursor: pointer;
 
-        .progress-icon {
-          line-height: 1;
-          font-size: 18px;
-          margin-right: 10px;
-          margin-top: 4px;
-          color: #aeaeae;
-
-          .ant-badge {
-            margin-bottom: 0;
-          }
-        }
-
-        .progress-b {
-          width: 200px;
-          margin-right: 15px;
-
-          .ant-progress { margin: 0 }
+        &:hover {
+          background-color: #E1E1E1B3;
         }
       }
 
-      > div:nth-of-type(2) {
-        position: relative;
-        width: 70px;
-        height: 51px;
-
-        > span {
-          right: 0;
-          top: 6px;
-          position: absolute;
-          border: 1px solid white;
-          box-shadow: 1px 1px 5px #0000006e;
-          width: 38px;
-          height: 38px;
-        }
+      .view-detail-action {
+        padding: 10px 12px;
+        background-color: #358dd8;
+        margin-right: 10px;
+        color: white;
+        border-radius: 4px;
+        transition-duration: .2s;
+        cursor: pointer;
       }
     }
+
+    span { line-height: 15px }
   }
 }
