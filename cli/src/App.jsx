@@ -5,6 +5,7 @@ import RootRoutes from './views/index'
 import extractStorage from 'constants/clientStorage'
 
 import 'assets/vendors/style'
+import 'antd/dist/antd.css'
 import 'assets/style.css'
 import 'assets/css/_layout.scss'
 

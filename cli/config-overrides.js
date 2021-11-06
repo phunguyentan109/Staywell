@@ -15,6 +15,9 @@ module.exports = override(
   fixBabelImports('antd',
     { libraryDirectory: 'es', style: true }
   ),
+  fixBabelImports('@ant-design/icons',
+    { libraryDirectory: 'es/icons', camel2DashComponentName: false }
+  ),
   overrideProcessEnv({
     VERSION: JSON.stringify(require('./package.json').version),
   })

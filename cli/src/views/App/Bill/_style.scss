@@ -1,0 +1,78 @@
+.manage-bill {
+  .back-bar .ant-card-body {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: flex;
+    align-items: center;
+  }
+
+  .back-bar .ant-card-body {
+    background-color: #038fde;
+    color: #fff;
+    padding: 5px 15px;
+  }
+
+  .bill-sidebar {
+    .gx-module-side-header {
+      background-color: #f4f4f4;
+      text-transform: uppercase;
+      font-size: 18px;
+    }
+
+    .section-wrapper {
+      margin-top: 30px;
+
+      > div {
+        margin-bottom: 12px;
+      }
+    }
+
+    li .gx-link {
+      padding: 5px 15px;
+    }
+
+    .gx-module-add-task {
+      padding: 24px 0 0;
+
+      > button {
+        border-radius: 0 10px 0 10px;
+        text-align: left;
+        height: 45px;
+        display: flex;
+        align-items: center;
+
+        .icon {
+          margin-right: 10px;
+          font-size: 17px;
+        }
+      }
+    }
+  }
+
+  .action {
+    padding: 10px 12px;
+    color: #a8a8a8;
+    border-radius: 4px;
+    transition-duration: .2s;
+    cursor: pointer;
+
+    &:hover {
+      //color: #767676;
+      background-color: red;
+    }
+
+    &.back-contract {
+      font-size: 19px;
+      color: white;
+
+      &:hover {
+        background-color: #ffffff29;
+      }
+    }
+
+    &.remove {
+      background-color: #f2f2f2;
+      color: gray;
+    }
+  }
+}

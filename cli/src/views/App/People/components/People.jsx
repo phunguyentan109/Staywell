@@ -90,21 +90,21 @@ export default function People({ people, hdRemove, tokens, removeToken, hdOpenRe
                 {
                   title: 'Living Status',
                   dataIndex: ['room_id', 'name'],
-                  filters: [
-                    { text: 'Not Assigned', value: 'Not Assigned' },
-                    { text: 'Not Verified', value: 'Not Verified' },
-                    ...filterRooms
-                  ],
-                  onFilter: (v, r) => {
-                    switch (v) {
-                      case 'Not Assigned':
-                        return !r.room_id && r.isVerified
-                      case 'Not Verified':
-                        return !r.isVerified
-                      default:
-                        return r.isVerified && r.room_id?.name.includes(v)
-                    }
-                  },
+                  // filters: [
+                  //   { text: 'Not Assigned', value: 'Not Assigned' },
+                  //   { text: 'Not Verified', value: 'Not Verified' },
+                  //   ...filterRooms
+                  // ],
+                  // onFilter: (v, r) => {
+                  //   switch (v) {
+                  //     case 'Not Assigned':
+                  //       return !r.room_id && r.isVerified
+                  //     case 'Not Verified':
+                  //       return !r.isVerified
+                  //     default:
+                  //       return r.isVerified && r.room_id?.name.includes(v)
+                  //   }
+                  // },
                   render: (v, r) => {
                     if (!r.isVerified) return <span className='text-danger'>Not Verified</span>
                     return <span>{v ? v : 'Not Assigned'}</span>

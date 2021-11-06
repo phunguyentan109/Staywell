@@ -4,18 +4,27 @@ const { hdLog } = require('../utils/logger')
 
 exports.get = async(req, res, next) => {
   try {
-    let { room_id } = req.params
-    let contracts = await db.Contract
-      .find({ room_id })
-      .populate({
-        path: 'room_id',
-        select: 'user_id',
-        populate: {
-          path: 'user_id',
-          select: '_id avatar'
-        }
-      })
+    // prepare query
+    let { filter, paging } = req.body
+
+    console.log(req.body)
+
+    const populatePath = {
+      path: 'room_id',
+      select: 'user_id name',
+      populate: {
+        path: 'user_id',
+        select: '_id avatar'
+      }
+    }
+
+    // Process the query
+    let contracts = await db.Contract.find(filter)
+      .populate(populatePath)
+      .limit(paging.size)
+      .lean()
       .exec()
+
     return res.status(200).json(contracts)
   } catch (err) {
     hdLog('price.get', err.message)

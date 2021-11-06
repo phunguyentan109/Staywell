@@ -22,7 +22,7 @@ function ContractListContainer(props) {
     }
   }, [roomId, setContracts])
 
-  useEffect(() => { getContracts() }, [getContracts])
+  // useEffect(() => { getContracts() }, [getContracts])
 
   return (
     <ContractList {...props} contracts={contracts} contractId={contractId}/>

@@ -15,30 +15,3 @@ export const PRICE_INPUTS = [
   { label: 'Living', name: 'living' },
   { label: 'Extra', name: 'extra' }
 ]
-
-export const PRICE_COLS = [
-  {
-    title: 'Price type',
-    dataIndex: 'type',
-  },
-  {
-    title: 'Electric',
-    dataIndex: 'electric'
-  },
-  {
-    title: 'Wifi',
-    dataIndex: 'wifi',
-  },
-  {
-    title: 'Water',
-    dataIndex: 'water'
-  },
-  {
-    title: 'Living',
-    dataIndex: 'living'
-  },
-  {
-    title: 'Extra',
-    dataIndex: 'extra'
-  }
-]

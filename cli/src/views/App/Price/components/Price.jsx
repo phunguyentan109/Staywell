@@ -1,10 +1,9 @@
 import React, { memo } from 'react'
-import { Card, Table, Divider, Button } from 'antd'
+import { Button, Card, Divider, Table } from 'antd'
 import PropTypes from 'prop-types'
 
 import { priceApi } from 'constants/api'
 import DeleteAction from 'components/DeleteAction'
-import { PRICE_COLS } from '../modules/const'
 import PriceForm from '../modules/PriceForm'
 
 function Price({ listPrice, hdRemove, updateListPrice }) {
@@ -22,7 +21,26 @@ function Price({ listPrice, hdRemove, updateListPrice }) {
         dataSource={listPrice}
         rowKey='_id'
         columns={[
-          ...PRICE_COLS,
+          {
+            title: 'Price type',
+            dataIndex: 'type',
+          },
+          {
+            title: 'Electric',
+            dataIndex: 'electric'
+          },
+          {
+            title: 'Wifi',
+            dataIndex: 'wifi',
+          },
+          {
+            title: 'Water',
+            dataIndex: 'water'
+          },
+          {
+            title: 'Living',
+            dataIndex: 'living'
+          },
           {
             title: 'Action',
             key: 'action',

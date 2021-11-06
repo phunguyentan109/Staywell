@@ -1,0 +1,64 @@
+.contract-item {
+  margin-bottom: 0 !important;
+
+  .first-line {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+
+    .contract-id div,
+    .contract-id span {
+      color: #565656;
+    }
+
+    .price-badge {
+      margin-bottom: 0;
+      background-color: #c5c5c5;
+    }
+  }
+
+  .progress-b {
+    width: 500px;
+    margin: 0 15px;
+
+    .ant-progress { margin: 0 }
+  }
+
+  .avatars {
+    position: relative;
+    width: 70px;
+    height: 51px;
+
+    > span {
+      right: 0;
+      top: 6px;
+      position: absolute;
+      border: 1px solid white;
+      box-shadow: 1px 1px 5px #0000006e;
+      width: 35px;
+      height: 35px;
+    }
+  }
+
+  &.done {
+    .progress-b {
+      margin-right: 10px;
+    }
+  }
+
+  &.select {
+    border: 2px solid #1995ff4a !important;
+
+    .first-line {
+      .price-badge {
+        background-color: #358DD8FF;
+      }
+
+      .contract-id div,
+      .contract-id span {
+        color: #2f2f2f;
+      }
+    }
+  }
+}
+//#c5c5c5

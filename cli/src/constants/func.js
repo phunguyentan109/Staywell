@@ -12,6 +12,7 @@ export function notify(type, description) {
 
 export function onLoading() {
   let $spin = document.querySelector('.ant-spin-nested-loading')
+  if ($spin) return
   let $spinLogo = $spin.querySelector('div:first-child')
   let $spinBlur = $spin.querySelector('div.ant-spin-container')
   // Show loading if there's none
@@ -23,6 +24,7 @@ export function onLoading() {
 
 export function offLoading() {
   let $spin = document.querySelector('.ant-spin-nested-loading')
+  if (!$spin) return
   let $spinLogo = $spin.querySelector('div:first-child')
   let $spinBlur = $spin.querySelector('div.ant-spin-container')
   // Check if the loading is rendered then hide it
