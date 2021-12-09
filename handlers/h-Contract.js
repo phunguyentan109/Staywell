@@ -27,7 +27,7 @@ exports.get = async(req, res, next) => {
 
     return res.status(200).json(contracts)
   } catch (err) {
-    hdLog('price.get', err.message)
+    hdLog('contract.get', err.message)
     return next(err)
   }
 }
@@ -57,7 +57,7 @@ exports.getLatestElectric = async(req, res, next) => {
       return res.status(200).json(info.electric)
     }
   } catch (err) {
-    hdLog('price.getLatestElectric', err.message)
+    hdLog('contract.getLatestElectric', err.message)
     return next(err)
   }
 }
@@ -68,7 +68,7 @@ exports.getOne = async(req, res, next) => {
     let foundContract = await db.Contract.findById(contract_id).populate('bill_id').exec()
     return res.status(200).json(foundContract)
   } catch (err) {
-    hdLog('price.getOne', err.message)
+    hdLog('contract.getOne', err.message)
     return next(err)
   }
 }
@@ -79,7 +79,7 @@ exports.remove = async(req, res, next) => {
     contract && await contract.remove()
     return res.status(200).json(contract)
   } catch (err) {
-    hdLog('price.remove', err.message)
+    hdLog('contract.remove', err.message)
     return next(err)
   }
 }

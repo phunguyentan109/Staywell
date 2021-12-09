@@ -1,23 +1,23 @@
 const express = require('express')
 const router = express.Router({ mergeParams: true })
-const hdl = require('../handlers')
+const { roomController } = require('../controllers')
 const mw = require('../middleware')
 
 router.route('/')
-  .get(hdl.Room.get)
-  .post(mw.User.isPermit, mw.Room.create, hdl.Room.getOne)
+  .get(roomController.get)
+  .post(mw.User.isPermit, mw.Room.create, roomController.getOne)
 
 router.route('/old')
-  .get(hdl.Room.getDeleted)
+  .get(roomController.getDeleted)
 
-router.route('/old/:room_id').post(hdl.Room.restore)
+router.route('/old/:room_id').post(roomController.restore)
 
 router.route('/:room_id')
-  .get(mw.User.isPermit, hdl.Room.getOne)
-  .delete(mw.User.isPermit, hdl.Room.remove)
-  .put(mw.User.isPermit, mw.Room.update, hdl.Room.getOne)
+  .get(mw.User.isPermit, roomController.getOne)
+  .delete(mw.User.isPermit, roomController.remove)
+  .put(mw.User.isPermit, mw.Room.update, roomController.getOne)
 
-router.route('/:room_id/assign').put(mw.User.isPermit, mw.Room.assign, hdl.Room.getOne)
+router.route('/:room_id/assign').put(mw.User.isPermit, mw.Room.assign, roomController.getOne)
 
 router.use('/:room_id/contracts', require('./r-Contract'))
 
