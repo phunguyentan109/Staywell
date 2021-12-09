@@ -4,6 +4,7 @@ const samp = require('./samples')
 module.exports = async function seedSample () {
   try {
     console.log('\n----- SEEDING NEW DATA -----')
+
     console.log('Creating manager...')
     let manager = await db.User.create(samp.Manager)
 

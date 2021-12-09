@@ -28,6 +28,7 @@ const userSchema = mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  gender: { type: String, required: true },
   room_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Room'
