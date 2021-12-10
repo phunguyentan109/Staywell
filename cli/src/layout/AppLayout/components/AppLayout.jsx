@@ -38,6 +38,7 @@ import {
   onNavStyleChange,
   setThemeType
 } from 'appRedux/actions/setting'
+import ErrorBoundary from 'components/ErrorBoundary'
 
 const { Content, Footer } = Layout
 

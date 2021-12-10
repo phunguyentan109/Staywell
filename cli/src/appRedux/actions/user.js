@@ -29,9 +29,9 @@ export function addUser(value = {}) {
   return { type: ADD_USER, value }
 }
 
-export function sendReloadUser(user_id) {
+export function sendReloadUser(id) {
   return {
     type: SEND_RELOAD_USER,
-    value: { user_id }
+    id
   }
 }

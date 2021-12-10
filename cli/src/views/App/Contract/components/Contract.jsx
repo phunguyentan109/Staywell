@@ -8,9 +8,9 @@ import '../_style.scss'
 import ContractForm from '../modules/ContractForm'
 // import ContractList from '../modules/ContractList'
 import ContractRooms from '../modules/ContractRooms'
-import { FILTERS } from '../modules/const'
+import { FILTERS } from '../const'
 import Checkbox from '../modules/Checkbox'
-import { samples20 } from '../modules/ContractList/modules/const'
+import { samples20 } from '../modules/ContractList/const'
 import ContractItem from '../modules/ContractItem'
 
 const { Option } = Select

@@ -1,22 +1,24 @@
 import apiContract from './models/contract'
 import apiUser from './models/user'
-import apiRoom from './models/room'
+// import apiRoom from './models/room'
 import apiBill from './models/bill'
-import apiPrice from './models/price'
+// import apiPrice from './models/price'
 import { notify } from '../func'
 import axios from 'axios'
 
 export {
   apiContract,
   apiUser,
-  apiRoom,
+  // apiRoom,
   apiBill,
-  apiPrice
+  // apiPrice
 }
 
 const prefix = '/api/'
 
-export async function call(url, method = 'get', data) {
+export async function call(args) {
+  const [url, method = 'get', data] = args
+
   try {
     let rs = await axios[method](`${prefix}${url}`, data)
     if (rs.status !== 200) throw 'Oops! Something went wrong...'
@@ -29,34 +31,33 @@ export async function call(url, method = 'get', data) {
 ///// API LIST DEFINITION //////////////////////////////////////////////////////
 /* Contract */
 export const contractApi = {
-  get: roomId => ['/contracts/list', 'post'],
+  get: query => ['/contracts/list', 'post', query],
   getOne: (roomId, contractId) => [`rooms/${roomId}/contracts/${contractId}`],
   getElectric: (roomId, contractId) => [`rooms/${roomId}/contracts/${contractId}/latest_electric`],
   remove: (roomId, contractId) => [`rooms/${roomId}/contracts/${contractId}`, 'delete'],
-  create: roomId => [`rooms/${roomId}/contracts`, 'post']
+  create: roomId => roomId[`rooms/${roomId}/contracts`, 'post']
 }
 
-/* Room */
 export const roomApi = {
   get: () => ['rooms'],
-  create: () => ['rooms', 'post'],
+  add: data => ['rooms', 'post', data],
   getOne: roomId => [`rooms/${roomId}`],
   remove: roomId => [`rooms/${roomId}`, 'delete'],
-  update: roomId => [`rooms/${roomId}`, 'put'],
+  update: (id, room) => [`rooms/${id}`, 'put', room],
   assign: roomId => [`rooms/${roomId}/assign`, 'put']
 }
 
-/* User */
 export const userApi = {
   get: () => ['user'],
-  getOne: userId => [`user/${userId}`],
+  getOne: id => [`user/${id}`],
   available: () => ['user/available'],
-  auth: type => [`user/${type}`, 'post'],
+  auth: (type, data) => [`user/${type}`, 'post', data],
   forgot: () => ['user/forgot', 'post'],
-  remove: userId => [`user/${userId}`, 'delete'],
-  update: userId => [`user/${userId}`, 'put'],  activate: userId => [`user/${userId}/activate`, 'put'],
+  remove: id => [`user/${id}`, 'delete'],
+  update: (id, data) => [`user/${id}`, 'put', data],
+  activate: id => [`user/${id}/activate`, 'put'],
   reset: token => [`user/${token}/reset`, 'put'],
-  password: userId => [`user/${userId}/password`, 'put'],
+  password: id => [`user/${id}/password`, 'put'],
 
   // registration
   openRegistration: () => ['user/registration', 'post'],
@@ -65,13 +66,12 @@ export const userApi = {
   closeRegistration: token => [`user/registration/${token}`, 'delete'],
 }
 
-/* Price */
 export const priceApi = {
   get: () => ['price'],
-  create: () => ['price', 'post'],
+  add: () => ['price', 'post'],
   getOne: priceId => [`price/${priceId}`],
   remove: priceId => [`price/${priceId}`, 'delete'],
-  update: priceId => [`price/${priceId}`, 'put']
+  update: (id, data) => [`price/${id}`, 'put', data]
 }
 
 /* Bill */
