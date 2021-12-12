@@ -6,6 +6,7 @@ import TableTransfer from './modules/ModalTransfer'
 import RoomForm from './modules/RoomForm'
 import { useFetch } from 'hooks'
 import { roomApi } from 'constants/api'
+import { PlusOutlined } from '@ant-design/icons'
 
 export default function Room() {
   const { data: rooms, isFetching, isMutating, mutate } = useFetch(roomApi.get(), {
@@ -31,8 +32,9 @@ export default function Room() {
           mutateRoom={form => mutate('add', form)}
           isProcessing={isMutating}
         >
-          <Button type='primary'>Add new room</Button>
+          <Button type='primary' icon={<PlusOutlined />}>New Room</Button>
         </RoomForm>
+
         <Table
           className='gx-table-responsive'
           dataSource={rooms}
@@ -48,7 +50,7 @@ export default function Room() {
               title: 'Price Type',
               dataIndex: 'price_id',
               render: col => <span>
-                { col ? col.type : <i>No price applied</i> }
+                { col ? col.type : <i style={{ color: '#cdcdcd' }}>No price applied</i> }
               </span>
             },
             {
@@ -59,6 +61,7 @@ export default function Room() {
                 <>
                   <DeleteAction onConfirm={() => mutate('remove', v)}/>
                   <Divider type='vertical'/>
+
                   <RoomForm
                     value={record}
                     title={'Edit room\'s information'}
@@ -67,6 +70,7 @@ export default function Room() {
                     <span className='gx-link'>Edit</span>
                   </RoomForm>
                   <Divider type='vertical'/>
+
                   <TableTransfer room={record}>
                     <span className='gx-link'>Assign</span>
                   </TableTransfer>
