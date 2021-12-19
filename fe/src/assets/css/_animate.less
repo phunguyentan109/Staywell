@@ -1,0 +1,48 @@
+// BOUNCE ANIMATION ==========================================================
+@keyframes bounceIn {
+  0%{
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  40%{
+    opacity: .8;
+    transform: scale(1);
+  }
+  80%{
+    opacity: 1;
+    transform: scale(0.8);
+  }
+  100%{
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.bounceIn {
+  animation-name: bounceIn;
+  animation-duration: .75s;
+  animation-timing-function: ease-out;
+}
+
+// ANIMATION FOR SLIDE =======================================================
+.appear(@name, @x1, @x2, @y1, @y2) {
+  @keyframes @name {
+    from {
+      transform: translate(@x1, @y1);
+      opacity: 0;
+    }
+    to {
+      transform: translate(@x2, @y2);
+      opacity: 1;
+    }
+  }
+}
+
+.appear-animation(@name, @duration, @delay: 0s) {
+  animation-name: @name;
+  animation-duration: @duration;
+  animation-delay: @delay;
+  animation-fill-mode: backwards;
+}
+
+
