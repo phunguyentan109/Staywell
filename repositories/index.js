@@ -1,0 +1,7 @@
+module.exports.userRepository = require('./user.repository')
+module.exports.roleRepository = require('./role.repository')
+module.exports.peopleRepository = require('./people.repository')
+module.exports.priceRepository = require('./price.repository')
+module.exports.billRepository = require('./bill.repository')
+module.exports.roomRepository = require('./room.repository')
+module.exports.contractRepository = require('./contract.repository')

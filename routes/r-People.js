@@ -1,14 +1,14 @@
 const express = require('express')
 const router = express.Router()
-const hdl = require('../handlers')
+const { peopleController } = require('../controllers')
 
-router.route('/').get(hdl.People.get)
+router.route('/').get(peopleController.get)
 
-router.route('/no-assign').get(hdl.People.getNoAssign)
+router.route('/no-assign').get(peopleController.getNoAssign)
 
 router.route('/:people_id')
-  .get(hdl.People.getOne)
-  .delete(hdl.People.remove)
-  .put(hdl.People.update)
+  .get(peopleController.getOne)
+  .delete(peopleController.remove)
+  .put(peopleController.update)
 
 module.exports = router

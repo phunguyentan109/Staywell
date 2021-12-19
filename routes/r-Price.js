@@ -1,19 +1,19 @@
 const express = require('express')
 const router = express.Router({ mergeParams: true })
-const hdl = require('../handlers')
+const { priceController } = require('../controllers')
 const mw = require('../middleware')
 
 router.route('/')
-  .get(hdl.Price.get)
-  .post(mw.User.isPermit, hdl.Price.create)
+  .get(priceController.get)
+  .post(mw.User.isPermit, priceController.create)
   
-router.route('/old').get(hdl.Price.getDeleted)
+router.route('/old').get(priceController.getDeleted)
 
-router.route('/old/:price_id').post(hdl.Price.restore)
+router.route('/old/:price_id').post(priceController.restore)
   
 router.route('/:price_id')
-  .get(hdl.Price.getOne)
-  .delete(mw.User.isPermit, hdl.Price.remove)
-  .put(mw.User.isPermit, hdl.Price.update)
+  .get(priceController.getOne)
+  .delete(mw.User.isPermit, priceController.remove)
+  .put(mw.User.isPermit, priceController.update)
 
 module.exports = router

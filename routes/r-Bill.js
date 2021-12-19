@@ -1,10 +1,10 @@
 const express = require('express')
 const router = express.Router({ mergeParams: true })
 const mw = require('../middleware')
-const hdl = require('../handlers')
+const { billController } = require('../controllers')
 
 router.route('/:bill_id')
-  .post(mw.Bill.generate, hdl.Bill.getOne)
-  .put(mw.Bill.updatePayment, hdl.Bill.getOne)
+  .post(mw.Bill.generate, billController.getOne)
+  .put(mw.Bill.updatePayment, billController.getOne)
 
 module.exports = router

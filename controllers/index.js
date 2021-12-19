@@ -1,0 +1,7 @@
+module.exports.userController = require('./user.controller')
+module.exports.roleController = require('./role.controller')
+module.exports.peopleController = require('./people.controller')
+module.exports.priceController = require('./price.controller')
+module.exports.billController = require('./bill.controller')
+module.exports.roomController = require('./room.controller')
+module.exports.contractController = require('./contract.controller')

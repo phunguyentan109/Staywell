@@ -1,7 +1,7 @@
-const express = require("express");
-const router = express.Router();
-const hdl = require("../handlers");
+const express = require('express')
+const router = express.Router()
+const { roleController } = require('../controllers')
 
-router.route("/new").post(hdl.Role.create);
+router.route('/new').post(roleController.create)
 
-module.exports = router;
+module.exports = router
