@@ -1,0 +1,118 @@
+@import "assets/css/_mixin";
+
+.auth-bg {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  width: 100vw;
+  height: 100vh;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.auth-credit {
+  position: absolute;
+  bottom: 10px;
+  right: 40px;
+  color: #878787;
+
+  p {
+    font-family: @f-ubuntu;
+    font-size: 14px !important;
+    font-weight: 300 !important;
+    margin-bottom: 16px;
+
+    &:nth-of-type(2) { display: initial }
+    &:nth-of-type(1) { display: none }
+  }
+
+  i {
+    padding-left: 5px;
+    padding-right: 5px;
+    color: #17a2b8;
+  }
+
+  @include mobile {
+    right: 0;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 15px;
+
+    p {
+      &:nth-of-type(2) { display: none }
+      &:nth-of-type(1) { display: initial }
+    }
+  }
+}
+
+.auth-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 45px;
+
+  > a {
+    font-family: @f-poppins;
+    font-size: 25px;
+    color: #d9d9d9;
+    transition: .5s;
+
+    &:hover { color: white; }
+  }
+
+  > div {
+    display: flex;
+    align-items: center;
+
+    > a {
+      font-family: @f-montserrat;
+      font-size: 14px;
+      color: #d9d9d9;
+      transition: .5s;
+
+      &:hover { color: white; }
+
+      > i { margin-right: 8px; }
+
+      &:nth-of-type(1) { margin-right: 6px; }
+      &:nth-of-type(2) { display: none; }
+
+      @include mobile {
+        background-color: #bbbbbb14;
+        padding: 10px 13px;
+        border-radius: 5px;
+        font-size: 13px;
+
+        > i {
+          margin-right: 0;
+          font-size: 12px;
+        }
+
+        &:nth-of-type(1) {
+          > span { display: none; }
+        }
+
+        &:nth-of-type(2) { display: initial; }
+      }
+    }
+  }
+
+  @include mobile {
+    padding: 30px 25px;
+
+    > a { font-size: 20px; }
+  }
+}

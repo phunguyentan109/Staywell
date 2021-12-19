@@ -9,8 +9,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "start:fe": "cd cli && yarn start",
-    "dev": "concurrently \"yarn start\" \"cd cli && yarn start\"",
+    "start:fe": "cd fe && yarn start",
     "seed": "node seed",
     "test": "mocha tests/**/*.test.js --timeout 10000",
     "test-watch": "nodemon --exec yarn test",
