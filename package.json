@@ -8,12 +8,13 @@
   },
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
-    "start:fe": "cd fe && yarn start",
+    "start": "node index.js",
+    "dev:be": "nodemon",
+    "dev:fe": "cd fe && yarn start",
     "seed": "node seed",
     "test": "mocha tests/**/*.test.js --timeout 10000",
     "test-watch": "nodemon --exec yarn test",
-    "heroku-postbuild": "yarn seed && cd cli && yarn && yarn run build"
+    "heroku-postbuild": "node postbuild"
   },
   "keywords": [],
   "author": "",
@@ -36,7 +37,8 @@
     "multer": "^1.4.2",
     "node-cron": "^2.0.3",
     "node-emoji": "^1.10.0",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "shelljs": "^0.8.4"
   },
   "devDependencies": {
     "chai": "^4.3.4",

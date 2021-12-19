@@ -63,11 +63,13 @@
     "slick-carousel": "^1.8.1",
     "swr": "^1.1.2-beta.0",
     "url-search-params": "^1.1.0",
+    "customize-cra": "^0.9.1",
+    "react-app-rewired": "^2.1.5",
     "victory": "^35.4.6"
   },
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
+    "start": "SKIP_PREFLIGHT_CHECK=true react-app-rewired start ",
+    "build": "SKIP_PREFLIGHT_CHECK=true react-app-rewired build",
     "test": "react-app-rewired --env=jsdom",
     "less": "lessc --js src/styles/wieldy.less public/css/style.css && lessc --js src/styles/wieldy.less public/css/style.min.css --compress -x"
   },
@@ -136,8 +138,6 @@
     ]
   },
   "devDependencies": {
-    "babel-plugin-import": "^1.13.0",
-    "customize-cra": "^0.9.1",
-    "react-app-rewired": "^2.1.5"
+    "babel-plugin-import": "^1.13.0"
   }
 }

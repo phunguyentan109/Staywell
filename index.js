@@ -3,11 +3,11 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const hdl = require('./handlers')
 const path = require('path')
+const { userController } = require('./controllers')
 const { PORT } = process.env
 
-app.use(express.static(path.join(__dirname, 'cli/build')))
+app.use(express.static(path.join(__dirname, 'build')))
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -19,16 +19,25 @@ app.use('/api/rooms', require('./routes/r-Room'))
 app.use('/api/contracts', require('./routes/r-Contract'))
 
 // For navigate app pages
-app.get('/registration/complete/:user_id', hdl.User.complete)
+app.get('/registration/complete/:user_id', userController.complete)
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname + '/cli/build/index.html'))
+  res.sendFile(path.join(__dirname + '/build/index.html'))
 })
 
-app.use(hdl.Error.invalidRoute)
+// Not found route handler
+app.use((req, res, next) => {
+  let err = new Error('Route not found!')
+  err.status = 404
+  return next(err)
+})
 
 // All the error will be turned into JSON in here
-app.use(hdl.Error.wrapErr)
+app.use((err, req, res, next) => {
+  return res.status(err.status || 500).json({
+    errorMsg: err.message || 'Oops! Something went wrong!'
+  })
+})
 
 app.listen(PORT, () => console.log(`[ SERVER IS STARTED ON PORT ${PORT} ]`))
 
