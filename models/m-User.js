@@ -15,11 +15,10 @@ const userSchema = mongoose.Schema({
     unique: true
   },
   avatar: {
-    cloudId: String,
-    link: {
-      type: String,
-      default: 'https://images.unsplash.com/photo-1563729574084-950da51d3822?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=100&ixlib=rb-1.2.1&q=80&w=100'
-    }
+    type: String,
+    required: true,
+    get: v => JSON.parse(v),
+    set: v => JSON.stringify(v)
   },
   isVerified: Boolean,
   phone: String,
@@ -37,7 +36,10 @@ const userSchema = mongoose.Schema({
     type: String,
     set: v => JSON.stringify(v),
   }
-}, { timestamps: true })
+}, {
+  timestamps: true,
+  toJSON: { getters: true },
+})
 
 // ========================================================================================
 // SUPPORT

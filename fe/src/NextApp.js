@@ -3,6 +3,7 @@ import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'connected-react-router'
 import 'assets/vendors/style'
 import 'styles/wieldy.less'
+import 'assets/css/_layout.less'
 
 import configureStore, { history } from './appRedux/store'
 import AppRoutes from 'routes'

@@ -19,6 +19,7 @@ const MenuItemGroup = Menu.ItemGroup
 const SidebarContent = ({ sidebarCollapsed, setSidebarCollapsed }) => {
   const { navStyle } = useSelector(({ settings }) => settings)
   const pathname = useSelector(({ common }) => common.pathname)
+  const userAvatar = useSelector(({ user }) => user?.data?.avatar)
 
   const getNoHeaderClass = (navStyle) => {
     if (navStyle === NAV_STYLE_NO_HEADER_MINI_SIDEBAR || navStyle === NAV_STYLE_NO_HEADER_EXPANDED_SIDEBAR) {
@@ -35,7 +36,7 @@ const SidebarContent = ({ sidebarCollapsed, setSidebarCollapsed }) => {
       <SidebarLogo sidebarCollapsed={sidebarCollapsed} setSidebarCollapsed={setSidebarCollapsed}/>
       <div className='gx-sidebar-content'>
         <div className={`gx-sidebar-notifications ${getNoHeaderClass(navStyle)}`}>
-          <UserProfile/>
+          <UserProfile avatar={userAvatar} />
           <AppsNavigation/>
         </div>
         <CustomScrollbars className='gx-layout-sider-scrollbar'>

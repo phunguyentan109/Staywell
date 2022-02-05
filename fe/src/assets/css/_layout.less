@@ -1,0 +1,38 @@
+@sizes: {
+  xs: 5px;
+  sm: 10px;
+  md: 15px;
+  lg: 20px;
+};
+
+@directions: {
+  l: left;
+  r: right;
+  t: top;
+  b: bottom;
+}
+
+@list-dir: l, r, t, b;
+@list-size: xs, sm, md, lg;
+
+.margin(@list-size, @list-dir);
+
+
+.margin(@list-sizes, @list-dir, @i: 1) when (@i =< 4) {
+  @size: extract(@list-sizes, @i);
+
+  .direct(@size, @list-dir);
+
+  .margin(@list-sizes, @list-dir, @i + 1);
+}
+
+.direct(@size, @directs, @i: 1) when (@i =< length(@directs)) {
+  @dir: extract(@directs, @i);
+  @dir-text: @directions[$@dir];
+
+  .m@{dir}-@{size} {
+    margin-@{dir-text}: @sizes[$@size];
+  }
+
+  .direct(@size, @directs, @i + 1);
+}
