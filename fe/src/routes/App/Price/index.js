@@ -7,6 +7,7 @@ import PriceForm from './modules/PriceForm'
 import { useFetch } from 'hooks'
 import { priceApi } from 'constants/api'
 import { PlusOutlined } from '@ant-design/icons'
+import { formatVND } from 'constants/func'
 
 function Price() {
   const { data: price, isFetching, isMutating, mutate } = useFetch(priceApi.get(), {
@@ -40,24 +41,28 @@ function Price() {
           rowKey='_id'
           columns={[
             {
-              title: 'Price type',
+              title: 'Price Tags',
               dataIndex: 'type',
             },
             {
               title: 'Electric',
-              dataIndex: 'electric'
+              dataIndex: 'electric',
+              render: v => formatVND(v)
             },
             {
               title: 'Wifi',
               dataIndex: 'wifi',
+              render: v => formatVND(v)
             },
             {
               title: 'Water',
-              dataIndex: 'water'
+              dataIndex: 'water',
+              render: v => formatVND(v)
             },
             {
               title: 'Living',
-              dataIndex: 'living'
+              dataIndex: 'living',
+              render: v => formatVND(v)
             },
             {
               title: 'Action',
