@@ -10,5 +10,7 @@ fi
 
 if [ "$1" = "$stg" ]
 then
-  git push heroku-sw-stg develop:main;
+  git co staging;
+  git pull;
+  git push heroku-sw-stg staging:main -f;
 fi

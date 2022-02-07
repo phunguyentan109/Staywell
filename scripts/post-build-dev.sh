@@ -1,4 +1,4 @@
-printf '\nExecute post buld script for DEV...\n'
+printf '\nExecute post build script for DEV...\n'
 
 cd fe && yarn && yarn run build;
 
