@@ -3,6 +3,8 @@ stg="stg"
 
 if [ "$1" = "$dev" ]
 then
+  git co develop;
+  git pull;
   git push heroku-sw-dev develop:main -f;
 fi
 
