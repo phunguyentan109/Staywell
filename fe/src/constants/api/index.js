@@ -44,7 +44,7 @@ export const roomApi = {
   getOne: roomId => [`rooms/${roomId}`],
   remove: roomId => [`rooms/${roomId}`, 'delete'],
   update: (id, room) => [`rooms/${id}`, 'put', room],
-  assign: roomId => [`rooms/${roomId}/assign`, 'put']
+  assign: (roomId, data) => [`rooms/${roomId}/assign`, 'put', data]
 }
 
 export const userApi = {

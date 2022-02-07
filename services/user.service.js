@@ -11,7 +11,7 @@ exports.signUp = async(body, host) => {
 
     // Mail user to confirm email
     await mail.confirmMail(host, { to: email, viewName: username, userId: _id })
-    
+
     return user
   } catch (error) {
     throw new Error(error)
@@ -38,7 +38,7 @@ exports.logIn = async(req) => {
     const userRole = await repo.userRepository.findUserRole({ user_id: _id })
 
     const role = userRole.length > 0 ? userRole.map(u => u.role_id) : false
-    
+
     // get anonymous data
     let anonymousData = { tokens: [] }
     if (anonymous) {
@@ -127,16 +127,16 @@ exports.remove = async(userId) => {
 exports.updatePassword = async({ user_id, current, change }) => {
   try {
     const user = await repo.userRepository.findById(user_id)
-  
+
     // verify old password and change password
     let match = await user.comparePassword(current)
     if (match){
       user.password = change
       await user.save()
-  
+
       //send change password mail
       mail.changePassword(user.email, user.username)
-      return { 
+      return {
         status: 'success',
         data: user
       }
@@ -150,13 +150,13 @@ exports.updatePassword = async({ user_id, current, change }) => {
 exports.forgot = async({ email, host }) => {
   try {
     const foundUser = await repo.userRepository.findOne({ email })
-  
+
     if (foundUser){
       let token = genToken(foundUser._id)
       foundUser.resetPwToken = token
       foundUser.resetPwExpires = Date.now() + 3600000 // 1 hour
       await foundUser.save()
-  
+
       // send token to reset password
       mail.forgotPassword(foundUser.email, foundUser.username, token, host)
       return {
@@ -179,10 +179,10 @@ exports.resetPassword = async({ token, password }) => {
     if (!foundUser) {
       return { status: 'fail' }
     }
-  
+
     foundUser.password = password
     await foundUser.save()
-  
+
     mail.changePassword(foundUser.email, foundUser.username)
     return {
       status: 'success',

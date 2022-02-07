@@ -51,10 +51,25 @@ exports.remove = async({ room_id, bodyReq }) => {
         data: foundRoom
       }
     }
-    return {
-      status: 'fail',
-      data: foundRoom
-    }
+    return { status: 'fail' }
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+exports.assign = async(roomId, removeOne, newOne) => {
+  try {
+    let foundRoom = await repo.roomRepository.findOne({ _id: roomId })
+
+    if (!foundRoom) return { error: 'No data found.' }
+
+    await repo.roomRepository.clearIdFromUser(roomId, removeOne)
+
+    let updateRoom = await repo.roomRepository.update({ _id: roomId }, { user_id: newOne })
+
+    await repo.roomRepository.writeIdToUser(roomId, newOne)
+
+    return { status: 'success', data: updateRoom }
   } catch (error) {
     throw new Error(error)
   }

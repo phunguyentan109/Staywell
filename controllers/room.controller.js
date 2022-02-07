@@ -45,7 +45,7 @@ exports.restore = async(req, res, next) => {
 exports.remove = async(req, res, next) => {
   try {
     let foundRoom = await services.roomService.remove({
-      room_id: req.params.room_id, 
+      room_id: req.params.room_id,
       bodyReq: req.body
     })
     if (foundRoom.status === 'success') {
@@ -58,5 +58,19 @@ exports.remove = async(req, res, next) => {
   } catch (err) {
     hdLog('room.remove', err.message)
     return next(err)
+  }
+}
+
+exports.assign = async(req, res, next) => {
+  try {
+    const { changes } = req.body
+    const removeOne = changes.filter(u => u._remove).map(u => u._id)
+    const newOne = changes.filter(u => !u._remove).map(u => u._id)
+
+    const rs = await services.roomService.assign(req.params.roomId, removeOne, newOne)
+    return res.status(200).json(rs)
+  } catch (e) {
+    hdLog('room.assign', e.message)
+    return next(e)
   }
 }

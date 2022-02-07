@@ -24,6 +24,10 @@ export default function Room() {
     update: {
       exec: (id, data) => roomApi.update(id, data),
       successMsg: 'Update room information successfully!'
+    },
+    assign: {
+      exec: (id, data) => roomApi.assign(id, data),
+      successMsg: 'Assign people into room successfully!'
     }
   })
 
@@ -48,29 +52,33 @@ export default function Room() {
               {
                 title: 'People',
                 dataIndex: 'user_id',
-                render: userIds => <>
-                  <span className='mr-xs'>{userIds.length} people</span>
-                  <Popover
-                    content={
-                      <>
-                        {
-                          userIds.map(user => (
-                            <div className='mb-md' key={user._id} style={{ display: 'flex', alignItems: 'center' }}>
-                              <Avatar style={{ width: 40, height: 40 }} className='mr-sm' {...genConfig(user.avatar)}/>
-                              <div>
-                                <div className='mt-xs'>{user.username}</div>
-                                <div style={{ color: 'gray' }}><small>{user.gender}</small></div>
+                render: userIds => {
+                  if (userIds.length === 0) return <i style={{ color: '#bfbfbf' }}>Empty</i>
+                  return (<>
+                    <span className='mr-xs'>{userIds.length} people</span>
+                    <Popover
+                      content={
+                        <>
+                          {
+                            userIds.map(user => (
+                              <div className='mb-md' key={user._id} style={{ display: 'flex', alignItems: 'center' }}>
+                                <Avatar style={{ width: 40, height: 40 }}
+                                  className='mr-sm' {...genConfig(user.avatar)} />
+                                <div>
+                                  <div className='mt-xs'>{user.username}</div>
+                                  <div style={{ color: 'gray' }}><small>{user.gender}</small></div>
+                                </div>
                               </div>
-                            </div>
-                          ))
-                        }
-                      </>}
-                    title='People Detail'
-                    trigger='click'
-                  >
-                    <InfoCircleOutlined className='peopleIcon'/>
-                  </Popover>
-                </>
+                            ))
+                          }
+                        </>}
+                      title='People Detail'
+                      trigger='click'
+                    >
+                      <InfoCircleOutlined className='peopleIcon' />
+                    </Popover>
+                  </>)
+                }
               },
               {
                 title: 'Price Tags',
@@ -125,7 +133,7 @@ export default function Room() {
                     </RoomForm>
                     <Divider type='vertical'/>
 
-                    <TableTransfer room={record}>
+                    <TableTransfer room={record} onAssign={(id, data) => mutate('assign', id, data)}>
                       <span className='gx-link'>Assign</span>
                     </TableTransfer>
                   </>

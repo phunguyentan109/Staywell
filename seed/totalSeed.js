@@ -38,27 +38,21 @@ module.exports = async function seedSample () {
       }),
       room35_2: await db.Room.create({
         ...samp.Room[2],
-        price_id: priceList[1]._id,
-        user_id: [
-          peopleList[2]._id,
-          peopleList[3]._id
-        ]
+        price_id: priceList[1]._id
       }),
       room40: await db.Room.create({
         ...samp.Room[3],
         price_id: priceList[2]._id,
-        user_id: [
-          peopleList[4]._id,
-        ]
       }),
       room40_2: await db.Room.create({
         ...samp.Room[4],
-        price_id: priceList[2]._id,
-        user_id: [
-          peopleList[4]._id,
-        ]
+        price_id: priceList[2]._id
       })
     }
+
+    console.log('Connect room and user...')
+    await createdRooms.room25.addIdToUser()
+    await createdRooms.room35.addIdToUser()
 
     console.log('Create contract and bill...')
     for (let contractItem of samp.Contract) {

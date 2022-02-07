@@ -17,7 +17,7 @@ router.route('/:room_id')
   .delete(mw.User.isPermit, roomController.remove)
   .put(mw.User.isPermit, mw.Room.update, roomController.getOne)
 
-router.route('/:room_id/assign').put(mw.User.isPermit, mw.Room.assign, roomController.getOne)
+router.route('/:roomId/assign').put(roomController.assign)
 
 router.use('/:room_id/contracts', require('./r-Contract'))
 
