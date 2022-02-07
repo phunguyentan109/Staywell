@@ -9,6 +9,7 @@ import { roomApi } from 'constants/api'
 import { InfoCircleOutlined, PlusOutlined, TagFilled } from '@ant-design/icons'
 import './_styles.less'
 import Avatar, { genConfig } from 'react-nice-avatar'
+import { formatVND } from 'constants/func'
 
 export default function Room() {
   const { data: rooms, isFetching, isMutating, mutate } = useFetch(roomApi.get(), {
@@ -72,14 +73,32 @@ export default function Room() {
                 </>
               },
               {
-                title: 'Price Type',
+                title: 'Price Tags',
                 dataIndex: 'price_id',
-                render: col => {
-                  if (!col) return <i style={{ color: '#cdcdcd' }}>No price applied</i>
+                render: info => {
+                  if (!info) return <i style={{ color: '#cdcdcd' }}>No price applied</i>
                   return <>
-                    <span className='mr-xs'>{col.type}</span>
+                    <span className='mr-xs'>{info.type}</span>
                     <Popover
-                      content={<p onClick={() => {}}>Le van luyen</p>}
+                      content={
+                        <div className='qv-price'>
+                          <div>
+                            <span>Electric:</span>
+                            <span>{formatVND(info.electric)}</span>
+                          </div>
+                          <div>
+                            <span>Living:</span>
+                            <span>{formatVND(info.living)}</span>
+                          </div>
+                          <div>
+                            <span>Water:</span>
+                            <span>{formatVND(info.water)}</span>
+                          </div>
+                          <div>
+                            <span>Wifi:</span>
+                            <span>{formatVND(info.wifi)}</span>
+                          </div>
+                        </div>}
                       title='Price Detail'
                       trigger='click'
                     >
