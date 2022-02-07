@@ -5,4 +5,8 @@ if (process.env.ENV_MODE === 'develop') {
   shell.exec('sh scripts/post-build-dev.sh')
 }
 
+if (process.env.ENV_MODE === 'staging') {
+  shell.exec('sh scripts/post-build-stg.sh')
+}
+
 if (process.env.BUILD_STATE === 'optimize') shell.exec('sh scripts/optimize.sh')
