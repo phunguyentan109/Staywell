@@ -101,6 +101,7 @@ exports.people = [
     email: 'becauseopu13@gmail.com',
     username: 'becauseopu13',
     gender: 'Female',
+    isVerified: true,
     avatar: {
       'sex': 'woman',
       'faceColor': '#F9C9B6',
@@ -123,8 +124,32 @@ exports.people = [
     email: 'newbb213@gmail.com',
     username: 'newbb213',
     gender: 'Female',
+    isVerified: true,
     avatar: {
       'sex': 'woman',
+      'faceColor': '#AC6651',
+      'earSize': 'big',
+      'eyeStyle': 'oval',
+      'noseStyle': 'long',
+      'mouthStyle': 'laugh',
+      'shirtStyle': 'polo',
+      'glassesStyle': 'none',
+      'hairColor': '#000',
+      'hairStyle': 'normal',
+      'hatStyle': 'none',
+      'hatColor': '#F48150',
+      'eyeBrowStyle': 'upWoman',
+      'shirtColor': '#F4D150',
+      'bgColor': '#74D153'
+    }
+  },
+
+  {
+    email: 'hacker@gmail.com',
+    username: 'newbb213',
+    gender: 'Male',
+    avatar: {
+      'sex': 'man',
       'faceColor': '#AC6651',
       'earSize': 'big',
       'eyeStyle': 'oval',

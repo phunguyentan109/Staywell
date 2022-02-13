@@ -21,13 +21,15 @@ export default function useFetch (args, mutators = {}, revalidate = revalidateOp
 
       const { successMsg, exec, revalidate = true } = mutators[key] || {}
 
-      await call(_.isEmpty(data) ? exec() : exec(...data))
+      let rs = await call(_.isEmpty(data) ? exec() : exec(...data))
 
       if (revalidate) await mutate()
 
+      setMutating(false)
+
       if (successMsg) notify('success', successMsg)
 
-      return setMutating(false)
+      return rs?.data
     }
 
     console.error(`useFetch: No mutating function called "${key}" is found.`)

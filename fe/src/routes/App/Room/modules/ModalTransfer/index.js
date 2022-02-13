@@ -1,41 +1,53 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
-import _ from 'lodash'
 import './_style.less'
-import { Modal, Table } from 'antd'
+import { Modal, Table, Tag } from 'antd'
 import { useFetch, useToggle } from 'hooks'
 import { userApi } from 'constants/api'
 
-export default function ModalTransfer({ room, children }) {
-  const [checkedIn, setCheckedIn] = useState([])
+export default function ModalTransfer({ room, children, onAssign }) {
+  const [changes, setChanges] = useState([])
   const [pair, togglePair] = useToggle({ modal: false, process: false })
-  const { data: people, isLoading, mutate } = useFetch(pair.modal ? userApi.available() : null, {
-  })
+  const { data: people = [] } = useFetch(pair.modal ? userApi.available() : null, {})
 
   useEffect(() => {
-    setCheckedIn(_.map(room.user_id, u => u._id))
+    setChanges(room.user_id)
   }, [room.user_id])
 
-  const toggleModal = useCallback(async() => {
-    togglePair(['modal'])
-  }, [togglePair])
+  const selectedIds = useMemo(
+    () => changes.filter(u => !u._remove).map(u => u._id),
+    [changes]
+  )
 
-  const hdOk = useCallback(async() => {
-  //   togglePair(['process'])
-  //   let rs = await hdAssign({ user_id: checkedIn })
-  //   if (rs.status === 200) {
-  //     updateRooms(rs.data)
-  //     notify('success')
-  //     togglePair(['modal'])
-  //   }
-  //   togglePair(['process'])
-  }, [])
+  const hdOk = async() => {
+    togglePair(['process'])
+    await onAssign(room._id, { changes })
+    togglePair()
+  }
 
-  const hdFilter = (value, item) => item.username.includes(value) || item.email.includes(value)
+  const isUnSaved = r => {
+    let foundUser = changes.find(u => u._id === r._id)
+    if (!foundUser) return false
+
+    return foundUser._remove || people.map(u => u._id).includes(r._id)
+  }
+
+  const hdSelect = (r, select) => {
+    let isSavedRecord = room.user_id.map(u => u._id).includes(r._id)
+
+    if (isSavedRecord) {
+      setChanges(prev => {
+        let currentChanges = prev.filter(u => u._id !== r._id)
+        return select ? [...currentChanges, r] : [...currentChanges, { ...r, _remove: true }]
+      })
+    } else {
+      setChanges(prev => select ? [...prev, r] : prev.filter(u => u._id !== r._id))
+    }
+  }
 
   return (
     <>
-      <span onClick={toggleModal}>{children}</span>
+      <span onClick={() => togglePair(['modal'])}>{children}</span>
       <Modal
         width={800}
         title={'Room\'s people assignment'}
@@ -45,18 +57,24 @@ export default function ModalTransfer({ room, children }) {
         confirmLoading={pair.process}
       >
         <Table
+          tableLayout='fixed'
           className='gx-table-responsive'
-          dataSource={people}
+          dataSource={[...room.user_id, ...people]}
           rowKey='_id'
           pagination={false}
           rowSelection={{
             type: 'checkbox',
-            onChange: (selectedRowKeys, selectedRows) => console.log(selectedRowKeys, selectedRows)
+            selectedRowKeys: selectedIds,
+            onSelect: hdSelect
           }}
           columns={[
             {
               title: 'Name',
               dataIndex: 'username',
+              render: (v, r) => <>
+                {v}
+                {isUnSaved(r) && <Tag style={{ marginBottom: 0 }} color='red' className='ml-sm'>unsaved</Tag>}
+              </>
             },
             {
               title: 'Gender',
@@ -83,11 +101,12 @@ export default function ModalTransfer({ room, children }) {
 
 ModalTransfer.propTypes = {
   children: PropTypes.any,
+  onAssign: PropTypes.func,
   room: PropTypes.object
 }
 
 ModalTransfer.defaultProps = {
-  roomId: '',
-  people: [],
-  visible: false
+  room: {
+    user_id: []
+  }
 }
