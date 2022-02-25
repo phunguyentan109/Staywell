@@ -1,5 +1,6 @@
 const _ = require('lodash')
 const repo = require('../repositories')
+const { serviceLogger } = require('../utils/logger')
 
 exports.get = async({ filter, paging }) => {
   try {
@@ -13,6 +14,7 @@ exports.get = async({ filter, paging }) => {
     }
     return await repo.contractRepository.findLean(filter, populatePath, paging.size)
   } catch (error) {
+    serviceLogger('contract.get', error.message)
     throw new Error(error)
   }
 }
@@ -23,7 +25,7 @@ exports.getLatestElectric = async(contract_id) => {
       path: 'bill_id',
       match: { electric: { $exists: true } }
     }, 'bill_id info.electric')
-  
+
     if (!_.isEmpty(bill_id)) {
       // Get last electric number
       let electricNums = _.map(bill_id, b => b.electric.number)
@@ -33,6 +35,7 @@ exports.getLatestElectric = async(contract_id) => {
     }
     return info.electric
   } catch (error) {
+    serviceLogger('contract.getLatestElectric', error.message)
     throw new Error(error)
   }
 }
@@ -41,6 +44,7 @@ exports.getOne = async(contract_id) => {
   try {
     return await repo.contractRepository.findByIdLean(contract_id, 'bill_id')
   } catch (error) {
+    serviceLogger('contract.getOne', error.message)
     throw new Error(error)
   }
 }
@@ -51,6 +55,7 @@ exports.remove = async(contract_id) => {
     contract && await contract.remove()
     return contract
   } catch (error) {
+    serviceLogger('contract.remove', error.message)
     throw new Error(error)
   }
 }

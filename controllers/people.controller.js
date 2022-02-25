@@ -1,5 +1,5 @@
 const services = require('../services')
-const { hdLog } = require('../utils/logger')
+const { controllerLogger } = require('../utils/logger')
 
 exports.get = async(req, res, next) => {
   try {
@@ -8,7 +8,7 @@ exports.get = async(req, res, next) => {
 
     return res.status(200).json(foundPeople)
   } catch (err) {
-    hdLog('people.get', err.message)
+    controllerLogger('people.get', err.message)
     return next(err)
   }
 }
@@ -19,7 +19,7 @@ exports.getNoAssign = async(req, res, next) => {
     let foundPeople = await services.peopleService.getNoAssign(peopleIds)
     return res.status(200).json(foundPeople)
   } catch (err) {
-    hdLog('people.getNoAssign', err.message)
+    controllerLogger('people.getNoAssign', err.message)
     return next(err)
   }
 }
@@ -29,7 +29,7 @@ exports.remove = async(req, res, next) => {
     const foundPeople = await services.peopleService.remove(req.params.people_id)
     return res.status(200).json(foundPeople)
   } catch (err) {
-    hdLog('people.remove', err.message)
+    controllerLogger('people.remove', err.message)
     return next(err)
   }
 }
@@ -39,7 +39,7 @@ exports.getOne = async(req, res, next) => {
     const people = await services.peopleService.getOne(req.params.people_id)
     return res.status(200).json(people)
   } catch (err) {
-    hdLog('people.getOne', err.message)
+    controllerLogger('people.getOne', err.message)
     return next(err)
   }
 }
@@ -52,7 +52,7 @@ exports.update  = async(req, res, next) => {
     })
     return res.status(200).json(updatedPeople)
   } catch (err) {
-    hdLog('people.update', err.message)
+    controllerLogger('people.update', err.message)
     return next(err)
   }
 }

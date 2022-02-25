@@ -1,5 +1,6 @@
 const moment = require('moment')
 const repo = require('../repositories')
+const { serviceLogger } = require('../utils/logger')
 
 exports.get = async() => {
   try {
@@ -7,6 +8,7 @@ exports.get = async() => {
       deleteAt: { $exists: false }
     })
   } catch (error) {
+    serviceLogger('room.get', error.message)
     throw new Error(error)
   }
 }
@@ -15,6 +17,7 @@ exports.getDeleted = async() => {
   try {
     return await repo.roomRepository.find({ deleteAt: { $exists: true } })
   } catch (error) {
+    serviceLogger('room.getDeleted', error.message)
     throw new Error(error)
   }
 }
@@ -23,6 +26,7 @@ exports.getOne = async(roomId) => {
   try {
     return await repo.roomRepository.findByIdLean(roomId)
   } catch (error) {
+    serviceLogger('room.getOne', error.message)
     throw new Error(error)
   }
 }
@@ -33,6 +37,7 @@ exports.restore = async(room_id) => {
       $unset: { deleteAt: 1 }
     })
   } catch (error) {
+    serviceLogger('room.restore', error.message)
     throw new Error(error)
   }
 }
@@ -53,6 +58,7 @@ exports.remove = async({ room_id, bodyReq }) => {
     }
     return { status: 'fail' }
   } catch (error) {
+    serviceLogger('room.remove', error.message)
     throw new Error(error)
   }
 }
@@ -71,6 +77,7 @@ exports.assign = async(roomId, removeOne, newOne) => {
 
     return { status: 'success', data: updateRoom }
   } catch (error) {
+    serviceLogger('room.assign', error.message)
     throw new Error(error)
   }
 }

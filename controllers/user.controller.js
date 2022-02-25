@@ -1,5 +1,5 @@
 const services = require('../services')
-const { hdLog } = require('../utils/logger')
+const { controllerLogger } = require('../utils/logger')
 
 exports.signUp = async(req, res, next) => {
   try {
@@ -22,14 +22,14 @@ exports.logIn = async(req, res, next) => {
     const { _id, username, avatar, email, role, anonymousData, token, errMessage, status } = loginVal
     if (errMessage || status === 'fail') {
       return next({
-        status: 400, 
+        status: 400,
         message: errMessage
       })
     }
-    
+
     return res.status(200).json({ _id, username, avatar, email, role, anonymous: anonymousData, token })
   } catch (err) {
-    hdLog('user.logIn', err.message)
+    controllerLogger('user.logIn', err.message)
     return next({ status: 400, message: 'Invalid email/password.' })
   }
 }
@@ -45,7 +45,7 @@ exports.complete = async(req, res, next) => {
 
     return next()
   } catch (err) {
-    hdLog('user.complete', err.message)
+    controllerLogger('user.complete', err.message)
     return res.redirect('/')
   }
 }
@@ -58,7 +58,7 @@ exports.openRegistration = async(req, res, next) => {
     }
     return res.status(200).json({ success: true })
   } catch (err) {
-    hdLog('user.openRegistration', err.message)
+    controllerLogger('user.openRegistration', err.message)
     return next(err)
   }
 }
@@ -69,7 +69,7 @@ exports.getOne = async(req, res, next) => {
     // return email and phone for updating profile
     return res.status(200).json({ ...user, anonymous: user.anonymousData })
   } catch (err) {
-    hdLog('user.getOne', err.message)
+    controllerLogger('user.getOne', err.message)
     return next(err)
   }
 }
@@ -79,7 +79,7 @@ exports.get = async(req, res, next) => {
     const people = await services.userService.get()
     return res.status(200).json(people)
   } catch (err) {
-    hdLog('user.get', err.message)
+    controllerLogger('user.get', err.message)
     return next(err)
   }
 }
@@ -89,7 +89,7 @@ exports.remove = async(req, res, next) => {
     const user = await services.userService.remove(req.params.user_id)
     return res.status(200).json(user)
   } catch (err) {
-    hdLog('user.remove', err.message)
+    controllerLogger('user.remove', err.message)
     return next(err)
   }
 }
@@ -113,7 +113,7 @@ exports.updatePassword = async(req, res, next) => {
       })
     }
   } catch (err) {
-    hdLog('user.updatePassword', err.message)
+    controllerLogger('user.updatePassword', err.message)
     return next({
       status: 400,
       message: err.code === 11000 ? 'Sorry, the password is invalid' : err.message
@@ -135,7 +135,7 @@ exports.forgot = async(req, res, next) => {
       message: 'The email is not available.'
     })
   } catch (err) {
-    hdLog('user.forgot', err.message)
+    controllerLogger('user.forgot', err.message)
     return next(err)
   }
 }
@@ -157,7 +157,7 @@ exports.resetPassword = async(req, res, next) => {
 
     return res.status(200).json(foundUser.token)
   } catch (err) {
-    hdLog('user.resetPassword', err.message)
+    controllerLogger('user.resetPassword', err.message)
     return next(err)
   }
 }
@@ -168,7 +168,7 @@ exports.contact = async(req, res, next) => {
     let listUser = await services.userService.contact({ title, content, user_id })
     return res.status(200).json(listUser.data)
   } catch (err) {
-    hdLog('user.contact', err.message)
+    controllerLogger('user.contact', err.message)
     return next(err)
   }
 }
@@ -178,7 +178,7 @@ exports.getAvailable = async(req, res, next) => {
     const foundPeople = await services.userService.getAvailable()
     return res.status(200).json(foundPeople.data)
   } catch (err) {
-    hdLog('user.getAvailable', err.message)
+    controllerLogger('user.getAvailable', err.message)
     return next(err)
   }
 }
@@ -191,7 +191,7 @@ exports.update = async(req, res, next) => {
     })
     return res.status(200).json(updateUser.data)
   } catch (err) {
-    hdLog('user.update', err.message)
+    controllerLogger('user.update', err.message)
     return next(err)
   }
 }

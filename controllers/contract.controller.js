@@ -1,5 +1,5 @@
 const services = require('../services')
-const { hdLog } = require('../utils/logger')
+const { controllerLogger } = require('../utils/logger')
 
 exports.get = async(req, res, next) => {
   try {
@@ -8,7 +8,7 @@ exports.get = async(req, res, next) => {
     const contracts = await services.contractService.get({ filter, paging })
     return res.status(200).json(contracts)
   } catch (err) {
-    hdLog('contract.get', err.message)
+    controllerLogger('contract.get', err.message)
     return next(err)
   }
 }
@@ -19,7 +19,7 @@ exports.getLatestElectric = async(req, res, next) => {
     const data = await services.contractService.getLatestElectric(contract_id)
     return res.status(200).json(data)
   } catch (err) {
-    hdLog('contract.getLatestElectric', err.message)
+    controllerLogger('contract.getLatestElectric', err.message)
     return next(err)
   }
 }
@@ -30,7 +30,7 @@ exports.getOne = async(req, res, next) => {
     const foundContract = await services.contractService.getOne(contract_id)
     return res.status(200).json(foundContract)
   } catch (err) {
-    hdLog('contract.getOne', err.message)
+    controllerLogger('contract.getOne', err.message)
     return next(err)
   }
 }
@@ -40,7 +40,7 @@ exports.remove = async(req, res, next) => {
     let contract = await services.contractService.remove(req.params.contract_id)
     return res.status(200).json(contract)
   } catch (err) {
-    hdLog('contract.remove', err.message)
+    controllerLogger('contract.remove', err.message)
     return next(err)
   }
 }

@@ -1,6 +1,7 @@
 const moment = require('moment')
 const jwt = require('jsonwebtoken')
 const repo = require('../repositories')
+const { serviceLogger } = require('../utils/logger')
 const mail = require('../utils/mail')
 const { genToken } = require('../utils/token')
 
@@ -14,6 +15,7 @@ exports.signUp = async(body, host) => {
 
     return user
   } catch (error) {
+    serviceLogger('user.signUp', error.message)
     throw new Error(error)
   }
 }
@@ -50,6 +52,7 @@ exports.logIn = async(req) => {
 
     return { _id, username, avatar, email, role, anonymousData, token }
   } catch (error) {
+    serviceLogger('user.logIn', error.message)
     throw new Error(error)
   }
 }
@@ -64,6 +67,7 @@ exports.complete = async(userId) => {
     await foundUser.save()
     return { status: 'success' }
   } catch (error) {
+    serviceLogger('user.complete', error.message)
     throw new Error(error)
   }
 }
@@ -75,6 +79,7 @@ exports.openRegistration = async(loginUserId) => {
     if (foundUser) await foundUser.setAnonymousToken(registrationToken)
     return foundUser
   } catch (error) {
+    serviceLogger('user.openRegistration', error.message)
     throw new Error(error)
   }
 }
@@ -102,6 +107,7 @@ exports.getOne = async(userId) => {
       _id, username, avatar, email, role, anonymousData, token
     }
   } catch (error) {
+    serviceLogger('user.getOne', error.message)
     throw new Error(error)
   }
 }
@@ -110,6 +116,7 @@ exports.get = async() => {
   try {
     return await repo.userRepository.find({ password: { $exists: false } })
   } catch (error) {
+    serviceLogger('user.get', error.message)
     throw new Error(error)
   }
 }
@@ -120,6 +127,7 @@ exports.remove = async(userId) => {
     if (user) user.remove()
     return user
   } catch (error) {
+    serviceLogger('user.remove', error.message)
     throw new Error(error)
   }
 }
@@ -143,6 +151,7 @@ exports.updatePassword = async({ user_id, current, change }) => {
     }
     return { status: 'fail' }
   } catch (error) {
+    serviceLogger('user.updatePassword', error.message)
     throw new Error(error)
   }
 }
@@ -166,6 +175,7 @@ exports.forgot = async({ email, host }) => {
     }
     return { status: 'fail' }
   } catch (error) {
+    serviceLogger('user.forgot', error.message)
     throw new Error(error)
   }
 }
@@ -189,6 +199,7 @@ exports.resetPassword = async({ token, password }) => {
       data: token
     }
   } catch (error) {
+    serviceLogger('user.resetPassword', error.message)
     throw new Error(error)
   }
 }
@@ -209,6 +220,7 @@ exports.contact = async({ title, content, user_id }) => {
       data: listUser
     }
   } catch (error) {
+    serviceLogger('user.contact', error.message)
     throw new Error(error)
   }
 }
@@ -225,6 +237,7 @@ exports.getAvailable = async() => {
       data: foundPeople
     }
   } catch (error) {
+    serviceLogger('user.getAvailable', error.message)
     throw new Error(error)
   }
 }
@@ -240,6 +253,7 @@ exports.update = async({ user_id, dataReq }) => {
       data: updateUser
     }
   } catch (error) {
+    serviceLogger('user.update', error.message)
     throw new Error(error)
   }
 }

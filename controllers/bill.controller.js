@@ -1,5 +1,5 @@
 const services = require('../services')
-const { hdLog } = require('../utils/logger')
+const { controllerLogger } = require('../utils/logger')
 
 exports.getOne = async(req, res, next) => {
   try {
@@ -7,7 +7,7 @@ exports.getOne = async(req, res, next) => {
     let foundBill = await services.billService.getOne(bill_id)
     return res.status(200).json(foundBill)
   } catch (err) {
-    hdLog('bill.getOne', err.message)
+    controllerLogger('bill.getOne', err.message)
     return next(err)
   }
 }
