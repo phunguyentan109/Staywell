@@ -1,17 +1,11 @@
-import React from 'react'
+export const FETCH_ROOM_ACTION = 'app/Room/FETCH_ROOM_ACTION'
+export const FETCH_ROOM_SUCCESS_ACTION = 'app/Room/FETCH_ROOM_SUCCESS_ACTION'
 
-export const TABLE_COLS = [
-  {
-    title: 'Username',
-    dataIndex: 'username',
-    render: (text, rec) => (
-      <span className='transfer'>
-        <img src={rec.avatar.link} alt='img'/>{text}
-      </span>
-    )
-  },
-  {
-    title: 'Email',
-    dataIndex: 'email'
-  }
-]
+export const FETCH_PRICE_ACTION = 'app/Room/FETCH_PRICE_ACTION'
+
+export const CREATE_ROOM_ACTION = 'app/Room/CREATE_ROOM_ACTION'
+export const EDIT_ROOM_ACTION = 'app/Room/EDIT_ROOM_ACTION'
+export const REMOVE_ROOM_ACTION = 'app/Room/REMOVE_ROOM_ACTION'
+
+export const FETCH_AVAILABLE_PEOPLE_ACTION = 'app/Room/FETCH_AVAILABLE_PEOPLE_ACTION'
+export const ASSIGN_ROOM_ACTION = 'app/Room/ASSIGN_ROOM_ACTION'

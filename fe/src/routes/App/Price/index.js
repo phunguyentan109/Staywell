@@ -1,41 +1,46 @@
-import React, { memo } from 'react'
-import { Button, Card, Divider, Spin, Table } from 'antd'
+import React, { useCallback, useEffect } from 'react'
+import { Button, Card, Divider, message, Table } from 'antd'
 import PropTypes from 'prop-types'
 
 import DeleteAction from 'components/DeleteAction'
-import PriceForm from './modules/PriceForm'
-import { useFetch } from 'hooks'
-import { priceApi } from 'constants/api'
+import PriceForm from './components/PriceForm'
 import { PlusOutlined } from '@ant-design/icons'
 import { formatVND } from 'constants/func'
+import { createPriceAction, editPriceAction, fetchPriceAction, removePriceAction } from './redux/action'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectPrice } from './redux/selector'
 
-function Price() {
-  const { data: price, isFetching, isMutating, mutate } = useFetch(priceApi.get(), {
-    remove: {
-      exec: id => priceApi.remove(id),
-      successMsg: 'Price is removed successfully!'
-    },
-    add: {
-      exec: data => priceApi.add(data),
-      successMsg: 'Add new price successfully!'
-    },
-    update: {
-      exec: (id, data) => priceApi.update(id, data),
-      successMsg: 'Update price information successfully!'
-    }
-  })
+export default function Price() {
+  const { price, loading } = useSelector(selectPrice)
+
+  const dp = useDispatch()
+
+  const getPrice = useCallback(() => dp(fetchPriceAction()), [dp])
+
+  useEffect(() => {
+    getPrice()
+  }, [getPrice])
+
+  const removeRoom = roomId => {
+    dp(removePriceAction(roomId, rs => {
+      if (rs) message.success('Removing price successfully!')
+      getPrice()
+    }))
+  }
 
   return (
-    <Spin spinning={isFetching}>
+    <>
       <Card className='gx-card' title='List of available price'>
         <PriceForm
-          title='Add new price'
-          onSubmit={form => mutate('add', form)}
-          isProcessing={isMutating}
+          title='New price'
+          onSubmitAction={createPriceAction}
+          getPrice={getPrice}
         >
           <Button type='primary' icon={<PlusOutlined />}>New Price</Button>
         </PriceForm>
+
         <Table
+          loading={loading}
           className='gx-table-responsive'
           dataSource={price}
           rowKey='_id'
@@ -69,12 +74,15 @@ function Price() {
               dataIndex: '_id',
               key: 'action',
               render: (v, record) => <>
-                <DeleteAction onConfirm={() => mutate('remove', v)}/>
+                <DeleteAction onConfirm={() => removeRoom(v)}/>
+
                 <Divider type='vertical'/>
+
                 <PriceForm
                   value={record}
-                  title={'Edit price\'s information'}
-                  onSubmit={price => mutate('update', v, price)}
+                  title='Edit price'
+                  onSubmitAction={editPriceAction}
+                  getPrice={getPrice}
                 >
                   <span className='gx-link'>Edit</span>
                 </PriceForm>
@@ -83,14 +91,12 @@ function Price() {
           ]}
         />
       </Card>
-    </Spin>
+    </>
   )
 }
 
-export default memo(Price)
-
 Price.propTypes = {
-  listPrice: PropTypes.array,
+  price: PropTypes.object,
   updateListPrice: PropTypes.func,
   hdRemove: PropTypes.func
 }

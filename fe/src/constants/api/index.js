@@ -9,14 +9,12 @@ import axios from 'axios'
 export {
   apiContract,
   apiUser,
-  // apiRoom,
   apiBill,
-  // apiPrice
 }
 
 const prefix = '/api/'
 
-export async function call(args) {
+export async function call(args) { // deprecated
   const [url, method = 'get', data] = args
 
   try {
@@ -25,6 +23,19 @@ export async function call(args) {
     return rs
   } catch (err) {
     notify('error', 'Oops! Something went wrong...')
+  }
+}
+
+export async function request(args) {
+  const [url, method = 'get', data] = args
+
+  try {
+    let rs = await axios[method](`${prefix}${url}`, data)
+    if (rs.data?.errors) throw rs.data?.errors?.display
+    return rs.data
+  } catch (err) {
+    notify('error', err.message)
+    return {}
   }
 }
 
@@ -51,7 +62,7 @@ export const userApi = {
   get: () => ['user'],
   getOne: id => [`user/${id}`],
   available: () => ['user/available'],
-  auth: (type, data) => [`user/${type}`, 'post', data],
+  logIn: data => ['user/login', 'post', data],
   forgot: () => ['user/forgot', 'post'],
   remove: id => [`user/${id}`, 'delete'],
   update: (id, data) => [`user/${id}`, 'put', data],
@@ -68,7 +79,7 @@ export const userApi = {
 
 export const priceApi = {
   get: () => ['price'],
-  add: () => ['price', 'post'],
+  add: data => ['price', 'post', data],
   getOne: priceId => [`price/${priceId}`],
   remove: priceId => [`price/${priceId}`, 'delete'],
   update: (id, data) => [`price/${id}`, 'put', data]

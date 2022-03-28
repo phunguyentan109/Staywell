@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import './_styles.less'
 import { useDispatch, useSelector } from 'react-redux'
-import { addMessage, sendAuthData } from 'appRedux/actions'
+import { loginAction } from 'appRedux/actions/user'
 
 function Login() {
   const msg = useSelector(({ message }) => message)
   const dispatch = useDispatch()
 
   const [account, setAccount] = useState({ email: '', password: '' })
-
-  useEffect(() => { return () => addMessage() }, [])
 
   const hdChange = e => {
     const { value, name } = e.target
@@ -19,7 +17,7 @@ function Login() {
 
   const hdSubmit = e => {
     e.preventDefault()
-    dispatch(sendAuthData('login', account))
+    dispatch(loginAction(account))
   }
 
   return (
@@ -27,9 +25,7 @@ function Login() {
       <h1>Welcome to Staywell,</h1>
       <h1>What a nice day,</h1>
       <h4>Please enter your account to continue.</h4>
-      {
-        msg.text && <div className='notify'><span>{msg.text}</span></div>
-      }
+
       <form className='auth-form' onSubmit={hdSubmit}>
         <div className='auth-input'>
           <i className='far fa-envelope'/>

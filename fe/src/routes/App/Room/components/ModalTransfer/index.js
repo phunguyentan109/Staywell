@@ -1,14 +1,17 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import './_style.less'
 import { Modal, Table, Tag } from 'antd'
-import { useFetch, useToggle } from 'hooks'
-import { userApi } from 'constants/api'
+import { assignRoomAction, fetchAvailablePeopleAction } from '../../redux/action'
+import { useDispatch } from 'react-redux'
 
-export default function ModalTransfer({ room, children, onAssign }) {
+export default function ModalTransfer({ room, getRooms }) {
   const [changes, setChanges] = useState([])
-  const [pair, togglePair] = useToggle({ modal: false, process: false })
-  const { data: people = [] } = useFetch(pair.modal ? userApi.available() : null, {})
+  const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [people, setPeople] = useState([])
+
+  const dp = useDispatch()
 
   useEffect(() => {
     setChanges(room.user_id)
@@ -19,10 +22,31 @@ export default function ModalTransfer({ room, children, onAssign }) {
     [changes]
   )
 
-  const hdOk = async() => {
-    togglePair(['process'])
-    await onAssign(room._id, { changes })
-    togglePair()
+  const hdOpen = () => {
+    if (!open) {
+      setLoading(true)
+      setOpen(true)
+
+      dp(fetchAvailablePeopleAction(data => {
+        if (data) {
+          setLoading(false)
+          setPeople(data)
+        }
+      }))
+    }
+  }
+
+  const hdOk = () => {
+    setLoading(true)
+
+    dp(assignRoomAction(room._id, { changes }, rs => {
+      if (rs) {
+        setOpen(false)
+        getRooms()
+      }
+
+      setLoading(false)
+    }))
   }
 
   const isUnSaved = r => {
@@ -45,18 +69,23 @@ export default function ModalTransfer({ room, children, onAssign }) {
     }
   }
 
+  const hdCancel = () => {
+    if (!loading) setOpen(false)
+  }
+
   return (
     <>
-      <span onClick={() => togglePair(['modal'])}>{children}</span>
+      <span onClick={hdOpen} className='gx-link'>Assign</span>
+
       <Modal
         width={800}
         title={'Room\'s people assignment'}
-        visible={pair.modal}
-        onCancel={() => togglePair(['modal'])}
+        visible={open}
+        onCancel={hdCancel}
         onOk={hdOk}
-        confirmLoading={pair.process}
       >
         <Table
+          loading={loading}
           tableLayout='fixed'
           className='gx-table-responsive'
           dataSource={[...room.user_id, ...people]}
@@ -100,8 +129,7 @@ export default function ModalTransfer({ room, children, onAssign }) {
 }
 
 ModalTransfer.propTypes = {
-  children: PropTypes.any,
-  onAssign: PropTypes.func,
+  getRooms: PropTypes.func,
   room: PropTypes.object
 }
 

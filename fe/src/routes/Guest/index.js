@@ -1,16 +1,19 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import Login from './Login'
-import PublicLayout from '../../layout/PublicLayout'
+import Login from './Login/Loader'
+import PublicLayout from 'layout/PublicLayout'
+import Accessing from '../Public/Accessing'
 
 function AuthRoutes({ location }) {
   return (
     <PublicLayout>
-      <Switch>
-        <Route exact path='/' component={Login}/>
-        <Redirect from={location.pathname} to='/'/>
-      </Switch>
+      <Suspense fallback={Accessing}>
+        <Switch>
+          <Route exact path='/' component={Login}/>
+          <Redirect from={location.pathname} to='/'/>
+        </Switch>
+      </Suspense>
     </PublicLayout>
   )
 }

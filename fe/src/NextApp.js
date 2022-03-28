@@ -1,16 +1,12 @@
 import React from 'react'
 import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'connected-react-router'
+import store, { history } from './appRedux'
+import AppRoutes from 'routes'
+
 import 'assets/vendors/style'
 import 'styles/wieldy.less'
 import 'assets/css/_layout.less'
-
-import configureStore, { history } from './appRedux/store'
-import AppRoutes from 'routes'
-import extractStorage from './constants/storage'
-
-const store = configureStore()
-extractStorage(store)
 
 const NextApp = () =>
   <Provider store={store}>

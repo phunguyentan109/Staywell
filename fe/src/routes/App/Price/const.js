@@ -15,3 +15,11 @@ export const PRICE_INPUTS = [
   { label: 'Living', name: 'living' },
   { label: 'Extra', name: 'extra' }
 ]
+
+export const FETCH_PRICE_ACTION = 'app/Price/FETCH_PRICE_ACTION'
+export const FETCH_PRICE_SUCCESS_ACTION = 'app/Price/FETCH_PRICE_SUCCESS_ACTION'
+
+export const CREATE_PRICE_ACTION = 'app/Price/CREATE_PRICE_ACTION'
+export const EDIT_PRICE_ACTION = 'app/Price/EDIT_PRICE_ACTION'
+export const REMOVE_PRICE_ACTION = 'app/Price/REMOVE_PRICE_ACTION'
+
