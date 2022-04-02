@@ -1,58 +1,42 @@
 const services = require('../services')
-const { controllerLogger } = require('../utils/logger')
+const ErrorTracker = require('../utils/shield')
 
-exports.get = async(req, res, next) => {
-  try {
-    const { peopleIds } = res.locals
-    let foundPeople = await services.peopleService.get(peopleIds)
+const tracker = new ErrorTracker('controller.people')
 
-    return res.status(200).json(foundPeople)
-  } catch (err) {
-    controllerLogger('people.get', err.message)
-    return next(err)
-  }
-}
 
-exports.getNoAssign = async(req, res, next) => {
-  try {
-    const { peopleIds } = res.locals
-    let foundPeople = await services.peopleService.getNoAssign(peopleIds)
-    return res.status(200).json(foundPeople)
-  } catch (err) {
-    controllerLogger('people.getNoAssign', err.message)
-    return next(err)
-  }
-}
+exports.get = tracker.handler('get', async(req, res) => {
+  const { peopleIds } = res.locals
+  let foundPeople = await services.peopleService.get(peopleIds)
 
-exports.remove = async(req, res, next) => {
-  try {
-    const foundPeople = await services.peopleService.remove(req.params.people_id)
-    return res.status(200).json(foundPeople)
-  } catch (err) {
-    controllerLogger('people.remove', err.message)
-    return next(err)
-  }
-}
+  return res.status(200).json(foundPeople)
+})
 
-exports.getOne = async(req, res, next) => {
-  try {
-    const people = await services.peopleService.getOne(req.params.people_id)
-    return res.status(200).json(people)
-  } catch (err) {
-    controllerLogger('people.getOne', err.message)
-    return next(err)
-  }
-}
 
-exports.update  = async(req, res, next) => {
-  try {
-    const updatedPeople = await services.peopleService.update({
-      people_id: req.params.people_id,
-      dataReq: req.body
-    })
-    return res.status(200).json(updatedPeople)
-  } catch (err) {
-    controllerLogger('people.update', err.message)
-    return next(err)
-  }
-}
+exports.getNoAssign = tracker.handler('getNoAssign', async(req, res) => {
+  const { peopleIds } = res.locals
+  let foundPeople = await services.peopleService.getNoAssign(peopleIds)
+
+  return res.status(200).json(foundPeople)
+})
+
+
+exports.remove = tracker.handler('remove', async(req, res) => {
+  const foundPeople = await services.peopleService.remove(req.params.people_id)
+  return res.status(200).json(foundPeople)
+})
+
+
+exports.getOne = tracker.handler('getOne', async(req, res) => {
+  const people = await services.peopleService.getOne(req.params.people_id)
+  return res.status(200).json(people)
+})
+
+
+exports.update  = tracker.handler('update', async(req, res) => {
+  const updatedPeople = await services.peopleService.update({
+    people_id: req.params.people_id,
+    dataReq: req.body
+  })
+
+  return res.status(200).json(updatedPeople)
+})

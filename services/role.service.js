@@ -1,12 +1,9 @@
 const repo = require('../repositories')
-const { serviceLogger } = require('../utils/logger')
+const ErrorTracker = require('../utils/shield')
 
-exports.create = async(req) => {
-  try {
-    const createRole = await repo.roleRepository.create(req)
-    return createRole
-  } catch (error) {
-    serviceLogger('role.create', error.message)
-    throw new Error(error)
-  }
-}
+const tracker = new ErrorTracker('service.bill')
+
+
+exports.create = tracker.seal('create', async (req) => {
+  return repo.roleRepository.create(req)
+})

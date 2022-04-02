@@ -1,61 +1,48 @@
 const _ = require('lodash')
 const repo = require('../repositories')
-const { serviceLogger } = require('../utils/logger')
+const ErrorTracker = require('../utils/shield')
 
-exports.get = async({ filter, paging }) => {
-  try {
-    const populatePath = {
-      path: 'room_id',
-      select: 'user_id name',
-      populate: {
-        path: 'user_id',
-        select: '_id avatar'
-      }
+const tracker = new ErrorTracker('service.contract')
+
+
+exports.get = tracker.seal('get', async ({ filter, paging }) => {
+  const populatePath = {
+    path: 'room_id',
+    select: 'user_id name',
+    populate: {
+      path: 'user_id',
+      select: '_id avatar'
     }
-    return await repo.contractRepository.findLean(filter, populatePath, paging.size)
-  } catch (error) {
-    serviceLogger('contract.get', error.message)
-    throw new Error(error)
   }
-}
+  return await repo.contractRepository.findLean(filter, populatePath, paging.size)
+})
 
-exports.getLatestElectric = async(contract_id) => {
-  try {
-    let { bill_id, info } = await repo.contractRepository.findByIdLean(contract_id, {
-      path: 'bill_id',
-      match: { electric: { $exists: true } }
-    }, 'bill_id info.electric')
 
-    if (!_.isEmpty(bill_id)) {
-      // Get last electric number
-      let electricNums = _.map(bill_id, b => b.electric.number)
-      let highestNumber = Math.max(...electricNums)
-      let foundBill = _.find(bill_id, b => b.electric.number === highestNumber)
-      return foundBill.electric.number
-    }
-    return info.electric
-  } catch (error) {
-    serviceLogger('contract.getLatestElectric', error.message)
-    throw new Error(error)
+exports.getLatestElectric = tracker.seal('getLatestElectric', async (contract_id) => {
+  let { bill_id, info } = await repo.contractRepository.findByIdLean(contract_id, {
+    path: 'bill_id',
+    match: { electric: { $exists: true } }
+  }, 'bill_id info.electric')
+
+  if (!_.isEmpty(bill_id)) {
+    // Get last electric number
+    let electricNums = _.map(bill_id, b => b.electric.number)
+    let highestNumber = Math.max(...electricNums)
+    let foundBill = _.find(bill_id, b => b.electric.number === highestNumber)
+    return foundBill.electric.number
   }
-}
+  return info.electric
+})
 
-exports.getOne = async(contract_id) => {
-  try {
-    return await repo.contractRepository.findByIdLean(contract_id, 'bill_id')
-  } catch (error) {
-    serviceLogger('contract.getOne', error.message)
-    throw new Error(error)
-  }
-}
 
-exports.remove = async(contract_id) => {
-  try {
-    let contract = await repo.contractRepository.findById(contract_id)
-    contract && await contract.remove()
-    return contract
-  } catch (error) {
-    serviceLogger('contract.remove', error.message)
-    throw new Error(error)
-  }
-}
+exports.getOne = tracker.seal('getOne', async (contract_id) => {
+  return await repo.contractRepository.findByIdLean(contract_id, 'bill_id')
+})
+
+
+exports.remove = tracker.seal('remove', async (contract_id) => {
+  let contract = await repo.contractRepository.findById(contract_id)
+  contract && await contract.remove()
+  return contract
+})
+

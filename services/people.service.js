@@ -1,49 +1,31 @@
 const repo = require('../repositories')
-const { serviceLogger } = require('../utils/logger')
+const ErrorTracker = require('../utils/shield')
 
-exports.get = async (peopleIds) => {
-  try {
-    return await repo.userRepository.findLean({ _id: { $in: peopleIds } })
-  } catch (error) {
-    serviceLogger('people.get', error.message)
-    throw new Error(error)
-  }
-}
+const tracker = new ErrorTracker('service.bill')
 
-exports.getOne = async(people_id) => {
-  try {
-    return await repo.peopleRepository.findById(people_id)
-  } catch (error) {
-    serviceLogger('people.getOne', error.message)
-    throw new Error(error)
-  }
-}
+exports.get = tracker.seal('get', async (peopleIds) => {
+  return repo.userRepository.findLean({ _id: { $in: peopleIds } })
+})
 
-exports.getNoAssign = async(peopleIds) => {
-  try {
-    return await repo.userRepository.getNoAssign(peopleIds)
-  } catch (error) {
-    serviceLogger('people.getNoAssign', error.message)
-    throw new Error(error)
-  }
-}
 
-exports.remove = async(people_id) => {
-  try {
-    let foundPeople = await repo.peopleRepository.findById(people_id)
-    if (foundPeople) foundPeople.remove()
-    return foundPeople
-  } catch (error) {
-    serviceLogger('people.remove', error.message)
-    throw new Error(error)
-  }
-}
+exports.getOne = tracker.seal('getOne', async (people_id) => {
+  return repo.peopleRepository.findById(people_id)
+})
 
-exports.update = async({ people_id, dataReq }) => {
-  try {
-    return await repo.peopleRepository.findByIdAndUpdate(people_id, dataReq)
-  } catch (error) {
-    serviceLogger('people.update', error.message)
-    throw new Error(error)
-  }
-}
+
+exports.getNoAssign = tracker.seal('getNoAssign', async (peopleIds) => {
+  return repo.userRepository.getNoAssign(peopleIds)
+})
+
+
+exports.remove = tracker.seal('remove', async (people_id) => {
+  let foundPeople = await repo.peopleRepository.findById(people_id)
+  if (foundPeople) foundPeople.remove()
+  return foundPeople
+})
+
+
+exports.update = tracker.seal('update', async ({ people_id, dataReq }) => {
+  return repo.peopleRepository.findByIdAndUpdate(people_id, dataReq)
+})
+

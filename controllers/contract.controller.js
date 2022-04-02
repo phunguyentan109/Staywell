@@ -1,46 +1,35 @@
 const services = require('../services')
-const { controllerLogger } = require('../utils/logger')
+const ErrorTracker = require('../utils/shield')
 
-exports.get = async(req, res, next) => {
-  try {
-    // prepare query
-    const { filter, paging } = req.body
-    const contracts = await services.contractService.get({ filter, paging })
-    return res.status(200).json(contracts)
-  } catch (err) {
-    controllerLogger('contract.get', err.message)
-    return next(err)
-  }
-}
+const tracker = new ErrorTracker('controller.contract')
 
-exports.getLatestElectric = async(req, res, next) => {
-  try {
-    const { contract_id } = req.params
-    const data = await services.contractService.getLatestElectric(contract_id)
-    return res.status(200).json(data)
-  } catch (err) {
-    controllerLogger('contract.getLatestElectric', err.message)
-    return next(err)
-  }
-}
 
-exports.getOne = async(req, res, next) => {
-  try {
-    const contract_id = res.locals.contract_id || req.params.contract_id
-    const foundContract = await services.contractService.getOne(contract_id)
-    return res.status(200).json(foundContract)
-  } catch (err) {
-    controllerLogger('contract.getOne', err.message)
-    return next(err)
-  }
-}
+exports.get = tracker.handler('get', async(req, res) => {
+  const { filter, paging } = req.body
+  const contracts = await services.contractService.get({ filter, paging })
 
-exports.remove = async(req, res, next) => {
-  try {
-    let contract = await services.contractService.remove(req.params.contract_id)
-    return res.status(200).json(contract)
-  } catch (err) {
-    controllerLogger('contract.remove', err.message)
-    return next(err)
-  }
-}
+  return res.status(200).json(contracts)
+})
+
+
+exports.getLatestElectric = tracker.handler('getLatestElectric', async(req, res) => {
+  const { contract_id } = req.params
+  const data = await services.contractService.getLatestElectric(contract_id)
+
+  return res.status(200).json(data)
+})
+
+
+exports.getOne = tracker.handler('getOne', async(req, res) => {
+  const contract_id = res.locals.contract_id || req.params.contract_id
+  const foundContract = await services.contractService.getOne(contract_id)
+
+  return res.status(200).json(foundContract)
+})
+
+
+exports.remove = tracker.handler('remove', async(req, res) => {
+  let contract = await services.contractService.remove(req.params.contract_id)
+  return res.status(200).json(contract)
+})
+

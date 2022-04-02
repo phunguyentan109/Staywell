@@ -22,7 +22,7 @@ router.route('/:user_id')
 
 router.route('/:token/reset').put(userController.resetPassword)
 
-router.route('/:user_id/password').put(userController.updatePassword)
+// router.route('/:user_id/password').put(userController.updatePassword)
 router.route('/:user_id/contact').post(userController.contact)
 
 // LINKED ROUTES

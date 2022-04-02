@@ -34,8 +34,12 @@ app.use((req, res, next) => {
 
 // All the error will be turned into JSON in here
 app.use((err, req, res, next) => {
-  return res.status(err.status || 500).json({
-    errorMsg: err.message || 'Oops! Something went wrong!'
+  return res.status(err.status).json({
+    errors: {
+      display: err.logicError,
+      debug: err.message,
+      occurAt: err.occurAt
+    },
   })
 })
 

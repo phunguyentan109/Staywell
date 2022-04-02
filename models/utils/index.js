@@ -1,6 +1,6 @@
 const db = require('../index')
 
-exports.writeIdToDoc = async (targetModel, targetIds, idKey, idValue) => {
+exports.saveIdToChildren = async (targetModel, targetIds, idKey, idValue) => {
   return db[targetModel].updateMany(
     {
       _id: { $in: targetIds },
