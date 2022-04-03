@@ -3,12 +3,12 @@ const mail = require('../utils/mail')
 const { genToken } = require('../utils/token')
 const moment = require('moment')
 const jwt = require('jsonwebtoken')
-const ErrorTracker = require('../utils/shield')
+const Monitor = require('../utils/shield')
 
-const tracker = new ErrorTracker('service.user')
+const monitor = new Monitor('service.user')
 
 
-exports.signUp = tracker.seal(async(body, host) => {
+exports.signUp = monitor.seal(async(body, host) => {
   const user = await repo.userRepository.create(body)
   const { email, username, _id } = user
 
@@ -19,7 +19,7 @@ exports.signUp = tracker.seal(async(body, host) => {
 })
 
 
-exports.logIn = tracker.seal('logIn', async (req) => {
+exports.logIn = monitor.seal('logIn', async (req) => {
   let { email, password } = req
   email = email.includes('@') ? email :`${email}@gmail.com`
 
@@ -29,7 +29,7 @@ exports.logIn = tracker.seal('logIn', async (req) => {
 
   // compare password
   const match = await user.comparePassword(password)
-  if (!match) throw tracker.wrap('Invalid email/password')
+  if (!match) throw monitor.wrap('Invalid email/password')
 
   // get role of user
   const userRole = await repo.userRepository.findUserRole({ user_id: _id })
@@ -49,10 +49,10 @@ exports.logIn = tracker.seal('logIn', async (req) => {
 }, { catchMsg: 'Invalid email/password.' })
 
 
-exports.complete = tracker.seal('complete', async(userId) => {
+exports.complete = monitor.seal('complete', async(userId) => {
   let foundUser = await repo.userRepository.findById(userId)
 
-  if (!foundUser) throw tracker.wrap('User is not exist')
+  if (!foundUser) throw monitor.wrap('User is not exist')
 
   foundUser.isVerified = true
   await foundUser.save()
@@ -61,7 +61,7 @@ exports.complete = tracker.seal('complete', async(userId) => {
 })
 
 
-exports.openRegistration = tracker.seal(async (loginUserId) => {
+exports.openRegistration = monitor.seal(async (loginUserId) => {
   const registrationToken = jwt.sign({ openAt: moment() }, process.env.SECRET, { expiresIn: '24h' })
 
   let foundUser = await repo.userRepository.findById(loginUserId)
@@ -72,7 +72,7 @@ exports.openRegistration = tracker.seal(async (loginUserId) => {
 })
 
 
-exports.getOne = tracker.seal('getOne', async (userId) => {
+exports.getOne = monitor.seal('getOne', async (userId) => {
   const user = await repo.userRepository.findById(userId)
 
   let { _id, username, email, avatar, anonymous } = user
@@ -96,19 +96,19 @@ exports.getOne = tracker.seal('getOne', async (userId) => {
 })
 
 
-exports.get = tracker.seal('get', async () => {
+exports.get = monitor.seal('get', async () => {
   return repo.userRepository.find({ password: { $exists: false } })
 })
 
 
-exports.remove = tracker.seal('remove', async(userId) => {
+exports.remove = monitor.seal('remove', async(userId) => {
   const user = await repo.userRepository.findById(userId)
   if (user) user.remove()
   return user
 })
 
 
-exports.updatePassword = tracker.seal('updatePassword', async({ user_id, current, change }) => {
+exports.updatePassword = monitor.seal('updatePassword', async({ user_id, current, change }) => {
   const user = await repo.userRepository.findById(user_id)
 
   // verify old password and change password
@@ -129,7 +129,7 @@ exports.updatePassword = tracker.seal('updatePassword', async({ user_id, current
 })
 
 
-exports.forgot = tracker.seal('forgot', async({ email, host }) => {
+exports.forgot = monitor.seal('forgot', async({ email, host }) => {
   const foundUser = await repo.userRepository.findOne({ email })
 
   if (foundUser) {
@@ -147,7 +147,7 @@ exports.forgot = tracker.seal('forgot', async({ email, host }) => {
 })
 
 
-exports.resetPassword = tracker.seal('resetPassword', async({ token, password }) => {
+exports.resetPassword = monitor.seal('resetPassword', async({ token, password }) => {
   const foundUser = await repo.userRepository.findOne({
     resetPwToken: token,
     resetPwExpires: { $gt: Date.now() }
@@ -166,7 +166,7 @@ exports.resetPassword = tracker.seal('resetPassword', async({ token, password })
 })
 
 
-exports.contact = tracker.seal('contact', async({ title, content, user_id }) => {
+exports.contact = monitor.seal('contact', async({ title, content, user_id }) => {
   let listUser = []
 
   // get user mail from user_id
@@ -181,7 +181,7 @@ exports.contact = tracker.seal('contact', async({ title, content, user_id }) => 
 })
 
 
-exports.getAvailable = tracker.seal('getAvailable', async() => {
+exports.getAvailable = monitor.seal('getAvailable', async() => {
   const foundPeople = await repo.userRepository.find({
     isVerified: true,
     password: { $exists: false },
@@ -192,7 +192,7 @@ exports.getAvailable = tracker.seal('getAvailable', async() => {
 })
 
 
-exports.update = tracker.seal('update', async({ user_id, dataReq }) => {
+exports.update = monitor.seal('update', async({ user_id, dataReq }) => {
   const updateUser = await repo.userRepository.update({ params: user_id, body: dataReq })
 
   return { status: 'success', data: updateUser }

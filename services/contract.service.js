@@ -1,11 +1,11 @@
 const _ = require('lodash')
 const repo = require('../repositories')
-const ErrorTracker = require('../utils/shield')
+const Monitor = require('../utils/shield')
 
-const tracker = new ErrorTracker('service.contract')
+const monitor = new Monitor('service.contract')
 
 
-exports.get = tracker.seal('get', async ({ filter, paging }) => {
+exports.get = monitor.seal('get', async ({ filter, paging }) => {
   const populatePath = {
     path: 'room_id',
     select: 'user_id name',
@@ -18,7 +18,7 @@ exports.get = tracker.seal('get', async ({ filter, paging }) => {
 })
 
 
-exports.getLatestElectric = tracker.seal('getLatestElectric', async (contract_id) => {
+exports.getLatestElectric = monitor.seal('getLatestElectric', async (contract_id) => {
   let { bill_id, info } = await repo.contractRepository.findByIdLean(contract_id, {
     path: 'bill_id',
     match: { electric: { $exists: true } }
@@ -35,12 +35,12 @@ exports.getLatestElectric = tracker.seal('getLatestElectric', async (contract_id
 })
 
 
-exports.getOne = tracker.seal('getOne', async (contract_id) => {
+exports.getOne = monitor.seal('getOne', async (contract_id) => {
   return await repo.contractRepository.findByIdLean(contract_id, 'bill_id')
 })
 
 
-exports.remove = tracker.seal('remove', async (contract_id) => {
+exports.remove = monitor.seal('remove', async (contract_id) => {
   let contract = await repo.contractRepository.findById(contract_id)
   contract && await contract.remove()
   return contract

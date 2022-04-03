@@ -1,48 +1,48 @@
 const services = require('../services')
-const ErrorTracker = require('../utils/shield')
+const Monitor = require('../utils/shield')
 
-const tracker = new ErrorTracker('controller.price')
+const monitor = new Monitor('controller.price')
 
 
-exports.get = tracker.handler('get', async(req, res) => {
+exports.get = monitor.handler('get', async(req, res) => {
   let prices = await services.priceService.get()
-  return res.status(200).json(prices)
+  return res.status(200).json(monitor.response(prices))
 })
 
 
-exports.getDeleted = tracker.handler('getDeleted', async(req, res) => {
+exports.getDeleted = monitor.handler('getDeleted', async(req, res) => {
   let prices = await services.priceService.getDeleted()
-  return res.status(200).json(prices)
+  return res.status(200).json(monitor.response(prices))
 })
 
 
 exports.getOne = async(req, res) => {
   let price = await services.priceService.getOne(req.params.price_id)
-  return res.status(200).json(price)
+  return res.status(200).json(monitor.response(price))
 }
 
 
 exports.create = async(req, res) => {
   let newPrice = await services.priceService.create(req.body)
-  return res.status(200).json(newPrice)
+  return res.status(200).json(monitor.response(newPrice))
 }
 
 
-exports.remove = tracker.handler('remove', async(req, res) => {
+exports.remove = monitor.handler('remove', async(req, res) => {
   let foundPrice = await services.priceService.remove({
     price_id: req.params.price_id,
     bodyReq: req.body
   })
 
-  if (foundPrice.status !== 'success') throw tracker.wrap('Price is not exist')
+  if (foundPrice.status !== 'success') throw monitor.wrap('Price is not exist')
 
-  return res.status(200).json(foundPrice.data)
+  return res.status(200).json(monitor.response(foundPrice.data))
 })
 
 
 exports.restore = async(req, res) => {
   let restorePrice = await services.priceService.restore(req.params.price_id)
-  return res.status(200).json(restorePrice)
+  return res.status(200).json(monitor.response(restorePrice))
 }
 
 
@@ -51,5 +51,5 @@ exports.update = async(req, res) => {
     price_id: req.params.price_id,
     bodyReq: req.body
   })
-  return res.status(200).json(updatedPrice)
+  return res.status(200).json(monitor.response(updatedPrice))
 }

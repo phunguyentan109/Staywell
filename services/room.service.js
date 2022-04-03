@@ -1,34 +1,34 @@
 const moment = require('moment')
 const repo = require('../repositories')
-const ErrorTracker = require('../utils/shield')
+const Monitor = require('../utils/shield')
 
-const tracker = new ErrorTracker('service.bill')
+const monitor = new Monitor('service.bill')
 
-exports.get = tracker.seal('get', async () => {
+exports.get = monitor.seal('get', async () => {
   return repo.roomRepository.find({
     deleteAt: { $exists: false }
   })
 })
 
 
-exports.getDeleted = tracker.seal('getDeleted', async () => {
+exports.getDeleted = monitor.seal('getDeleted', async () => {
   return repo.roomRepository.find({ deleteAt: { $exists: true } })
 })
 
 
-exports.getOne = tracker.seal('getOne', async (roomId) => {
+exports.getOne = monitor.seal('getOne', async (roomId) => {
   return repo.roomRepository.findByIdLean(roomId)
 })
 
 
-exports.restore = tracker.seal('restore', async (room_id) => {
+exports.restore = monitor.seal('restore', async (room_id) => {
   return repo.roomRepository.findByIdAndUpdate(room_id, {
     $unset: { deleteAt: 1 }
   })
 })
 
 
-exports.remove = tracker.seal('remove', async ({ room_id, bodyReq }) => {
+exports.remove = monitor.seal('remove', async ({ room_id, bodyReq }) => {
   let foundRoom = await repo.roomRepository.findById(room_id)
   if (foundRoom) {
     if (bodyReq.softDelete) {
@@ -45,7 +45,7 @@ exports.remove = tracker.seal('remove', async ({ room_id, bodyReq }) => {
 })
 
 
-exports.assign = tracker.seal('assign', async (roomId, removeOne, newOne) => {
+exports.assign = monitor.seal('assign', async (roomId, removeOne, newOne) => {
   let foundRoom = await repo.roomRepository.findOne({ _id: roomId })
 
   if (!foundRoom) return { error: 'No data found.' }
