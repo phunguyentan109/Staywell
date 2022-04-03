@@ -1,197 +1,104 @@
 const services = require('../services')
-const { hdLog } = require('../utils/logger')
+const _ = require('lodash')
+const ErrorTracker = require('../utils/shield')
 
-exports.signUp = async(req, res, next) => {
-  try {
-    const { body, header: { host } } = req
-    const signUpVal = await services.userService.signUp(body, host)
-    const { email, username } = signUpVal
+const tracker = new ErrorTracker('controller.user')
 
-    return res.status(200).json({ email, username })
-  } catch (err) {
-    return next({
-      status: 400,
-      message: err.code === 11000 ? 'Sorry, that email/password is taken or invalid' : err.message
-    })
-  }
-}
 
-exports.logIn = async(req, res, next) => {
-  try {
-    const loginVal = await services.userService.logIn(req.body)
-    const { _id, username, avatar, email, role, anonymousData, token, errMessage, status } = loginVal
-    if (errMessage || status === 'fail') {
-      return next({
-        status: 400, 
-        message: errMessage
-      })
-    }
-    
-    return res.status(200).json({ _id, username, avatar, email, role, anonymous: anonymousData, token })
-  } catch (err) {
-    hdLog('user.logIn', err.message)
-    return next({ status: 400, message: 'Invalid email/password.' })
-  }
-}
+exports.signUp = tracker.handler('signUp', async (req, res) => {
+  const { body, header: { host } } = req
+  const rs = await services.userService.signUp(body, host)
 
-exports.complete = async(req, res, next) => {
-  try {
-    let { user_id } = req.params
-    const completeVal = await services.userService.complete(user_id)
-    if (completeVal.status === 'fail') {
-      return res.redirect('/')
-    }
-    res.locals.loadHtml = true
+  return res.status(200).json(_.pick(rs, ['email', 'username']))
+})
 
-    return next()
-  } catch (err) {
-    hdLog('user.complete', err.message)
-    return res.redirect('/')
-  }
-}
 
-exports.openRegistration = async(req, res, next) => {
-  try {
-    const openRegistrationVal = await services.userService.openRegistration(res.locals.loginUserId)
-    if (!openRegistrationVal) {
-      return next()
-    }
-    return res.status(200).json({ success: true })
-  } catch (err) {
-    hdLog('user.openRegistration', err.message)
-    return next(err)
-  }
-}
+exports.logIn = tracker.handler('logIn', async (req, res) => {
+  const rs = await services.userService.logIn(req.body)
+  return res.status(200).json(rs)
+}, { catchMsg: 'Invalid email/password.' })
 
-exports.getOne = async(req, res, next) => {
-  try {
-    const user = await services.userService.getOne((req.params.user_id))
-    // return email and phone for updating profile
-    return res.status(200).json({ ...user, anonymous: user.anonymousData })
-  } catch (err) {
-    hdLog('user.getOne', err.message)
-    return next(err)
-  }
-}
 
-exports.get = async(req, res, next) => {
-  try {
-    const people = await services.userService.get()
-    return res.status(200).json(people)
-  } catch (err) {
-    hdLog('user.get', err.message)
-    return next(err)
-  }
-}
+exports.complete = tracker.handler('complete', async(req, res, next) => {
+  let { user_id } = req.params
+  const completeVal = await services.userService.complete(user_id)
 
-exports.remove = async(req, res, next) => {
-  try {
-    const user = await services.userService.remove(req.params.user_id)
-    return res.status(200).json(user)
-  } catch (err) {
-    hdLog('user.remove', err.message)
-    return next(err)
-  }
-}
+  if (completeVal.status === 'fail') return res.redirect('/')
 
-exports.updatePassword = async(req, res, next) => {
-  try {
-    const { current, change } = req.body
-    const updatePasswordVal = await services.userService.updatePassword({
-      user_id: req.params.user_id,
-      current,
-      change
-    })
+  res.locals.loadHtml = true
 
-    if (updatePasswordVal.data){
-      return res.status(200).json(updatePasswordVal.data)
-    } else {
-      // return error if old password is not matched
-      return next({
-        status: 400,
-        message: 'Sorry, the password is invalid'
-      })
-    }
-  } catch (err) {
-    hdLog('user.updatePassword', err.message)
-    return next({
-      status: 400,
-      message: err.code === 11000 ? 'Sorry, the password is invalid' : err.message
-    })
-  }
-}
+  return next()
+}, { onCatch: (err, res) => res.redirect('/') })
 
-exports.forgot = async(req, res, next) => {
-  try {
-    const { email } = req.body
-    const { host } = req.headers
-    let foundUser = await services.userService.forgot({ email, host })
 
-    if (foundUser.token){
-      return res.status(200).json(foundUser.token)
-    }
-    return next({
-      status: 404,
-      message: 'The email is not available.'
-    })
-  } catch (err) {
-    hdLog('user.forgot', err.message)
-    return next(err)
-  }
-}
+exports.openRegistration = tracker.handler('openRegistration', async(req, res, next) => {
+  const openRegistrationVal = await services.userService.openRegistration(res.locals.loginUserId)
+  if (!openRegistrationVal) return next()
 
-exports.resetPassword = async(req, res, next) => {
-  try {
-    const { token } = req.params
-    const { password } = req.body
+  return res.status(200).json({ success: true })
+})
 
-    // find user by token and check timeout
-    const foundUser = await services.userService.resetPassword({ token, password })
-    // return massage if not find any token in table user or the token has timeout
-    if (!foundUser) {
-      return next({
-        status: 404,
-        message: 'The token is invalid or timeout.'
-      })
-    }
 
-    return res.status(200).json(foundUser.token)
-  } catch (err) {
-    hdLog('user.resetPassword', err.message)
-    return next(err)
-  }
-}
+exports.getOne = tracker.handler('getOne', async(req, res) => {
+  const user = await services.userService.getOne((req.params.user_id))
+  return res.status(200).json({ ...user, anonymous: user.anonymousData })
+})
 
-exports.contact = async(req, res, next) => {
-  try {
-    let { title, content, user_id } = req.body
-    let listUser = await services.userService.contact({ title, content, user_id })
-    return res.status(200).json(listUser.data)
-  } catch (err) {
-    hdLog('user.contact', err.message)
-    return next(err)
-  }
-}
 
-exports.getAvailable = async(req, res, next) => {
-  try {
-    const foundPeople = await services.userService.getAvailable()
-    return res.status(200).json(foundPeople.data)
-  } catch (err) {
-    hdLog('user.getAvailable', err.message)
-    return next(err)
-  }
-}
+exports.get = tracker.handler('get', async(req, res) => {
+  const people = await services.userService.get()
+  return res.status(200).json(people)
+})
 
-exports.update = async(req, res, next) => {
-  try {
-    const updateUser = await services.userService.update({
-      user_id: req.params.user_id,
-      dataReq: req.body
-    })
-    return res.status(200).json(updateUser.data)
-  } catch (err) {
-    hdLog('user.update', err.message)
-    return next(err)
-  }
-}
+
+exports.remove = tracker.handler('remove', async(req, res) => {
+  const user = await services.userService.remove(req.params.user_id)
+  return res.status(200).json(user)
+})
+
+
+exports.forgot = tracker.handler('forgot', async(req, res) => {
+  const { email } = req.body
+  const { host } = req.headers
+
+  let foundUser = await services.userService.forgot({ email, host })
+  if (!foundUser.token) throw tracker.wrap('The email is not available.')
+
+  return res.status(200).json(foundUser.token)
+})
+
+
+exports.resetPassword = tracker.handler('resetPassword', async(req, res) => {
+  const { token } = req.params
+  const { password } = req.body
+
+  // find user by token and check timeout
+  const foundUser = await services.userService.resetPassword({ token, password })
+  if (!foundUser) throw tracker.wrap('The token is invalid or timeout.')
+
+  return res.status(200).json(foundUser.token)
+})
+
+
+exports.contact = tracker.handler('contact', async(req, res) => {
+  let { title, content, user_id } = req.body
+  let listUser = await services.userService.contact({ title, content, user_id })
+
+  return res.status(200).json(listUser.data)
+})
+
+
+exports.getAvailable = tracker.handler('getAvailable', async(req, res) => {
+  const foundPeople = await services.userService.getAvailable()
+  return res.status(200).json(foundPeople.data)
+})
+
+
+exports.update = tracker.handler('update', async(req, res) => {
+  const updateUser = await services.userService.update({
+    user_id: req.params.user_id,
+    dataReq: req.body
+  })
+
+  return res.status(200).json(updateUser.data)
+})

@@ -2,6 +2,7 @@ const emoji = require('node-emoji')
 const sgMail = require('@sendgrid/mail')
 const ejs = require('ejs')
 const fs = require('fs')
+const LogicError = require('../shield')
 const { GMAIL_USER, SENDGRID_API_KEY } = process.env
 
 sgMail.setApiKey(SENDGRID_API_KEY)
@@ -15,8 +16,13 @@ async function send(info, templateName, data) {
 }
 
 exports.confirmMail = async(host, { to, viewName, userId }) => {
-  const subject = emoji.emojify(':building_construction: Email Confirmation - Staywell')
-  const confirmUrl = `${process.env.DEVHOST || host}/registration/complete/${userId}`
+  try {
+    const subject = emoji.emojify(':building_construction: Email Confirmation - Staywell')
+    const confirmUrl = `${process.env.DEVHOST || host}/registration/complete/${userId}`
 
-  await send({ to, subject }, 'confirmEmail', { viewName, confirmUrl })
+    await send({ to, subject }, 'confirmEmail', { viewName, confirmUrl })
+  } catch (e) {
+    throw new LogicError(e, 'utils.mail.confirmMail', 'Failed to send mail')
+  }
+
 }

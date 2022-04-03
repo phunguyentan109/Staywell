@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const moment = require('moment')
 const { spliceId } = require('../utils/dbSupport')
-const { writeIdToDoc, clearIdFromDoc } = require('./utils')
+const { saveIdToChildren, clearIdFromDoc } = require('./utils')
 
 const roomSchema = new mongoose.Schema({
   name: {
@@ -42,7 +42,7 @@ roomSchema.pre('remove', async function(next) {
 })
 
 roomSchema.methods.addIdToUser = async function() {
-  await writeIdToDoc('User', this.get('user_id'), 'room_id', this.get('_id'))
+  await saveIdToChildren('User', this.get('user_id'), 'room_id', this.get('_id'))
 }
 
 roomSchema.methods.clearIdFromUser = async function(userIds) {

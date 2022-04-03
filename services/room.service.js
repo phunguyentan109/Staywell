@@ -1,76 +1,61 @@
 const moment = require('moment')
 const repo = require('../repositories')
+const ErrorTracker = require('../utils/shield')
 
-exports.get = async() => {
-  try {
-    return await repo.roomRepository.find({
-      deleteAt: { $exists: false }
-    })
-  } catch (error) {
-    throw new Error(error)
-  }
-}
+const tracker = new ErrorTracker('service.bill')
 
-exports.getDeleted = async() => {
-  try {
-    return await repo.roomRepository.find({ deleteAt: { $exists: true } })
-  } catch (error) {
-    throw new Error(error)
-  }
-}
+exports.get = tracker.seal('get', async () => {
+  return repo.roomRepository.find({
+    deleteAt: { $exists: false }
+  })
+})
 
-exports.getOne = async(roomId) => {
-  try {
-    return await repo.roomRepository.findByIdLean(roomId)
-  } catch (error) {
-    throw new Error(error)
-  }
-}
 
-exports.restore = async(room_id) => {
-  try {
-    return await repo.roomRepository.findByIdAndUpdate(room_id, {
-      $unset: { deleteAt: 1 }
-    })
-  } catch (error) {
-    throw new Error(error)
-  }
-}
+exports.getDeleted = tracker.seal('getDeleted', async () => {
+  return repo.roomRepository.find({ deleteAt: { $exists: true } })
+})
 
-exports.remove = async({ room_id, bodyReq }) => {
-  try {
-    let foundRoom = await repo.roomRepository.findById(room_id)
-    if (foundRoom) {
-      if (bodyReq.softDelete) {
-        await foundRoom.updateOne({ deleteAt: moment() })
-      } else {
-        await foundRoom.remove()
-      }
-      return {
-        status: 'success',
-        data: foundRoom
-      }
+
+exports.getOne = tracker.seal('getOne', async (roomId) => {
+  return repo.roomRepository.findByIdLean(roomId)
+})
+
+
+exports.restore = tracker.seal('restore', async (room_id) => {
+  return repo.roomRepository.findByIdAndUpdate(room_id, {
+    $unset: { deleteAt: 1 }
+  })
+})
+
+
+exports.remove = tracker.seal('remove', async ({ room_id, bodyReq }) => {
+  let foundRoom = await repo.roomRepository.findById(room_id)
+  if (foundRoom) {
+    if (bodyReq.softDelete) {
+      await foundRoom.updateOne({ deleteAt: moment() })
+    } else {
+      await foundRoom.remove()
     }
-    return { status: 'fail' }
-  } catch (error) {
-    throw new Error(error)
+    return {
+      status: 'success',
+      data: foundRoom
+    }
   }
-}
+  return { status: 'fail' }
+})
 
-exports.assign = async(roomId, removeOne, newOne) => {
-  try {
-    let foundRoom = await repo.roomRepository.findOne({ _id: roomId })
 
-    if (!foundRoom) return { error: 'No data found.' }
+exports.assign = tracker.seal('assign', async (roomId, removeOne, newOne) => {
+  let foundRoom = await repo.roomRepository.findOne({ _id: roomId })
 
-    await repo.roomRepository.clearIdFromUser(roomId, removeOne)
+  if (!foundRoom) return { error: 'No data found.' }
 
-    let updateRoom = await repo.roomRepository.update({ _id: roomId }, { user_id: newOne })
+  await repo.roomRepository.clearIdFromUser(roomId, removeOne)
 
-    await repo.roomRepository.writeIdToUser(roomId, newOne)
+  let updateRoom = await repo.roomRepository.update({ _id: roomId }, { user_id: newOne })
 
-    return { status: 'success', data: updateRoom }
-  } catch (error) {
-    throw new Error(error)
-  }
-}
+  await repo.roomRepository.writeIdToUser(roomId, newOne)
+
+  return { status: 'success', data: updateRoom }
+})
+

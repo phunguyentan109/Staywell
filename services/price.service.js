@@ -1,75 +1,54 @@
 const moment = require('moment')
 const repo = require('../repositories')
+const ErrorTracker = require('../utils/shield')
 
-exports.get = async() => {
-  try {
-    return await repo.priceRepository.find({ deleteAt: { $exists: false } }, '-room_id')
-  } catch (error) {
-    throw new Error(error)
-  }
-}
+const tracker = new ErrorTracker('service.bill')
 
-exports.getDeleted = async() => {
-  try {
-    return await repo.priceRepository.find({ deleteAt: { $exists: true } }, '-room_id')
-  } catch (error) {
-    throw new Error(error)
-  }
-}
 
-exports.getOne = async(price_id) => {
-  try {
-    return await repo.priceRepository.findById(price_id)
-  } catch (error) {
-    throw new Error(error)
-  }
-}
+exports.get = tracker.seal('', async () => {
+  return repo.priceRepository.find({ deleteAt: { $exists: false } }, '-room_id')
+})
 
-exports.create = async(req) => {
-  try {
-    return await repo.priceRepository.create(req)
-  } catch (error) {
-    throw new Error(error)
-  }
-}
 
-exports.remove = async({ price_id, bodyReq }) => {
-  try {
-    let foundPrice = await repo.priceRepository.findById(price_id)
-    if (foundPrice) {
-      if (bodyReq.softDelete) {
-        await foundPrice.updateOne({ deleteAt: moment() })
-      } else {
-        await foundPrice.remove()
-      }
-      return {
-        status: 'success',
-        data: foundPrice
-      }
+exports.getDeleted = tracker.seal('getDeleted', async () => {
+  return repo.priceRepository.find({ deleteAt: { $exists: true } }, '-room_id')
+})
+
+
+exports.getOne = tracker.seal('getOne', async (price_id) => {
+  return repo.priceRepository.findById(price_id)
+})
+
+
+exports.create = tracker.seal('create', async (req) => {
+  return repo.priceRepository.create(req)
+})
+
+
+exports.remove = tracker.seal('remove', async ({ price_id, bodyReq }) => {
+  let foundPrice = await repo.priceRepository.findById(price_id)
+
+  if (foundPrice) {
+    if (bodyReq.softDelete) {
+      await foundPrice.updateOne({ deleteAt: moment() })
+    } else {
+      await foundPrice.remove()
     }
-    return {
-      status: 'fail',
-      data: foundPrice
-    }
-  } catch (error) {
-    throw new Error(error)
+    return { status: 'success', data: foundPrice }
   }
-}
 
-exports.restore = async(price_id) => {
-  try {
-    return await repo.priceRepository.findByIdAndUpdate(price_id, {
-      $unset: { deleteAt: 1 }
-    })
-  } catch (error) {
-    throw new Error(error)
-  }
-}
+  return { status: 'fail', data: foundPrice }
+})
 
-exports.update = async({ price_id, bodyReq }) => {
-  try {
-    return await repo.priceRepository.findByIdAndUpdate(price_id, bodyReq)
-  } catch (error) {
-    throw new Error(error)
-  }
-}
+
+exports.restore = tracker.seal('restore', async (price_id) => {
+  return repo.priceRepository.findByIdAndUpdate(price_id, {
+    $unset: { deleteAt: 1 }
+  })
+})
+
+
+exports.update = tracker.seal('update', async ({ price_id, bodyReq }) => {
+  return repo.priceRepository.findByIdAndUpdate(price_id, bodyReq)
+})
+

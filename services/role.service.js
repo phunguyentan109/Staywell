@@ -1,10 +1,9 @@
 const repo = require('../repositories')
+const ErrorTracker = require('../utils/shield')
 
-exports.create = async(req) => {
-  try {
-    const createRole = await repo.roleRepository.create(req)
-    return createRole
-  } catch (error) {
-    throw new Error(error)
-  }
-}
+const tracker = new ErrorTracker('service.bill')
+
+
+exports.create = tracker.seal('create', async (req) => {
+  return repo.roleRepository.create(req)
+})

@@ -1,9 +1,8 @@
 const repo = require('../repositories')
+const ErrorTracker = require('../utils/shield')
 
-exports.getOne = async(bill_id) => {
-  try {
-    return await repo.billRepository.findByIdLean(bill_id)
-  } catch (error) {
-    throw new Error(error)
-  }
-}
+const tracker = new ErrorTracker('service.bill')
+
+exports.getOne = tracker.seal('getOne', async(bill_id) => {
+  return await repo.billRepository.findByIdLean(bill_id)
+})

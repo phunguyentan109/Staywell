@@ -1,10 +1,10 @@
 const services = require('../services')
+const ErrorTracker = require('../utils/shield')
 
-exports.create = async(req, res, next) => {
-  try {
-    const createdRole = await services.roleService.create(req.body)
-    return res.status(200).json(createdRole)
-  } catch (err){
-    return res.send(err)
-  }
-}
+const tracker = new ErrorTracker('controller.role')
+
+
+exports.create = tracker.handler('create', async(req, res) => {
+  const createdRole = await services.roleService.create(req.body)
+  return res.status(200).json(createdRole)
+})

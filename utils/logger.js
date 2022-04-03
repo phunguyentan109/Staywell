@@ -6,6 +6,7 @@ const logger = (type, from, msg) => {
   console.error(`* Desc: ${msg}\n`)
 }
 
-exports.hdLog = (from, msg) => logger('HANDLER', from, msg)
-exports.mwLog = (from, msg) => logger('MIDDLEWARE', from, msg)
+exports.controllerLogger = (from, msg) => logger('CONTROLLER', from, msg)
+
+exports.serviceLogger = (from, msg) => logger('SERVICE', from, msg)
 
