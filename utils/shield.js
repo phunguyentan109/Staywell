@@ -31,6 +31,10 @@ class ErrorTracker extends Error {
     return { msg, error }
   }
 
+  response (data) {
+    return { status: 200, data }
+  }
+
   wrap(_msg, _error) {
     const { msg, error } = this.validateParams([_msg, _error])
 

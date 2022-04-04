@@ -1,31 +1,31 @@
 const moment = require('moment')
 const repo = require('../repositories')
-const ErrorTracker = require('../utils/shield')
+const Monitor = require('../utils/shield')
 
-const tracker = new ErrorTracker('service.bill')
+const monitor = new Monitor('service.bill')
 
 
-exports.get = tracker.seal('', async () => {
+exports.get = monitor.seal('', async () => {
   return repo.priceRepository.find({ deleteAt: { $exists: false } }, '-room_id')
 })
 
 
-exports.getDeleted = tracker.seal('getDeleted', async () => {
+exports.getDeleted = monitor.seal('getDeleted', async () => {
   return repo.priceRepository.find({ deleteAt: { $exists: true } }, '-room_id')
 })
 
 
-exports.getOne = tracker.seal('getOne', async (price_id) => {
+exports.getOne = monitor.seal('getOne', async (price_id) => {
   return repo.priceRepository.findById(price_id)
 })
 
 
-exports.create = tracker.seal('create', async (req) => {
+exports.create = monitor.seal('create', async (req) => {
   return repo.priceRepository.create(req)
 })
 
 
-exports.remove = tracker.seal('remove', async ({ price_id, bodyReq }) => {
+exports.remove = monitor.seal('remove', async ({ price_id, bodyReq }) => {
   let foundPrice = await repo.priceRepository.findById(price_id)
 
   if (foundPrice) {
@@ -41,14 +41,14 @@ exports.remove = tracker.seal('remove', async ({ price_id, bodyReq }) => {
 })
 
 
-exports.restore = tracker.seal('restore', async (price_id) => {
+exports.restore = monitor.seal('restore', async (price_id) => {
   return repo.priceRepository.findByIdAndUpdate(price_id, {
     $unset: { deleteAt: 1 }
   })
 })
 
 
-exports.update = tracker.seal('update', async ({ price_id, bodyReq }) => {
+exports.update = monitor.seal('update', async ({ price_id, bodyReq }) => {
   return repo.priceRepository.findByIdAndUpdate(price_id, bodyReq)
 })
 

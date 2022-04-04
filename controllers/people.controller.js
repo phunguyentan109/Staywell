@@ -1,42 +1,42 @@
 const services = require('../services')
-const ErrorTracker = require('../utils/shield')
+const Monitor = require('../utils/shield')
 
-const tracker = new ErrorTracker('controller.people')
+const monitor = new Monitor('controller.people')
 
 
-exports.get = tracker.handler('get', async(req, res) => {
+exports.get = monitor.handler('get', async(req, res) => {
   const { peopleIds } = res.locals
   let foundPeople = await services.peopleService.get(peopleIds)
 
-  return res.status(200).json(foundPeople)
+  return res.status(200).json(monitor.response(foundPeople))
 })
 
 
-exports.getNoAssign = tracker.handler('getNoAssign', async(req, res) => {
+exports.getNoAssign = monitor.handler('getNoAssign', async(req, res) => {
   const { peopleIds } = res.locals
   let foundPeople = await services.peopleService.getNoAssign(peopleIds)
 
-  return res.status(200).json(foundPeople)
+  return res.status(200).json(monitor.response(foundPeople))
 })
 
 
-exports.remove = tracker.handler('remove', async(req, res) => {
+exports.remove = monitor.handler('remove', async(req, res) => {
   const foundPeople = await services.peopleService.remove(req.params.people_id)
-  return res.status(200).json(foundPeople)
+  return res.status(200).json(monitor.response(foundPeople))
 })
 
 
-exports.getOne = tracker.handler('getOne', async(req, res) => {
+exports.getOne = monitor.handler('getOne', async(req, res) => {
   const people = await services.peopleService.getOne(req.params.people_id)
-  return res.status(200).json(people)
+  return res.status(200).json(monitor.response(people))
 })
 
 
-exports.update  = tracker.handler('update', async(req, res) => {
+exports.update  = monitor.handler('update', async(req, res) => {
   const updatedPeople = await services.peopleService.update({
     people_id: req.params.people_id,
     dataReq: req.body
   })
 
-  return res.status(200).json(updatedPeople)
+  return res.status(200).json(monitor.response(updatedPeople))
 })
