@@ -1,14 +1,28 @@
-import React from 'react'
-import { connect } from 'react-redux'
+import React, { useMemo } from 'react'
+import { useSelector } from 'react-redux'
 import { Redirect, Route } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 // User Access Control
-import { mapState } from './const'
+import { selectUser } from 'appRedux/selectors'
+import { pm } from './const'
 
-function PermissionRouter({ access, inAccess, path, component, redirect, verifyAccess }) {
-  let allowAccess = verifyAccess(access, inAccess)
-  if (!allowAccess) return <Redirect to={redirect || defaultUrl(path)}/>
+function PermissionRouter({ access, inAccess, path, component, redirect }) {
+  const user = useSelector(selectUser)
+
+  const ableToAccess = useMemo(() => {
+    let userRoles = user?.role?.length === 0 ? [{ code: pm.GUEST_PM }] : user?.role
+    let userRoleCodes = userRoles.map(r => r.code)
+
+    if (!access) return true
+
+    let considerAccept = userRoleCodes.some(p => access.some(a => pm[a] === p))
+    let considerDeny = userRoleCodes.some(p => inAccess.some(a => pm[a] === p))
+    return considerAccept && !considerDeny
+  }, [access, inAccess, user?.role])
+
+  if (!ableToAccess) return <Redirect to={redirect || defaultUrl(path)}/>
+
   return <Route path={path} component={component}/>
 }
 
@@ -30,4 +44,4 @@ PermissionRouter.defaultProps = {
   useCommon: true
 }
 
-export default connect(mapState, null)(PermissionRouter)
+export default PermissionRouter

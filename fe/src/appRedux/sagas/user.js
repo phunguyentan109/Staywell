@@ -1,60 +1,81 @@
-import { call, put, takeLatest } from 'redux-saga/effects'
-import { CLEAR_AUTH_DATA, SEND_AUTH_DATA, SEND_RELOAD_USER } from 'constants/ActionTypes'
-import { call as apiCall, userApi } from 'constants/api'
+import { all, call, delay, put, takeLatest } from 'redux-saga/effects'
+import { request, userApi } from 'constants/api'
 import { setTokenHeader } from 'constants/api/call'
-import { addUser } from 'appRedux/actions/user'
-import { addMessage } from 'appRedux/actions/message'
-import _ from 'lodash'
+import { CLI_STORE_KEYS, LOGIN_ACTION, LOGOUT_ACTION, RELOAD_USER_ACTION, VERIFY_USER_TOKEN_ACTION } from '../const'
+import { loginSuccessAction, reloadUserAction } from 'appRedux/actions/user'
+import jwtDecode from 'jwt-decode'
 
-function* hdAuthData({ value }) {
+function* hdLoginAction({ data }) {
   try {
-    const type = _.get(value, 'params', '')
-    let auth = yield call(apiCall, userApi.auth(value.type, value.data))
+    let rs = yield call(request, userApi.logIn(data))
 
-    if (_.get(auth, 'status') !== 200) {
-      return yield put(addMessage(_.get(auth, 'error.errorMsg')))
-    }
+    if (rs.data) {
+      const { token, ...user } = rs.data
 
-    const { data: { token, ...user } } = auth
-    setTokenHeader(token)
-    localStorage.setItem('swtoken', token)
-    sessionStorage.setItem('auth', JSON.stringify(user))
-    yield put(addUser(user))
+      if (token) setTokenHeader(token)
 
-    // inform user to check mail after success registration
-    if (type === '/signup') {
-      let msg = 'A verification link from us has been sent to your mail.'
-      yield put(addMessage(msg, false))
+      localStorage.setItem(CLI_STORE_KEYS.token, token)
+      sessionStorage.setItem(CLI_STORE_KEYS.token, JSON.stringify(user))
+
+      yield put(loginSuccessAction(user))
     }
   } catch (e) {
-    console.error('error => function* hdAuthData', e)
+    console.error('error => function* hdLoginAction', e)
   }
 }
 
-function* hdClearAuthData() {
-  sessionStorage.clear()
-  localStorage.clear()
+function* hdLogOutAction() {
+  sessionStorage.removeItem(CLI_STORE_KEYS.token)
+
+  localStorage.removeItem(CLI_STORE_KEYS.token)
+
   setTokenHeader(false)
-  yield put(addUser())
+
+  yield put(loginSuccessAction())
 }
 
-function* hdReloadUser({ id }) {
-  try {
-    let data = yield call(userApi.getOne(id))
+function* hdVerifyUserToken() {
+  if (!localStorage[CLI_STORE_KEYS.token]) return
 
-    if (!data.errorMsg) {
-      const { token, ...user } = data
-      sessionStorage.setItem('auth', JSON.stringify(user))
-      localStorage.setItem('swtoken', token)
-      yield put(addUser(user))
+  try {
+    setTokenHeader(localStorage[CLI_STORE_KEYS.token])
+
+    if (sessionStorage[CLI_STORE_KEYS.token]) {
+      const user = JSON.parse(sessionStorage[CLI_STORE_KEYS.token])
+      return yield put(loginSuccessAction(user))
     }
-  } catch (e) {
-    console.error('error => function* hdAuthData', e)
+
+    let userId = jwtDecode(localStorage[CLI_STORE_KEYS.token])._id
+
+    yield delay(2000)
+
+    yield put(reloadUserAction(userId))
+  } catch (err) {
+    yield put(hdLogOutAction())
+    console.error('error => function* hdVerifyUserToken', err)
   }
 }
 
-export default [
-  takeLatest(SEND_AUTH_DATA, hdAuthData),
-  takeLatest(SEND_RELOAD_USER, hdReloadUser),
-  takeLatest(CLEAR_AUTH_DATA, hdClearAuthData)
-]
+function* hdReloadUser({ userId }) {
+  try {
+    let rs = yield call(request, userApi.getOne(userId))
+
+    if (rs.data) {
+      const { token, ...user } = rs.data
+      sessionStorage.setItem(CLI_STORE_KEYS.token, JSON.stringify(user))
+      localStorage.setItem(CLI_STORE_KEYS.token, token)
+      yield put(loginSuccessAction(user))
+    }
+  } catch (e) {
+    console.error('error => function* hdReloadUser', e)
+  }
+}
+
+export default function* userSaga() {
+  yield all([
+    takeLatest(LOGIN_ACTION, hdLoginAction),
+    takeLatest(VERIFY_USER_TOKEN_ACTION, hdVerifyUserToken),
+    takeLatest(RELOAD_USER_ACTION, hdReloadUser),
+    takeLatest(LOGOUT_ACTION, hdLogOutAction)
+  ])
+}

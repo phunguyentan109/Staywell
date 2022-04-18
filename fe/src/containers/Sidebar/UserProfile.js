@@ -3,9 +3,12 @@ import { Popover } from 'antd'
 import Avatar, { genConfig } from 'react-nice-avatar'
 import PropTypes from 'prop-types'
 import './_styles.less'
+import { useDispatch } from 'react-redux'
+import { logoutAction } from 'appRedux/actions'
 
 const UserProfile = (props) => {
   const avaConfig = useMemo(() => genConfig(props.avatar), [props.avatar])
+  const dp = useDispatch()
 
   return (
     <div className='gx-flex-row gx-align-items-center gx-mb-4 gx-avatar-row userProfile'>
@@ -15,6 +18,7 @@ const UserProfile = (props) => {
           <ul className='gx-user-popover'>
             <li>My Account</li>
             <li>Connections</li>
+            <li onClick={() => dp(logoutAction())}>Log Out</li>
           </ul>
         }
         trigger='click'

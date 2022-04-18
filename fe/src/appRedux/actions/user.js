@@ -1,37 +1,42 @@
 import {
-  SEND_AUTH_DATA,
-  SEND_SOCIAL_AUTH_DATA,
-  CLEAR_AUTH_DATA,
-  // ACTIVATED_USER,
-  SEND_RELOAD_USER,
-  ADD_USER
-} from 'constants/ActionTypes'
+  LOGIN_ACTION,
+  LOGIN_SUCCESS_ACTION,
+  LOGOUT_ACTION,
+  RELOAD_USER_ACTION,
+  VERIFY_USER_TOKEN_ACTION
+} from '../const'
 
-export function sendAuthData(type, data){
+export function loginAction(data){
   return {
-    type: SEND_AUTH_DATA,
-    value: { type, data }
+    type: LOGIN_ACTION,
+    data
   }
 }
 
-export function sendSocialAuthData(value) {
+export function loginSuccessAction(data) {
   return {
-    type: SEND_SOCIAL_AUTH_DATA,
-    value
+    type: LOGIN_SUCCESS_ACTION,
+    data
   }
 }
 
-export function clearAuthData() {
-  return { type: CLEAR_AUTH_DATA }
-}
-
-export function addUser(value = {}) {
-  return { type: ADD_USER, value }
-}
-
-export function sendReloadUser(id) {
+export function logoutAction(){
   return {
-    type: SEND_RELOAD_USER,
-    id
+    type: LOGOUT_ACTION,
+  }
+}
+
+export function sendReloadUser(userId){}
+
+export function verifyUserTokenAction(){
+  return {
+    type: VERIFY_USER_TOKEN_ACTION,
+  }
+}
+
+export function reloadUserAction(userId){
+  return {
+    type: RELOAD_USER_ACTION,
+    userId
   }
 }

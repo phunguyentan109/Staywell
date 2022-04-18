@@ -1,17 +1,17 @@
-import { ADD_USER } from 'constants/ActionTypes'
+import { LOGIN_SUCCESS_ACTION } from '../const'
 
-const DEFAULT_STATE = {
-  isAuthenticated: false,
-  data: {}
+export const DEFAULT_USER = {
+  data: {
+    role: []
+  }
 }
 
-export default (state = DEFAULT_STATE, action) => {
-  const { type, value } = action
-  switch (type){
-    case ADD_USER:
+export default (state = DEFAULT_USER, action) => {
+  switch (action.type){
+    case LOGIN_SUCCESS_ACTION:
       return {
-        isAuthenticated: !!Object.keys(value).length,
-        data: value
+        ...state,
+        data: action.data || DEFAULT_USER.data
       }
     default:
       return state

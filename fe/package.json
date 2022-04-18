@@ -122,7 +122,8 @@
           "children": "never"
         }
       ],
-      "react/prop-types": 2
+      "react/prop-types": 2,
+      "import/no-anonymous-default-export": "off"
     }
   },
   "proxy": "http://localhost:8080",

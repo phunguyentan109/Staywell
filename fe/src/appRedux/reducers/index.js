@@ -3,14 +3,18 @@ import Settings from './Settings'
 import Common from './Common'
 import { connectRouter } from 'connected-react-router'
 import user from './user'
-import message from './message'
 
-const createRootReducer = (history) => combineReducers({
+const createRootReducer = (history, asyncReducer = {}) => combineReducers({
   router: connectRouter(history),
   settings: Settings,
   common: Common,
   user,
-  message
+
+  global: {
+    user,
+  },
+
+  ...asyncReducer
 })
 
 export default createRootReducer
