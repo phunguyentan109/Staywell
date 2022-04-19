@@ -2,7 +2,7 @@ import { LOGIN_SUCCESS_ACTION } from '../const'
 
 export const DEFAULT_USER = {
   data: {
-    role: []
+    permissions: {}
   }
 }
 

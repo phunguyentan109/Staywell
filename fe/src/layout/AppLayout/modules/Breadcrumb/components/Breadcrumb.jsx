@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
 import { Card, Breadcrumb } from 'antd'
-import { breadNames } from 'constants/variables'
+import { breadNames } from 'constants/routes'
 import { get, split } from 'lodash'
 
 function BreadcrumbBar(props) {

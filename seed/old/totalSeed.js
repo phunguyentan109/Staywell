@@ -1,5 +1,5 @@
-const db = require('../models')
-const samp = require('./samples')
+const db = require('../../models')
+const samp = require('../samples')
 
 module.exports = async function seedSample () {
   try {

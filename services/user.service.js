@@ -31,10 +31,12 @@ exports.logIn = monitor.seal('logIn', async (req) => {
   const match = await user.comparePassword(password)
   if (!match) throw monitor.wrap('Invalid email/password')
 
-  // get role of user
-  const userRole = await repo.userRepository.findUserRole({ user_id: _id })
-
-  const role = userRole.length > 0 ? userRole.map(u => u.role_id) : false
+  // get permissions
+  const group = await repo.userRepository.findUserGroup(_id.toString())
+  const permissions = (group?.permissions || []).reduce((rs, n) => {
+    rs[n] = true
+    return rs
+  }, {})
 
   // get anonymous data
   let anonymousData = { tokens: [] }
@@ -43,9 +45,9 @@ exports.logIn = monitor.seal('logIn', async (req) => {
   }
 
   // gen token to store on client
-  const token = genToken({ _id, role })
+  const token = genToken({ email, permissions })
 
-  return { _id, username, avatar, email, role, anonymousData, token }
+  return { username, avatar, permissions, anonymousData, token }
 }, { catchMsg: 'Invalid email/password.' })
 
 
@@ -72,14 +74,17 @@ exports.openRegistration = monitor.seal(async (loginUserId) => {
 })
 
 
-exports.getOne = monitor.seal('getOne', async (userId) => {
-  const user = await repo.userRepository.findById(userId)
+exports.getOne = monitor.seal('getOne', async (findQuery) => {
+  const user = await repo.userRepository.findOne(findQuery)
 
   let { _id, username, email, avatar, anonymous } = user
 
-  // get role
-  const userRole = await repo.userRepository.findUserRole({ user_id: _id })
-  const role = userRole.length > 0 ? userRole.map(u => u.role_id) : false
+  // get permissions
+  const group = await repo.userRepository.findUserGroup(_id.toString())
+  const permissions = (group?.permissions || []).reduce((rs, n) => {
+    rs[n] = true
+    return rs
+  }, {})
 
   // get anonymous data
   let anonymousData = { tokens: [] }
@@ -88,11 +93,9 @@ exports.getOne = monitor.seal('getOne', async (userId) => {
   }
 
   // gen token to store on client
-  const token = genToken({ _id, role, anonymous: anonymousData })
+  const token = genToken({ email, permissions })
 
-  return {
-    _id, username, avatar, email, role, anonymousData, token
-  }
+  return { username, avatar, permissions, anonymousData, token }
 })
 
 
@@ -185,7 +188,7 @@ exports.getAvailable = monitor.seal('getAvailable', async() => {
   const foundPeople = await repo.userRepository.find({
     isVerified: true,
     password: { $exists: false },
-    room_id: { $exists: false }
+    roomId: { $exists: false }
   })
 
   return { status: 'success', data: foundPeople }

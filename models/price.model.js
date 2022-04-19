@@ -8,7 +8,7 @@ const priceSchema = new mongoose.Schema({
     unique: true,
     required: true
   },
-  room_id: [
+  roomIds: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Room'

@@ -1,32 +1,65 @@
 require('dotenv').config()
-const totalSeed = require('./totalSeed')
-const { clear, isDevMode, isResetMode } = require('./utils')
+const { clear, isDevMode, isResetMode, inserting, connecting } = require('./utils')
+const samples = require('./samples')
+const { mapRoom, mapGroup, mapPrice } = require('./map')
 
-async function clearData() {
-  console.log('\n----- REMOVING OLD DATA -----')
+async function discard() {
+  if (!isDevMode && !isResetMode) return
 
-  await clear('Role', 'role')
+  console.log('\n----- DISCARD DATABASE -----')
 
-  await clear('UserRole', 'user role')
+  let collections = [
+    'Group',
+    'User',
+    'Price',
+    'Room',
+    'Contract',
+    'Bill'
+  ]
 
-  await clear('User', 'user')
-
-  await clear('Price', 'price')
-
-  await clear('Room', 'room')
-
-  await clear('Contract', 'contract')
-
-  await clear('Bill', 'bill')
+  await Promise.all(collections.map(clear))
 
   console.log('=> Done')
 }
 
-async function seed() {
-  (isDevMode || isResetMode) && await clearData()
+async function insert() {
+  if (!isDevMode) return
 
-  isDevMode && await totalSeed()
-  console.log('=> Done')
+  console.log('\n----- INSERT DATA -----')
+
+  let collections = [
+    'Price',
+    'Room',
+    'User',
+    'Admin',
+    'Group',
+  ]
+
+  await inserting(samples, collections)
 }
 
-seed().then(() => process.exit())
+async function connect() {
+  if (!isDevMode) return
+
+  console.log('\n----- CREATE DATA RELATIONS -----')
+
+  let seedList = [
+    mapRoom,
+    mapGroup,
+    mapPrice
+  ]
+
+  await Promise.all(seedList.flat().map(connecting))
+}
+
+async function run() {
+  await discard()
+
+  await insert()
+
+  await connect()
+
+  console.log('\n=> Completed')
+}
+
+run().catch(console.log).finally(process.exit)

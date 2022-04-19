@@ -28,9 +28,13 @@ const userSchema = mongoose.Schema({
     default: Date.now
   },
   gender: { type: String, required: true },
-  room_id: {
+  roomId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Room'
+  },
+  groupId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Group'
   },
   anonymous: {
     type: String,

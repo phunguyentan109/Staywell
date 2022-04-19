@@ -12,7 +12,7 @@ exports.saveIdToChildren = async (targetModel, targetIds, idKey, idValue) => {
   )
 }
 
-exports.clearIdFromDoc = async (targetModel, targetIds, clearKey, clearValue) => {
+exports.removeIdFromChildren = async (targetModel, targetIds, clearKey, clearValue) => {
   return db[targetModel].updateMany(
     {
       _id: { $in: targetIds },

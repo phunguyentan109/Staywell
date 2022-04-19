@@ -1,10 +1,14 @@
 const db = require('../models')
 const { writeIdToDoc, clearIdFromDoc } = require('./utils')
 
-exports.find = (params) => {
-  return db.Room.find(params)
-    .populate('price_id')
-    .populate('user_id')
+exports.find = async (params, populates) => {
+  const foundRooms = await db.Room.find(params)
+
+  if (populates) {
+    await db.Room.populate(foundRooms, populates)
+  }
+
+  return foundRooms
 }
 
 exports.findLean = (params) => {

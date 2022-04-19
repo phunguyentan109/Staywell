@@ -5,9 +5,16 @@ const Monitor = require('../utils/shield')
 const monitor = new Monitor('service.bill')
 
 exports.get = monitor.seal('get', async () => {
-  return repo.roomRepository.find({
+  const query = {
     deleteAt: { $exists: false }
-  })
+  }
+
+  const populates = [
+    { path: 'userIds' },
+    { path: 'priceId' }
+  ]
+
+  return repo.roomRepository.find(query, populates)
 })
 
 
@@ -21,15 +28,15 @@ exports.getOne = monitor.seal('getOne', async (roomId) => {
 })
 
 
-exports.restore = monitor.seal('restore', async (room_id) => {
-  return repo.roomRepository.findByIdAndUpdate(room_id, {
+exports.restore = monitor.seal('restore', async (roomId) => {
+  return repo.roomRepository.findByIdAndUpdate(roomId, {
     $unset: { deleteAt: 1 }
   })
 })
 
 
-exports.remove = monitor.seal('remove', async ({ room_id, bodyReq }) => {
-  let foundRoom = await repo.roomRepository.findById(room_id)
+exports.remove = monitor.seal('remove', async ({ roomId, bodyReq }) => {
+  let foundRoom = await repo.roomRepository.findById(roomId)
   if (foundRoom) {
     if (bodyReq.softDelete) {
       await foundRoom.updateOne({ deleteAt: moment() })

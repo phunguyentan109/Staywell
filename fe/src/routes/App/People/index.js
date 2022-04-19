@@ -5,7 +5,7 @@ import Widget from 'components/Widget'
 import { formatTime } from 'constants/func'
 import './_styles.less'
 import DeleteAction from 'components/DeleteAction'
-import { routes } from 'constants/variables'
+import { urls } from 'constants/routes'
 import { useFetch } from 'hooks'
 import { userApi } from 'constants/api'
 import { useDispatch, useSelector } from 'react-redux'
@@ -136,7 +136,7 @@ export default function People(props) {
                         overlay={(
                           <Menu>
                             <Menu.Item>
-                              <a target='_blank' rel='noopener noreferrer' href={routes.registration(r.token)}>
+                              <a target='_blank' rel='noopener noreferrer' href={urls.registration(r.token)}>
                                 View in new tab
                               </a>
                             </Menu.Item>

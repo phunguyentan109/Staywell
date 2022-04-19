@@ -1,62 +1,10 @@
-exports.manager = {
-  email: process.env.GMAIL_USER,
-  password: 'manager',
-  username: 'manager',
-  gender: 'Male',
-  avatar: {
-    'sex': 'woman',
-    'faceColor': '#F9C9B6',
-    'earSize': 'big',
-    'eyeStyle': 'circle',
-    'noseStyle': 'short',
-    'mouthStyle': 'smile',
-    'shirtStyle': 'polo',
-    'glassesStyle': 'round',
-    'hairColor': '#F48150',
-    'hairStyle': 'womanLong',
-    'hatStyle': 'none',
-    'hatColor': '#506AF4',
-    'eyeBrowStyle': 'upWoman',
-    'shirtColor': '#77311D',
-    'bgColor': 'linear-gradient(45deg, #178bff 0%, #ff6868 100%)'
-  }
-}
-
-exports.managerRole = {
-  type: 'Manager',
-  code: '000'
-}
-
-exports.people = [
+module.exports = [
   {
-    email: 'magazine.group@gmail.com',
-    username: 'magazine.group',
-    gender: 'Male',
-    isVerified: true,
-    avatar: {
-      'sex':'man',
-      'faceColor':'#F9C9B6',
-      'earSize':'small',
-      'eyeStyle':'oval',
-      'noseStyle':'long',
-      'mouthStyle':'smile',
-      'shirtStyle':'polo',
-      'glassesStyle':'none',
-      'hairColor':'#000',
-      'hairStyle':'womanLong',
-      'hatStyle':'none',
-      'hatColor':'#343434',
-      'eyeBrowStyle':'up',
-      'shirtColor':'#358dd8',
-      'bgColor':'linear-gradient(45deg, #1729ff 0%, #ff56f7 100%)'
-    }
-  },
-  {
-    email: 'nothinglike1@gmail.com',
-    username: 'nothinglike1',
-    gender: 'Male',
-    isVerified: true,
-    avatar: {
+    'email': 'nothinglike1@gmail.com',
+    'username': 'nothinglike1',
+    'gender': 'Male',
+    'isVerified': true,
+    'avatar': {
       'sex': 'man',
       'faceColor': '#F9C9B6',
       'earSize': 'small',
@@ -75,11 +23,11 @@ exports.people = [
     }
   },
   {
-    email: 'great121@gmail.com',
-    username: 'great121',
-    gender: 'Male',
-    isVerified: true,
-    avatar: {
+    'email': 'great121@gmail.com',
+    'username': 'great121',
+    'gender': 'Male',
+    'isVerified': true,
+    'avatar': {
       'sex': 'man',
       'faceColor': '#F9C9B6',
       'earSize': 'small',
@@ -98,11 +46,11 @@ exports.people = [
     }
   },
   {
-    email: 'becauseopu13@gmail.com',
-    username: 'becauseopu13',
-    gender: 'Female',
-    isVerified: true,
-    avatar: {
+    'email': 'becauseopu13@gmail.com',
+    'username': 'becauseopu13',
+    'gender': 'Female',
+    'isVerified': true,
+    'avatar': {
       'sex': 'woman',
       'faceColor': '#F9C9B6',
       'earSize': 'big',
@@ -121,11 +69,11 @@ exports.people = [
     }
   },
   {
-    email: 'newbb213@gmail.com',
-    username: 'newbb213',
-    gender: 'Female',
-    isVerified: true,
-    avatar: {
+    'email': 'newbb213@gmail.com',
+    'username': 'newbb213',
+    'gender': 'Female',
+    'isVerified': true,
+    'avatar': {
       'sex': 'woman',
       'faceColor': '#AC6651',
       'earSize': 'big',
@@ -143,12 +91,12 @@ exports.people = [
       'bgColor': '#74D153'
     }
   },
-
   {
-    email: 'hacker@gmail.com',
-    username: 'newbb213',
-    gender: 'Male',
-    avatar: {
+    'email': 'hacker@gmail.com',
+    'username': 'newbb213',
+    'gender': 'Male',
+    isVerified: true,
+    'avatar': {
       'sex': 'man',
       'faceColor': '#AC6651',
       'earSize': 'big',

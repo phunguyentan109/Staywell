@@ -45,20 +45,20 @@ function* hdVerifyUserToken() {
       return yield put(loginSuccessAction(user))
     }
 
-    let userId = jwtDecode(localStorage[CLI_STORE_KEYS.token])._id
+    let { email } = jwtDecode(localStorage[CLI_STORE_KEYS.token])
 
     yield delay(2000)
 
-    yield put(reloadUserAction(userId))
+    yield put(reloadUserAction(email))
   } catch (err) {
     yield put(hdLogOutAction())
     console.error('error => function* hdVerifyUserToken', err)
   }
 }
 
-function* hdReloadUser({ userId }) {
+function* hdReloadUser({ email }) {
   try {
-    let rs = yield call(request, userApi.getOne(userId))
+    let rs = yield call(request, userApi.getOne({ email }))
 
     if (rs.data) {
       const { token, ...user } = rs.data

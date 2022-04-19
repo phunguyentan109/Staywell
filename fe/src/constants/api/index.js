@@ -60,7 +60,7 @@ export const roomApi = {
 
 export const userApi = {
   get: () => ['user'],
-  getOne: id => [`user/${id}`],
+  getOne: data => ['user', 'post', data],
   available: () => ['user/available'],
   logIn: data => ['user/login', 'post', data],
   forgot: () => ['user/forgot', 'post'],
