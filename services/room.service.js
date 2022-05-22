@@ -59,7 +59,7 @@ exports.assign = monitor.seal('assign', async (roomId, removeOne, newOne) => {
 
   await repo.roomRepository.clearIdFromUser(roomId, removeOne)
 
-  let updateRoom = await repo.roomRepository.update({ _id: roomId }, { user_id: newOne })
+  let updateRoom = await repo.roomRepository.update({ _id: roomId }, { userIds: newOne })
 
   await repo.roomRepository.writeIdToUser(roomId, newOne)
 

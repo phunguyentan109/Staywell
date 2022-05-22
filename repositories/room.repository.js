@@ -18,11 +18,11 @@ exports.findLean = (params) => {
 exports.findOne = params => db.Room.findOne(params)
 
 exports.clearIdFromUser = async (roomId, removeOne) => {
-  await clearIdFromDoc('User', removeOne, 'room_id', roomId)
+  await clearIdFromDoc('User', removeOne, 'roomId', roomId)
 }
 
 exports.writeIdToUser = async (roomId, newOne) => {
-  await writeIdToDoc('User', newOne, 'room_id', roomId)
+  await writeIdToDoc('User', newOne, 'roomId', roomId)
 }
 
 exports.findById = (params) => {
