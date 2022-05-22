@@ -1,8 +1,13 @@
-const { manager, managerRole, people } = require('./user')
+const room = require('./room')
+const price = require('./price')
+const admin = require('./admin')
+const user = require('./user')
+const group = require('./group')
 
-module.exports.Price = require('./price')
-module.exports.Contract = require('./contract')
-module.exports.Manager = manager
-module.exports.ManagerRole = managerRole
-module.exports.People = people
-module.exports.Room = require('./room')
+module.exports = {
+  Room: room,
+  Price: price,
+  Admin: admin,
+  User: user,
+  Group: group
+}

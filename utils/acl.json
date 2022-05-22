@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Dashboard",
+    "permission": "sw.app.dashboard"
+  },
+  {
+    "name": "Manage People",
+    "permission": "sw.app.managePeople"
+  },
+  {
+    "name": "Manage Room",
+    "permission": "sw.app.manageRoom"
+  },
+  {
+    "name": "Manage Price",
+    "permission": "sw.app.managePrice"
+  },
+  {
+    "name": "Manage Contract",
+    "permission": "sw.app.manageContract"
+  },
+  {
+    "name": "Manage Bill",
+    "permission": "sw.app.manageBill"
+  }
+]

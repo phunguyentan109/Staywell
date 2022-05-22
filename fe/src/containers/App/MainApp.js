@@ -9,7 +9,7 @@ import AboveHeader from '../Topbar/AboveHeader/index'
 import BelowHeader from '../Topbar/BelowHeader/index'
 import Topbar from '../Topbar/index'
 import { footerText } from '../../util/config'
-import App from 'routes/App'
+// import App from 'routes/App'
 
 import {
   NAV_STYLE_ABOVE_HEADER,
@@ -27,6 +27,7 @@ import NoHeaderNotification from '../Topbar/NoHeaderNotification/index'
 import { useRouteMatch } from 'react-router-dom'
 import { updateWindowWidth } from 'appRedux/actions'
 import AppSidebar from './AppSidebar'
+import PropTypes from 'prop-types'
 
 const { Content, Footer } = Layout
 
@@ -74,9 +75,8 @@ const getNavStyles = (navStyle) => {
   }
 }
 
-const MainApp = () => {
+const MainApp = (props) => {
   const { navStyle } = useSelector(({ settings }) => settings)
-  const match = useRouteMatch()
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -91,7 +91,7 @@ const MainApp = () => {
       <Layout>
         {getNavStyles(navStyle)}
         <Content className={`gx-layout-content ${getContainerClass(navStyle)} `}>
-          <App match={match}/>
+          {props.children}
           <Footer>
             <div className='gx-layout-footer-content'>
               {footerText}
@@ -102,5 +102,10 @@ const MainApp = () => {
     </Layout>
   )
 }
+
+MainApp.propTypes = {
+  children: PropTypes.any
+}
+
 export default MainApp
 

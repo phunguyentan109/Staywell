@@ -26,7 +26,7 @@ export function logoutAction(){
   }
 }
 
-export function sendReloadUser(userId){}
+export function sendReloadUser(email){}
 
 export function verifyUserTokenAction(){
   return {
@@ -34,9 +34,9 @@ export function verifyUserTokenAction(){
   }
 }
 
-export function reloadUserAction(userId){
+export function reloadUserAction(email){
   return {
     type: RELOAD_USER_ACTION,
-    userId
+    email
   }
 }

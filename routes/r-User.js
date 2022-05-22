@@ -3,7 +3,10 @@ const mw = require('../middleware')
 const { userController } = require('../controllers')
 const router = express.Router({ mergeParams: true })
 
-router.route('/').get(userController.get)
+router.route('/')
+  .get(userController.get)
+  .post(mw.User.isLogin, userController.getOne)
+
 router.route('/available').get(userController.getAvailable)
 
 router.route('/login').post(userController.logIn)
@@ -16,7 +19,6 @@ router.route('/registration/:token')
   .delete(mw.User.isValidRegisterToken, mw.User.disableToken)
 
 router.route('/:user_id')
-  .get(mw.User.isLogin, userController.getOne)
   .delete(userController.remove)
   .put(userController.update)
 

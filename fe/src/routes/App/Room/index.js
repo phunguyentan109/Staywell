@@ -45,7 +45,7 @@ export default function Room() {
             { title: 'Room Name', dataIndex: 'name' },
             {
               title: 'People',
-              dataIndex: 'user_id',
+              dataIndex: 'userIds',
               render: userIds => {
                 if (userIds.length === 0) return <i style={{ color: '#bfbfbf' }}>Empty</i>
                 return (<>

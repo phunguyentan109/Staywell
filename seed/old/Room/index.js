@@ -1,4 +1,4 @@
-const db = require('../../models')
+const db = require('../../../models')
 const ROOMS = require('./data')
 
 async function createRoom(){

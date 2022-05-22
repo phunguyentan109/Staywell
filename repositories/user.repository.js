@@ -8,8 +8,8 @@ exports.findOne = (data) => {
   return db.User.findOne(data)
 }
 
-exports.findUserRole = ({ user_id }) => {
-  return db.UserRole.find({ user_id }).populate('role_id').lean().exec()
+exports.findUserGroup = (userId) => {
+  return db.Group.findOne({ userIds: userId }).lean().exec()
 }
 
 exports.find = (params) => {

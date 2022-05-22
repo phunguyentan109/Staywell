@@ -13,9 +13,11 @@ export default function ModalTransfer({ room, getRooms }) {
 
   const dp = useDispatch()
 
+  const peopleIds = useMemo(() => people.map(p => p._id), [people])
+
   useEffect(() => {
-    setChanges(room.user_id)
-  }, [room.user_id])
+    setChanges(room.userIds)
+  }, [room.userIds])
 
   const selectedIds = useMemo(
     () => changes.filter(u => !u._remove).map(u => u._id),
@@ -53,11 +55,11 @@ export default function ModalTransfer({ room, getRooms }) {
     let foundUser = changes.find(u => u._id === r._id)
     if (!foundUser) return false
 
-    return foundUser._remove || people.map(u => u._id).includes(r._id)
+    return foundUser._remove || peopleIds.includes(r._id)
   }
 
   const hdSelect = (r, select) => {
-    let isSavedRecord = room.user_id.map(u => u._id).includes(r._id)
+    let isSavedRecord = room.userIds.map(u => u._id).includes(r._id)
 
     if (isSavedRecord) {
       setChanges(prev => {
@@ -79,7 +81,7 @@ export default function ModalTransfer({ room, getRooms }) {
 
       <Modal
         width={800}
-        title={'Room\'s people assignment'}
+        title='Assign people'
         visible={open}
         onCancel={hdCancel}
         onOk={hdOk}
@@ -88,7 +90,7 @@ export default function ModalTransfer({ room, getRooms }) {
           loading={loading}
           tableLayout='fixed'
           className='gx-table-responsive'
-          dataSource={[...room.user_id, ...people]}
+          dataSource={[...room.userIds, ...people]}
           rowKey='_id'
           pagination={false}
           rowSelection={{
@@ -135,6 +137,6 @@ ModalTransfer.propTypes = {
 
 ModalTransfer.defaultProps = {
   room: {
-    user_id: []
+    userIds: []
   }
 }

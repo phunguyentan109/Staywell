@@ -40,7 +40,7 @@ exports.openRegistration = monitor.handler('openRegistration', async(req, res, n
 
 
 exports.getOne = monitor.handler('getOne', async(req, res) => {
-  const user = await services.userService.getOne((req.params.user_id))
+  const user = await services.userService.getOne(req.body)
   return res.status(200).json(monitor.response({ ...user, anonymous: user.anonymousData }))
 })
 

@@ -1,6 +1,4 @@
-import Router from './PermissionRouter'
-import Render from './PermissionRender'
+import Router from './Router'
+import Render from './Render'
 
-const Permission = { Router, Render }
-
-export default Permission
+export default { Router, Render }
