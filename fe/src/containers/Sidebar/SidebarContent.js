@@ -47,7 +47,6 @@ const SidebarContent = ({ sidebarCollapsed, setSidebarCollapsed }) => {
             mode='inline'
           >
             <MenuItemGroup key='main' className='gx-menu-group' title='Main'>
-              {/* Manage People */}
               <Menu.Item key='/app'>
                 <Link to='/app'>
                   <i className='icon icon-dasbhoard'/>
@@ -57,13 +56,13 @@ const SidebarContent = ({ sidebarCollapsed, setSidebarCollapsed }) => {
             </MenuItemGroup>
 
             <MenuItemGroup key='group' className='gx-menu-group' title='Group'>
-              {/*<Permission.Render access={['OWNER_PM']}>*/}
-              {/*<Menu.Item key='/app/people'>*/}
-              {/*  <Link to='/app/people'>*/}
-              {/*    <i className='icon icon-auth-screen'/>*/}
-              {/*    <span>Manage People</span>*/}
-              {/*  </Link>*/}
-              {/*</Menu.Item>*/}
+              {/* Manage People */}
+              <Menu.Item key='/app/people'>
+                <Link to='/app/people'>
+                  <i className='icon icon-auth-screen'/>
+                  <span>Manage People</span>
+                </Link>
+              </Menu.Item>
 
               {/* Manage Rooms */}
               <Menu.Item key='/app/rooms'>

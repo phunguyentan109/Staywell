@@ -6,6 +6,7 @@ import Room from 'routes/App/Room/Loader'
 import Price from 'routes/App/Price/Loader'
 import Dashboard from 'routes/App/Dashboard'
 import Login from 'routes/Guest/Login/Loader'
+import People from 'routes/App/People/Loader'
 
 export const breadNames = {
   '/app': {
@@ -35,7 +36,8 @@ export const urls = {
   login: '/',
   dashboard: '/app',
   rooms: '/app/rooms',
-  price: '/app/price'
+  price: '/app/price',
+  people: '/app/people'
 }
 
 export default {
@@ -49,6 +51,12 @@ export default {
     },
   ],
   app: [
+    {
+      path: urls.people,
+      component: People,
+      permissions: [permissions.mnPeople],
+      redirect: '/app'
+    },
     {
       path: urls.rooms,
       component: Room,

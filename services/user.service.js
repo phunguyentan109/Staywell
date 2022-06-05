@@ -106,7 +106,7 @@ exports.get = monitor.seal('get', async () => {
 
 exports.remove = monitor.seal('remove', async(userId) => {
   const user = await repo.userRepository.findById(userId)
-  if (user) user.remove()
+  if (user) await user.remove()
   return user
 })
 

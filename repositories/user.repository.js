@@ -15,7 +15,7 @@ exports.findUserGroup = (userId) => {
 exports.find = (params) => {
   return db.User
     .find(params)
-    .populate('room_id')
+    .populate('roomId')
     .lean().exec()
 }
 
@@ -33,8 +33,7 @@ exports.findByIdAndUpdate = (data) => {
 }
 
 exports.getNoAssign = (peopleIds) => {
-  return db.User.find({ _id: { $in: peopleIds }, room_id: undefined })
-    .populate('user_id')
+  return db.User.find({ _id: { $in: peopleIds }, roomId: undefined })
     .lean()
     .exec()
 }
