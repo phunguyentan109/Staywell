@@ -1,31 +1,45 @@
-import React from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { Badge, Button, Card, Col, Dropdown, Menu, Row, Table, Tooltip, Typography } from 'antd'
+import { Badge, Button, Card, Col, Dropdown, Menu, message, Row, Table, Tooltip, Typography } from 'antd'
 import Widget from 'components/Widget'
-import { formatTime } from 'constants/func'
 import './_styles.less'
 import DeleteAction from 'components/DeleteAction'
 import { urls } from 'constants/routes'
-import { useFetch } from 'hooks'
-import { userApi } from 'constants/api'
 import { useDispatch, useSelector } from 'react-redux'
-import { sendReloadUser } from 'appRedux/actions/user'
+import { selectPeople } from './redux/selector'
+import _ from 'lodash'
+import { createRegistrationToken, fetchPeopleAction, removePeopleAction } from './redux/action'
+import { formatTime } from 'constants/func'
+import Avatar from 'react-nice-avatar'
 
 export default function People(props) {
-  const userData = useSelector(({ user }) => user.data)
-  const dispatch = useDispatch()
+  const { people, loading } = useSelector(selectPeople)
+  const dp = useDispatch()
 
-  const { data: people, isFetching, isMutating, mutate } = useFetch(userApi.get(), {
-    remove: {
-      exec: id => userApi.remove(id),
-      successMsg: 'User is removed successfully!'
-    },
-    getRegisterToken: {
-      exec: () => userApi.openRegistration(),
-      successMsg: 'Registration token is generated successfully!',
-      revalidate: false
-    }
-  })
+  const getPeople = useCallback(() => dp(fetchPeopleAction()), [dp])
+
+  useEffect(() => {
+    getPeople()
+  }, [getPeople])
+
+  const removePeople = (peopleId) => {
+    dp(removePeopleAction(peopleId, rs => {
+      if (rs) message.success('Removing people successfully!')
+      getPeople()
+    }))
+  }
+
+  // const { data: people, isFetching, isMutating, mutate } = useFetch(userApi.get(), {
+  //   remove: {
+  //     exec: id => userApi.remove(id),
+  //     successMsg: 'User is removed successfully!'
+  //   },
+  //   getRegisterToken: {
+  //     exec: () => userApi.openRegistration(),
+  //     successMsg: 'Registration token is generated successfully!',
+  //     revalidate: false
+  //   }
+  // })
 
   // const hdCopy = useCallback((e, token) => {
   //   e.target.classList.add('bounceIn')
@@ -50,8 +64,8 @@ export default function People(props) {
   // }, [])
 
   const hdOpenRegistration = async () => {
-    await mutate('getRegisterToken')
-    dispatch(sendReloadUser(userData._id))
+    dp(createRegistrationToken())
+    // dp(sendReloadUser(userData._id))
   }
 
   // const filterRooms = useMemo(() => {
@@ -59,8 +73,10 @@ export default function People(props) {
   //   return _.map(_.uniq(roomNames.flat()), v => ({ text: v, value: v }))
   // }, [people])
 
-  const hdRemove = () => {
-
+  const hdRemove = (peopleId) => {
+    // dp(removePeopleAction(peopleId), () => {
+    //
+    // })
   }
 
   return (
@@ -100,7 +116,7 @@ export default function People(props) {
           >
             <div className='gx-table-responsive'>
               <Table
-                loading={isFetching || isMutating}
+                loading={loading}
                 className='token-table'
                 rowKey='token'
                 columns={[
@@ -164,7 +180,7 @@ export default function People(props) {
 
           <Card className='gx-card' title='List of Renter'>
             <Table
-              loading={isFetching || isMutating}
+              loading={loading}
               className='gx-table-responsive'
               scroll={{ x: 'max-content' }}
               dataSource={people}
@@ -175,7 +191,10 @@ export default function People(props) {
                   dataIndex: ['avatar', 'link'],
                   render: (text, rec) => (
                     <span className='user-cell'>
-                      <img src={text} alt=''/>
+                      <Avatar
+                        className='gx-size-40 gx-mr-3 customAvatar'
+                        {...text}
+                      />
                       <div>
                         <p>{rec.username}</p>
                         <small>{rec.email}</small>
@@ -185,7 +204,7 @@ export default function People(props) {
                 },
                 {
                   title: 'Living Status',
-                  dataIndex: ['room_id', 'name'],
+                  dataIndex: ['roomId', 'name'],
                   // filters: [
                   //   { text: 'Not Assigned', value: 'Not Assigned' },
                   //   { text: 'Not Verified', value: 'Not Verified' },
@@ -210,7 +229,7 @@ export default function People(props) {
                   title: 'Action',
                   key: 'action',
                   dataIndex: '_id',
-                  render: v => <DeleteAction onConfirm={() => mutate('remove', v)}/>
+                  render: v => <DeleteAction onConfirm={() => removePeople(v)}/>
                 }
               ]}
             />
