@@ -5,6 +5,4 @@ module.exports.priceService = require('./price.service')
 module.exports.billService = require('./bill.service')
 module.exports.roomService = require('./room.service')
 module.exports.contractService = require('./contract.service')
-
-// const UserService = require('./user.service')
-// module.exports = { UserService }
+module.exports.redisService = require('./redis.service')

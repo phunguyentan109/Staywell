@@ -5,14 +5,6 @@
 .appear('fromLeft', -100px, 0, 0, 0);
 .appear('fromBottom', 0, 0, 100px, 0);
 
-.input-icon() {
-  padding: 7px 15px 7px 20px;
-  background-color: #ffffff1a;
-  line-height: 2;
-  transition-duration: 0.5s;
-  font-size: 14px;
-}
-
 .register-content {
   display: flex;
   flex-direction: column;
@@ -26,7 +18,7 @@
     font-size: 40px;
     margin: 0 0 8px;
 
-    @include appear-animation(fromTop, 1.2s, .3s);
+    //@include appear-animation(fromTop, 1.2s, .3s);
 
     &:nth-of-type(2) { display: none }
   }
@@ -36,51 +28,36 @@
     color: #bbbbbb;
     font-size: 15px;
 
-    @include appear-animation(fromTop, 1.2s);
-  }
-
-  > .notify {
-    padding: 10px 35px;
-    margin: 10px 20px -42px 20px;
-    border-radius: 2px;
-    background-color: #f31a1a3d;
-    color: #bababa;
-    font-size: 14px;
-    font-weight: bold;
-  }
-
-  > .great-notify {
-    padding: 10px 35px;
-    margin: 10px 20px -42px 20px;
-    border-radius: 2px;
-    background-color: #1df31a3d;
-    color: #bababa;
-    font-size: 14px;
-    font-weight: bold;
+    //@include appear-animation(fromTop, 1.2s);
   }
 
   form {
     margin-top: 60px;
 
-    > .auth-input {
+    .auth-input {
       margin-bottom: 15px;
 
-      &:hover i,
-      &:hover input {
-        background-color: #ffffff2e;
+      i, input {
+        padding: 7px 15px 7px 20px;
+        background-color: #ffffff1a;
+        line-height: 2;
+        transition-duration: 0.5s;
+        font-size: 14px;
       }
 
-      i {
-        @extend .input-icon();
+      > i {
         color: #edededa8;
         padding-left: 15px;
         border-top-left-radius: 20px;
         border-bottom-left-radius: 20px;
         transition-duration: 0.5s;
+
+        &.focus {
+          background-color: #ffffff30;
+        }
       }
 
-      input {
-        @extend .input-icon();
+      > input {
         padding-left: 0;
         padding-right: 0;
         border: none;
@@ -97,17 +74,25 @@
           font-size: 14px;
         }
 
+        &.focus {
+          background-color: #ffffff30;
+        }
+
         @include mobile {
           width: 270px;
         }
       }
 
       &:nth-of-type(1) {
-        @include appear-animation(fromLeft, 1.2s, .6s);
+        //.appear-animation(fromLeft, 1.2s, .6s);
       }
 
       &:nth-of-type(2) {
-        @include appear-animation(fromLeft, 1.2s, .9s);
+        //.appear-animation(fromLeft, 1.2s, .9s);
+      }
+
+      &:nth-of-type(3) {
+        //.appear-animation(fromLeft, 1.2s, 1.2s);
       }
     }
 
@@ -144,7 +129,7 @@
         }
       }
 
-      @include appear-animation(fromLeft, 1.2s, 1.2s);
+      //@include appear-animation(fromLeft, 1.2s, 1.2s);
     }
 
     .signup {
@@ -172,16 +157,13 @@
         font-size: 15px;
       }
 
-      @include appear-animation(fromBottom, 1.2s, 1.5s);
+      //@include appear-animation(fromBottom, 1.2s, 1.5s);
     }
   }
 
   @include mobile {
     > h1 {
       font-size: 30px;
-
-      &:nth-of-type(1) { display: none }
-      &:nth-of-type(2) { display: initial }
     }
 
     > a { display: none; }
@@ -191,54 +173,6 @@
     }
   }
 }
-
-//.auth-form {
-//  .auth-input {
-//    margin-bottom: 15px;
-//
-//    > i {
-//      @extend %iconInput;
-//      color: #edededa8;
-//      padding-left: 15px;
-//      border-top-left-radius: 20px;
-//      border-bottom-left-radius: 20px;
-//      transition-duration: 0.5s;
-//
-//      &.focus {
-//        background-color: #ffffff30;
-//      }
-//    }
-//
-//    > input {
-//      @extend %iconInput;
-//      padding-left: 0;
-//      padding-right: 0;
-//      border: none;
-//      outline: none;
-//      width: 290px;
-//      color: #ffffffa8;
-//      border-top-right-radius: 20px;
-//      border-bottom-right-radius: 20px;
-//      font-family: $f-ubuntu;
-//      margin-bottom: 0;
-//
-//      &::placeholder{
-//        color: #edededa8;
-//        font-size: 14px;
-//      }
-//
-//      &.focus {
-//        background-color: #ffffff30;
-//      }
-//
-//      @include mobile {
-//        width: 270px;
-//      }
-//    }
-//  }
-//
-//
-//}
 
 
 

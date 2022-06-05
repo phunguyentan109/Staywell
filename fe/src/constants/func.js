@@ -1,5 +1,4 @@
 import { notification } from 'antd'
-import moment from 'moment'
 
 const CASES = {
   error: { msg: 'Process is not completed. Please try again!' },
@@ -15,12 +14,4 @@ export function formatVND(num) {
     style: 'currency',
     currency: 'VND',
   }).format(num * 1000)
-}
-
-export function formatTime(date, hhMM = false) {
-  return moment(date).format(hhMM ? 'Do MMM, YYYY HH:mm:ss' : 'Do MMM, YYYY')
-}
-
-export function formatFullTextTime (date) {
-  return moment(date).format('MMMM Do YYYY')
 }

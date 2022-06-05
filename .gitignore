@@ -89,3 +89,7 @@ typings/
 .dynamodb/
 
 cli/
+
+dump.rdb
+
+build/

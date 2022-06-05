@@ -10,22 +10,13 @@ router.route('/')
 router.route('/available').get(userController.getAvailable)
 
 router.route('/login').post(userController.logIn)
-router.route('/forgot').post(userController.forgot)
-
-router.route('/registration').post(mw.User.isLogin, mw.User.isPermit, userController.openRegistration)
-
-router.route('/registration/:token')
-  .post(mw.User.isValidRegisterToken, mw.User.disableToken, userController.signUp)
-  .delete(mw.User.isValidRegisterToken, mw.User.disableToken)
 
 router.route('/:user_id')
   .delete(userController.remove)
   .put(userController.update)
 
-router.route('/:token/reset').put(userController.resetPassword)
-
-// router.route('/:user_id/password').put(userController.updatePassword)
-router.route('/:user_id/contact').post(userController.contact)
+router.route('/:userId/verify')
+  .get(userController.completeVerify)
 
 // LINKED ROUTES
 router.use('/:user_id/contracts', require('./r-Contract'))
@@ -36,4 +27,16 @@ router.use('/:user_id/people', mw.User.isLogin, require('./r-People'))
 // HANDLE UNFINISHED DONE REQUESTS
 router.use((req, res) => res.status(200).json({ status: 'success' }))
 
+// router.route('/:token/reset').put(userController.resetPassword)
+
+// router.route('/:user_id/password').put(userController.updatePassword)
+// router.route('/:user_id/contact').post(userController.contact)
+
+// router.route('/forgot').post(userController.forgot)
+
+// router.route('/registration/:token')
+//   .post(mw.User.isValidRegisterToken, mw.User.disableToken, userController.signUp)
+//   .delete(mw.User.isValidRegisterToken, mw.User.disableToken)
+
 module.exports = router
+

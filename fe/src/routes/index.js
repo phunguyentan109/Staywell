@@ -4,9 +4,8 @@ import routes, { urls } from 'constants/routes'
 import { useDispatch, useSelector } from 'react-redux'
 import _ from 'lodash'
 import Permission from 'components/Permissions'
-
 import Register from './Public/Register'
-import Confirm from './Public/Confirm'
+import CompleteVerify from './Public/CompleteVerify'
 import Accessing from './Public/Accessing'
 import MainApp from 'containers/App/MainApp'
 import { selectUser } from 'appRedux/selectors'
@@ -26,7 +25,7 @@ function App () {
   if (isRememberAuth) {
     return (
       <Switch>
-        <Route path={urls.completeRegistration} component={Confirm}/>
+        <Route path={urls.completeVerify} component={CompleteVerify}/>
         <Route path={urls.registration} component={Register}/>
         <Route path='/' component={Accessing}/>
       </Switch>
@@ -35,9 +34,6 @@ function App () {
 
   return (
     <Switch>
-      <Route path={urls.completeRegistration} component={Confirm}/>
-      <Route path={urls.registration} component={Register}/>
-
       <Route path='/app' render={() => (
         <MainApp>
           <div className='gx-main-content-wrapper'>
@@ -61,9 +57,10 @@ function App () {
           <Suspense fallback={<div>Loading...</div>}>
             <Switch>
               {
-                routes.guest.map(r => <Permission.Router key={r.path} {...r} />)
+                routes.guest.map(
+                  r => r.permissions ? <Permission.Router key={r.path} {...r} /> : <Route {...r} />
+                )
               }
-
               <Redirect to='/app'/>
             </Switch>
           </Suspense>
