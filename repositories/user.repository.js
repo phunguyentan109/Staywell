@@ -1,7 +1,13 @@
 const db = require('../models')
+const bcrypt = require('bcrypt')
 
-exports.create = (data) => {
+exports.create = async (data) => {
+  data.password = await bcrypt.hash(this.password, 10)
   return db.User.create(data)
+}
+
+exports.comparePassword = (enterPwd, savePwd) => {
+  return bcrypt.compare(enterPwd, savePwd)
 }
 
 exports.findOne = (data) => {

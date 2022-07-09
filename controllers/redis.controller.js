@@ -18,6 +18,10 @@ exports.newRegistrationToken = monitor.handler('newRegistrationToken', async(req
 
 
 exports.submitRegistrationToken = monitor.handler('submitRegistrationToken', async(req, res) => {
+  const requireKeys = ['email', 'password', 'avatar']
+
+  if (requireKeys.some(k => !req.body[k])) return monitor.wrap('Required data missing')
+
   const rs = await redisService.submitRegistrationToken(req.params.token, req.body)
   return res.status(200).json(monitor.response(rs))
 }, {

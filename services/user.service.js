@@ -6,19 +6,10 @@ const Monitor = require('../utils/shield')
 const monitor = new Monitor('service.user')
 
 
-exports.logIn = monitor.seal('logIn', async (req) => {
-  let { email, password } = req
-  email = email.includes('@') ? email : `${email}@gmail.com`
+exports.getOne = monitor.seal('getOne', async (findQuery) => {
+  const user = await repo.userRepository.findOne(findQuery)
 
-  await mail.testMail(email)
-
-  const user = await repo.userRepository.findOne({ email })
-
-  const { _id, username, avatar } = user
-
-  // compare password
-  const match = await user.comparePassword(password)
-  if (!match) throw monitor.wrap('Invalid email/password')
+  let { _id, username, email, avatar, password } = user
 
   // get permissions
   const group = await repo.userRepository.findUserGroup(_id.toString())
@@ -27,10 +18,25 @@ exports.logIn = monitor.seal('logIn', async (req) => {
     return rs
   }, {})
 
-  // gen token to store on client
-  const token = genToken({ email, permissions })
+  const userData = { username, avatar, permissions, password }
 
-  return { username, avatar, permissions, token }
+  if (password) userData.token = genToken({ email, permissions })
+
+  return userData
+})
+
+
+exports.logIn = monitor.seal('logIn', async (req) => {
+  let { email, password } = req
+  email = email.includes('@') ? email : `${email}@gmail.com`
+
+  const user = await exports.getOne({ email })
+
+  // compare password
+  const match = await repo.userRepository.comparePassword(password, user.password)
+  if (!match) throw monitor.wrap('Invalid email/password')
+
+  return user
 }, { catchMsg: 'Invalid email/password.' })
 
 
@@ -45,25 +51,6 @@ exports.completeVerify = monitor.seal('completeVerify', async (userId) => {
 
   foundUser.isVerified = true
   await foundUser.save()
-})
-
-
-exports.getOne = monitor.seal('getOne', async (findQuery) => {
-  const user = await repo.userRepository.findOne(findQuery)
-
-  let { _id, username, email, avatar } = user
-
-  // get permissions
-  const group = await repo.userRepository.findUserGroup(_id.toString())
-  const permissions = (group?.permissions || []).reduce((rs, n) => {
-    rs[n] = true
-    return rs
-  }, {})
-
-  // gen token to store on client
-  const token = genToken({ email, permissions })
-
-  return { username, avatar, permissions, token }
 })
 
 
@@ -150,17 +137,6 @@ exports.contact = monitor.seal('contact', async ({ title, content, user_id }) =>
 
   return { status: 'success', data: listUser }
 })
-
-
-// exports.getAvailable = monitor.seal('getAvailable', async () => {
-//   const foundPeople = await repo.userRepository.find({
-//     isVerified: true,
-//     password: { $exists: false },
-//     roomId: { $exists: false }
-//   })
-//
-//   return { status: 'success', data: foundPeople }
-// })
 
 
 exports.update = monitor.seal('update', async ({ user_id, dataReq }) => {

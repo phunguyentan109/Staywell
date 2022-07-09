@@ -14,6 +14,10 @@ exports.clear = async model => {
 }
 
 exports.inserting = async (samples, sampleKeys) => {
+  if (sampleKeys.includes('Admin')) {
+    samples.Admin = await samples.Admin()
+  }
+
   for (const sampleKey of sampleKeys) {
     console.log(`Inserting ${sampleKey}...`)
 
