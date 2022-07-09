@@ -15,10 +15,10 @@ async function send(info, templateName, data) {
   await sgMail.send({ ...info, from: GMAIL_USER, html })
 }
 
-exports.confirmMail = async(host, { to, viewName, userId }) => {
+exports.confirmMail = async({ to, viewName, userId }) => {
   try {
     const subject = emoji.emojify(':building_construction: Email Confirmation - Staywell')
-    const confirmUrl = `${process.env.DEVHOST || host}/registration/complete/${userId}`
+    const confirmUrl = `${process.env.DEVHOST}/registration/complete/${userId}`
 
     await send({ to, subject }, 'confirmEmail', { viewName, confirmUrl })
   } catch (e) {

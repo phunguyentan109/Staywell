@@ -3,7 +3,6 @@ import _ from 'lodash'
 import PropTypes from 'prop-types'
 import '../_styles.less'
 import { DEFAULT_ACCOUNT } from '../const'
-import PublicLayout from 'layout/PublicLayout'
 
 export default function Register({ hdRegister }) {
   const [account, setAccount] = useState(_.cloneDeep(DEFAULT_ACCOUNT))
@@ -30,56 +29,58 @@ export default function Register({ hdRegister }) {
   const isMan = useMemo(() => account.gender === 'man', [account.gender])
 
   return (
-    <PublicLayout>
-      <div className='register-content'>
-        <h1>Sign up</h1>
-        <h4>Please fill in below to complete registration</h4>
-        <form className='auth-form' onSubmit={hdSubmit}>
-          <div className='auth-input'>
-            <i className='far fa-user'/>
-            <input
-              placeholder='What should we call you?'
-              name='username'
-              value={account.username}
-              onChange={hdChange}
-            />
-          </div>
-          <div className='auth-input'>
-            <i className='far fa-envelope'/>
-            <input
-              placeholder= 'Email to keep informed'
-              name='email'
-              onChange={hdChange}
-              value={account.email}
-            />
-          </div>
-          <div className='auth-select'>
-            <button
-              type='button'
-              className={isMan ? 'select' : ''}
-              onClick={() => setAccount(prev => ({ ...prev, gender: 'man' }))}
-            >
-              {isMan && <i className='fas fa-male mr-xs'/>} Man
-            </button>
-            <span>OR</span>
-            <button
-              type='button'
-              className={!isMan ? 'select' : ''}
-              onClick={() => setAccount(prev => ({ ...prev, gender: 'woman' }))}
-            >
-              {isMan || <i className='fas fa-female mr-xs'/>} Woman
-            </button>
-          </div>
-          <button type='submit' className='signup' disabled={loading}>
-            {
-              loading
-                ? <i className='fas fa-circle-notch fa-spin'/>
-                : 'Confirm'
-            }
+    <div className='register-content'>
+      <h1>Sign up</h1>
+      <h4>Please fill in below to complete registration</h4>
+
+      <form onSubmit={hdSubmit}>
+        <div className='auth-input'>
+          <i className='far fa-user'/>
+          <input
+            placeholder='What should we call you?'
+            name='username'
+            value={account.username}
+            onChange={hdChange}
+          />
+        </div>
+
+        <div className='auth-input'>
+          <i className='far fa-envelope'/>
+          <input
+            placeholder= 'Email to keep informed'
+            name='email'
+            onChange={hdChange}
+            value={account.email}
+          />
+        </div>
+
+        <div className='auth-select'>
+          <button
+            type='button'
+            className={isMan ? 'select' : ''}
+            onClick={() => setAccount(prev => ({ ...prev, gender: 'man' }))}
+          >
+            {isMan && <i className='fas fa-male mr-xs'/>} Male
           </button>
-        </form>
-      </div>
-    </PublicLayout>
+          <span>OR</span>
+          <button
+            type='button'
+            className={!isMan ? 'select' : ''}
+            onClick={() => setAccount(prev => ({ ...prev, gender: 'woman' }))}
+          >
+            {isMan || <i className='fas fa-female mr-xs'/>} Female
+          </button>
+        </div>
+
+        <button type='submit' className='signup' disabled={loading}>
+          {
+            loading
+              ? <i className='fas fa-circle-notch fa-spin'/>
+              : 'Confirm'
+          }
+        </button>
+      </form>
+    </div>
   )
 }
 

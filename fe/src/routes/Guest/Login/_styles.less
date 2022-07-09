@@ -17,41 +17,15 @@
     color: #bababa;
     font-size: 40px;
     margin: 0 0 8px;
-
-    .appear-animation(fromTop, 1.2s, .3s);
-
-    &:nth-of-type(2) { display: none }
   }
 
   > h4 {
     margin: 20px 0 0;
     color: #bbbbbb;
     font-size: 15px;
-
-    .appear-animation(fromTop, 1.2s);
   }
 
-  > .notify {
-    padding: 10px 35px;
-    margin: 10px 20px -42px 20px;
-    border-radius: 2px;
-    background-color: #f31a1a3d;
-    color: #bababa;
-    font-size: 14px;
-    font-weight: bold;
-  }
-
-  > .great-notify {
-    padding: 10px 35px;
-    margin: 10px 20px -42px 20px;
-    border-radius: 2px;
-    background-color: #1df31a3d;
-    color: #bababa;
-    font-size: 14px;
-    font-weight: bold;
-  }
-
-  .auth-form {
+  form {
     margin-top: 60px;
 
     > button {
@@ -69,7 +43,7 @@
       background-color: #952323;
       font-size: 16px;
 
-      .appear-animation(fromBottom, 1.2s, 1.2s);
+      //.appear-animation(fromBottom, 1.2s, 1.2s);
 
       &:hover{
         background-color: #a02828;
@@ -133,15 +107,15 @@
       }
 
       &:nth-of-type(1) {
-        .appear-animation(fromLeft, 1.2s, .6s);
+        //.appear-animation(fromLeft, 1.2s, .6s);
       }
 
       &:nth-of-type(2) {
-        .appear-animation(fromLeft, 1.2s, .9s);
+        //.appear-animation(fromLeft, 1.2s, .9s);
       }
 
       &:nth-of-type(3) {
-        .appear-animation(fromLeft, 1.2s, 1.2s);
+        //.appear-animation(fromLeft, 1.2s, 1.2s);
       }
     }
   }
@@ -149,9 +123,6 @@
   @include mobile {
     > h1 {
       font-size: 30px;
-
-      &:nth-of-type(1) { display: none }
-      &:nth-of-type(2) { display: initial }
     }
 
     > a { display: none; }

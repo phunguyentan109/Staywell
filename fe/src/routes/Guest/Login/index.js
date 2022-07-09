@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import './_styles.less'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { loginAction } from 'appRedux/actions/user'
 
 function Login() {
-  const msg = useSelector(({ message }) => message)
   const dispatch = useDispatch()
 
   const [account, setAccount] = useState({ email: '', password: '' })
@@ -23,10 +22,9 @@ function Login() {
   return (
     <div className='login-content'>
       <h1>Welcome to Staywell,</h1>
-      <h1>What a nice day,</h1>
       <h4>Please enter your account to continue.</h4>
 
-      <form className='auth-form' onSubmit={hdSubmit}>
+      <form onSubmit={hdSubmit}>
         <div className='auth-input'>
           <i className='far fa-envelope'/>
           <input

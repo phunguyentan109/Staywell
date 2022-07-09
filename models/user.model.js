@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
-const db = require('./index')
 const jwt = require('jsonwebtoken')
 
 const userSchema = mongoose.Schema({

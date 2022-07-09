@@ -14,7 +14,7 @@ export {
 
 const prefix = '/api/'
 
-export async function call(args) { // deprecated
+export async function call(args) {
   const [url, method = 'get', data] = args
 
   try {
@@ -69,12 +69,6 @@ export const userApi = {
   activate: id => [`user/${id}/activate`, 'put'],
   reset: token => [`user/${token}/reset`, 'put'],
   password: id => [`user/${id}/password`, 'put'],
-
-  // registration
-  openRegistration: () => ['user/registration', 'post'],
-  allowRegistration: token => [`user/registration/${token}`],
-  submitRegistration: token => [`user/registration/${token}`, 'post'],
-  closeRegistration: token => [`user/registration/${token}`, 'delete'],
 }
 
 export const priceApi = {
@@ -89,4 +83,11 @@ export const priceApi = {
 export const billApi = {
   generate: (contractId, billId) => [`contracts/${contractId}/bills/${billId}`, 'post'],
   updatePayment: (contractId, billId) => [`contracts/${contractId}/bills/${billId}`, 'put']
+}
+
+export const redisApi = {
+  getRegistrations: () => ['registration'],
+  newRegistration: () => ['registration', 'post'],
+  removeRegistration: (token) => [`registration/${token}`, 'delete'],
+  verifyRegistration: (token) => [`registration/${token}/verify`]
 }

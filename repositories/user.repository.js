@@ -27,9 +27,8 @@ exports.findById = (userId) => {
   return db.User.findById(userId)
 }
 
-exports.findByIdAndUpdate = (data) => {
-  const { params, body } = data
-  return db.User.findByIdAndUpdate(params, body, { new: true })
+exports.findByIdAndUpdate = (userId, data) => {
+  return db.User.findByIdAndUpdate(userId, data, { new: true })
 }
 
 exports.getNoAssign = (peopleIds) => {

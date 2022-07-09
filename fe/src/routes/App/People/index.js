@@ -1,26 +1,36 @@
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Badge, Button, Card, Col, Dropdown, Menu, message, Row, Table, Tooltip, Typography } from 'antd'
+import { Badge, Button, Card, Col, Divider, Dropdown, Menu, message, Row, Table, Tooltip, Typography } from 'antd'
 import Widget from 'components/Widget'
 import './_styles.less'
 import DeleteAction from 'components/DeleteAction'
-import { urls } from 'constants/routes'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectPeople } from './redux/selector'
-import _ from 'lodash'
-import { createRegistrationToken, fetchPeopleAction, removePeopleAction } from './redux/action'
-import { formatTime } from 'constants/func'
+import {
+  fetchPeopleAction,
+  getRegistrationToken,
+  newRegistrationToken,
+  removePeopleAction,
+  removeRegistrationToken
+} from './redux/action'
 import Avatar from 'react-nice-avatar'
+import { FORMAT_DATE_TIME } from 'constants/const'
+import moment from 'moment'
+import { Link } from 'react-router-dom'
+import { urls } from 'constants/routes'
 
 export default function People(props) {
-  const { people, loading } = useSelector(selectPeople)
+  const { people, loading, tokens, loadingTokens } = useSelector(selectPeople)
   const dp = useDispatch()
 
   const getPeople = useCallback(() => dp(fetchPeopleAction()), [dp])
 
+  const getRegistration = useCallback(() => dp(getRegistrationToken()), [dp])
+
   useEffect(() => {
     getPeople()
-  }, [getPeople])
+    getRegistration()
+  }, [getPeople, getRegistration])
 
   const removePeople = (peopleId) => {
     dp(removePeopleAction(peopleId, rs => {
@@ -28,18 +38,6 @@ export default function People(props) {
       getPeople()
     }))
   }
-
-  // const { data: people, isFetching, isMutating, mutate } = useFetch(userApi.get(), {
-  //   remove: {
-  //     exec: id => userApi.remove(id),
-  //     successMsg: 'User is removed successfully!'
-  //   },
-  //   getRegisterToken: {
-  //     exec: () => userApi.openRegistration(),
-  //     successMsg: 'Registration token is generated successfully!',
-  //     revalidate: false
-  //   }
-  // })
 
   // const hdCopy = useCallback((e, token) => {
   //   e.target.classList.add('bounceIn')
@@ -63,9 +61,11 @@ export default function People(props) {
   //   }, 1000)
   // }, [])
 
-  const hdOpenRegistration = async () => {
-    dp(createRegistrationToken())
-    // dp(sendReloadUser(userData._id))
+  const hdOpenRegistration = () => {
+    dp(newRegistrationToken(rs => {
+      if (rs) message.success('Generating token successfully!')
+      getRegistration()
+    }))
   }
 
   // const filterRooms = useMemo(() => {
@@ -73,11 +73,31 @@ export default function People(props) {
   //   return _.map(_.uniq(roomNames.flat()), v => ({ text: v, value: v }))
   // }, [people])
 
-  const hdRemove = (peopleId) => {
-    // dp(removePeopleAction(peopleId), () => {
-    //
-    // })
+  const hdRemoveRegistration = (token) => {
+    dp(removeRegistrationToken(token, rs => {
+      if (rs) message.success('Removing token successfully!')
+      getRegistration()
+    }))
   }
+
+  const fromNow = time => {
+    const timeObj = moment.unix(time)
+    let timeDiff = timeObj.diff(moment(), 'hours')
+    let timeString = `${timeDiff} hour(s)`
+
+    if (timeDiff < 2) {
+      timeDiff = time.diff(moment(), 'minutes')
+      timeString = `${timeDiff} min(s)`
+    }
+
+    return <>
+      About <span className='gx-link'>{timeString}</span>
+      <Divider type='vertical'/>
+      <span>{timeObj.format(FORMAT_DATE_TIME)}</span>
+    </>
+  }
+
+  console.log(urls.registration.replace(':token', 123))
 
   return (
     <div className='app-people'>
@@ -116,7 +136,7 @@ export default function People(props) {
           >
             <div className='gx-table-responsive'>
               <Table
-                loading={loading}
+                loading={loadingTokens}
                 className='token-table'
                 rowKey='token'
                 columns={[
@@ -132,33 +152,33 @@ export default function People(props) {
                           className='d-flex align-items-center'
                         >
                           <Badge status={r.isClose ? 'default' : 'processing'}/>
-                          <Typography.Text >
-                            {v.substring(v.length - 10, v.length)}
-                          </Typography.Text>
+                          <Typography.Text copyable>{v}</Typography.Text>
                         </Tooltip>
                       )
                     }
                   },
                   {
-                    title: 'Open At',
-                    dataIndex: 'openAt',
-                    render: v => formatTime(v, true),
+                    title: 'Expiration',
+                    dataIndex: 'expireTime',
+                    render: v => fromNow(v),
                   },
                   {
                     title: 'Action',
-                    dataIndex: 'isClose',
-                    render: (v, r) => {
+                    dataIndex: 'token',
+                    render: v => {
                       return <Dropdown
                         overlay={(
                           <Menu>
                             <Menu.Item>
-                              <a target='_blank' rel='noopener noreferrer' href={urls.registration(r.token)}>
+                              <Link to={urls.registration.replace(':token', v)} target='_blank'>
                                 View in new tab
-                              </a>
+                              </Link>
                             </Menu.Item>
+
                             <Menu.Divider/>
+
                             <Menu.Item>
-                              <DeleteAction onConfirm={() => props.removeToken(r.token)}>
+                              <DeleteAction onConfirm={() => hdRemoveRegistration(v)}>
                                 <span className='gx-text-danger'>Remove</span>
                               </DeleteAction>
                             </Menu.Item>
@@ -171,7 +191,7 @@ export default function People(props) {
                     },
                   },
                 ]}
-                dataSource={props.tokens}
+                dataSource={tokens}
                 pagination={false}
                 size='small'
               />
@@ -205,21 +225,6 @@ export default function People(props) {
                 {
                   title: 'Living Status',
                   dataIndex: ['roomId', 'name'],
-                  // filters: [
-                  //   { text: 'Not Assigned', value: 'Not Assigned' },
-                  //   { text: 'Not Verified', value: 'Not Verified' },
-                  //   ...filterRooms
-                  // ],
-                  // onFilter: (v, r) => {
-                  //   switch (v) {
-                  //     case 'Not Assigned':
-                  //       return !r.room_id && r.isVerified
-                  //     case 'Not Verified':
-                  //       return !r.isVerified
-                  //     default:
-                  //       return r.isVerified && r.room_id?.name.includes(v)
-                  //   }
-                  // },
                   render: (v, r) => {
                     if (!r.isVerified) return <span className='text-danger'>Not Verified</span>
                     return <span>{v ? v : 'Not Assigned'}</span>

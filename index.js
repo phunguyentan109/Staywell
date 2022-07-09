@@ -13,13 +13,14 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
 
-app.use('/api/user', require('./routes/r-User'))
+app.use('/api/user', require('./routes/user.route'))
 app.use('/api/price', require('./routes/r-Price'))
 app.use('/api/rooms', require('./routes/r-Room'))
 app.use('/api/contracts', require('./routes/r-Contract'))
+app.use('/api', require('./routes/redis.route'))
 
 // For navigate app pages
-app.get('/registration/complete/:user_id', userController.complete)
+app.get('/registration/verify/:userId?', userController.completeVerify)
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname + '/build/index.html'))
