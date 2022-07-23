@@ -15,8 +15,8 @@ router.route('/:user_id')
   .delete(userController.remove)
   .put(userController.update)
 
-router.route('/:userId/verify')
-  .get(userController.completeVerify)
+// router.route('/:userId/verify')
+//   .get(userController.completeVerify)
 
 // LINKED ROUTES
 router.use('/:user_id/contracts', require('./r-Contract'))

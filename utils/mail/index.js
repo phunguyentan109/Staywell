@@ -1,28 +1,40 @@
 const emoji = require('node-emoji')
-const sgMail = require('@sendgrid/mail')
+const mailer = require('nodemailer')
+const { OAuth2Client } = require('google-auth-library')
+const config = require('../config')
 const ejs = require('ejs')
-const fs = require('fs')
-const LogicError = require('../shield')
-const { GMAIL_USER, SENDGRID_API_KEY } = process.env
 
-sgMail.setApiKey(SENDGRID_API_KEY)
+const oauthClient = new OAuth2Client(config.ggId, config.ggSecret)
+oauthClient.setCredentials({ refresh_token: config.ggRefresh })
 
-async function send(info, templateName, data) {
-  const templatePath = `${__dirname}/templates/${templateName}.ejs`
-  const readTemplate = fs.readFileSync(templatePath, 'utf-8')
-  let html = ejs.compile(readTemplate)(data)
+const createTransport = async () => {
+  const accessToken = (await oauthClient.getAccessToken())?.token
 
-  await sgMail.send({ ...info, from: GMAIL_USER, html })
+  return mailer.createTransport({
+    service: 'gmail',
+    auth: {
+      type: 'OAuth2',
+      user: config.ggMail,
+      clientId: config.ggId,
+      clientSecret: config.ggSecret,
+      refresh_token: config.ggRefresh,
+      accessToken
+    }
+  })
 }
 
-exports.confirmMail = async({ to, viewName, userId }) => {
-  try {
-    const subject = emoji.emojify(':building_construction: Email Confirmation - Staywell')
-    const confirmUrl = `${process.env.DEVHOST}/registration/complete/${userId}`
+async function send(mailOpts, templateName, ejsData) {
+  const templatePath = `${__dirname}/templates/${templateName}.ejs`
+  let html = await ejs.renderFile(templatePath, ejsData)
 
-    await send({ to, subject }, 'confirmEmail', { viewName, confirmUrl })
-  } catch (e) {
-    throw new LogicError(e, 'utils.mail.confirmMail', 'Failed to send mail')
-  }
+  const transport = await createTransport()
+  return transport.sendMail({ ...mailOpts, html })
+}
 
+
+exports.verifyPeople = async(to, data) => {
+  const subject = emoji.emojify(':building_construction: Email Confirmation - Staywell')
+  const confirmUrl = `${config.host}/registration/verify/${data.userId}`
+
+  return send({ to, subject }, 'confirmEmail', { ...data, confirmUrl })
 }

@@ -1,6 +1,7 @@
 const divider = '* ##################'
 const _ = require('lodash')
 const moment = require('moment')
+const { VALIDATE_ERRORS } = require('./const')
 
 const logger = (position, handler, msg, detail) => {
   console.error(`\n${divider}`)
@@ -35,6 +36,14 @@ class ErrorTracker extends Error {
     return { status: 200, data }
   }
 
+  parseValidateCode (code) {
+    const errCodes = {
+      11000: VALIDATE_ERRORS.duplicate
+    }
+
+    return errCodes[code]
+  }
+
   wrap(_msg, _error) {
     const { msg, error } = this.validateParams([_msg, _error])
 
@@ -43,6 +52,7 @@ class ErrorTracker extends Error {
     this.status = error?.status || 500
     this.message = error?.message || ''
     this.logicError = msg || error?.logicError || 'Oops, something went wrong...'
+    this.dbValidateErr = this.parseValidateCode(error?.code)
     this.occurAt = error?.occurAt || moment().valueOf()
 
     if (!error?.logicError && error?.stack) {
@@ -77,7 +87,7 @@ class ErrorTracker extends Error {
       } catch (err) {
         const { onCatch, catchMsg } = options
 
-        if (onCatch) return onCatch(err, res)
+        if (onCatch) return onCatch(err, res, next)
 
         return next(this.wrap(catchMsg, err))
       }
