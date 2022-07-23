@@ -11,4 +11,3 @@ router.route('/registration/:token')
   .delete(redisController.removeRegistrationToken)
 
 module.exports = router
-0
