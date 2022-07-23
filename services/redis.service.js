@@ -2,7 +2,7 @@ const crypto = require('crypto')
 const moment = require('moment')
 const Monitor = require('../utils/shield')
 const repo = require('../repositories')
-// const mail = require('../utils/mail')
+const mail = require('../utils/mail')
 
 const monitor = new Monitor('service.user')
 const registerPrefix = 'regtr_'
@@ -59,7 +59,7 @@ exports.submitRegistrationToken = monitor.seal('submitRegistrationToken', async 
 
   let newUser = await repo.userRepository.create({ ...data, avatar: defaultAvatar })
 
-  // await mail.confirmMail({ to: data.email, viewName: data.username, userId: newUser._id })
+  await mail.verifyPeople(data.email, {  username: data.username, userId: newUser._id })
 
   // Remove the token
   await exports.removeRegistrationToken(token)

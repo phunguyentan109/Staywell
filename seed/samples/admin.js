@@ -1,6 +1,8 @@
+const config = require('../../utils/config')
+
 module.exports = [
   {
-    'email': 'systemstaywell7@gmail.com',
+    'email': config.ggMail,
     'password': 'manager',
     'username': 'manager',
     'gender': 'Male',

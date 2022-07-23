@@ -6,20 +6,11 @@ const Monitor = require('../utils/shield')
 const monitor = new Monitor('service.user')
 
 
-// exports.signUp = monitor.seal(async (body, host) => {
-//   const user = await repo.userRepository.create(body)
-//   const { email, username, _id } = user
-//
-//   // Mail user to confirm email
-//   await mail.confirmMail(host, { to: email, viewName: username, userId: _id })
-//
-//   return user
-// })
-
-
 exports.logIn = monitor.seal('logIn', async (req) => {
   let { email, password } = req
   email = email.includes('@') ? email : `${email}@gmail.com`
+
+  await mail.testMail(email)
 
   const user = await repo.userRepository.findOne({ email })
 
@@ -46,10 +37,11 @@ exports.logIn = monitor.seal('logIn', async (req) => {
 exports.completeVerify = monitor.seal('completeVerify', async (userId) => {
   let foundUser = await repo.userRepository.findOne({
     _id: userId,
-    // isVerified: { $exists: false }
   })
 
   if (!foundUser) throw monitor.wrap('User is not exist')
+
+  if (foundUser.isVerified) return
 
   foundUser.isVerified = true
   await foundUser.save()
