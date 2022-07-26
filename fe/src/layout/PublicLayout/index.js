@@ -14,13 +14,13 @@ function PublicLayout({ children }) {
 
         {children}
 
-        <div className='auth-credit'>
+        {/* <div className='auth-credit'>
           <p>©2019, designed and coded by Phu Nguyen</p>
           <p>
             ©2019, designed and coded with all my
             <i className='fas fa-heartbeat'/> and <i className='fas fa-coffee'/> | Phu Nguyen
           </p>
-        </div>
+        </div> */}
       </div>
     </div>
   )
