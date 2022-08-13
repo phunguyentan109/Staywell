@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import Register from '../components/Register'
+import Register from '../componentsbk/Register'
 import PropTypes from 'prop-types'
 import { notify } from 'constants/func'
 import { call, userApi } from 'constants/api'
