@@ -1,179 +1,360 @@
-@import "assets/css/_mixin";
-@import "assets/css/_animate";
-
-.appear('fromTop', 0, 0, -100px, 0);
-.appear('fromLeft', -100px, 0, 0, 0);
-.appear('fromBottom', 0, 0, 100px, 0);
+@f-ubuntu: "Ubuntu", sans-serif;
 
 .register-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   font-family: @f-ubuntu;
+  position: relative;
 
-  > h1 {
-    text-align: center;
-    color: #bababa;
-    font-size: 40px;
-    margin: 0 0 8px;
+  .avatar-form {
+    position: absolute;
+    top: -36px;
+    left: -50px;
+    width: 450px;
+    height: 700px;
 
-    //@include appear-animation(fromTop, 1.2s, .3s);
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.6);
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
 
-    &:nth-of-type(2) { display: none }
-  }
+    transition: all 0.3s ease-out;
 
-  > h4 {
-    margin: 20px 0 0;
-    color: #bbbbbb;
-    font-size: 15px;
+    .content {
+      opacity: 0;
+      transition: opacity .5s ease-out;
+      height: 100%;
 
-    //@include appear-animation(fromTop, 1.2s);
-  }
-
-  form {
-    margin-top: 60px;
-
-    .auth-input {
-      margin-bottom: 15px;
-
-      i, input {
-        padding: 7px 15px 7px 20px;
-        background-color: #ffffff1a;
-        line-height: 2;
-        transition-duration: 0.5s;
-        font-size: 14px;
+      .avatar {
+        width: 126px;
+        height: 126px;
+        border: 3px solid white;
+        background-color: #D9D9D9;
+        display: block;
+        margin-bottom: 24px;
       }
 
-      > i {
-        color: #edededa8;
-        padding-left: 15px;
-        border-top-left-radius: 20px;
-        border-bottom-left-radius: 20px;
-        transition-duration: 0.5s;
+      .tabs {
+        position: relative;
+        margin-bottom: 14px;
 
-        &.focus {
-          background-color: #ffffff30;
+        .tab {
+          text-align: center;
+          line-height: 42px;
+          width: 113px;
+          font-family: @f-ubuntu;
+
+          border-bottom: 2px solid #514F4F;
+          color: #9F9F9F;
+          cursor: pointer;
+          transition-duration: 0.3s;
+
+          &:hover {
+            color: #cecece;
+            border-color: #626262;
+          }
+
+          &.active {
+            color: #27A4EA !important;
+            font-size: 20px;
+            border-bottom: 3px solid #27A4EA;
+            cursor: default;
+          }
         }
       }
 
-      > input {
-        padding-left: 0;
-        padding-right: 0;
-        border: none;
-        outline: none;
-        width: 290px;
-        color: #ffffffa8;
-        border-top-right-radius: 20px;
-        border-bottom-right-radius: 20px;
-        font-family: @f-ubuntu;
-        margin-bottom: 0;
+      .avatar-select {
+        //padding-left: 50px;
+        //padding-right: 50px;
 
-        &::placeholder{
-          color: #edededa8;
+        .label {
+          color: white;
+          font-size: 18px;
+          padding-left: 30px;
+          //margin-right: 60px;
+        }
+
+        .color-input {
+          border-radius: 55%;
+          border: 3px solid rgba(152, 152, 152, 0.5);
+          width: 25px;
+          height: 25px;
+
+          input[type='color'] {
+            opacity: 0;
+            cursor: pointer;
+          }
+        }
+
+        .color-label {
+          //font-size: initial;
+          //color: white;
+          font-size: 14px;
+          color: whitesmoke;
+        }
+
+        .result {
+          font-size: 14px;
+          color: white;
+
+          background: #5C5C5C80;
+          width: 83px;
+          line-height: 32px;
+          text-align: center;
+        }
+
+        [class*='arrow'] {
+          cursor: pointer;
+          color: white;
+          font-size: initial;
+        }
+      }
+    }
+
+  }
+
+  .register-form {
+    position: relative;
+    padding: 100px 40px 0;
+    width: 470px;
+    height: 720px;
+    border-radius: 5px;
+    background-color: white;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+
+    transition: all .3s ease-out;
+
+    .top {
+      position: absolute;
+      border-radius: 20px;
+      transform: rotate(-51.45deg);
+
+      &.b1 {
+        height: 38px;
+        width: 406px;
+        left: 185px;
+        top: -131px;
+        background: #FFBFBF47;
+      }
+
+      &.b2 {
+        height: 48px;
+        width: 389px;
+        left: 280px;
+        top: -129px;
+        border-radius: 20px;
+        background: #B4B4B447;
+      }
+
+      &.b3 {
+        height: 48px;
+        width: 357px;
+        left: 305px;
+        top: -35px;
+        border-radius: 20px;
+        background: #D24C4C26;
+      }
+
+      &.b4 {
+        width: 365px;
+        height: 48px;
+        left: 370px;
+        top: -25px;
+        border-radius: 20px;
+        background: #1AB0B01C;
+      }
+    }
+
+    .bottom {
+      &.round {
+        position: absolute;
+        width: 361px;
+        height: 225px;
+        left: -201px;
+        bottom: -157px;
+        border-radius: 60%;
+
+        background: #D9D9D966;
+      }
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      width: 100%;
+      isolation: isolate;
+      margin-bottom: 60px;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border: 2px solid #E8E8E8;
+        width: 132px;
+        height: 132px;
+        border-radius: 55%;
+        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.18);
+      }
+
+      .avatar {
+        width: 126px;
+        height: 126px;
+        border: 2px solid white;
+        background-color: #D9D9D9;
+        display: block;
+        margin: auto;
+      }
+
+      .edit {
+        position: absolute;
+        bottom: 0;
+        left: 60%;
+        transform: translateX(-50%);
+
+        color: #6BB1D9;
+        border-radius: 55%;
+        border: 2px solid #AFD0E2;
+        width: 28px;
+        height: 28px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 4px 0 #0000001A;
+        background-color: white;
+        cursor: pointer;
+        transition-duration: .5s;
+
+        &:hover {
+          border: 2px solid white;
+          background-color: #63c6ff;
+          color: white;
+        }
+      }
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    h4 {
+      color: #535353;
+      font-size: 14px;
+      margin-bottom: 33px;
+    }
+
+    form {
+      .input {
+        background-color: #efecec;
+        border-radius: 20px;
+        overflow: hidden;
+        box-sizing: border-box;
+
+        i, input {
+          padding: 6px 15px 6px 20px;
+          background-color: transparent;
+          line-height: 2;
           font-size: 14px;
         }
 
-        &.focus {
-          background-color: #ffffff30;
+        input {
+          padding-left: 5px;
+          border: none;
+          outline: none;
+
+          &::placeholder {
+            color: #929292;
+            font-size: 14px;
+          }
         }
-
-        @include mobile {
-          width: 270px;
-        }
       }
 
-      &:nth-of-type(1) {
-        //.appear-animation(fromLeft, 1.2s, .6s);
-      }
-
-      &:nth-of-type(2) {
-        //.appear-animation(fromLeft, 1.2s, .9s);
-      }
-
-      &:nth-of-type(3) {
-        //.appear-animation(fromLeft, 1.2s, 1.2s);
-      }
-    }
-
-    .auth-select {
-      margin-bottom: 15px;
-      display: flex;
-      align-items: center;
-
-      span {
-        color: white;
-        width: 40px;
-        text-align: center;
-      }
-
-      button {
-        height: 42px;
-        flex-grow: 1;
-        color: white;
-        border: none;
+      .signup {
         outline: none;
-        background-color: #ffffff1a;
+        border: none;
+        color: white;
         border-radius: 20px;
-        transition-duration: .2s;
-        max-width: 100px;
-
-        &.select {
-          border: 2px solid #a0a0a0;
-          font-weight: bold;
-          max-width: 300px;
-        }
+        width: 100%;
+        line-height: 40px;
+        margin-top: 15px;
+        transition-duration: 0.2s;
+        font-family: @f-ubuntu;
+        background: #038FDDFF;
+        font-size: 16px;
 
         &:hover {
-          background-color: #ffffff2e;
+          background-color: #006fde;
+          cursor: pointer;
         }
+
+        //@include mobile {
+        //  margin-top: 30px;
+        //  padding: 5px 0;
+        //  font-size: 15px;
+        //}
       }
-
-      //@include appear-animation(fromLeft, 1.2s, 1.2s);
-    }
-
-    .signup {
-      outline: none;
-      border: none;
-      color: white;
-      border-radius: 20px;
-      width: 100%;
-      padding: 4px 0;
-      line-height: 2;
-      margin-top: 40px;
-      transition-duration: 0.3s;
-      font-family: @f-ubuntu;
-      background-color: #287f7f;
-      font-size: 16px;
-
-      &:hover{
-        background-color: #319696;
-        cursor: pointer;
-      }
-
-      @include mobile {
-        margin-top: 30px;
-        padding: 5px 0;
-        font-size: 15px;
-      }
-
-      //@include appear-animation(fromBottom, 1.2s, 1.5s);
     }
   }
 
-  @include mobile {
-    > h1 {
-      font-size: 30px;
+  &.avatar-config {
+    .avatar-form {
+      top: 20px;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+
+      height: 672px;
+      width: 500px;
+
+      .content {
+        opacity: 1;
+      }
     }
 
-    > a { display: none; }
-
-    > h4 {
-      font-size: 14px;
+    .register-form {
+      margin-left: 451px;
     }
   }
+
+  //.avatar-edit {
+  //  width: 500px;
+  //  height: 620px;
+  //
+  //  overflow: auto;
+  //  border-radius: 0 5px 5px 0;
+  //  background: rgba(0, 0, 0, 0.7);
+  //  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+  //
+  //  .avatar {
+  //    margin-top: 3em;
+  //    border: 4px solid white;
+  //    width: 138px;
+  //    height: 138px;
+  //    background-color: #D9D9D9;
+  //  }
+  //
+  //  .avatar-selector {
+  //    display: flex;
+  //    flex-direction: row;
+  //    align-items: center;
+  //    flex-wrap: wrap;
+  //
+  //    span {
+  //      color: white;
+  //      margin-right: 1em;
+  //    }
+  //  }
+  //}
+
+  //@include mobile {
+  //  > h1 {
+  //    font-size: 30px;
+  //  }
+  //
+  //  > a { display: none; }
+  //
+  //  > h4 {
+  //    font-size: 14px;
+  //  }
+  //}
 }
-
-
-
-

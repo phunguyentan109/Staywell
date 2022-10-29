@@ -11,7 +11,6 @@ import MainApp from 'containers/App/MainApp'
 import { selectUser } from 'appRedux/selectors'
 import { verifyUserTokenAction } from 'appRedux/actions'
 import { CLI_STORE_KEYS } from 'appRedux/const'
-import PublicLayout from 'layout/PublicLayout'
 
 function App () {
   const user = useSelector(selectUser)
@@ -53,18 +52,14 @@ function App () {
       )}/>
 
       <Route path='/' render={() => (
-        <PublicLayout>
-          <Suspense fallback={<div>Loading...</div>}>
-            <Switch>
-              {
-                routes.guest.map(
-                  r => r.permissions ? <Permission.Router key={r.path} {...r} /> : <Route {...r} />
-                )
-              }
-              <Redirect to='/app'/>
-            </Switch>
-          </Suspense>
-        </PublicLayout>
+        <Switch>
+          {
+            routes.guest.map(
+              r => r.permissions ? <Permission.Router key={r.path} {...r} /> : <Route key={r.path} {...r} />
+            )
+          }
+          <Redirect to='/app'/>
+        </Switch>
       )}/>
     </Switch>
   )

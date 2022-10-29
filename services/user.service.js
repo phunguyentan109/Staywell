@@ -10,8 +10,6 @@ exports.logIn = monitor.seal('logIn', async (req) => {
   let { email, password } = req
   email = email.includes('@') ? email : `${email}@gmail.com`
 
-  await mail.testMail(email)
-
   const user = await repo.userRepository.findOne({ email })
 
   const { _id, username, avatar } = user
